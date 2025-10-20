@@ -1,6 +1,8 @@
 # 👨‍💻 Development Guidelines
 
-**Coding standards, conventions, and best practices for Vantage Lane 2.0**
+**Current coding standards, conventions, and best practices for Vantage Lane 2.0**
+
+> 📍 **Note**: This document reflects **current reality**. For planned features and future patterns, see [ROADMAP.md](./ROADMAP.md)
 
 ## 📋 **Code Quality Standards**
 
@@ -8,7 +10,7 @@
 
 - **TypeScript strict mode**: All code must be fully typed
 - **ESLint compliance**: Zero warnings on commit
-- **File size limit**: Maximum 200 lines per file
+- **File size limit**: Maximum 250 lines per file (exceptions: design tokens, complex components)
 - **No `console.log`**: Use logger system instead
 - **Error handling**: Proper try-catch with logging
 - **Testing**: Unit tests for utilities, E2E for critical flows
@@ -16,7 +18,7 @@
 ### ❌ **NEVER Do**
 
 - Use `any` type without justification
-- Create files larger than 200 lines
+- Create files larger than 250 lines (without justification)
 - Skip error handling in async operations
 - Hardcode sensitive values
 - Commit with lint warnings
@@ -26,8 +28,11 @@
 ### **Component Architecture**
 
 ```tsx
-// ✅ Good: Proper component structure
-interface ButtonProps {
+// ✅ Good: Real component example from our codebase
+import { cn } from '@/lib/utils/cn'
+import { colors } from '@/design-system/tokens/colors'
+
+interface LuxuryCardProps {
   variant?: 'primary' | 'secondary'
   size?: 'sm' | 'md' | 'lg'
   disabled?: boolean
@@ -92,36 +97,26 @@ export function useAuth() {
 ### **Server Action Pattern**
 
 ```tsx
-// ✅ Good: Server action with validation and logging
-'use server'
+// ✅ Good: API route example (real implementation)
+import { NextResponse } from 'next/server'
 
-import { createAuditLog } from '@/lib/db/audit'
-import { log } from '@/lib/logger'
-
-export async function createBooking(formData: FormData) {
+export async function GET() {
   try {
-    // Validate input
-    const bookingData = bookingSchema.parse({
-      pickup: formData.get('pickup'),
-      destination: formData.get('destination'),
-      date: formData.get('date'),
-    })
+    const healthData = {
+      status: 'healthy',
+      timestamp: new Date().toISOString(), 
+      services: {
+        webserver: 'up',
+        next: 'ready'
+      }
+    }
 
-    // Business logic
-    const booking = await supabase.from('bookings').insert(bookingData).select().single()
-
-    // Audit log
-    await createAuditLog({
-      action: 'booking.create',
-      user_id: booking.user_id,
-      resource_id: booking.id,
-    })
-
-    log.info('Booking created', { bookingId: booking.id })
-    return { success: true, booking }
+    return NextResponse.json(healthData)
   } catch (error) {
-    log.error('Booking creation failed', error)
-    return { success: false, error: 'Failed to create booking' }
+    return NextResponse.json(
+      { status: 'unhealthy', error: 'Health check failed' },
+      { status: 500 }
+    )
   }
 }
 ```
@@ -224,9 +219,10 @@ export async function POST(request: NextRequest) {
 
 | **Type**   | **Convention**         | **Example**        |
 | ---------- | ---------------------- | ------------------ |
-| Components | PascalCase             | `BookingCard.tsx`  |
-| Hooks      | kebab-case with `use-` | `use-booking.ts`   |
-| Utils      | kebab-case             | `format-date.ts`   |
+| Components | PascalCase             | `LuxuryCard.tsx`   |
+| Types      | PascalCase             | `ButtonProps`      |
+| Utils      | camelCase              | `utils.ts`         |
+| Config     | kebab-case             | `theme.config.ts`  |
 | Types      | kebab-case             | `booking-types.ts` |
 | Constants  | UPPER_SNAKE_CASE       | `API_ROUTES.ts`    |
 

@@ -2,6 +2,9 @@
 
 **Complete explanation of all packages used in Vantage Lane 2.0**
 
+> 📍 **Last Updated**: 2025-01-20 | **Synced with**: package.json v1.0.0  
+> 💡 All versions reflect **current implementation**, not planned features
+
 ## 🏗️ **Core Framework & Language**
 
 | **Package**    | **Version** | **Purpose**        | **Why We Use It**                                        |
@@ -18,7 +21,7 @@
 | **tailwindcss**    | ^3.4.13     | Utility CSS framework | Fast styling, consistent design system |
 | **postcss**        | ^8.4.47     | CSS processor         | Required for Tailwind, autoprefixer    |
 | **autoprefixer**   | ^10.4.19    | CSS vendor prefixes   | Cross-browser compatibility            |
-| **framer-motion**  | ^11.2.9     | Animation library     | Premium animations, gesture support    |
+| **framer-motion**  | ^11.18.2    | Animation library     | Premium animations, gesture support    |
 | **lucide-react**   | ^0.417.0    | Icon library          | Modern SVG icons, tree-shakable        |
 | **clsx**           | ^2.1.1      | Conditional classes   | Clean className logic                  |
 | **tailwind-merge** | ^2.3.0      | Class deduplication   | Prevent conflicting Tailwind classes   |
@@ -70,7 +73,7 @@
 | **Package**                       | **Version** | **Purpose**         | **Why We Use It**                   |
 | --------------------------------- | ----------- | ------------------- | ----------------------------------- |
 | **@supabase/supabase-js**         | ^2.45.2     | Database client     | PostgreSQL, Auth, Storage, Realtime |
-| **@supabase/auth-helpers-nextjs** | ^0.10.1     | Next.js integration | Seamless auth with SSR/SSG          |
+| **@supabase/auth-helpers-nextjs** | ^0.8.7      | Next.js integration | Seamless auth with SSR/SSG          |
 
 **Why Supabase?**
 
@@ -87,6 +90,14 @@
 | ----------- | ----------- | ------------ | ----------------------------- |
 | **zustand** | ^4.5.5      | Global state | Simple, TypeScript-friendly   |
 | **ky**      | ^1.7.2      | HTTP client  | Modern fetch wrapper, retries |
+
+## 🛠️ **Utilities & Infrastructure**
+
+| **Package**     | **Version** | **Purpose**           | **Why We Use It**                |
+| --------------- | ----------- | --------------------- | -------------------------------- |
+| **envsafe**     | ^2.0.3      | Environment validation| Type-safe environment variables  |
+| **nanoid**      | ^5.0.7      | ID generation        | Secure, URL-safe unique IDs      |
+| **@upstash/redis** | ^1.28.4  | Redis client         | Serverless Redis, edge-compatible |
 
 **Why This Stack?**
 
@@ -126,15 +137,14 @@
 
 | **Package**                 | **Version** | **Purpose**     | **Why We Use It**                      |
 | --------------------------- | ----------- | --------------- | -------------------------------------- |
-| **@react-email/components** | ^0.0.22     | Email templates | React-based email design               |
 | **resend**                  | ^4.0.0      | Email delivery  | Modern email API, better than SendGrid |
 
 **Email Stack Benefits:**
 
-- ✅ **React Email**: Component-based templates
 - ✅ **Resend**: Better deliverability than traditional ESPs
 - ✅ Built-in analytics
 - ✅ Developer-friendly API
+- 🔮 **Planned**: React Email components for templates
 
 ## 📊 **Analytics & Monitoring**
 
@@ -198,8 +208,8 @@
 | -------------------- | ----------- | ------------------ |
 | **sharp**            | ^0.33.5     | Image optimization |
 | **@types/node**      | ^22.8.0     | Node.js types      |
-| **@types/react**     | ^18.3.11    | React types        |
-| **@types/react-dom** | ^18.3.0     | React DOM types    |
+| **@types/react**     | ^19.0.1     | React 19 types     |
+| **@types/react-dom** | ^19.0.1     | React 19 DOM types |
 
 ## 📋 **Package Selection Criteria**
 

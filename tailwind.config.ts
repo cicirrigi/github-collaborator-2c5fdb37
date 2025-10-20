@@ -20,6 +20,8 @@ const config: Config = {
     extend: {
       // Colors from theme.config.ts - single source of truth
       colors: {
+        'brand-primary': '#CBB26A',
+        'brand-secondary': '#E5D485',
         brand: {
           primary: designTokens.colors.brand.primary,
           secondary: designTokens.colors.brand.secondary,

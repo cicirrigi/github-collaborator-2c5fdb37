@@ -74,12 +74,14 @@ export default function TestBenefitsPage() {
 
           {/* Grid Layout (responsive) */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-            {benefitsData.map(benefit => (
+            {benefitsData.map((benefit, index) => (
               <LuxuryCard
                 key={benefit.id}
-                variant="shimmer"
+                variant="shimmer"  // 🎯 Carduri albe pe light mode, negre pe dark mode
                 size="md"
                 hover="shimmer"
+                // 🎯 IDENTIC cu originalul Vantage Lane - iconițe mari pe toate
+                iconSize="vantage" // 80x80px ca în originalul Vantage Lane
                 as={Link}
                 href={benefit.href}
                 icon={benefit.icon}
@@ -136,12 +138,23 @@ export default function TestBenefitsPage() {
             <LuxuryCard variant="shimmer" hover="shimmer">
               <div className="space-y-4">
                 <div className="text-6xl">🎯</div>
-                <h3 className="text-xl font-bold text-[#CBB26A]">Custom Layout</h3>
+                <h3 className="text-xl font-bold" style={{ color: 'var(--brand-primary)' }}>Custom Layout</h3>
                 <p className="text-neutral-400">
                   Using children API pentru layout complet custom cu{' '}
-                  <span className="font-semibold text-[#E5D485]">markup</span> și styling.
+                  <span className="font-semibold" style={{ color: 'var(--brand-accent)' }}>markup</span> și styling.
                 </p>
-                <button className="rounded-md bg-gradient-to-r from-[#CBB26A] to-[#E5D485] px-4 py-2 font-medium text-black transition-all hover:from-[#E5D485] hover:to-[#CBB26A]">
+                <button 
+                  className="rounded-md px-4 py-2 font-medium text-black transition-all"
+                  style={{
+                    background: 'linear-gradient(to right, var(--brand-primary), var(--brand-accent))',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(to right, var(--brand-accent), var(--brand-primary))';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(to right, var(--brand-primary), var(--brand-accent))';
+                  }}
+                >
                   Custom Action
                 </button>
               </div>

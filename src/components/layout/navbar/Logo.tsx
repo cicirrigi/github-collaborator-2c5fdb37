@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type React from 'react';
 
 import { cn } from '@/lib/utils/cn';
+import { brandConfig } from '@/config/brand.config';
 
 /**
  * 🎨 Vantage Lane Logo (final version)
@@ -57,7 +58,7 @@ export function Logo({
       {/* Logo Image */}
       <Image
         src="/logo.svg"
-        alt="Vantage Lane Logo"
+        alt={`${brandConfig.name} Logo`}
         fill
         className={cn('object-contain drop-shadow-lg', 'dark:brightness-[1.1]')}
         priority
@@ -70,7 +71,7 @@ export function Logo({
       <Link
         href={href}
         className="inline-block rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
-        aria-label="Vantage Lane - Home"
+        aria-label={`${brandConfig.name} - Home`}
         {...(onClick && { onClick })}
       >
         {logoElement}

@@ -26,3 +26,5 @@ export { LuxuryCard } from './LuxuryCard';
 
 // Theme Controls
 export { ThemeToggle } from './theme-toggle';
+export * from './TestButton';
+export * from './PremiumButton';

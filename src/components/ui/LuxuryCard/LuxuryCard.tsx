@@ -9,6 +9,8 @@
  * - Scalable naming pattern (LuxuryX components)
  */
 
+'use client';
+
 import { forwardRef } from 'react';
 
 import { cn } from '@/lib/utils';
@@ -67,6 +69,10 @@ const LuxuryCard = forwardRef<HTMLElement, LuxuryCardProps>(
       // Customization
       glowColor,
       shimmerColor,
+      iconSize = 'md',
+      iconEnhancement = 'none',
+      cardEnhancement = 'none',
+      titleGolden = false,
       className,
 
       // Content (simple API)
@@ -110,7 +116,7 @@ const LuxuryCard = forwardRef<HTMLElement, LuxuryCardProps>(
     return (
       <Component ref={ref as never} className={cardClasses} style={customProps} {...rest}>
         {/* Hover Effects Layer */}
-        {renderShimmerOverlay({ hover, disabled })}
+        {renderShimmerOverlay({ hover, disabled, cardEnhancement, glowColor, shimmerColor })}
 
         {/* Content Layer */}
         <div className="relative z-10">
@@ -122,6 +128,9 @@ const LuxuryCard = forwardRef<HTMLElement, LuxuryCardProps>(
             footer,
             glowColor,
             shimmerColor,
+            iconSize,
+            iconEnhancement,
+            titleGolden,
             hover,
             disabled,
           })}

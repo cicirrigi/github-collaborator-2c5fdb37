@@ -15,10 +15,16 @@ import type { ComponentPropsWithRef, ElementType, ReactNode } from 'react';
 // type ShadowVariant = keyof typeof luxuryCardTokens.shadows;
 
 // Luxury card variants
-export type LuxuryCardVariant = 'shimmer' | 'glow' | 'minimal' | 'premium';
+export type LuxuryCardVariant = 'shimmer' | 'glow' | 'minimal' | 'premium' | 'vantage';
 
 // Luxury card sizes
 export type LuxuryCardSize = 'sm' | 'md' | 'lg' | 'xl';
+
+// Icon sizes (pentru compatibilitate cu Vantage Lane design)
+export type LuxuryCardIconSize = 'sm' | 'md' | 'lg' | 'xl' | 'vantage'; // vantage = 80x80px
+
+// Icon enhancement effects (pentru efecte premium pe iconițe)
+export type LuxuryCardIconEnhancement = 'none' | 'glow' | 'shimmer' | 'premium';
 
 // Hover effects
 export type LuxuryCardHover = 'shimmer' | 'glow' | 'lift' | 'none';
@@ -44,6 +50,18 @@ export interface LuxuryCardBaseProps {
 
   /** Custom shimmer color (overrides theme) */
   shimmerColor?: string;
+
+  /** Icon size (pentru customizare dimensiuni iconițe) */
+  iconSize?: LuxuryCardIconSize;
+
+  /** Icon enhancement effects (glow, shimmer pe iconițe) */
+  iconEnhancement?: LuxuryCardIconEnhancement;
+
+  /** Card enhancement effects (pentru efecte pe întreg cardul ca în Vantage Lane) */
+  cardEnhancement?: 'none' | 'golden-glow' | 'full-shimmer' | 'vantage-premium';
+
+  /** Enable title color transition on hover (text-white → text-golden) */
+  titleGolden?: boolean;
 
   /** Disable all hover effects */
   disabled?: boolean;

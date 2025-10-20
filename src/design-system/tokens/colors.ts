@@ -1,23 +1,42 @@
 /**
- * Design system color tokens for Vantage Lane 2.0
+ * 🎨 Design Tokens – Colors (Vantage Lane)
+ * Source of truth for programmatic color usage.
+ * All tokens map directly to CSS vars and brandConfig.
  */
 
-// Primary brand colors (extracted from Vantage Lane 1.0)
+export const colors = {
+  brand: {
+    primary: 'var(--brand-primary)',
+    secondary: 'var(--brand-secondary)',
+    accent: 'var(--brand-accent)',
+  },
+  text: {
+    primary: 'var(--text-primary)',
+    secondary: 'var(--text-secondary)',
+    muted: 'var(--text-muted)',
+  },
+  background: {
+    light: 'var(--background-light)',
+    dark: 'var(--background-dark)',
+    elevated: 'var(--background-elevated)',
+  },
+  status: {
+    success: 'var(--status-success)',
+    warning: 'var(--status-warning)',
+    error: 'var(--status-error)',
+  },
+} as const;
+
+export type ColorTokens = typeof colors;
+
+// Legacy support - keeping existing exports for compatibility
 export const brandColors = {
   primary: {
-    50: 'hsl(48, 78%, 95%)', // Ultra light gold tint
-    100: 'hsl(48, 75%, 87%)', // Light gold background
-    200: 'hsl(48, 70%, 75%)', // Soft gold for highlights
-    300: 'hsl(48, 65%, 65%)', // Medium gold for accents
-    400: 'hsl(48, 60%, 55%)', // Bright gold for CTAs
-    500: 'hsl(45, 35%, 60%)', // PRIMARY GOLD - Main brand color
-    600: 'hsl(45, 35%, 50%)', // Dark gold for hover states
-    700: 'hsl(45, 35%, 40%)', // Darker gold for pressed states
-    800: 'hsl(45, 35%, 30%)', // Very dark gold
-    900: 'hsl(45, 35%, 20%)', // Ultra dark gold
+    500: 'var(--brand-primary)', // Main brand color
+    600: 'var(--brand-primary)', // Hover state
   },
   secondary: {
-    DEFAULT: 'hsl(48, 50%, 70%)', // Light gold for hover effects
+    DEFAULT: 'var(--brand-accent)',
   },
 } as const;
 

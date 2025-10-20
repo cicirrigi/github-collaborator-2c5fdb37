@@ -4,6 +4,7 @@ import Link from 'next/link';
 import type React from 'react';
 
 import { footer } from '@/config/site.config';
+import { brandConfig } from '@/config/brand.config';
 import { cn } from '@/lib/utils/cn';
 
 import { Container } from './Container';
@@ -54,8 +55,7 @@ export default function Footer({ className }: FooterProps): React.JSX.Element {
           <div className="lg:col-span-2">
             <Logo size="lg" className="mb-6" />
             <p className="max-w-md text-sm leading-relaxed text-neutral-400 dark:text-neutral-500">
-              Premium chauffeur service in London. Experience luxury travel with our professional
-              drivers and exceptional fleet.
+              {brandConfig.service.full}. {brandConfig.service.detailed}.
             </p>
 
             {/* Social icons */}
@@ -119,7 +119,7 @@ export default function Footer({ className }: FooterProps): React.JSX.Element {
         <div className="mt-12 border-t border-neutral-800 pt-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="text-sm text-neutral-400 dark:text-brand-primary/90">
-              &copy; {currentYear} Vantage Lane. All rights reserved.
+              &copy; {currentYear} {brandConfig.legal.copyright}
             </div>
 
             <div className="flex items-center gap-6 text-sm">
@@ -132,7 +132,7 @@ export default function Footer({ className }: FooterProps): React.JSX.Element {
                     'rounded-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/50',
                   )}
                 >
-                  {['Privacy Policy', 'Terms of Service', 'Cookie Policy'][i]}
+                  {[brandConfig.legal.privacy, brandConfig.legal.terms, brandConfig.legal.cookies][i]}
                   <span className="absolute bottom-0 left-0 h-[1px] w-0 bg-brand-primary/60 transition-all duration-300 group-hover:w-full" />
                 </Link>
               ))}

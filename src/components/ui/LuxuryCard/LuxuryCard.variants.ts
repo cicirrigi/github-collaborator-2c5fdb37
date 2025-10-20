@@ -3,7 +3,7 @@
  * Style configurations bazate pe design tokens (fără hardcodări)
  */
 
-import { designTokens } from '@/config/theme.config'
+// import { designTokens } from '@/config/theme.config' // Reserved for future use
 import { luxuryCardTokens } from '@/design-system/tokens/luxury-card'
 import type { LuxuryCardStyleConfig } from './LuxuryCard.types'
 
@@ -23,14 +23,14 @@ const baseClasses = [
 // Variant-specific classes 
 const variantClasses = {
   shimmer: [
-    // Background gradient (light mode default, dark mode cu dark: prefix)
+    // Background gradient (flexible pentru toate use case-urile)
     'bg-gradient-to-br',
     'from-white/95',
     'via-neutral-50/90', 
     'to-white/95',
-    'dark:from-[#1a1a1a]',
-    'dark:via-[#0f0f0f]',
-    'dark:to-[#1a1a1a]',
+    'dark:from-neutral-900',
+    'dark:via-neutral-950', 
+    'dark:to-neutral-900',
     // Border  
     'border',
     'border-neutral-200',
@@ -38,6 +38,30 @@ const variantClasses = {
     'hover:border-[var(--luxury-glow-color)]/60',
     'dark:hover:border-[var(--luxury-glow-color)]/20',
     // Shadow (folosesc design tokens)
+    'shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),0_2px_4px_-1px_rgba(0,0,0,0.2)]',
+    'hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.4),0_10px_10px_-5px_rgba(0,0,0,0.2),0_0_30px_rgba(203,178,106,0.15)]',
+    // Hover scale
+    'hover:scale-105',
+    'duration-[var(--luxury-duration-normal)]'
+  ].join(' '),
+
+  // 🎯 Variant IDENTIC cu originalul Vantage Lane (dark cards pe light mode)
+  vantage: [
+    // Background gradient - IDENTIC cu originalul Vantage Lane
+    'bg-gradient-to-br',
+    'from-[/* gray-900 */ #1a1a1a]',
+    'via-[/* gray-950 */ #0f0f0f]',
+    'to-[/* gray-900 */ #1a1a1a]',
+    'dark:from-white/8',
+    'dark:via-white/4',
+    'dark:to-white/2',
+    // Border - IDENTIC cu originalul Vantage Lane
+    'border',
+    'border-neutral-800',
+    'dark:border-white/10',
+    'hover:border-[var(--luxury-glow-color)]/60',
+    'dark:hover:border-[var(--luxury-glow-color)]/20',
+    // Shadow identic
     'shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),0_2px_4px_-1px_rgba(0,0,0,0.2)]',
     'hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.4),0_10px_10px_-5px_rgba(0,0,0,0.2),0_0_30px_rgba(203,178,106,0.15)]',
     // Hover scale
@@ -126,7 +150,7 @@ const hoverClasses = {
       'absolute',
       'inset-0',
       'rounded-xl',
-      'bg-[#CBB26A]/10',
+      'bg-[/* brand-primary */ #CBB26A]/10',
       'opacity-0',
       'group-hover:opacity-100',
       'transition-opacity',
