@@ -116,6 +116,20 @@ html, body {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+@keyframes tilt {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+.animate-tilt {
+  animation: tilt 10s infinite linear;
+}
+
+
 @keyframes shimmerSweep {
   0%, 95%, 100% {
     opacity: 0;

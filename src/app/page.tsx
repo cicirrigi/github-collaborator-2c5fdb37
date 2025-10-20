@@ -2,7 +2,7 @@ import { CarFront, Clock, CreditCard, Search, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 
 import { Section } from '@/components/layout';
-import { Button, LuxuryCard, Text } from '@/components/ui';
+import { Button, LuxuryCard, Text, PinContainerDemo, FloatingDockDemo, BookingTabsDemo, LocationPickerDemo } from '@/components/ui';
 import { homeContent } from '@/config/content.config';
 
 export default function HomePage() {
@@ -89,6 +89,45 @@ export default function HomePage() {
             description="Round-the-clock service for airport transfers, business meetings, and special occasions."
           />
         </div>
+      </Section>
+
+      {/* Premium Fleet Showcase */}
+      <Section spacing="lg" align="center">
+        <div className="text-center mb-12">
+          <Text variant="h2" className="mb-4">
+            Our Premium Fleet
+          </Text>
+          <Text variant="lead">
+            Experience luxury with our BMW executive collection
+          </Text>
+        </div>
+        <PinContainerDemo />
+      </Section>
+
+      {/* Booking Navigation Demo Section */}
+      <Section spacing="lg" align="center">
+        <div className="text-center mb-12">
+          <Text variant="h2" className="mb-4">
+            Modern Booking Interface
+          </Text>
+          <Text variant="lead">
+            Elegant pill-shaped navigation for seamless booking experience
+          </Text>
+        </div>
+        <BookingTabsDemo />
+      </Section>
+
+      {/* Location Picker Demo Section */}
+      <Section spacing="lg" align="center">
+        <div className="text-center mb-12">
+          <Text variant="h2" className="mb-4">
+            Smart Location Selection
+          </Text>
+          <Text variant="lead">
+            Google Places integration with elegant pill-shaped inputs
+          </Text>
+        </div>
+        <LocationPickerDemo />
       </Section>
 
       {/* CTA Section */}

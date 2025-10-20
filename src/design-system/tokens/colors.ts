@@ -4,7 +4,7 @@
  * All tokens map directly to CSS vars and brandConfig.
  */
 
-export const colors = {
+export const designTokens = {
   brand: {
     primary: 'var(--brand-primary)',
     secondary: 'var(--brand-secondary)',
@@ -27,7 +27,7 @@ export const colors = {
   },
 } as const;
 
-export type ColorTokens = typeof colors;
+export type ColorTokens = typeof designTokens;
 
 // Legacy support - keeping existing exports for compatibility
 export const brandColors = {
