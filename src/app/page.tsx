@@ -2,7 +2,7 @@ import { CarFront, Clock, CreditCard, Search, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 
 import { Section } from '@/components/layout';
-import { Button, LuxuryCard, Text, PinContainerDemo, FloatingDockDemo, BookingTabsDemo, LocationPickerDemo } from '@/components/ui';
+import { Button, LuxuryCard, Text, PinContainerDemo, FloatingDockDemo, BookingTabsDemo, LocationPickerDemo, TravelPlannerDemo } from '@/components/ui';
 import { homeContent } from '@/config/content.config';
 
 export default function HomePage() {
@@ -128,6 +128,11 @@ export default function HomePage() {
           </Text>
         </div>
         <LocationPickerDemo />
+      </Section>
+
+      {/* Travel Planner Demo Section */}
+      <Section spacing="xl" align="center">
+        <TravelPlannerDemo />
       </Section>
 
       {/* CTA Section */}
