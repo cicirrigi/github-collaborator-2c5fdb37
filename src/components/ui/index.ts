@@ -28,6 +28,16 @@ export { LuxuryCard } from './LuxuryCard';
 export { BookingTabs } from './booking-tabs';
 export { BookingTabsDemo } from './booking-tabs/demo';
 export type { BookingTabsProps, BookingTabType } from './booking-tabs/types';
+
+// Booking tabs pro
+export { BookingTabsPro } from './booking-tabs-pro';
+export { BookingTabsProDemo } from './booking-tabs-pro/demo';
+export type {
+  BookingTab as BookingTabPro,
+  BookingTabsProProps,
+  BookingTabType as BookingTabTypePro,
+} from './booking-tabs-pro/types';
+
 export type { FloatingDockItem, FloatingDockProps } from './floating-dock';
 export { FloatingDock } from './floating-dock';
 export { FloatingDockDemo } from './floating-dock-demo';
@@ -43,6 +53,8 @@ export { PinContainerDemo } from './pin-container-demo';
 export { TravelPlanner } from './travel-planner';
 export { TravelPlannerDemo } from './travel-planner/demo';
 export type { Stop, TimeSlot, TravelPlan, TravelPlannerProps } from './travel-planner/types';
+export * from './travel-planner';
+export * from './travel-planner-pro';
 
 // Theme Controls
 export * from './PremiumButton';
