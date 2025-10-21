@@ -18,7 +18,7 @@ import { luxuryCardTokens } from '@/design-system/tokens/luxury-card';
  */
 export const generateCustomProperties = (
   glowColor?: string,
-  shimmerColor?: string,
+  shimmerColor?: string
 ): Record<string, string> => {
   return {
     '--luxury-glow-color': glowColor || luxuryCardTokens.colors.goldGlow,
@@ -27,20 +27,19 @@ export const generateCustomProperties = (
   } as Record<string, string>;
 };
 
-
 /**
  * 🎯 Icon Size Classes Generator (folosind luxury tokens)
  */
 export const getIconSizeClasses = (size: 'sm' | 'md' | 'lg' | 'xl' | 'vantage' = 'md'): string => {
   // Note: Tailwind classes are kept for compatibility, but sizes are defined in tokens
   const sizeMap = {
-    sm: 'h-8 w-8',      // luxuryCardTokens.sizes.icon.sm (2rem x 2rem)
-    md: 'h-12 w-12',    // luxuryCardTokens.sizes.icon.md (3rem x 3rem)
-    lg: 'h-16 w-16',    // luxuryCardTokens.sizes.icon.lg (4rem x 4rem)
-    xl: 'h-18 w-18',    // luxuryCardTokens.sizes.icon.xl (4.5rem x 4.5rem)
-    vantage: 'h-20 w-20' // luxuryCardTokens.sizes.icon.vantage (5rem x 5rem)
+    sm: 'h-8 w-8', // luxuryCardTokens.sizes.icon.sm (2rem x 2rem)
+    md: 'h-12 w-12', // luxuryCardTokens.sizes.icon.md (3rem x 3rem)
+    lg: 'h-16 w-16', // luxuryCardTokens.sizes.icon.lg (4rem x 4rem)
+    xl: 'h-18 w-18', // luxuryCardTokens.sizes.icon.xl (4.5rem x 4.5rem)
+    vantage: 'h-20 w-20', // luxuryCardTokens.sizes.icon.vantage (5rem x 5rem)
   };
-  
+
   return `${sizeMap[size]} transition-all duration-[var(--luxury-duration-normal)]`;
 };
 
@@ -52,17 +51,17 @@ export const getIconEnhancementClasses = (
   hover: boolean = true
 ): string => {
   const baseClasses = 'relative overflow-visible';
-  
+
   switch (enhancement) {
     case 'glow':
       return `${baseClasses} ${hover ? `group-hover:scale-[${luxuryCardTokens.scales.hover.icon}] group-hover:drop-shadow-[${luxuryCardTokens.effects.glow.dropShadow}]` : ''}`;
-    
+
     case 'shimmer':
       return `${baseClasses} ${hover ? `group-hover:scale-[${luxuryCardTokens.scales.hover.icon}]` : ''}`;
-    
+
     case 'premium':
       return `${baseClasses} ${hover ? `group-hover:scale-[${luxuryCardTokens.scales.hover.icon}] group-hover:drop-shadow-[${luxuryCardTokens.effects.glow.dropShadow}]` : ''}`;
-    
+
     default:
       return baseClasses;
   }
@@ -98,7 +97,6 @@ export const getIconShimmerClasses = (
 export const getIconShimmerInnerClasses = (): string => {
   return `absolute inset-0 bg-gradient-to-r from-transparent via-[${luxuryCardTokens.colors.shimmerPrimary}]/40 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-[var(--luxury-shimmer-duration)] ease-out w-[200%] h-full`;
 };
-
 
 /**
  * Checks if component is running in browser environment (SSR compatible)

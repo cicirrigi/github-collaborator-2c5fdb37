@@ -25,26 +25,26 @@ export type {
 export { LuxuryCard } from './LuxuryCard';
 
 // Special Effects Components
-export { InfiniteMovingCards } from './infinite-moving-cards';
-export type { InfiniteMovingCardsProps } from './infinite-moving-cards';
-export { InfiniteMovingCardsDemo } from './infinite-moving-cards-demo';
-export { PinContainer, PinPerspective } from './pin-container';
-export type { PinContainerProps } from './pin-container';
-export { PinContainerDemo } from './pin-container-demo';
 export { BookingTabs } from './booking-tabs';
-export type { BookingTabsProps, BookingTabType } from './booking-tabs/types';
 export { BookingTabsDemo } from './booking-tabs/demo';
-export { LocationPicker } from './location-picker';
-export type { LocationPickerProps, GooglePlace, LocationVariant } from './location-picker/types';
-export { LocationPickerDemo } from './location-picker/demo';
-export { TravelPlanner } from './travel-planner';
-export type { TravelPlannerProps, TravelPlan, TimeSlot, Stop } from './travel-planner/types';
-export { TravelPlannerDemo } from './travel-planner/demo';
+export type { BookingTabsProps, BookingTabType } from './booking-tabs/types';
+export type { FloatingDockItem, FloatingDockProps } from './floating-dock';
 export { FloatingDock } from './floating-dock';
-export type { FloatingDockProps, FloatingDockItem } from './floating-dock';
 export { FloatingDockDemo } from './floating-dock-demo';
+export type { InfiniteMovingCardsProps } from './infinite-moving-cards';
+export { InfiniteMovingCards } from './infinite-moving-cards';
+export { InfiniteMovingCardsDemo } from './infinite-moving-cards-demo';
+export { LocationPicker } from './location-picker';
+export { LocationPickerDemo } from './location-picker/demo';
+export type { GooglePlace, LocationPickerProps, LocationVariant } from './location-picker/types';
+export type { PinContainerProps } from './pin-container';
+export { PinContainer, PinPerspective } from './pin-container';
+export { PinContainerDemo } from './pin-container-demo';
+export { TravelPlanner } from './travel-planner';
+export { TravelPlannerDemo } from './travel-planner/demo';
+export type { Stop, TimeSlot, TravelPlan, TravelPlannerProps } from './travel-planner/types';
 
 // Theme Controls
-export { ThemeToggle } from './theme-toggle';
-export * from './TestButton';
 export * from './PremiumButton';
+export * from './TestButton';
+export { ThemeToggle } from './theme-toggle';

@@ -1,15 +1,17 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
 import { Calendar } from 'lucide-react';
+import { useMemo, useState } from 'react';
+
+import { MOTION, TIME_SLOTS, TRAVEL_THEME } from '@/components/ui/travel-planner/constants';
+import { type DateTimeSectionProps, type TimeSlot } from '@/components/ui/travel-planner/types';
 import { cn } from '@/lib/utils';
-import { DateTimeSectionProps, TimeSlot } from '../types';
-import { TRAVEL_THEME, SECTION_ACCENTS, TIME_SLOTS, MOTION } from '../constants';
+
 import { CalendarPicker } from './calendar-picker';
 import { TimeSlotsPicker } from './time-slots-picker';
 
 export const DateTimeSection = ({
-  bookingType,
+  bookingType: _bookingType,
   pickupDate,
   returnDate,
   pickupTime,
@@ -18,7 +20,7 @@ export const DateTimeSection = ({
   onTimeChange,
   showReturn,
   isLoading = false,
-  className
+  className,
 }: DateTimeSectionProps) => {
   const [currentMonth, setCurrentMonth] = useState(pickupDate || new Date());
   const [rangeMode, setRangeMode] = useState<'pickup' | 'return'>('pickup');
@@ -57,12 +59,12 @@ export const DateTimeSection = ({
   // Filter available return times (smart logic)
   const availableReturnTimes = useMemo(() => {
     if (!showReturn || !pickupTime || !pickupDate || !returnDate) return TIME_SLOTS;
-    
+
     // Same day: only times after pickup
     if (pickupDate.toDateString() === returnDate.toDateString()) {
       return TIME_SLOTS.filter(slot => slot.value > pickupTime.value);
     }
-    
+
     // Different day: all times available
     return TIME_SLOTS;
   }, [showReturn, pickupTime, pickupDate, returnDate]);
@@ -72,28 +74,20 @@ export const DateTimeSection = ({
   }
 
   return (
-    <div className={cn(
-      TRAVEL_THEME.sections.dateTime,
-      SECTION_ACCENTS[bookingType],
-      MOTION.transition,
-      className
-    )}>
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <Calendar className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-          Select Date & Time
-        </h3>
-        {showReturn && (
-          <div className="ml-auto text-sm text-gray-600 dark:text-gray-400">
-            Mode: {rangeMode === 'pickup' ? 'Pickup' : 'Return'}
-          </div>
-        )}
-      </div>
+    <div className={cn('grid gap-8 lg:grid-cols-2', className)}>
+      {/* Calendar Section */}
+      <div className='space-y-4'>
+        {/* Calendar Header */}
+        <div className='mb-4 flex items-center gap-3'>
+          <Calendar className='h-5 w-5 text-yellow-600 dark:text-yellow-400' />
+          <h4 className='font-semibold text-gray-700 dark:text-gray-300'>Select Date</h4>
+          {showReturn && (
+            <div className='ml-auto text-xs text-gray-500'>
+              Mode: {rangeMode === 'pickup' ? 'Pickup' : 'Return'}
+            </div>
+          )}
+        </div>
 
-      {/* Main Content Grid */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Calendar Section */}
         <CalendarPicker
           currentMonth={currentMonth}
           pickupDate={pickupDate}
@@ -102,12 +96,20 @@ export const DateTimeSection = ({
           onNavigate={handleMonthNavigate}
           showReturn={showReturn}
         />
+      </div>
 
-        {/* Time Selection Section */}
-        <div className="space-y-6">
+      {/* Time Selection Section */}
+      <div className='space-y-4'>
+        {/* Time Header */}
+        <div className='mb-4 flex items-center gap-3'>
+          <div className='h-5 w-5 rounded-full bg-gradient-to-r from-[#CBB26A] to-[#D4AF37]' />
+          <h4 className='font-semibold text-gray-700 dark:text-gray-300'>Select Time</h4>
+        </div>
+
+        <div className='space-y-6'>
           {/* Pickup Time */}
           <TimeSlotsPicker
-            type="pickup"
+            type='pickup'
             selected={pickupTime}
             availableSlots={TIME_SLOTS}
             onSelect={handlePickupTimeSelect}
@@ -117,7 +119,7 @@ export const DateTimeSection = ({
           {showReturn && (
             <div className={cn(MOTION.fadeIn)}>
               <TimeSlotsPicker
-                type="return"
+                type='return'
                 selected={returnTime || null}
                 availableSlots={availableReturnTimes}
                 onSelect={handleReturnTimeSelect}
@@ -132,17 +134,17 @@ export const DateTimeSection = ({
 };
 
 // Skeleton loader component
-const DateTimeSectionSkeleton = ({ 
-  showReturn = false, 
-  className 
-}: { 
-  showReturn?: boolean; 
-  className?: string; 
+const DateTimeSectionSkeleton = ({
+  showReturn = false,
+  className,
+}: {
+  showReturn?: boolean;
+  className?: string;
 }) => (
   <div className={cn(TRAVEL_THEME.sections.dateTime, className)}>
-    <div className="grid lg:grid-cols-2 gap-6">
+    <div className='grid gap-6 lg:grid-cols-2'>
       <div className={cn(TRAVEL_THEME.skeleton.base, TRAVEL_THEME.skeleton.calendar)} />
-      <div className="space-y-4">
+      <div className='space-y-4'>
         <div className={cn(TRAVEL_THEME.skeleton.base, 'h-32')} />
         {showReturn && <div className={cn(TRAVEL_THEME.skeleton.base, 'h-32')} />}
       </div>

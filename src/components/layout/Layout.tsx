@@ -65,7 +65,7 @@ export default function Layout({
       className={cn(
         'flex flex-col',
         fullHeight && 'min-h-screen',
-        'transition-colors duration-300 ease-in-out',
+        'transition-colors duration-300 ease-in-out'
       )}
     >
       {/* SEO Title */}
@@ -79,15 +79,15 @@ export default function Layout({
         className={cn(
           'flex-1',
           fullHeight && !hideNavbar && !hideFooter && 'flex flex-col',
-          containerClassName,
+          containerClassName
         )}
-        role="main"
-        aria-label="Main content"
+        role='main'
+        aria-label='Main content'
       >
         <div
           className={cn(
             fullHeight && !hideNavbar && !hideFooter && 'flex flex-1 flex-col',
-            className,
+            className
           )}
         >
           {children}

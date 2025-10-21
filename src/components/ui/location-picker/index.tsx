@@ -1,13 +1,21 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import type { LocationPickerProps, GooglePlace } from "./types";
-import { LOCATION_VARIANTS, SIZE_CLASSES, THEME_CLASSES, VALIDATION, SPACING_CONFIG, BACKGROUND_CONFIG } from "./constants";
-import { designTokens } from "@/design-system/tokens/colors";
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import { cn } from '@/lib/utils';
+
+import {
+  LOCATION_VARIANTS,
+  SIZE_CLASSES,
+  SPACING_CONFIG,
+  THEME_CLASSES,
+  VALIDATION,
+} from './constants';
+import type { GooglePlace, LocationPickerProps } from './types';
 
 // Re-export types pentru convenience
-export type { LocationPickerProps, GooglePlace, LocationVariant } from "./types";
+export type { GooglePlace, LocationPickerProps, LocationVariant } from './types';
 
 export const LocationPicker = ({
   value,
@@ -20,7 +28,7 @@ export const LocationPicker = ({
   placeholder,
   icon,
   error,
-  onValidate,
+  _onValidate,
 }: LocationPickerProps) => {
   const [inputValue, setInputValue] = useState(value?.address || '');
   const [isOpen, setIsOpen] = useState(false);
@@ -34,11 +42,7 @@ export const LocationPicker = ({
 
   // Get variant config
   const variantConfig = LOCATION_VARIANTS[variant];
-  const displayIcon = icon || (
-    <variantConfig.icon 
-      className={SIZE_CLASSES.icon[size]} 
-    />
-  );
+  const displayIcon = icon || <variantConfig.icon className={SIZE_CLASSES.icon[size]} />;
   const displayPlaceholder = placeholder || variantConfig.placeholder;
 
   // Input validation
@@ -65,9 +69,9 @@ export const LocationPicker = ({
       return;
     }
 
-    const timeoutId = setTimeout(async () => {
+    const timeoutId = setTimeout(() => {
       setIsLoading(true);
-      
+
       // TODO: Replace with Google Places API
       /* 
       const service = new google.maps.places.AutocompleteService();
@@ -84,25 +88,25 @@ export const LocationPicker = ({
         setIsLoading(false);
       });
       */
-      
+
       // For now, mock suggestions
       const mockSuggestions: GooglePlace[] = [
         {
           placeId: '1',
           address: `${inputValue} - Heathrow Airport`,
-          coordinates: [51.4700, -0.4543],
+          coordinates: [51.47, -0.4543],
           type: 'airport',
-          components: { country: 'UK', city: 'London' }
+          components: { country: 'UK', city: 'London' },
         },
         {
-          placeId: '2', 
+          placeId: '2',
           address: `${inputValue} - Central London`,
           coordinates: [51.5074, -0.1278],
           type: 'address',
-          components: { country: 'UK', city: 'London' }
-        }
+          components: { country: 'UK', city: 'London' },
+        },
       ];
-      
+
       setSuggestions(mockSuggestions);
       setIsOpen(true);
       setIsLoading(false);
@@ -119,7 +123,7 @@ export const LocationPicker = ({
         setSuggestions([]);
       }
     };
-    
+
     document.addEventListener('pointerdown', handleClickOutside);
     return () => document.removeEventListener('pointerdown', handleClickOutside);
   }, []);
@@ -132,7 +136,7 @@ export const LocationPicker = ({
     onChange?.(suggestion);
     setInputValue(suggestion.address);
     selectedValueRef.current = suggestion.address; // 🔥 memorizează ultima selecție
-    
+
     // Important: blur-ul trebuie să vină DUPĂ setIsOpen și inputValue
     setTimeout(() => {
       inputRef.current?.blur();
@@ -144,7 +148,7 @@ export const LocationPicker = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
-    
+
     if (!newValue.trim()) {
       selectedValueRef.current = null; // 🔥 reset
       setIsOpen(false);
@@ -158,19 +162,19 @@ export const LocationPicker = ({
   const displayError = error || validationError;
 
   return (
-    <div ref={containerRef} className={cn("relative", className)}>
+    <div ref={containerRef} className={cn('relative', className)}>
       {/* Input container */}
-      <div className="relative group">
+      <div className='group relative'>
         {/* Icon */}
-        <div 
+        <div
           className={cn(
-            'absolute top-1/2 -translate-y-1/2 transition-colors z-10',
+            'absolute top-1/2 z-10 -translate-y-1/2 transition-colors',
             'text-gray-600 dark:text-gray-400',
             'group-hover:text-yellow-600 dark:group-hover:text-yellow-400',
             !disabled && isOpen && 'text-gray-800 dark:text-gray-200'
           )}
-          style={{ 
-            left: SPACING_CONFIG.iconLeft[size]
+          style={{
+            left: SPACING_CONFIG.iconLeft[size],
           }}
         >
           {displayIcon}
@@ -179,7 +183,7 @@ export const LocationPicker = ({
         {/* Input field */}
         <input
           ref={inputRef}
-          type="text"
+          type='text'
           value={inputValue}
           onChange={handleInputChange}
           onFocus={() => {
@@ -205,16 +209,16 @@ export const LocationPicker = ({
             'text-gray-600 dark:text-gray-400',
             'hover:bg-yellow-50/30 dark:hover:bg-yellow-900/20',
             'hover:border-yellow-300/50',
-            'focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500',
+            'focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50',
             displayError && 'bg-red-50/20 dark:bg-red-900/20',
-            disabled && 'bg-gray-100/20 text-gray-400 cursor-not-allowed dark:bg-gray-800/20'
+            disabled && 'cursor-not-allowed bg-gray-100/20 text-gray-400 dark:bg-gray-800/20'
           )}
         />
 
         {/* Loading indicator */}
         {isLoading && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <div className='absolute right-3 top-1/2 -translate-y-1/2'>
+            <div className='h-4 w-4 animate-spin rounded-full border-2 border-blue-500 border-t-transparent' />
           </div>
         )}
       </div>
@@ -222,17 +226,15 @@ export const LocationPicker = ({
       {/* Suggestions dropdown */}
       {isOpen && suggestions.length > 0 && (
         <div className={THEME_CLASSES.suggestions.container}>
-          {suggestions.map((suggestion) => (
+          {suggestions.map(suggestion => (
             <div
               key={suggestion.placeId}
-              onMouseDown={(e) => e.preventDefault()} // Previne blur
+              onMouseDown={e => e.preventDefault()} // Previne blur
               onClick={() => handleSelectSuggestion(suggestion)}
               className={THEME_CLASSES.suggestions.item}
             >
-              <div className="font-medium text-gray-900 dark:text-white">
-                {suggestion.address}
-              </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div className='font-medium text-gray-900 dark:text-white'>{suggestion.address}</div>
+              <div className='text-sm text-gray-500 dark:text-gray-400'>
                 {suggestion.type} • {suggestion.components.city}
               </div>
             </div>
@@ -242,9 +244,7 @@ export const LocationPicker = ({
 
       {/* Error message */}
       {displayError && (
-        <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-          {displayError}
-        </p>
+        <p className='mt-1 text-sm text-red-600 dark:text-red-400'>{displayError}</p>
       )}
     </div>
   );

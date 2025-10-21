@@ -20,7 +20,7 @@ export const safeClientEnv = envsafe({
   // Analytics (client-safe)
   NEXT_PUBLIC_VERCEL_ANALYTICS_ID: str({ default: '' }),
   NEXT_PUBLIC_SENTRY_DSN: str({ default: '' }),
-})
+});
 
 // 🚫 SERVER-ONLY Environment Validation
 export const safeServerEnv = envsafe({

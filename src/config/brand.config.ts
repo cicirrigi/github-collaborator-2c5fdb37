@@ -19,10 +19,8 @@ export const brandConfig = {
   service: {
     short: 'Premium chauffeur service',
     full: 'Premium chauffeur service in London',
-    detailed:
-      'Experience luxury travel with our professional drivers and exceptional fleet.',
-    positioning:
-      "London's only luxury chauffeur platform where choice meets transparency.",
+    detailed: 'Experience luxury travel with our professional drivers and exceptional fleet.',
+    positioning: "London's only luxury chauffeur platform where choice meets transparency.",
   },
 
   /** 🏆 KEY FEATURES */
@@ -55,8 +53,7 @@ export const brandConfig = {
   marketing: {
     hero: 'Experience Luxury Transportation',
     cta: 'Book Your Journey',
-    subtitle:
-      'Professional chauffeurs, premium vehicles, exceptional service.',
+    subtitle: 'Professional chauffeurs, premium vehicles, exceptional service.',
     whyChoose: 'Why Choose Our Service',
   },
 

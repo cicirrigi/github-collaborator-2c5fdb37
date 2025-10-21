@@ -18,26 +18,26 @@ export interface LocationPickerProps {
   value?: GooglePlace | null;
   onChange?: (location: GooglePlace | null) => void;
   variant?: LocationVariant;
-  
+
   // UI customization (respectă template-ul bibliotecii)
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   required?: boolean;
   className?: string;
-  
+
   // Content
   placeholder?: string;
   icon?: React.ReactNode;
-  
+
   // Google API configuration
   googleConfig?: {
     restrictions?: {
       country?: string;
-      bounds?: any; // google.maps.LatLngBounds when available
+      bounds?: google.maps.LatLngBounds;
     };
     types?: string[];
   };
-  
+
   // Validation
   error?: string;
   onValidate?: (location: GooglePlace) => string | null;

@@ -4,7 +4,7 @@
  * ------------------------------------------
  * Scanează automat paginile create cu create-page.js și:
  *  - Detectează hardcodări (#fff, #000 etc.)
- *  - Detectează valori px/rem/em directe  
+ *  - Detectează valori px/rem/em directe
  *  - Confirmă că există importuri de tokeni și brandConfig
  *  - Verifică pattern-ul complet (.config.ts, .meta.ts, .test.tsx)
  *  - Validează conformitatea cu routes.config.ts
@@ -13,13 +13,13 @@
  *   npm run guard:pages
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-const SRC_DIR = path.join(__dirname, "../../src/app");
-const ROUTES_CONFIG = path.join(__dirname, "../../src/config/routes.config.ts");
-const FILE_EXTENSIONS = [".tsx", ".ts"];
-const IGNORE = ["node_modules", "dist", ".next", "api"];
+const SRC_DIR = path.join(__dirname, '../../src/app');
+const ROUTES_CONFIG = path.join(__dirname, '../../src/config/routes.config.ts');
+const FILE_EXTENSIONS = ['.tsx', '.ts'];
+const IGNORE = ['node_modules', 'dist', '.next', 'api'];
 
 class PagePatternChecker {
   constructor() {
@@ -39,9 +39,9 @@ class PagePatternChecker {
     try {
       for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
         if (IGNORE.includes(entry.name)) continue;
-        
+
         const fullPath = path.join(dir, entry.name);
-        
+
         if (entry.isDirectory()) {
           // Check if this is a page directory
           if (this.isPageDirectory(fullPath)) {
@@ -70,8 +70,12 @@ class PagePatternChecker {
     console.log(`🔍 Checking page: ${pageName}`);
 
     const requiredFiles = ['page.tsx', 'HeroSection.tsx', 'BaseSection.tsx'];
-    const recommendedFiles = [`${this.toPascalCase(pageName)}.config.ts`, `${this.toPascalCase(pageName)}.meta.ts`, `${this.toPascalCase(pageName)}.test.tsx`];
-    
+    const recommendedFiles = [
+      `${this.toPascalCase(pageName)}.config.ts`,
+      `${this.toPascalCase(pageName)}.meta.ts`,
+      `${this.toPascalCase(pageName)}.test.tsx`,
+    ];
+
     let issues = 0;
 
     // Check required files
@@ -109,7 +113,7 @@ class PagePatternChecker {
 
   checkFile(file) {
     try {
-      const content = fs.readFileSync(file, "utf8");
+      const content = fs.readFileSync(file, 'utf8');
       const relativePath = this.getRelativePath(file);
 
       // Check for hardcoded colors
@@ -122,19 +126,20 @@ class PagePatternChecker {
       const unitMatches = content.match(/\b\d+(px|rem|em)\b/g);
       if (unitMatches) {
         // Filter out common exceptions like "0px", line-height values, etc.
-        const problematicUnits = unitMatches.filter(unit => 
-          !unit.startsWith('0') && 
-          !content.includes(`line-height: ${unit}`) &&
-          !content.includes(`--tw-`) // Tailwind variables
+        const problematicUnits = unitMatches.filter(
+          unit =>
+            !unit.startsWith('0') &&
+            !content.includes(`line-height: ${unit}`) &&
+            !content.includes(`--tw-`) // Tailwind variables
         );
-        
+
         if (problematicUnits.length > 0) {
           this.results.directUnits.push(`${relativePath} - Found: ${problematicUnits.join(', ')}`);
         }
       }
 
       // Check for missing token imports in hero/base sections
-      const needsTokens = file.includes("HeroSection") || file.includes("BaseSection");
+      const needsTokens = file.includes('HeroSection') || file.includes('BaseSection');
       if (needsTokens && !this.hasTokenImports(content)) {
         this.results.missingImports.push(`${relativePath} - Missing design token imports`);
       }
@@ -143,7 +148,6 @@ class PagePatternChecker {
       if (content.includes('style={{') && !this.hasTokenUsage(content)) {
         this.results.missingImports.push(`${relativePath} - Inline styles without tokens`);
       }
-
     } catch (error) {
       console.warn(`⚠️ Could not read file: ${file}`);
     }
@@ -151,7 +155,7 @@ class PagePatternChecker {
 
   checkConfigFile(file) {
     try {
-      const content = fs.readFileSync(file, "utf8");
+      const content = fs.readFileSync(file, 'utf8');
       const relativePath = this.getRelativePath(file);
 
       if (file.endsWith('.config.ts')) {
@@ -159,7 +163,9 @@ class PagePatternChecker {
         const requiredProps = ['title', 'layout', 'hero'];
         for (const prop of requiredProps) {
           if (!content.includes(`${prop}:`)) {
-            this.results.incompletePatterns.push(`${relativePath} - Missing required property: ${prop}`);
+            this.results.incompletePatterns.push(
+              `${relativePath} - Missing required property: ${prop}`
+            );
           }
         }
       }
@@ -169,11 +175,12 @@ class PagePatternChecker {
         const requiredMeta = ['title', 'description', 'openGraph'];
         for (const prop of requiredMeta) {
           if (!content.includes(`${prop}:`)) {
-            this.results.incompletePatterns.push(`${relativePath} - Missing required meta: ${prop}`);
+            this.results.incompletePatterns.push(
+              `${relativePath} - Missing required meta: ${prop}`
+            );
           }
         }
       }
-
     } catch (error) {
       console.warn(`⚠️ Could not read config file: ${file}`);
     }
@@ -181,13 +188,17 @@ class PagePatternChecker {
 
   checkDeprecatedPatterns(pageDir, pageName) {
     const files = fs.readdirSync(pageDir);
-    
+
     // Check for old naming patterns
-    const deprecatedFiles = files.filter(file => 
-      file.includes('_') || // underscore naming
-      (file.endsWith('.tsx') && file !== 'page.tsx' && file !== 'HeroSection.tsx' && file !== 'BaseSection.tsx') ||
-      file.includes('.component.') || // old component pattern
-      file.includes('.page.') // old page pattern
+    const deprecatedFiles = files.filter(
+      file =>
+        file.includes('_') || // underscore naming
+        (file.endsWith('.tsx') &&
+          file !== 'page.tsx' &&
+          file !== 'HeroSection.tsx' &&
+          file !== 'BaseSection.tsx') ||
+        file.includes('.component.') || // old component pattern
+        file.includes('.page.') // old page pattern
     );
 
     for (const file of deprecatedFiles) {
@@ -202,9 +213,9 @@ class PagePatternChecker {
     }
 
     try {
-      const routesContent = fs.readFileSync(ROUTES_CONFIG, "utf8");
+      const routesContent = fs.readFileSync(ROUTES_CONFIG, 'utf8');
       const pageSlug = pageName.toLowerCase();
-      
+
       if (!routesContent.includes(`'${pageSlug}'`) && !routesContent.includes(`"${pageSlug}"`)) {
         this.results.missingRoutes.push(`${pageName} - Not registered in routes.config.ts`);
       }
@@ -214,18 +225,22 @@ class PagePatternChecker {
   }
 
   hasTokenImports(content) {
-    return content.includes("designTokens") || 
-           content.includes("@/design-system/tokens") ||
-           content.includes("@/config/brand.config") ||
-           content.includes("brandConfig") ||
-           content.includes("colors") && content.includes("from");
+    return (
+      content.includes('designTokens') ||
+      content.includes('@/design-system/tokens') ||
+      content.includes('@/config/brand.config') ||
+      content.includes('brandConfig') ||
+      (content.includes('colors') && content.includes('from'))
+    );
   }
 
   hasTokenUsage(content) {
-    return content.includes("designTokens.") ||
-           content.includes("brandConfig.") ||
-           content.includes("colors.") ||
-           content.includes("tokens.");
+    return (
+      content.includes('designTokens.') ||
+      content.includes('brandConfig.') ||
+      content.includes('colors.') ||
+      content.includes('tokens.')
+    );
   }
 
   toPascalCase(str) {
@@ -237,9 +252,9 @@ class PagePatternChecker {
   }
 
   generateReport() {
-    console.log("\n🛡️ AI GUARDIAN – PAGE COMPLIANCE REPORT v1.0");
-    console.log("=============================================");
-    
+    console.log('\n🛡️ AI GUARDIAN – PAGE COMPLIANCE REPORT v1.0');
+    console.log('=============================================');
+
     console.log(`\n📊 PAGES SCANNED: ${this.results.totalPages}`);
     console.log(`✅ COMPLIANT PAGES: ${this.results.compliantPages}`);
     console.log(`⚠️ PAGES WITH ISSUES: ${this.results.totalPages - this.results.compliantPages}`);
@@ -248,45 +263,45 @@ class PagePatternChecker {
       console.log(`\n🚨 HARDCODED COLORS (${this.results.hardcodedColors.length}):`);
       this.results.hardcodedColors.forEach(issue => console.log(`   - ${issue}`));
     } else {
-      console.log("\n✅ No hardcoded colors found.");
+      console.log('\n✅ No hardcoded colors found.');
     }
 
     if (this.results.directUnits.length) {
       console.log(`\n⚠️ DIRECT SPACING UNITS (${this.results.directUnits.length}):`);
       this.results.directUnits.forEach(issue => console.log(`   - ${issue}`));
     } else {
-      console.log("✅ No problematic spacing units found.");
+      console.log('✅ No problematic spacing units found.');
     }
 
     if (this.results.missingImports.length) {
       console.log(`\n⚠️ MISSING TOKEN IMPORTS (${this.results.missingImports.length}):`);
       this.results.missingImports.forEach(issue => console.log(`   - ${issue}`));
     } else {
-      console.log("✅ All required token imports found.");
+      console.log('✅ All required token imports found.');
     }
 
     if (this.results.incompletePatterns.length) {
       console.log(`\n📋 INCOMPLETE PATTERNS (${this.results.incompletePatterns.length}):`);
       this.results.incompletePatterns.forEach(issue => console.log(`   - ${issue}`));
     } else {
-      console.log("✅ All page patterns complete.");
+      console.log('✅ All page patterns complete.');
     }
 
     if (this.results.missingRoutes.length) {
       console.log(`\n🗺️ ROUTE ISSUES (${this.results.missingRoutes.length}):`);
       this.results.missingRoutes.forEach(issue => console.log(`   - ${issue}`));
     } else {
-      console.log("✅ All routes properly registered.");
+      console.log('✅ All routes properly registered.');
     }
 
     if (this.results.deprecatedPatterns.length) {
       console.log(`\n🔄 DEPRECATED PATTERNS (${this.results.deprecatedPatterns.length}):`);
       this.results.deprecatedPatterns.forEach(issue => console.log(`   - ${issue}`));
     } else {
-      console.log("✅ No deprecated patterns found.");
+      console.log('✅ No deprecated patterns found.');
     }
 
-    const totalIssues = 
+    const totalIssues =
       this.results.hardcodedColors.length +
       this.results.directUnits.length +
       this.results.missingImports.length +
@@ -294,22 +309,23 @@ class PagePatternChecker {
       this.results.missingRoutes.length +
       this.results.deprecatedPatterns.length;
 
-    const complianceScore = this.results.totalPages > 0 
-      ? Math.round((this.results.compliantPages / this.results.totalPages) * 100)
-      : 100;
+    const complianceScore =
+      this.results.totalPages > 0
+        ? Math.round((this.results.compliantPages / this.results.totalPages) * 100)
+        : 100;
 
     console.log(`\n📈 COMPLIANCE SCORE: ${complianceScore}%`);
     console.log(`📊 TOTAL ISSUES: ${totalIssues}`);
-    
+
     if (totalIssues === 0) {
-      console.log("\n🎉 ALL PAGES ARE FULLY COMPLIANT! ✨");
+      console.log('\n🎉 ALL PAGES ARE FULLY COMPLIANT! ✨');
     } else {
       console.log(`\n🔧 RECOMMENDATION: Fix ${totalIssues} issues before deploying.`);
-      console.log("\n💡 TIPS:");
+      console.log('\n💡 TIPS:');
       console.log("   - Use design tokens: import { colors } from '@/design-system/tokens/colors'");
-      console.log("   - Use Tailwind classes instead of inline styles");
-      console.log("   - Ensure all pages have .config.ts and .meta.ts files");
-      console.log("   - Register new pages in routes.config.ts");
+      console.log('   - Use Tailwind classes instead of inline styles');
+      console.log('   - Ensure all pages have .config.ts and .meta.ts files');
+      console.log('   - Register new pages in routes.config.ts');
     }
 
     return totalIssues === 0;
@@ -319,12 +335,12 @@ class PagePatternChecker {
 // Main execution
 function main() {
   const checker = new PagePatternChecker();
-  
-  console.log("🔍 Scanning pages for compliance issues...\n");
-  
+
+  console.log('🔍 Scanning pages for compliance issues...\n');
+
   checker.walk(SRC_DIR);
   const success = checker.generateReport();
-  
+
   process.exit(success ? 0 : 1);
 }
 

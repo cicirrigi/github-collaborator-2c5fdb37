@@ -30,7 +30,7 @@ export function UserMenu({ className }: UserMenuProps): React.JSX.Element {
         className={cn(
           'text-sm font-medium transition-colors duration-300',
           'text-neutral-300 hover:text-brand-primary',
-          'rounded-sm px-2 py-1 focus:outline-none focus:ring-2 focus:ring-brand-primary/50',
+          'rounded-sm px-2 py-1 focus:outline-none focus:ring-2 focus:ring-brand-primary/50'
         )}
       >
         Sign In
@@ -43,7 +43,7 @@ export function UserMenu({ className }: UserMenuProps): React.JSX.Element {
           'bg-brand-primary text-black hover:bg-brand-primary/90',
           'rounded-lg px-4 py-2',
           'focus:outline-none focus:ring-2 focus:ring-brand-primary/50',
-          'shadow-lg shadow-brand-primary/25 hover:shadow-brand-primary/40',
+          'shadow-lg shadow-brand-primary/25 hover:shadow-brand-primary/40'
         )}
       >
         Get Started

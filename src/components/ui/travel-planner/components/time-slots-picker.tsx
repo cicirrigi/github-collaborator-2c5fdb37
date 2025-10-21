@@ -1,8 +1,8 @@
-import React from 'react';
 import { Clock } from 'lucide-react';
+
+import { MOTION, TRAVEL_THEME } from '@/components/ui/travel-planner/constants';
+import { type TimeSlot } from '@/components/ui/travel-planner/types';
 import { cn } from '@/lib/utils';
-import { TimeSlot } from '../types';
-import { TRAVEL_THEME, MOTION } from '../constants';
 
 interface TimeSlotsPickerProps {
   type: 'pickup' | 'return';
@@ -19,7 +19,7 @@ export const TimeSlotsPicker = ({
   availableSlots,
   onSelect,
   className,
-  disabled = false
+  disabled = false,
 }: TimeSlotsPickerProps) => {
   const getIconColor = () => {
     switch (type) {
@@ -53,11 +53,11 @@ export const TimeSlotsPicker = ({
     if (slot.disabled || disabled) {
       return cn(TRAVEL_THEME.timeSlots.slot, TRAVEL_THEME.timeSlots.slotDisabled);
     }
-    
+
     if (selected?.value === slot.value) {
       return cn(TRAVEL_THEME.timeSlots.slot, TRAVEL_THEME.timeSlots.slotSelected);
     }
-    
+
     return cn(
       TRAVEL_THEME.timeSlots.slot,
       TRAVEL_THEME.timeSlots.slotInactive,
@@ -69,15 +69,11 @@ export const TimeSlotsPicker = ({
   return (
     <div className={cn('space-y-3', className)}>
       {/* Header */}
-      <div className="flex items-center gap-2">
-        <Clock className={cn('w-4 h-4', getIconColor())} />
-        <h5 className="font-medium text-gray-700 dark:text-gray-300">
-          {getTitle()}
-        </h5>
+      <div className='flex items-center gap-2'>
+        <Clock className={cn('h-4 w-4', getIconColor())} />
+        <h5 className='font-medium text-gray-700 dark:text-gray-300'>{getTitle()}</h5>
         {availableSlots.length > 0 && (
-          <span className="ml-auto text-xs text-gray-500">
-            {availableSlots.length} available
-          </span>
+          <span className='ml-auto text-xs text-gray-500'>{availableSlots.length} available</span>
         )}
       </div>
 
@@ -98,7 +94,7 @@ export const TimeSlotsPicker = ({
           ))}
         </div>
       ) : (
-        <div className="flex items-center justify-center h-32 text-gray-500 text-sm">
+        <div className='flex h-32 items-center justify-center text-sm text-gray-500'>
           {disabled ? 'Please select a date first' : 'No available time slots'}
         </div>
       )}

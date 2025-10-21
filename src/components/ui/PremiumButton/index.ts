@@ -5,5 +5,9 @@
  */
 
 export { PremiumButton } from './PremiumButton';
+export type {
+  PremiumButtonSize,
+  PremiumButtonStyleConfig,
+  PremiumButtonVariant,
+} from './PremiumButton.types';
 export { PremiumButtonVariants } from './PremiumButton.variants';
-export type { PremiumButtonStyleConfig, PremiumButtonVariant, PremiumButtonSize } from './PremiumButton.types';

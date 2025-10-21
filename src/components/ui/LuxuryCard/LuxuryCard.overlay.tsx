@@ -25,36 +25,36 @@ interface OverlayRenderProps {
  * @param props - Overlay rendering configuration
  * @returns JSX for overlay effects or null if disabled
  */
-export function renderShimmerOverlay({ 
-  hover, 
-  disabled, 
-  cardEnhancement = 'none',
+export function renderShimmerOverlay({
+  hover,
+  disabled,
+  cardEnhancement: _cardEnhancement = 'none',
   glowColor,
-  shimmerColor 
+  shimmerColor,
 }: OverlayRenderProps): ReactNode {
   if (hover === 'none' || disabled) return null;
 
   return (
     <>
       {/* 🌟 Golden glow on hover - folosind luxury tokens */}
-      <div 
-        className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--luxury-glow-duration)]"
+      <div
+        className='duration-[var(--luxury-glow-duration)] absolute inset-0 rounded-xl opacity-0 transition-opacity group-hover:opacity-100'
         style={{
-          background: glowColor 
+          background: glowColor
             ? `linear-gradient(135deg, ${glowColor}0D, transparent)`
             : luxuryCardTokens.effects.glow.gradient,
         }}
       />
-      
+
       {/* ⚡ Card shimmer sweep effect - folosind luxury tokens */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--luxury-glow-duration)]">
-        <div 
-          className="absolute inset-0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform ease-out"
+      <div className='duration-[var(--luxury-glow-duration)] pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity group-hover:opacity-100'>
+        <div
+          className='absolute inset-0 -translate-x-full -skew-x-12 transform transition-transform ease-out group-hover:translate-x-full'
           style={{
             width: luxuryCardTokens.effects.shimmer.width,
             height: '100%',
             transitionDuration: luxuryCardTokens.effects.shimmer.duration,
-            backgroundImage: shimmerColor 
+            backgroundImage: shimmerColor
               ? `linear-gradient(90deg, transparent, ${shimmerColor}33, transparent)`
               : luxuryCardTokens.effects.shimmer.gradient,
           }}

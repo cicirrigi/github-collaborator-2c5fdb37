@@ -6,9 +6,9 @@
  */
 
 export * from './colors';
-export * from './typography';
-export * from './spacing';
 export * from './shadows';
+export * from './spacing';
+export * from './typography';
 
 // Legacy exports for compatibility
 export { breakpoints, containers, mediaQueries } from './breakpoints';

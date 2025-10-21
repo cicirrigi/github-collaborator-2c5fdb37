@@ -39,28 +39,28 @@
 
 ```typescript
 // UI components can import:
-import { cn } from '@/lib/utils/cn'
-import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils/cn';
+import { Button } from '@/components/ui/button';
 
 // Features can import:
-import { Card } from '@/components/ui/card'
-import { PricingCard } from '@/components/shared/PricingCard'
-import { useBooking } from '@/lib/hooks/useBooking'
+import { Card } from '@/components/ui/card';
+import { PricingCard } from '@/components/shared/PricingCard';
+import { useBooking } from '@/lib/hooks/useBooking';
 
 // Services can import:
-import { env } from '@/lib/env'
-import type { BookingType } from '@/types/booking'
+import { env } from '@/lib/env';
+import type { BookingType } from '@/types/booking';
 ```
 
 ### **❌ FORBIDDEN IMPORTS:**
 
 ```typescript
 // UI components CANNOT import:
-import { BookingWizard } from '@/components/features/booking' // ❌
-import { supabase } from '@/lib/supabase' // ❌
+import { BookingWizard } from '@/components/features/booking'; // ❌
+import { supabase } from '@/lib/supabase'; // ❌
 
 // Shared components CANNOT import:
-import { PaymentModal } from '@/components/features/payments' // ❌
+import { PaymentModal } from '@/components/features/payments'; // ❌
 ```
 
 ## 🎯 Component Rules

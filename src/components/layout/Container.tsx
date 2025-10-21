@@ -72,7 +72,7 @@ export function Container({
           'max-w-7xl': size === 'xl', // 1280px - Wide layouts
           'max-w-full': size === 'full', // 100% - Full width
         },
-        className,
+        className
       )}
       {...(Tag === 'main' && { 'aria-label': 'Main content' })}
       {...(Tag === 'section' && { role: 'region' })}

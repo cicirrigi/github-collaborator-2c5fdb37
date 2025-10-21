@@ -50,7 +50,7 @@ export function Card({
         // Hover effect
         hover && 'transition-all duration-300 hover:scale-[1.02] hover:shadow-lg',
         // Custom className
-        className,
+        className
       )}
     >
       {children}

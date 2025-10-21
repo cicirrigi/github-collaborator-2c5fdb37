@@ -4,8 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type React from 'react';
 
-import { cn } from '@/lib/utils/cn';
 import { brandConfig } from '@/config/brand.config';
+import { cn } from '@/lib/utils/cn';
 
 /**
  * 🎨 Vantage Lane Logo (final version)
@@ -52,12 +52,12 @@ export function Logo({
         !isStatic && 'animate-luxuryFloat',
         !noShimmer && 'animate-logoShimmer',
         'transition-transform duration-300 hover:scale-[1.05]',
-        className,
+        className
       )}
     >
       {/* Logo Image */}
       <Image
-        src="/logo.svg"
+        src='/logo.svg'
         alt={`${brandConfig.name} Logo`}
         fill
         className={cn('object-contain drop-shadow-lg', 'dark:brightness-[1.1]')}
@@ -70,7 +70,7 @@ export function Logo({
     return (
       <Link
         href={href}
-        className="inline-block rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
+        className='inline-block rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary/50'
         aria-label={`${brandConfig.name} - Home`}
         {...(onClick && { onClick })}
       >

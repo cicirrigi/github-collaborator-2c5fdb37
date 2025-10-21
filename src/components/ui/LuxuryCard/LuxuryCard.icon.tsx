@@ -1,4 +1,3 @@
-
 // Note: Inline styles replaced with data attributes for better performance
 // Use CSS custom properties in Tailwind for dynamic styling
 
@@ -13,14 +12,18 @@ import type { ReactNode } from 'react';
 
 import { luxuryCardTokens } from '@/design-system/tokens/luxury-card';
 
-import type { LuxuryCardHover, LuxuryCardIconSize, LuxuryCardIconEnhancement } from './LuxuryCard.types';
-import { 
-  getIconSizeClasses, 
-  getIconEnhancementClasses, 
+import {
+  getIconEnhancementClasses,
   getIconGlowBackgroundClasses,
   getIconShimmerClasses,
-  getIconShimmerInnerClasses
+  getIconShimmerInnerClasses,
+  getIconSizeClasses,
 } from './LuxuryCard.helpers';
+import type {
+  LuxuryCardHover,
+  LuxuryCardIconEnhancement,
+  LuxuryCardIconSize,
+} from './LuxuryCard.types';
 
 interface IconRenderProps {
   icon?: ReactNode;
@@ -51,26 +54,27 @@ export function renderIcon({
 
   // Generate dynamic classes based on props
   const iconSizeClasses = getIconSizeClasses(iconSize);
-  const iconEnhancementClasses = getIconEnhancementClasses(iconEnhancement, !disabled);
-  const iconGlowBackgroundClasses = getIconGlowBackgroundClasses(iconEnhancement);
+  const _iconEnhancementClasses = getIconEnhancementClasses(iconEnhancement, !disabled);
+  const _iconGlowBackgroundClasses = getIconGlowBackgroundClasses(iconEnhancement);
   const iconShimmerClasses = getIconShimmerClasses(iconEnhancement);
   const iconShimmerInnerClasses = getIconShimmerInnerClasses();
 
   return (
-    <div className="mb-6 group-hover:scale-110 transition-transform duration-300 flex justify-center">
-      <div className="relative group-hover:scale-105 transition-all duration-300 overflow-visible">
+    <div className='mb-6 flex justify-center transition-transform duration-300 group-hover:scale-110'>
+      <div className='relative overflow-visible transition-all duration-300 group-hover:scale-105'>
         {typeof icon === 'string' ? (
-          <span className="text-4xl">{icon}</span>
+          <span className='text-4xl'>{icon}</span>
         ) : (
           <div
-            className={`${iconSizeClasses} transition-all duration-[var(--luxury-duration-normal)] [&>svg]:h-full [&>svg]:w-full [&>svg]:stroke-[1.2]`}
+            className={`${iconSizeClasses} duration-[var(--luxury-duration-normal)] transition-all [&>svg]:h-full [&>svg]:w-full [&>svg]:stroke-[1.2]`}
             data-glow-color={glowColor || luxuryCardTokens.colors.goldGlow}
-            onMouseEnter={(e) => {
+            onMouseEnter={e => {
               const target = e.currentTarget;
               target.style.color = glowColor || luxuryCardTokens.colors.shimmerPrimary;
-              target.style.filter = 'drop-shadow(0 0 12px rgba(203,178,106,0.6)) drop-shadow(0 4px 8px rgba(0,0,0,0.3))';
+              target.style.filter =
+                'drop-shadow(0 0 12px rgba(203,178,106,0.6)) drop-shadow(0 4px 8px rgba(0,0,0,0.3))';
             }}
-            onMouseLeave={(e) => {
+            onMouseLeave={e => {
               const target = e.currentTarget;
               target.style.color = glowColor || luxuryCardTokens.colors.goldGlow;
               target.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))';
@@ -81,18 +85,18 @@ export function renderIcon({
         )}
 
         {/* 🌟 Subtle glow effect - folosind luxury tokens */}
-        <div 
-          className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--luxury-glow-duration)] blur-xl"
+        <div
+          className='duration-[var(--luxury-glow-duration)] absolute inset-0 rounded-full opacity-0 blur-xl transition-opacity group-hover:opacity-100'
           data-bg-glow={glowColor || luxuryCardTokens.colors.goldGlow}
         />
 
         {/* ✨ Icon Shimmer Effect (Vantage Lane Style) */}
         {iconShimmerClasses && (
           <div className={iconShimmerClasses}>
-            <div 
+            <div
               className={iconShimmerInnerClasses}
               style={{
-                backgroundImage: `linear-gradient(90deg, transparent, ${shimmerColor || luxuryCardTokens.colors.shimmerPrimary}66, transparent)`
+                backgroundImage: `linear-gradient(90deg, transparent, ${shimmerColor || luxuryCardTokens.colors.shimmerPrimary}66, transparent)`,
               }}
             />
           </div>
@@ -100,13 +104,13 @@ export function renderIcon({
 
         {/* 🎯 Icon Shimmer pe TOATE cardurile cu hover shimmer - cu luxury tokens */}
         {hover === 'shimmer' && !disabled && (
-          <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-[var(--luxury-glow-duration)] group-hover:opacity-100">
-            <div 
-              className="absolute inset-0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-[var(--luxury-shimmer-duration)] ease-out"
+          <div className='duration-[var(--luxury-glow-duration)] pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity group-hover:opacity-100'>
+            <div
+              className='duration-[var(--luxury-shimmer-duration)] absolute inset-0 -translate-x-full -skew-x-12 transform transition-transform ease-out group-hover:translate-x-full'
               style={{
                 width: luxuryCardTokens.effects.shimmer.width,
                 height: '100%',
-                backgroundImage: shimmerColor 
+                backgroundImage: shimmerColor
                   ? `linear-gradient(90deg, transparent, ${shimmerColor}66, transparent)`
                   : luxuryCardTokens.effects.shimmer.gradient.replace('0.2', '0.4'), // Mai intens pentru iconițe
               }}

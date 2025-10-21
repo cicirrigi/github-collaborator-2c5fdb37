@@ -9,8 +9,12 @@ import type { ReactNode } from 'react';
 
 import { luxuryCardTokens } from '@/design-system/tokens/luxury-card';
 
-import type { LuxuryCardHover, LuxuryCardIconSize, LuxuryCardIconEnhancement } from './LuxuryCard.types';
 import { renderIcon } from './LuxuryCard.icon';
+import type {
+  LuxuryCardHover,
+  LuxuryCardIconEnhancement,
+  LuxuryCardIconSize,
+} from './LuxuryCard.types';
 
 interface ContentRenderProps {
   children?: ReactNode;
@@ -43,7 +47,7 @@ export function renderContent({
   shimmerColor,
   iconSize,
   iconEnhancement,
-  titleGolden,
+  titleGolden: _titleGolden,
   hover,
   disabled,
 }: ContentRenderProps): ReactNode {
@@ -55,36 +59,40 @@ export function renderContent({
   // Simple API: render from props
   return (
     <>
-      {renderIcon({ 
-        icon, 
-        glowColor, 
-        shimmerColor, 
-        iconSize: iconSize || 'md', 
-        iconEnhancement: iconEnhancement || 'none', 
-        hover, 
-        disabled 
+      {renderIcon({
+        icon,
+        glowColor,
+        shimmerColor,
+        iconSize: iconSize || 'md',
+        iconEnhancement: iconEnhancement || 'none',
+        hover,
+        disabled,
       })}
       {title && (
-        <h3 
-          className="text-xl font-medium mb-3 text-white transition-colors duration-[var(--luxury-glow-duration)] relative z-10"
-          style={{
-            '--hover-color': glowColor || luxuryCardTokens.colors.goldGlow,
-          } as React.CSSProperties & { '--hover-color': string }}
-          onMouseEnter={(e) => {
-            const customStyle = e.currentTarget.style as CSSStyleDeclaration & { '--hover-color': string };
+        <h3
+          className='duration-[var(--luxury-glow-duration)] relative z-10 mb-3 text-xl font-medium text-white transition-colors'
+          style={
+            {
+              '--hover-color': glowColor || luxuryCardTokens.colors.goldGlow,
+            } as React.CSSProperties & { '--hover-color': string }
+          }
+          onMouseEnter={e => {
+            const customStyle = e.currentTarget.style as CSSStyleDeclaration & {
+              '--hover-color': string;
+            };
             e.currentTarget.style.color = customStyle['--hover-color'];
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={e => {
             e.currentTarget.style.color = 'white';
           }}
         >
           {title}
         </h3>
       )}
-      {description && (
-        <p className="text-neutral-300 text-sm leading-relaxed">{description}</p>
+      {description && <p className='text-sm leading-relaxed text-neutral-300'>{description}</p>}
+      {footer && (
+        <div className='mt-4 border-t border-neutral-200 pt-4 dark:border-white/10'>{footer}</div>
       )}
-      {footer && <div className="mt-4 border-t border-neutral-200 dark:border-white/10 pt-4">{footer}</div>}
     </>
   );
 }

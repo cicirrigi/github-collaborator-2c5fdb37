@@ -99,19 +99,19 @@ Toate celelalte fișiere pot fi modificate dar sunt monitorizate de Quality Gate
 ```javascript
 // Pseudo-cod pentru AI verification
 function canModifyFile(filePath) {
-  const freezeList = getFreezeList()
+  const freezeList = getFreezeList();
 
   if (freezeList.forbidden.includes(filePath)) {
-    askExplicitPermission(filePath)
-    return waitForApproval()
+    askExplicitPermission(filePath);
+    return waitForApproval();
   }
 
   if (freezeList.restricted.includes(filePath)) {
-    requestJustification(filePath)
-    return waitForApproval()
+    requestJustification(filePath);
+    return waitForApproval();
   }
 
-  return true // Safe to modify
+  return true; // Safe to modify
 }
 ```
 

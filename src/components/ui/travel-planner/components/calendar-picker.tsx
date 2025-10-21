@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useMemo } from 'react';
+
+import { MOTION } from '@/components/ui/travel-planner/constants';
 import { cn } from '@/lib/utils';
-import { TRAVEL_THEME, MOTION } from '../constants';
 
 interface CalendarPickerProps {
   currentMonth: Date;
@@ -21,8 +22,8 @@ export const CalendarPicker = ({
   returnDate,
   onSelect,
   onNavigate,
-  showReturn = false,
-  className
+  showReturn: _showReturn = false,
+  className,
 }: CalendarPickerProps) => {
   // Calendar logic
   const calendarData = useMemo(() => {
@@ -34,12 +35,12 @@ export const CalendarPicker = ({
 
     const days = [];
     const current = new Date(startDate);
-    
+
     for (let i = 0; i < 42; i++) {
       days.push(new Date(current));
       current.setDate(current.getDate() + 1);
     }
-    
+
     return { days, month, year, firstDay };
   }, [currentMonth]);
 
@@ -74,13 +75,17 @@ export const CalendarPicker = ({
 
   // Get day styling
   const getDayStyle = (date: Date) => {
-    if (isPastDate(date)) return cn(TRAVEL_THEME.calendar.day, 'cursor-not-allowed opacity-40');
-    if (isPickupDate(date)) return cn(TRAVEL_THEME.calendar.day, TRAVEL_THEME.calendar.daySelected);
-    if (isReturnDate(date)) return cn(TRAVEL_THEME.calendar.day, 'bg-gradient-to-r from-[#CBB26A] to-[#D4AF37] text-white');
-    if (isInRange(date)) return cn(TRAVEL_THEME.calendar.day, TRAVEL_THEME.calendar.dayInRange);
-    if (isToday(date)) return cn(TRAVEL_THEME.calendar.day, TRAVEL_THEME.calendar.dayToday);
-    if (!isCurrentMonth(date)) return cn(TRAVEL_THEME.calendar.day, TRAVEL_THEME.calendar.dayInactive);
-    return cn(TRAVEL_THEME.calendar.day, TRAVEL_THEME.calendar.dayHover, MOTION.transition);
+    if (isPastDate(date)) return 'cursor-not-allowed opacity-40 text-gray-400';
+    if (isPickupDate(date))
+      return 'bg-gradient-to-r from-[#CBB26A] to-[#D4AF37] text-white shadow-md';
+    if (isReturnDate(date))
+      return 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md';
+    if (isInRange(date))
+      return 'bg-yellow-100/80 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200';
+    if (isToday(date))
+      return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 ring-2 ring-blue-500/30';
+    if (!isCurrentMonth(date)) return 'text-gray-400 dark:text-gray-600';
+    return 'hover:bg-yellow-50 dark:hover:bg-yellow-900/20 text-gray-700 dark:text-gray-300';
   };
 
   const handleDateClick = (date: Date) => {
@@ -90,49 +95,60 @@ export const CalendarPicker = ({
   };
 
   return (
-    <div className={cn('space-y-4', className)}>
+    <div className={cn('w-full space-y-4', className)}>
       {/* Calendar Header */}
-      <div className={TRAVEL_THEME.calendar.header}>
+      <div className='mb-4 flex items-center justify-between px-2'>
         <button
           onClick={() => onNavigate('prev')}
-          className={cn('p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800', MOTION.transition, MOTION.tap)}
-          aria-label="Previous month"
+          className={cn(
+            'rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800',
+            MOTION.transition,
+            MOTION.tap
+          )}
+          aria-label='Previous month'
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className='h-4 w-4' />
         </button>
-        
-        <h4 className="text-lg font-semibold">
-          {calendarData.firstDay.toLocaleDateString('en-US', { 
-            month: 'long', 
-            year: 'numeric' 
+
+        <h4 className='text-lg font-semibold'>
+          {calendarData.firstDay.toLocaleDateString('en-US', {
+            month: 'long',
+            year: 'numeric',
           })}
         </h4>
-        
+
         <button
           onClick={() => onNavigate('next')}
-          className={cn('p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800', MOTION.transition, MOTION.tap)}
-          aria-label="Next month"
+          className={cn(
+            'rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800',
+            MOTION.transition,
+            MOTION.tap
+          )}
+          aria-label='Next month'
         >
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className='h-4 w-4' />
         </button>
       </div>
 
-      {/* Calendar Grid */}
-      <div className={TRAVEL_THEME.calendar.grid}>
+      {/* Calendar Grid - Full Width */}
+      <div className='grid w-full grid-cols-7 gap-1 text-center'>
         {/* Week headers */}
         {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-          <div key={day} className="p-2 text-center text-sm font-medium text-gray-500">
+          <div key={day} className='p-2 text-sm font-medium text-gray-500'>
             {day}
           </div>
         ))}
-        
+
         {/* Calendar days */}
         {calendarData.days.map((date, index) => (
           <button
             key={index}
             onClick={() => handleDateClick(date)}
             disabled={isPastDate(date)}
-            className={getDayStyle(date)}
+            className={cn(
+              'flex aspect-square w-full cursor-pointer items-center justify-center rounded-lg text-sm font-medium transition-all',
+              getDayStyle(date)
+            )}
             aria-label={`${date.toDateString()}${isPickupDate(date) ? ' (Pickup date)' : ''}${isReturnDate(date) ? ' (Return date)' : ''}`}
           >
             {date.getDate()}

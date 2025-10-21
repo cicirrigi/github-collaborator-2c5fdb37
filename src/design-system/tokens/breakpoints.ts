@@ -194,7 +194,7 @@ export function useMediaQuery(query: keyof typeof mediaQueries) {
  */
 export function getResponsiveClass(
   baseClass: string,
-  responsiveClasses: Partial<Record<keyof typeof breakpoints, string>>,
+  responsiveClasses: Partial<Record<keyof typeof breakpoints, string>>
 ): string {
   const classes = [baseClass];
 

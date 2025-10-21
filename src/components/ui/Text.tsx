@@ -51,10 +51,10 @@ export function Text({ variant = 'body', as, className, children }: TextProps): 
         // Variant styles from theme config
         themeConfig.components.text.variants[variant],
         // Custom className
-        className,
+        className
       ),
     },
-    children,
+    children
   );
 }
 

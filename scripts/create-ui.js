@@ -2,7 +2,7 @@
 /**
  * 🧩 Vantage Lane UI Generator v3.0 (Universal Base)
  * - Strict TS in generated files (no any)
- * - ForwardRef + polymorphic `as` 
+ * - ForwardRef + polymorphic `as`
  * - A11y (focus-visible, aria-*), CVA variants
  * - Integrates designTokens + brandConfig
  * - Storybook + jest-axe tests + README
@@ -23,8 +23,13 @@ const CONFIG = {
 };
 
 /* ------------------------------ Utilities ------------------------------- */
-const exists = async (p) => {
-  try { await fs.stat(p); return true; } catch { return false; }
+const exists = async p => {
+  try {
+    await fs.stat(p);
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 const nowIso = () => new Date().toISOString();
@@ -32,7 +37,9 @@ const nowIso = () => new Date().toISOString();
 /* ------------------------------- CLI Parse ------------------------------ */
 const [, , rawName, ...flags] = process.argv;
 if (!rawName) {
-  console.error('❌ Usage: npm run create:ui ComponentName [--type=base|button|card|overlay|input|section|page]');
+  console.error(
+    '❌ Usage: npm run create:ui ComponentName [--type=base|button|card|overlay|input|section|page]'
+  );
   process.exit(1);
 }
 const componentName = rawName.trim();
@@ -44,7 +51,7 @@ const typeFlag = flags.find(f => f.startsWith('--type='));
 const componentType = (typeFlag ? typeFlag.split('=')[1] : 'base').toLowerCase();
 
 /* ----------------------------- Meta Header ------------------------------ */
-const metaHeader = (type) => `/**
+const metaHeader = type => `/**
  * 🧩 ${componentName} – Vantage Lane UI v${CONFIG.version}
  * Generated on ${nowIso()}
  * Type: ${type}
@@ -82,9 +89,10 @@ export const ${componentName} = forwardRef<HTMLElement, ${componentName}Props>(
   ): JSX.Element {
     const Comp = (as ?? 'div') as ElementType;
 
-    const classes = ${CONFIG.useCVA
-      ? `${componentName}Variants({ variant, size, disabled })` 
-      : `cn(
+    const classes = ${
+      CONFIG.useCVA
+        ? `${componentName}Variants({ variant, size, disabled })`
+        : `cn(
           'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-300',
           variant === 'primary' && 'bg-[var(--brand-primary)] text-black',
           variant === 'secondary' && 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700 dark:text-white',
@@ -358,7 +366,11 @@ async function main() {
     { name: 'index.ts', content: tpl_index_ts() },
     { name: 'README.md', content: tpl_readme_md() },
   ];
-  if (CONFIG.withStories) files.push({ name: `${componentName}.stories.tsx`, content: tpl_story_tsx() });
+  if (CONFIG.withStories)
+    files.push({
+      name: `${componentName}.stories.tsx`,
+      content: tpl_story_tsx(),
+    });
   if (CONFIG.withTests) files.push({ name: `${componentName}.test.tsx`, content: tpl_test_tsx() });
 
   // Write
@@ -369,7 +381,11 @@ async function main() {
 
   // Update barrel index
   if (!(await exists(MAIN_INDEX))) {
-    await fs.writeFile(MAIN_INDEX, '// Vantage Lane UI Components - Auto-generated exports\n\n', 'utf8');
+    await fs.writeFile(
+      MAIN_INDEX,
+      '// Vantage Lane UI Components - Auto-generated exports\n\n',
+      'utf8'
+    );
   }
   const current = await fs.readFile(MAIN_INDEX, 'utf8');
   const exportLine = `export * from './${componentName}';\n`;
@@ -387,7 +403,7 @@ async function main() {
   console.log(`\n🎯 Features: ✅ ForwardRef ✅ Polymorphic ✅ A11y ✅ CVA ✅ Story ✅ Test\n`);
 }
 
-main().catch((err) => {
+main().catch(err => {
   console.error('❌ Error:', err?.message || err);
   process.exit(1);
 });

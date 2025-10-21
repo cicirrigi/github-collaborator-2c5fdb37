@@ -6,27 +6,27 @@
  */
 
 export interface NavItem {
-  readonly href: string
-  readonly label: string
-  readonly external?: boolean
-  readonly hasDropdown?: boolean
+  readonly href: string;
+  readonly label: string;
+  readonly external?: boolean;
+  readonly hasDropdown?: boolean;
 }
 
 export interface ServiceItem {
-  readonly href: string
-  readonly label: string
-  readonly description: string
+  readonly href: string;
+  readonly label: string;
+  readonly description: string;
 }
 
 export interface SocialLink {
-  readonly href: string
-  readonly label: string
-  readonly icon: string
+  readonly href: string;
+  readonly label: string;
+  readonly icon: string;
 }
 
 export interface FooterSection {
-  readonly title: string
-  readonly links: readonly { href: string; label: string }[]
+  readonly title: string;
+  readonly links: readonly { href: string; label: string }[];
 }
 
 /**
@@ -63,7 +63,7 @@ export const navigation = {
       description: 'Premium limousine experience',
     },
   ] as const satisfies readonly ServiceItem[],
-} as const
+} as const;
 
 /**
  * 🏢 Footer Configuration
@@ -95,13 +95,21 @@ export const footer = {
   ] as const satisfies readonly FooterSection[],
 
   social: [
-    { href: 'https://twitter.com/vantagelane', label: 'Twitter', icon: 'twitter' },
+    {
+      href: 'https://twitter.com/vantagelane',
+      label: 'Twitter',
+      icon: 'twitter',
+    },
     {
       href: 'https://linkedin.com/company/vantage-lane',
       label: 'LinkedIn',
       icon: 'linkedin',
     },
-    { href: 'https://instagram.com/vantagelane', label: 'Instagram', icon: 'instagram' },
+    {
+      href: 'https://instagram.com/vantagelane',
+      label: 'Instagram',
+      icon: 'instagram',
+    },
   ] as const satisfies readonly SocialLink[],
 
   legal: [
@@ -109,7 +117,7 @@ export const footer = {
     { href: '/terms', label: 'Terms of Service' },
     { href: '/cookies', label: 'Cookie Policy' },
   ] as const,
-} as const
+} as const;
 
 /**
  * 📄 Site Metadata
@@ -127,10 +135,10 @@ export const siteMetadata = {
     phone: '+44 20 7946 0958',
     email: 'hello@vantagelane.co.uk',
   },
-} as const
+} as const;
 
 export default {
   navigation,
   footer,
   siteMetadata,
-} as const
+} as const;

@@ -1,0 +1,33 @@
+{
+  // 💅 Format automat la salvare
+  "editor.formatOnSave": true,
+
+  // ✅ Fix ESLint automat
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // 🧩 ESLint pentru toate limbajele relevante
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.useFlatConfig": true,
+
+  // 🔍 Afișare status ESLint
+  "eslint.alwaysShowStatus": true,
+
+  // 💡 Formatter pentru Windsurf
+  "editor.defaultFormatter": "vscode.typescript-language-features",
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+
+  // 🧠 Prettier settings
+  "prettier.requireConfig": true,
+  "prettier.enable": true,
+
+  // 🧹 Linie de final corectă (LF)
+  "files.eol": "\n"
+}

@@ -1,5 +1,5 @@
-import type { Config } from 'tailwindcss'
-import { designTokens } from './src/config/theme.config'
+import type { Config } from 'tailwindcss';
+import { designTokens } from './src/config/theme.config';
 
 const config: Config = {
   darkMode: ['class'],
@@ -125,6 +125,6 @@ const config: Config = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
   ],
-}
+};
 
-export default config
+export default config;

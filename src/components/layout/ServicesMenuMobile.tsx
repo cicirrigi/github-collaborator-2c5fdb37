@@ -44,8 +44,8 @@ export default function ServicesMenuMobile({
   return (
     <div
       className={cn('md:hidden', className)}
-      role="navigation"
-      aria-label="Mobile services navigation"
+      role='navigation'
+      aria-label='Mobile services navigation'
     >
       {/* Accordion Trigger */}
       <button
@@ -54,24 +54,24 @@ export default function ServicesMenuMobile({
           'flex w-full items-center justify-between px-4 py-3 text-left',
           'text-sm font-medium transition-colors duration-200',
           'hover:text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/50',
-          isServicesActive ? 'text-brand-primary' : 'text-neutral-700 dark:text-neutral-300',
+          isServicesActive ? 'text-brand-primary' : 'text-neutral-700 dark:text-neutral-300'
         )}
         aria-expanded={open}
-        aria-controls="services-mobile-menu"
+        aria-controls='services-mobile-menu'
       >
         <span>Services</span>
         <svg
           className={cn(
             'h-4 w-4 transition-transform duration-200',
             open && 'rotate-180',
-            isServicesActive && 'text-brand-primary',
+            isServicesActive && 'text-brand-primary'
           )}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
+          fill='none'
+          stroke='currentColor'
+          viewBox='0 0 24 24'
+          aria-hidden='true'
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 9l-7 7-7-7' />
         </svg>
       </button>
 
@@ -79,12 +79,12 @@ export default function ServicesMenuMobile({
       <AnimatePresence>
         {open && (
           <motion.div
-            id="services-mobile-menu"
+            id='services-mobile-menu'
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -5 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="space-y-1 px-3 pb-3"
+            className='space-y-1 px-3 pb-3'
           >
             {services.map(service => {
               const isActive = pathname === service.href;
@@ -94,10 +94,10 @@ export default function ServicesMenuMobile({
                   initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="relative"
+                  className='relative'
                 >
                   {isActive && (
-                    <span className="absolute bottom-0 left-0 top-0 w-[2px] rounded-r-md bg-brand-primary" />
+                    <span className='absolute bottom-0 left-0 top-0 w-[2px] rounded-r-md bg-brand-primary' />
                   )}
                   <Link
                     href={service.href}
@@ -108,12 +108,12 @@ export default function ServicesMenuMobile({
                       'focus:outline-none focus:ring-2 focus:ring-brand-primary/50',
                       isActive
                         ? 'bg-brand-primary/10 text-brand-primary'
-                        : 'text-neutral-700 hover:text-brand-primary dark:text-neutral-300',
+                        : 'text-neutral-700 hover:text-brand-primary dark:text-neutral-300'
                     )}
                   >
-                    <div className="text-sm font-medium">{service.label}</div>
+                    <div className='text-sm font-medium'>{service.label}</div>
                     {service.description && (
-                      <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                      <div className='text-xs text-neutral-500 dark:text-neutral-400'>
                         {service.description}
                       </div>
                     )}

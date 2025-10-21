@@ -24,7 +24,7 @@ export async function GET() {
         error: 'Health check failed',
         checks: [],
       },
-      { status: 503 },
+      { status: 503 }
     );
   }
 }

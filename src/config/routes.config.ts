@@ -26,5 +26,17 @@ export function getAllRoutes(): Record<string, RouteConfig> {
 }
 
 // Auto-generated routes:
-addRoute('services', { path: '/services', title: 'Services', layout: 'marketing', hero: true, requiresAuth: false });
-addRoute('contact', { path: '/contact', title: 'Contact', layout: 'marketing', hero: true, requiresAuth: false });
+addRoute('services', {
+  path: '/services',
+  title: 'Services',
+  layout: 'marketing',
+  hero: true,
+  requiresAuth: false,
+});
+addRoute('contact', {
+  path: '/contact',
+  title: 'Contact',
+  layout: 'marketing',
+  hero: true,
+  requiresAuth: false,
+});

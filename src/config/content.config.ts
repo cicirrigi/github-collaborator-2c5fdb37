@@ -6,19 +6,19 @@
  */
 
 export interface Feature {
-  readonly title: string
-  readonly description: string
-  readonly icon?: string
+  readonly title: string;
+  readonly description: string;
+  readonly icon?: string;
 }
 
 export interface Value {
-  readonly title: string
-  readonly description: string
+  readonly title: string;
+  readonly description: string;
 }
 
 export interface Stat {
-  readonly value: string
-  readonly label: string
+  readonly value: string;
+  readonly label: string;
 }
 
 /**
@@ -55,7 +55,7 @@ export const homeContent = {
     subtitle: 'Join thousands of satisfied customers who trust Vantage Lane',
     button: 'Get Started Today',
   },
-} as const
+} as const;
 
 /**
  * ℹ️ About Page Content
@@ -103,7 +103,7 @@ export const aboutContent = {
     subtitle: "Discover why London's elite choose us for their transportation needs",
     button: 'Book Your Experience',
   },
-} as const
+} as const;
 
 /**
  * 🔐 Auth Pages Content
@@ -121,7 +121,7 @@ export const authContent = {
       signup: "Don't have an account? Sign up here",
     },
   },
-} as const
+} as const;
 
 /**
  * 📄 Common UI Text
@@ -139,7 +139,7 @@ export const commonText = {
   edit: 'Edit',
   delete: 'Delete',
   confirm: 'Confirm',
-} as const
+} as const;
 
 /**
  * 🏢 Company Information
@@ -151,7 +151,7 @@ export const companyInfo = {
   email: 'hello@vantagelane.co.uk',
   address: 'London, United Kingdom',
   copyright: '© 2024 Vantage Lane. All rights reserved.',
-} as const
+} as const;
 
 export default {
   home: homeContent,
@@ -159,4 +159,4 @@ export default {
   auth: authContent,
   common: commonText,
   company: companyInfo,
-} as const
+} as const;

@@ -71,9 +71,9 @@ export function Button({
 
 ```typescript
 // src/components/ui/index.ts
-export { Button } from './button'
-export { Card } from './card'
-export { Input } from './input'
+export { Button } from './button';
+export { Card } from './card';
+export { Input } from './input';
 // ... other exports
 ```
 
@@ -132,8 +132,8 @@ Every component must support both light and dark themes:
 
 ```typescript
 // Use theme-aware classes
-className = 'bg-background text-foreground border-border'
+className = 'bg-background text-foreground border-border';
 
 // Avoid hardcoded colors
-className = 'bg-white text-black' // ❌
+className = 'bg-white text-black'; // ❌
 ```

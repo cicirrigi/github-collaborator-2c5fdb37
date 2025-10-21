@@ -12,32 +12,32 @@
  *   npm run create:page About --layout=marketing [--with-story]
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-const GENERATOR_VERSION = "3.2.0-light";
+const GENERATOR_VERSION = '3.2.0-light';
 console.log(`🧩 Vantage Lane Page Generator v${GENERATOR_VERSION} (Light Edition)`);
 
 const [, , rawName, ...args] = process.argv;
 if (!rawName) {
-  console.error("❌ Usage: npm run create:page PageName [--layout=marketing|dashboard|auth]");
+  console.error('❌ Usage: npm run create:page PageName [--layout=marketing|dashboard|auth]');
   process.exit(1);
 }
 
 const PageName = rawName.trim();
 if (!/^[A-Z][a-zA-Z0-9]*$/.test(PageName)) {
-  console.error("❌ Page name must be PascalCase (e.g. About, Services, Contact).");
+  console.error('❌ Page name must be PascalCase (e.g. About, Services, Contact).');
   process.exit(1);
 }
 
-const layoutFlag = args.find(a => a.startsWith("--layout="));
-const layout = layoutFlag ? layoutFlag.replace("--layout=", "") : "marketing";
-const withStory = args.includes("--with-story");
+const layoutFlag = args.find(a => a.startsWith('--layout='));
+const layout = layoutFlag ? layoutFlag.replace('--layout=', '') : 'marketing';
+const withStory = args.includes('--with-story');
 const pageSlug = PageName.toLowerCase();
 
 const appDir = path.join(__dirname, `../src/app/${pageSlug}`);
-const configDir = path.join(__dirname, "../src/config");
-const routeFile = path.join(configDir, "routes.config.ts");
+const configDir = path.join(__dirname, '../src/config');
+const routeFile = path.join(configDir, 'routes.config.ts');
 
 async function main() {
   if (fs.existsSync(appDir)) {
@@ -161,16 +161,16 @@ export const ${PageName}Config = {
   title: '${PageName}',
   slug: '${pageSlug}',
   layout: '${layout}',
-  hero: ${layout === "marketing"},
-  requiresAuth: ${layout === "dashboard"},
+  hero: ${layout === 'marketing'},
+  requiresAuth: ${layout === 'dashboard'},
   seo: {
     priority: 0.8,
     changefreq: 'monthly' as const,
   },
   features: {
-    breadcrumbs: ${layout === "dashboard"},
-    sidebar: ${layout === "dashboard"},
-    footer: ${layout !== "auth"},
+    breadcrumbs: ${layout === 'dashboard'},
+    sidebar: ${layout === 'dashboard'},
+    footer: ${layout !== 'auth'},
   },
 } as const;
 
@@ -235,9 +235,10 @@ describe('${PageName} page', () => {
 
   it('renders hero section for marketing layout', () => {
     render(<Page />);
-    ${layout === "marketing" ? 
-      "expect(screen.getByText('Discover premium experiences')).toBeInTheDocument();" :
-      "// Hero section disabled for non-marketing layout"
+    ${
+      layout === 'marketing'
+        ? "expect(screen.getByText('Discover premium experiences')).toBeInTheDocument();"
+        : '// Hero section disabled for non-marketing layout'
     }
   });
 });
@@ -277,14 +278,14 @@ export const ContentOnly: Story = {
 
   // Write all files
   console.log(`🧩 Creating ${PageName} page (layout: ${layout})...`);
-  
-  fs.writeFileSync(path.join(appDir, "HeroSection.tsx"), heroSection);
-  fs.writeFileSync(path.join(appDir, "BaseSection.tsx"), baseSection);
-  fs.writeFileSync(path.join(appDir, "page.tsx"), pageFile);
+
+  fs.writeFileSync(path.join(appDir, 'HeroSection.tsx'), heroSection);
+  fs.writeFileSync(path.join(appDir, 'BaseSection.tsx'), baseSection);
+  fs.writeFileSync(path.join(appDir, 'page.tsx'), pageFile);
   fs.writeFileSync(path.join(appDir, `${PageName}.config.ts`), configFile);
   fs.writeFileSync(path.join(appDir, `${PageName}.meta.ts`), metaFile);
   fs.writeFileSync(path.join(appDir, `${PageName}.test.tsx`), testFile);
-  
+
   if (withStory) {
     fs.writeFileSync(path.join(appDir, `${PageName}.stories.tsx`), storyFile);
     console.log(`✅ Created: ${PageName}.stories.tsx`);
@@ -338,9 +339,9 @@ export function getAllRoutes(): Record<string, RouteConfig> {
   }
 
   // Add route
-  const routeSnippet = `addRoute('${pageSlug}', { path: '/${pageSlug}', title: '${PageName}', layout: '${layout}', hero: ${layout === "marketing"}, requiresAuth: ${layout === "dashboard"} });`;
-  const content = fs.readFileSync(routeFile, "utf8");
-  
+  const routeSnippet = `addRoute('${pageSlug}', { path: '/${pageSlug}', title: '${PageName}', layout: '${layout}', hero: ${layout === 'marketing'}, requiresAuth: ${layout === 'dashboard'} });`;
+  const content = fs.readFileSync(routeFile, 'utf8');
+
   if (!content.includes(`'${pageSlug}'`)) {
     fs.appendFileSync(routeFile, `${routeSnippet}\n`);
     console.log(`✅ Added route to routes.config.ts`);
@@ -351,7 +352,9 @@ export function getAllRoutes(): Record<string, RouteConfig> {
   console.log(`\n🎉 ${PageName} page created successfully!`);
   console.log(`\n📊 Generated files: ${withStory ? '7' : '6'} files`);
   console.log(`📄 Layout: ${layout}`);
-  console.log(`🎯 Features: Hero(${layout === "marketing"}), Auth(${layout === "dashboard"}), SEO(✅), A11y(✅)`);
+  console.log(
+    `🎯 Features: Hero(${layout === 'marketing'}), Auth(${layout === 'dashboard'}), SEO(✅), A11y(✅)`
+  );
   console.log(`\n🚀 Next steps:`);
   console.log(`   1. Visit: http://localhost:3000/${pageSlug}`);
   console.log(`   2. Edit: src/app/${pageSlug}/BaseSection.tsx`);
@@ -361,6 +364,6 @@ export function getAllRoutes(): Record<string, RouteConfig> {
 }
 
 main().catch(err => {
-  console.error("❌ Error creating page:", err);
+  console.error('❌ Error creating page:', err);
   process.exit(1);
 });

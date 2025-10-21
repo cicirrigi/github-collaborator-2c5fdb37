@@ -74,23 +74,23 @@ Main global stylesheet containing luxury animations and effects:
 ### Basic Logo with Float
 
 ```tsx
-<div className="animate-luxuryFloat">
-  <Image src="/logo.svg" alt="Logo" width={64} height={64} />
+<div className='animate-luxuryFloat'>
+  <Image src='/logo.svg' alt='Logo' width={64} height={64} />
 </div>
 ```
 
 ### Premium Logo with Shimmer
 
 ```tsx
-<div className="animate-luxuryFloat animate-logoShimmer">
-  <Image src="/logo.svg" alt="Logo" width={64} height={64} />
+<div className='animate-luxuryFloat animate-logoShimmer'>
+  <Image src='/logo.svg' alt='Logo' width={64} height={64} />
 </div>
 ```
 
 ### Navbar with Backdrop
 
 ```tsx
-<nav className="navbar-backdrop bg-background/30">{/* Navigation content */}</nav>
+<nav className='navbar-backdrop bg-background/30'>{/* Navigation content */}</nav>
 ```
 
 ## 🎨 Design Philosophy

@@ -60,7 +60,7 @@ export const designTokens = {
   // Spacing tokens (inline for now, can be moved to tokens/spacing.ts)
   spacing: {
     xs: '0.5rem',
-    sm: '0.75rem', 
+    sm: '0.75rem',
     md: '1rem',
     lg: '1.5rem',
     xl: '2rem',
@@ -98,12 +98,12 @@ export const designTokens = {
       bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
     },
   },
-} as const
+} as const;
 
 export const propTokens = {
   variants: {
     primary: 'primary',
-    secondary: 'secondary', 
+    secondary: 'secondary',
     outline: 'outline',
     ghost: 'ghost',
     destructive: 'destructive',
@@ -111,10 +111,10 @@ export const propTokens = {
   sizes: {
     sm: 'sm',
     md: 'md',
-    lg: 'lg', 
+    lg: 'lg',
     xl: 'xl',
   },
-} as const
+} as const;
 
 /**
  * 🧩 Component Variants (will be moved to variants/ folder)
@@ -123,8 +123,10 @@ export const componentVariants = {
   button: {
     variants: {
       primary: 'bg-brand-primary hover:bg-brand-primary/90 text-black',
-      secondary: 'bg-neutral-200 hover:bg-neutral-300 text-neutral-900 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100',
-      outline: 'border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black',
+      secondary:
+        'bg-neutral-200 hover:bg-neutral-300 text-neutral-900 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100',
+      outline:
+        'border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black',
       ghost: 'text-brand-primary hover:bg-brand-primary/10',
       destructive: 'bg-red-500 hover:bg-red-600 text-white',
     },
@@ -139,7 +141,8 @@ export const componentVariants = {
   card: {
     variants: {
       default: 'bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800',
-      elevated: 'bg-white dark:bg-neutral-900 shadow-lg border border-neutral-200 dark:border-neutral-800',
+      elevated:
+        'bg-white dark:bg-neutral-900 shadow-lg border border-neutral-200 dark:border-neutral-800',
       glass: 'bg-white/10 backdrop-blur-md border border-white/10',
     },
     base: `rounded-lg transition-colors duration-300 ease-in-out`,
@@ -174,7 +177,7 @@ export const componentVariants = {
     },
     base: 'inline-flex items-center font-medium rounded-full',
   },
-} as const
+} as const;
 
 /**
  * 🎨 Unified Theme Configuration
@@ -183,6 +186,6 @@ export const themeConfig = {
   tokens: designTokens,
   props: propTokens,
   components: componentVariants,
-} as const
+} as const;
 
-export default themeConfig
+export default themeConfig;

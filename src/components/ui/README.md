@@ -84,30 +84,30 @@ ComponentName.displayName = 'ComponentName'
 
 ```typescript
 // ✅ Good - uses theme variables
-className = 'bg-background text-foreground border-border'
+className = 'bg-background text-foreground border-border';
 
 // ❌ Bad - hardcoded colors
-className = 'bg-white text-black border-gray-200'
+className = 'bg-white text-black border-gray-200';
 ```
 
 ### **Support Dark Mode**
 
 ```typescript
 // ✅ Automatic theme support
-className = 'bg-card text-card-foreground'
+className = 'bg-card text-card-foreground';
 
 // ❌ Manual dark mode (avoid unless necessary)
-className = 'bg-white dark:bg-gray-900'
+className = 'bg-white dark:bg-gray-900';
 ```
 
 ### **Use Semantic Spacing**
 
 ```typescript
 // ✅ Consistent spacing
-className = 'p-4 m-2 gap-3'
+className = 'p-4 m-2 gap-3';
 
 // ❌ Random spacing
-className = 'p-[13px] m-[7px] gap-[11px]'
+className = 'p-[13px] m-[7px] gap-[11px]';
 ```
 
 ## ♿ Accessibility Requirements
@@ -142,7 +142,7 @@ className = 'p-[13px] m-[7px] gap-[11px]'
 
 ```typescript
 interface SizeProps {
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
 const sizeClasses = {
@@ -151,14 +151,14 @@ const sizeClasses = {
   md: 'h-10 px-4 text-base',
   lg: 'h-12 px-6 text-lg',
   xl: 'h-14 px-8 text-xl',
-}
+};
 ```
 
 ### **Standard Variant System**
 
 ```typescript
 interface VariantProps {
-  variant?: 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive'
+  variant?: 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
 }
 
 const variantClasses = {
@@ -168,7 +168,7 @@ const variantClasses = {
   outline: 'border border-input hover:bg-accent hover:text-accent-foreground',
   ghost: 'hover:bg-accent hover:text-accent-foreground',
   destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-}
+};
 ```
 
 ## 🧪 Testing Atomic Components
@@ -183,13 +183,13 @@ const variantClasses = {
 
 ```typescript
 // src/components/ui/index.ts
-export { Button } from './button'
-export { Card, CardHeader, CardTitle, CardContent } from './card'
-export { Input } from './input'
-export { Label } from './label'
+export { Button } from './button';
+export { Card, CardHeader, CardTitle, CardContent } from './card';
+export { Input } from './input';
+export { Label } from './label';
 // ... other exports
 
 // Export types for external use
-export type { ButtonProps } from './button'
-export type { CardProps } from './card'
+export type { ButtonProps } from './button';
+export type { CardProps } from './card';
 ```

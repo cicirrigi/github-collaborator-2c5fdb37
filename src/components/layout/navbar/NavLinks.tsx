@@ -29,8 +29,8 @@ export function NavLinks({
   return (
     <nav
       className={cn('flex items-center gap-6', className)}
-      role="navigation"
-      aria-label="Main navigation"
+      role='navigation'
+      aria-label='Main navigation'
     >
       {items.map(item => {
         const isActive = !disableActive && normalize(pathname) === normalize(item.href);
@@ -47,13 +47,13 @@ export function NavLinks({
               'rounded-sm px-1 py-1 focus:outline-none focus:ring-2 focus:ring-brand-primary/50',
               isActive
                 ? 'text-brand-primary'
-                : 'text-neutral-700 hover:text-brand-primary dark:text-neutral-300 dark:hover:text-brand-primary',
+                : 'text-neutral-700 hover:text-brand-primary dark:text-neutral-300 dark:hover:text-brand-primary'
             )}
             aria-current={isActive ? 'page' : undefined}
           >
             {item.label}
             {item.external && (
-              <span className="ml-1 text-xs" aria-label="Opens in new tab">
+              <span className='ml-1 text-xs' aria-label='Opens in new tab'>
                 ↗
               </span>
             )}

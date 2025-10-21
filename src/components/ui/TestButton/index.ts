@@ -5,5 +5,5 @@
  */
 
 export { TestButton } from './TestButton';
+export type { TestButtonSize, TestButtonStyleConfig, TestButtonVariant } from './TestButton.types';
 export { TestButtonVariants } from './TestButton.variants';
-export type { TestButtonStyleConfig, TestButtonVariant, TestButtonSize } from './TestButton.types';

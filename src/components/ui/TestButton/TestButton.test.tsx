@@ -18,7 +18,7 @@ describe('TestButton', () => {
   });
 
   it('supports polymorphic as="button"', () => {
-    render(<TestButton as="button">Btn</TestButton>);
+    render(<TestButton as='button'>Btn</TestButton>);
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 

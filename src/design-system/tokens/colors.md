@@ -20,30 +20,30 @@ colors.brand.secondary.DEFAULT  // 'hsl(48, 50%, 70%)' - Light accent
 
 ```typescript
 // Customer tier system
-colors.tier.bronze   // 'hsl(30, 50%, 40%)'
-colors.tier.silver   // 'hsl(0, 0%, 75%)'
-colors.tier.gold     // 'hsl(51, 100%, 50%)'
-colors.tier.platinum // 'hsl(0, 0%, 90%)'
-colors.tier.elite    // 'hsl(45, 35%, 60%)' - Same as primary
+colors.tier.bronze; // 'hsl(30, 50%, 40%)'
+colors.tier.silver; // 'hsl(0, 0%, 75%)'
+colors.tier.gold; // 'hsl(51, 100%, 50%)'
+colors.tier.platinum; // 'hsl(0, 0%, 90%)'
+colors.tier.elite; // 'hsl(45, 35%, 60%)' - Same as primary
 ```
 
 ## ✅ Semantic Colors
 
 ```typescript
 // Success, warning, error, info with 50/500/700 scale
-colors.semantic.success[500]  // 'hsl(142, 71%, 45%)'
-colors.semantic.warning[500]  // 'hsl(38, 92%, 50%)'
-colors.semantic.error[500]    // 'hsl(0, 84%, 60%)'
-colors.semantic.info[500]     // 'hsl(217, 91%, 60%)'
+colors.semantic.success[500]; // 'hsl(142, 71%, 45%)'
+colors.semantic.warning[500]; // 'hsl(38, 92%, 50%)'
+colors.semantic.error[500]; // 'hsl(0, 84%, 60%)'
+colors.semantic.info[500]; // 'hsl(217, 91%, 60%)'
 ```
 
 ## ⚫ Neutral Colors
 
 ```typescript
 // Complete neutral system (50-950 scale)
-colors.neutral[50]   // 'hsl(0, 0%, 98%)' - Pure white
-colors.neutral[900]  // 'hsl(0, 0%, 10%)' - Dark background
-colors.neutral[950]  // 'hsl(0, 0%, 4%)' - Deep black
+colors.neutral[50]; // 'hsl(0, 0%, 98%)' - Pure white
+colors.neutral[900]; // 'hsl(0, 0%, 10%)' - Dark background
+colors.neutral[950]; // 'hsl(0, 0%, 4%)' - Deep black
 ```
 
 ## 🚀 Usage Guidelines

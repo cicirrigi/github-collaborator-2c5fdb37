@@ -39,7 +39,7 @@ export function Badge({
         // Size styles from theme config
         themeConfig.components.badge.sizes[size],
         // Custom className
-        className,
+        className
       )}
     >
       {children}

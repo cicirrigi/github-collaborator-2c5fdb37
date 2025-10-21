@@ -21,7 +21,7 @@ interface RequestLogData {
 export async function logRequest<T extends Response>(
   request: NextRequest,
   handler: () => Promise<T>,
-  userId?: string,
+  userId?: string
 ): Promise<T> {
   const start = Date.now();
   const requestData: RequestLogData = {
@@ -65,7 +65,7 @@ export async function logRequest<T extends Response>(
 export function logAuth(
   event: 'login' | 'logout' | 'register' | 'error',
   userId?: string,
-  meta?: Record<string, unknown>,
+  meta?: Record<string, unknown>
 ) {
   log.info(`Auth: ${event}`, { userId, event, ...meta });
 }

@@ -76,8 +76,7 @@ export function Section({
             'text-center': align === 'center',
             'text-right': align === 'right',
           },
-          animate &&
-            'motion-safe:animate-fadeIn opacity-0 transition-opacity duration-700 ease-out',
+          animate && 'motion-safe:animate-fadeIn opacity-0 transition-opacity duration-700 ease-out'
         )}
       >
         {children}
@@ -110,7 +109,7 @@ export function Section({
         },
         // Smooth transitions for dark/light switch
         'transition-colors duration-300 ease-in-out',
-        className,
+        className
       )}
       role={Tag === 'section' ? 'region' : undefined}
     >

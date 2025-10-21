@@ -1,8 +1,16 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { cn } from "@/lib/utils";
+import {
+  AnimatePresence,
+  motion,
+  type MotionValue,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from 'framer-motion';
+import React, { useState } from 'react';
+
+import { cn } from '@/lib/utils';
 
 export interface FloatingDockItem {
   title: string;
@@ -23,27 +31,36 @@ export const FloatingDock = ({
   items,
   desktopClassName,
   mobileClassName,
-  className,
-  variant = 'default',
-  size = 'md',
+  className: _className,
+  variant: _variant = 'default',
+  size: _size = 'md',
 }: FloatingDockProps) => {
   return (
     <>
-      <FloatingDockDesktop items={items} {...(desktopClassName && { className: desktopClassName })} />
+      <FloatingDockDesktop
+        items={items}
+        {...(desktopClassName && { className: desktopClassName })}
+      />
       <FloatingDockMobile items={items} {...(mobileClassName && { className: mobileClassName })} />
     </>
   );
 };
 
-const FloatingDockMobile = ({ items, className }: { items: FloatingDockItem[]; className?: string }) => {
+const FloatingDockMobile = ({
+  items,
+  className,
+}: {
+  items: FloatingDockItem[];
+  className?: string;
+}) => {
   const [open, setOpen] = useState(false);
   return (
-    <div className={cn("relative block md:hidden", className)}>
+    <div className={cn('relative block md:hidden', className)}>
       <AnimatePresence>
         {open && (
           <motion.div
-            layoutId="nav"
-            className="absolute bottom-full mb-2 inset-x-0 flex flex-col gap-2"
+            layoutId='nav'
+            className='absolute inset-x-0 bottom-full mb-2 flex flex-col gap-2'
           >
             {items.map((item, idx) => (
               <motion.div
@@ -65,9 +82,9 @@ const FloatingDockMobile = ({ items, className }: { items: FloatingDockItem[]; c
                 <a
                   href={item.href}
                   key={item.title}
-                  className="h-10 w-10 rounded-full bg-gray-50 dark:bg-neutral-900 flex items-center justify-center"
+                  className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-900'
                 >
-                  <div className="h-4 w-4">{item.icon}</div>
+                  <div className='h-4 w-4'>{item.icon}</div>
                 </a>
               </motion.div>
             ))}
@@ -76,39 +93,45 @@ const FloatingDockMobile = ({ items, className }: { items: FloatingDockItem[]; c
       </AnimatePresence>
       <button
         onClick={() => setOpen(!open)}
-        className="h-10 w-10 rounded-full bg-gray-50 dark:bg-neutral-800 flex items-center justify-center"
+        className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-800'
       >
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-5 w-5 text-neutral-500 dark:text-neutral-400"
+          xmlns='http://www.w3.org/2000/svg'
+          width='24'
+          height='24'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          strokeWidth='2'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          className='h-5 w-5 text-neutral-500 dark:text-neutral-400'
         >
-          <path d="M3 12h18m-9-9v18" />
+          <path d='M3 12h18m-9-9v18' />
         </svg>
       </button>
     </div>
   );
 };
 
-const FloatingDockDesktop = ({ items, className }: { items: FloatingDockItem[]; className?: string }) => {
-  let mouseX = useMotionValue(Infinity);
+const FloatingDockDesktop = ({
+  items,
+  className,
+}: {
+  items: FloatingDockItem[];
+  className?: string;
+}) => {
+  const mouseX = useMotionValue(Infinity);
   return (
     <motion.div
-      onMouseMove={(e) => mouseX.set(e.pageX)}
+      onMouseMove={e => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
-        "mx-auto hidden md:flex h-16 gap-4 items-end rounded-2xl bg-gray-50 dark:bg-neutral-900 px-4 pb-3",
+        'mx-auto hidden h-16 items-end gap-4 rounded-2xl bg-gray-50 px-4 pb-3 dark:bg-neutral-900 md:flex',
         className
       )}
     >
-      {items.map((item) => (
+      {items.map(item => (
         <IconContainer mouseX={mouseX} key={item.title} {...item} />
       ))}
     </motion.div>
@@ -121,41 +144,41 @@ function IconContainer({
   icon,
   href,
 }: {
-  mouseX: any;
+  mouseX: MotionValue<number>;
   title: string;
   icon: React.ReactNode;
   href: string;
 }) {
-  let ref = React.useRef<HTMLDivElement>(null);
+  const ref = React.useRef<HTMLDivElement>(null);
 
-  let distance = useTransform(mouseX, (val: number) => {
-    let bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
+  const distance = useTransform(mouseX, (val: number) => {
+    const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
     return val - bounds.x - bounds.width / 2;
   });
 
-  let widthTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
-  let heightTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
+  const widthTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
+  const heightTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
 
-  let widthTransformIcon = useTransform(distance, [-150, 0, 150], [20, 40, 20]);
-  let heightTransformIcon = useTransform(distance, [-150, 0, 150], [20, 40, 20]);
+  const widthTransformIcon = useTransform(distance, [-150, 0, 150], [20, 40, 20]);
+  const heightTransformIcon = useTransform(distance, [-150, 0, 150], [20, 40, 20]);
 
-  let width = useSpring(widthTransform, {
+  const width = useSpring(widthTransform, {
     mass: 0.1,
     stiffness: 150,
     damping: 12,
   });
-  let height = useSpring(heightTransform, {
+  const height = useSpring(heightTransform, {
     mass: 0.1,
     stiffness: 150,
     damping: 12,
   });
 
-  let widthIcon = useSpring(widthTransformIcon, {
+  const widthIcon = useSpring(widthTransformIcon, {
     mass: 0.1,
     stiffness: 150,
     damping: 12,
   });
-  let heightIcon = useSpring(heightTransformIcon, {
+  const heightIcon = useSpring(heightTransformIcon, {
     mass: 0.1,
     stiffness: 150,
     damping: 12,
@@ -170,15 +193,15 @@ function IconContainer({
         style={{ width, height }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="aspect-square rounded-full bg-gray-200 dark:bg-neutral-800 flex items-center justify-center relative"
+        className='relative flex aspect-square items-center justify-center rounded-full bg-gray-200 dark:bg-neutral-800'
       >
         <AnimatePresence>
           {hovered && (
             <motion.div
-              initial={{ opacity: 0, y: 10, x: "-50%" }}
-              animate={{ opacity: 1, y: 0, x: "-50%" }}
-              exit={{ opacity: 0, y: 2, x: "-50%" }}
-              className="px-2 py-0.5 whitespace-pre rounded-md bg-gray-100 border dark:bg-neutral-800 dark:border-neutral-900 dark:text-white border-gray-200 text-neutral-700 absolute left-1/2 -translate-x-1/2 -top-8 w-fit text-xs"
+              initial={{ opacity: 0, y: 10, x: '-50%' }}
+              animate={{ opacity: 1, y: 0, x: '-50%' }}
+              exit={{ opacity: 0, y: 2, x: '-50%' }}
+              className='absolute -top-8 left-1/2 w-fit -translate-x-1/2 whitespace-pre rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs text-neutral-700 dark:border-neutral-900 dark:bg-neutral-800 dark:text-white'
             >
               {title}
             </motion.div>
@@ -186,7 +209,7 @@ function IconContainer({
         </AnimatePresence>
         <motion.div
           style={{ width: widthIcon, height: heightIcon }}
-          className="flex items-center justify-center"
+          className='flex items-center justify-center'
         >
           {icon}
         </motion.div>

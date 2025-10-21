@@ -63,19 +63,19 @@ fonts/
 
 ```typescript
 // app/layout.tsx
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Playfair_Display } from 'next/font/google';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
-})
+});
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair',
   display: 'optional',
-})
+});
 ```
 
 ## 🎨 **Usage în Design System**
@@ -91,7 +91,7 @@ module.exports = {
       display: ['var(--font-playfair)', 'Georgia', 'serif'],
     },
   },
-}
+};
 ```
 
 ### **CSS Custom Properties**

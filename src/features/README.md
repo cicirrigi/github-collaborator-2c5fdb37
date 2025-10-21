@@ -60,13 +60,13 @@ booking/
 
 ```typescript
 // ✅ Features CAN import from:
-import { Button } from '@/components/ui/button'
-import { PricingCard } from '@/components/shared/PricingCard'
-import { useDebounce } from '@/lib/hooks/useDebounce'
-import type { UserType } from '@/types/user'
+import { Button } from '@/components/ui/button';
+import { PricingCard } from '@/components/shared/PricingCard';
+import { useDebounce } from '@/lib/hooks/useDebounce';
+import type { UserType } from '@/types/user';
 
 // ❌ Features CANNOT import from other features:
-import { PaymentModal } from '@/components/features/payments' // ❌
+import { PaymentModal } from '@/components/features/payments'; // ❌
 ```
 
 ### **3. State Management**
@@ -79,10 +79,10 @@ import { PaymentModal } from '@/components/features/payments' // ❌
 
 ```typescript
 // Use services from /lib/ or /server/
-import { bookingService } from '@/server/services/booking'
+import { bookingService } from '@/server/services/booking';
 
 // Don't call APIs directly in components
-const { data } = await supabase.from('bookings') // ❌
+const { data } = await supabase.from('bookings'); // ❌
 ```
 
 ## 🆕 Creating a New Feature
@@ -98,14 +98,14 @@ mkdir -p src/features/new-feature/{components,hooks}
 ```typescript
 // src/features/new-feature/types.ts
 export interface NewFeatureType {
-  id: string
-  name: string
-  status: 'active' | 'inactive'
+  id: string;
+  name: string;
+  status: 'active' | 'inactive';
 }
 
 export interface NewFeatureFormData {
-  name: string
-  description: string
+  name: string;
+  description: string;
 }
 ```
 
@@ -116,12 +116,12 @@ export interface NewFeatureFormData {
 export const NEW_FEATURE_STATUS = {
   ACTIVE: 'active',
   INACTIVE: 'inactive',
-} as const
+} as const;
 
 export const DEFAULT_FORM_VALUES = {
   name: '',
   description: '',
-}
+};
 ```
 
 ### **4. Build Components**
@@ -149,22 +149,22 @@ export function NewFeatureCard({ feature }: NewFeatureCardProps) {
 
 ```typescript
 // src/features/new-feature/hooks/useNewFeature.ts
-import { useState } from 'react'
-import type { NewFeatureType } from '../types'
+import { useState } from 'react';
+import type { NewFeatureType } from '../types';
 
 export function useNewFeature() {
-  const [features, setFeatures] = useState<NewFeatureType[]>([])
-  const [isLoading, setIsLoading] = useState(false)
+  const [features, setFeatures] = useState<NewFeatureType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const addFeature = (feature: NewFeatureType) => {
-    setFeatures(prev => [...prev, feature])
-  }
+    setFeatures(prev => [...prev, feature]);
+  };
 
   return {
     features,
     isLoading,
     addFeature,
-  }
+  };
 }
 ```
 
@@ -172,10 +172,10 @@ export function useNewFeature() {
 
 ```typescript
 // src/features/new-feature/index.ts
-export { NewFeatureCard } from './components/NewFeatureCard'
-export { useNewFeature } from './hooks/useNewFeature'
-export type { NewFeatureType, NewFeatureFormData } from './types'
-export { NEW_FEATURE_STATUS, DEFAULT_FORM_VALUES } from './constants'
+export { NewFeatureCard } from './components/NewFeatureCard';
+export { useNewFeature } from './hooks/useNewFeature';
+export type { NewFeatureType, NewFeatureFormData } from './types';
+export { NEW_FEATURE_STATUS, DEFAULT_FORM_VALUES } from './constants';
 ```
 
 ## 📱 Complex Features

@@ -36,9 +36,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# IDE
-.vscode/
+# IDE (keep vscode settings for team)
 .idea/
+.vscode/launch.json
+.vscode/sftp.json
 
 # OS
 Thumbs.db

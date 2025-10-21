@@ -83,21 +83,21 @@ export function ServicesMenu({ className }: ServicesMenuProps): React.JSX.Elemen
           'hover:text-brand-primary focus:text-brand-primary',
           'rounded-sm px-1 py-1 focus:outline-none focus:ring-2 focus:ring-brand-primary/50',
           'flex items-center gap-1',
-          isServicesActive ? 'text-brand-primary' : 'text-neutral-300 hover:text-brand-primary',
+          isServicesActive ? 'text-brand-primary' : 'text-neutral-300 hover:text-brand-primary'
         )}
         aria-expanded={isOpen}
-        aria-haspopup="true"
-        aria-label="Services menu"
+        aria-haspopup='true'
+        aria-label='Services menu'
       >
         Services
         <svg
           className={cn('h-4 w-4 transition-transform duration-200', isOpen && 'rotate-180')}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
+          fill='none'
+          stroke='currentColor'
+          viewBox='0 0 24 24'
+          aria-hidden='true'
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 9l-7 7-7-7' />
         </svg>
       </button>
 
@@ -109,12 +109,12 @@ export function ServicesMenu({ className }: ServicesMenuProps): React.JSX.Elemen
             'border border-border/50 bg-background/95 backdrop-blur-md',
             'rounded-lg shadow-lg shadow-black/20',
             'duration-200 animate-in fade-in-0 zoom-in-95',
-            'origin-top-left',
+            'origin-top-left'
           )}
-          role="menu"
-          aria-orientation="vertical"
+          role='menu'
+          aria-orientation='vertical'
         >
-          <div className="p-2">
+          <div className='p-2'>
             {services.map(service => {
               const isActive = pathname === service.href;
 
@@ -127,13 +127,13 @@ export function ServicesMenu({ className }: ServicesMenuProps): React.JSX.Elemen
                     'block rounded-md px-3 py-2 transition-colors duration-200',
                     'hover:bg-brand-primary/10 hover:text-brand-primary',
                     'focus:bg-brand-primary/10 focus:text-brand-primary focus:outline-none',
-                    isActive && 'bg-brand-primary/10 text-brand-primary',
+                    isActive && 'bg-brand-primary/10 text-brand-primary'
                   )}
-                  role="menuitem"
+                  role='menuitem'
                 >
-                  <div className="text-sm font-medium">{service.label}</div>
+                  <div className='text-sm font-medium'>{service.label}</div>
                   {service.description && (
-                    <div className="mt-0.5 text-xs text-muted-foreground">
+                    <div className='mt-0.5 text-xs text-muted-foreground'>
                       {service.description}
                     </div>
                   )}

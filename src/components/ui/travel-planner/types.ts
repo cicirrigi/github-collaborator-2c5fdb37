@@ -1,5 +1,5 @@
-import { BookingTabType } from '../booking-tabs/types';
-import { GooglePlace } from '../location-picker/types';
+import { type BookingTabType } from '@/components/ui/booking-tabs/types';
+import { type GooglePlace } from '@/components/ui/location-picker/types';
 
 // Time slot interface
 export interface TimeSlot {
@@ -13,23 +13,23 @@ export interface TimeSlot {
 export interface Stop {
   id: string;
   address: string;
-  place?: GooglePlace;
-  coordinates?: [number, number];
+  place?: GooglePlace | null | undefined;
+  coordinates?: [number, number] | null | undefined;
 }
 
 // Travel plan complet
 export interface TravelPlan {
   // Date & Time
   pickupDate: Date;
-  returnDate?: Date;
+  returnDate?: Date | null;
   pickupTime: TimeSlot | null;
   returnTime?: TimeSlot | null;
-  
+
   // Locations
   pickup: GooglePlace | null;
   destination: GooglePlace | null;
   additionalStops: Stop[];
-  
+
   // Meta
   bookingType: BookingTabType;
   totalStops: number;
@@ -52,8 +52,8 @@ export interface DateTimeSectionProps {
   returnDate?: Date | null;
   pickupTime: TimeSlot | null;
   returnTime?: TimeSlot | null;
-  onDateChange: (pickup: Date, return?: Date) => void;
-  onTimeChange: (pickup: TimeSlot, return?: TimeSlot) => void;
+  onDateChange: (pickup: Date, returnDate?: Date) => void;
+  onTimeChange: (pickup: TimeSlot, returnTime?: TimeSlot) => void;
   showReturn: boolean;
   isLoading?: boolean;
   className?: string;
@@ -85,7 +85,7 @@ export interface MapPreviewProps {
   className?: string;
 }
 
-// Weather hint types  
+// Weather hint types
 export interface WeatherHint {
   condition: string;
   temperature: number;

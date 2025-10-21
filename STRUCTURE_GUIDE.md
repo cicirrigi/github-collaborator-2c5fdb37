@@ -14,7 +14,7 @@ vantage-lane-2.0/
 │   │   ├── test-benefits/      # Test pages
 │   │   └── test-button/        # Component testing pages
 │   │
-│   ├── 🎨 components/          # UI Library & Feature Components  
+│   ├── 🎨 components/          # UI Library & Feature Components
 │   │   ├── ui/                 # Atomic components (Button, Card, Input)
 │   │   ├── shared/             # Reusable UI blocks with light logic
 │   │   ├── features/           # Domain-based modular organization
@@ -50,7 +50,7 @@ vantage-lane-2.0/
 │   ├── 🛠️ lib/                 # Pure logic & utilities
 │   │   ├── utils/              # Helper functions (cn, formatters, validators)
 │   │   ├── hooks/              # Custom React hooks
-│   │   ├── logger/             # Logging utilities  
+│   │   ├── logger/             # Logging utilities
 │   │   ├── monitoring/         # Sentry, error tracking
 │   │   ├── constants.ts        # Application constants
 │   │   ├── env.ts              # Environment configuration
@@ -76,13 +76,13 @@ vantage-lane-2.0/
 │   │
 │   └── 📝 types/               # TypeScript type definitions
 │       ├── booking.ts          # Booking-related types
-│       ├── user.ts             # User & authentication types  
+│       ├── user.ts             # User & authentication types
 │       ├── invoice.ts          # Payment & billing types
 │       └── global.ts           # Global type definitions
 │
 ├── 📁 docs/                    # Documentation
 ├── 📁 scripts/                 # Build & quality scripts (AI Guardian, etc.)
-├── 📁 sql/                     # Database schemas & migrations  
+├── 📁 sql/                     # Database schemas & migrations
 ├── 📁 public/                  # Static assets
 └── 📄 Configuration files      # package.json, tsconfig.json, etc.
 ```
@@ -99,7 +99,7 @@ vantage-lane-2.0/
 
 - **`components/features/`** vs **`features/`**: Components are UI-focused, features/ contains business logic
 - **`lib/`**: Pure utilities, no React dependencies
-- **`providers/`**: React context and global state management  
+- **`providers/`**: React context and global state management
 - **`server/`**: Server-side code (actions, middleware, services)
 - **`config/`**: Centralized configuration management
 

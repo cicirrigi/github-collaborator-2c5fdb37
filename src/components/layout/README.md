@@ -28,21 +28,21 @@ Enterprise-grade layout system with complete component ecosystem.
 ### Basic Page Layout
 
 ```tsx
-import { Layout } from '@/components/layout'
+import { Layout } from '@/components/layout';
 
 export default function HomePage() {
   return (
-    <Layout pageTitle="Home">
+    <Layout pageTitle='Home'>
       <h1>Welcome to Vantage Lane</h1>
     </Layout>
-  )
+  );
 }
 ```
 
 ### Custom Layout (Auth Page)
 
 ```tsx
-import { Layout } from '@/components/layout'
+import { Layout } from '@/components/layout';
 
 export default function LoginPage() {
   return (
@@ -50,36 +50,36 @@ export default function LoginPage() {
       hideNavbar
       hideFooter
       fullHeight
-      pageTitle="Sign In"
-      className="bg-gradient-to-br from-neutral-950 to-neutral-900"
+      pageTitle='Sign In'
+      className='bg-gradient-to-br from-neutral-950 to-neutral-900'
     >
       <LoginForm />
     </Layout>
-  )
+  );
 }
 ```
 
 ### Section-based Layout
 
 ```tsx
-import { Layout, Section } from '@/components/layout'
+import { Layout, Section } from '@/components/layout';
 
 export default function AboutPage() {
   return (
-    <Layout pageTitle="About Us">
-      <Section spacing="xl" background="gradient" align="center">
-        <Hero title="About Vantage Lane" />
+    <Layout pageTitle='About Us'>
+      <Section spacing='xl' background='gradient' align='center'>
+        <Hero title='About Vantage Lane' />
       </Section>
 
-      <Section spacing="lg" background="neutral" contained>
+      <Section spacing='lg' background='neutral' contained>
         <AboutContent />
       </Section>
 
-      <Section spacing="md" contained={false}>
+      <Section spacing='md' contained={false}>
         <FullWidthGallery />
       </Section>
     </Layout>
-  )
+  );
 }
 ```
 
@@ -89,13 +89,13 @@ export default function AboutPage() {
 
 ```typescript
 interface LayoutProps {
-  readonly children: React.ReactNode // Page content
-  readonly hideNavbar?: boolean // Hide navigation
-  readonly hideFooter?: boolean // Hide footer
-  readonly className?: string // Main content styling
-  readonly containerClassName?: string // Container styling
-  readonly fullHeight?: boolean // Enable min-h-screen
-  readonly pageTitle?: string // SEO page title
+  readonly children: React.ReactNode; // Page content
+  readonly hideNavbar?: boolean; // Hide navigation
+  readonly hideFooter?: boolean; // Hide footer
+  readonly className?: string; // Main content styling
+  readonly containerClassName?: string; // Container styling
+  readonly fullHeight?: boolean; // Enable min-h-screen
+  readonly pageTitle?: string; // SEO page title
 }
 ```
 
@@ -105,13 +105,13 @@ interface LayoutProps {
 
 ```tsx
 <Layout>
-  <Section spacing="xl" background="gradient" align="center">
+  <Section spacing='xl' background='gradient' align='center'>
     <Hero />
   </Section>
-  <Section spacing="lg" contained>
+  <Section spacing='lg' contained>
     <Features />
   </Section>
-  <Section spacing="lg" background="neutral">
+  <Section spacing='lg' background='neutral'>
     <Testimonials />
   </Section>
 </Layout>
@@ -120,8 +120,8 @@ interface LayoutProps {
 ### Dashboard Pattern
 
 ```tsx
-<Layout hideFooter pageTitle="Dashboard">
-  <Section spacing="md" contained={false}>
+<Layout hideFooter pageTitle='Dashboard'>
+  <Section spacing='md' contained={false}>
     <DashboardContent />
   </Section>
 </Layout>
@@ -131,7 +131,7 @@ interface LayoutProps {
 
 ```tsx
 <Layout hideNavbar hideFooter fullHeight>
-  <div className="flex min-h-screen items-center justify-center">
+  <div className='flex min-h-screen items-center justify-center'>
     <AuthForm />
   </div>
 </Layout>
@@ -168,10 +168,10 @@ interface LayoutProps {
 
 ```tsx
 // ✅ Good - Named imports from index
-import { Layout, Section, Container } from '@/components/layout'
+import { Layout, Section, Container } from '@/components/layout';
 
 // ❌ Avoid - Direct file imports
-import Layout from '@/components/layout/Layout'
+import Layout from '@/components/layout/Layout';
 ```
 
 ### Composition Pattern

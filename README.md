@@ -67,13 +67,13 @@ export const designTokens = {
   colors: { brand: { primary: '#CBB26A' } /* ... */ },
   typography: { fontFamily: { sans: ['Inter'] } /* ... */ },
   // All UI components use these tokens
-}
+};
 
 // content.config.ts - All text content
 export const homeContent = {
   hero: { title: 'Experience Luxury Transportation' },
   // No hardcoded strings anywhere
-}
+};
 ```
 
 **🎯 Reusable UI Components:**

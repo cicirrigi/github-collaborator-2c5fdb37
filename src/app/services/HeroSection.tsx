@@ -14,7 +14,7 @@ export function HeroSection(): JSX.Element {
 
   return (
     <section
-      className="relative text-center py-16 md:py-24"
+      className='relative text-center py-16 md:py-24'
       style={
         {
           '--brand-primary': primary,
@@ -25,10 +25,8 @@ export function HeroSection(): JSX.Element {
       }
     >
       <Container>
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-          Services
-        </h1>
-        <p className="mx-auto max-w-xl text-lg md:text-xl text-neutral-300 text-balance">
+        <h1 className='text-4xl md:text-6xl font-bold tracking-tight mb-6'>Services</h1>
+        <p className='mx-auto max-w-xl text-lg md:text-xl text-neutral-300 text-balance'>
           Discover premium experiences with Vantage Lane — crafted for elegance and performance.
         </p>
       </Container>

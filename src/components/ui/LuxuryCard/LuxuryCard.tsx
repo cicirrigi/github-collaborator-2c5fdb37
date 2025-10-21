@@ -87,7 +87,7 @@ const LuxuryCard = forwardRef<HTMLElement, LuxuryCardProps>(
       // Rest props (for polymorphic behavior)
       ...rest
     },
-    ref,
+    ref
   ) => {
     /**
      * Generate CSS custom properties for dynamic theming
@@ -106,7 +106,7 @@ const LuxuryCard = forwardRef<HTMLElement, LuxuryCardProps>(
       luxuryCardStyles.sizes[size],
       hover !== 'none' && luxuryCardStyles.hover[hover].container,
       disabled && 'pointer-events-none cursor-not-allowed opacity-50',
-      className,
+      className
     );
 
     /**
@@ -116,10 +116,16 @@ const LuxuryCard = forwardRef<HTMLElement, LuxuryCardProps>(
     return (
       <Component ref={ref as never} className={cardClasses} style={customProps} {...rest}>
         {/* Hover Effects Layer */}
-        {renderShimmerOverlay({ hover, disabled, cardEnhancement, glowColor, shimmerColor })}
+        {renderShimmerOverlay({
+          hover,
+          disabled,
+          cardEnhancement,
+          glowColor,
+          shimmerColor,
+        })}
 
         {/* Content Layer */}
-        <div className="relative z-10">
+        <div className='relative z-10'>
           {renderContent({
             children,
             icon,
@@ -137,7 +143,7 @@ const LuxuryCard = forwardRef<HTMLElement, LuxuryCardProps>(
         </div>
       </Component>
     );
-  },
+  }
 ) as LuxuryCardComponent;
 
 LuxuryCard.displayName = 'LuxuryCard';

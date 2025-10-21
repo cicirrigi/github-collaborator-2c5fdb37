@@ -6,11 +6,11 @@
 'use client';
 
 // Re-export from modularized files
-export { renderIcon } from './LuxuryCard.icon';
-export { renderShimmerOverlay } from './LuxuryCard.overlay';  
 export { renderContent } from './LuxuryCard.content';
+export { renderIcon } from './LuxuryCard.icon';
+export { renderShimmerOverlay } from './LuxuryCard.overlay';
 
 // Re-export types for backward compatibility
+export type { ContentRenderProps } from './LuxuryCard.content';
 export type { IconRenderProps } from './LuxuryCard.icon';
 export type { OverlayRenderProps } from './LuxuryCard.overlay';
-export type { ContentRenderProps } from './LuxuryCard.content';

@@ -17,6 +17,7 @@ This directory contains all images for the Vantage Lane website, organized by ca
 ## 🎯 Category Details
 
 ### **Hero Images** (`/hero/`)
+
 - All hero images for ServiceHero components
 - Account page hero images (Dashboard, Profile, Billing, My Journeys)
 - Service page hero images (City-to-City, Airport, Limousine, etc.)
@@ -24,17 +25,20 @@ This directory contains all images for the Vantage Lane website, organized by ca
 - **Format:** WebP optimized (85-95% size reduction vs original PNG)
 
 ### **Models** (`/models/`)
+
 - Car model images for fleet display
 - PNG files: BMW 5/7 Series, Mercedes E/S-Class, V-Class, Range Rover
 - SVG files: Fallback icons for vehicle types
 - **Usage:** Fleet pages, vehicle selection, booking forms
 
 ### **Payment** (`/payment/`)
+
 - Payment method logos (Visa, Mastercard, AmEx, Apple Pay, etc.)
 - Stripe branding assets
 - **Format:** PNG for compatibility with payment systems
 
 ### **Illustrations** (`/illustrations/`)
+
 - Landing page hero images
 - About page photos and illustrations
 - Company logos and branding assets
@@ -42,10 +46,12 @@ This directory contains all images for the Vantage Lane website, organized by ca
 - **Format:** Mixed WebP, JPG, SVG
 
 ### **Animations** (`/animations/`)
+
 - Animated assets and graphics
 - **Format:** WebP for optimal performance
 
 ### **Unused Images** (`/unused-images/`)
+
 - Archive of original PNG/JPG files replaced by WebP
 - **Size:** ~23MB total (vs ~2MB active images)
 - **Status:** Safe to delete or move elsewhere
@@ -53,11 +59,13 @@ This directory contains all images for the Vantage Lane website, organized by ca
 ## ⚡ Performance Impact
 
 **Before Reorganization:**
+
 - Images scattered across multiple directories
 - Mixed PNG/JPG formats (1MB+ each)
 - Total payload: ~15MB
 
 **After Reorganization:**
+
 - All images in organized `/images/` structure
 - WebP format with 85-90% size reduction
 - Total payload: ~2MB (87% reduction)
@@ -68,16 +76,16 @@ All image references in the codebase have been updated to use the new structure:
 
 ```typescript
 // Hero images
-backgroundImage="/images/hero/City to city hero.webp"
+backgroundImage = '/images/hero/City to city hero.webp';
 
-// Car models  
-image="/images/models/BMW-5-Series.png"
+// Car models
+image = '/images/models/BMW-5-Series.png';
 
 // Payment logos
-src="/images/payment/Visa.png"
+src = '/images/payment/Visa.png';
 
 // Illustrations
-src="/images/illustrations/landing-hero.jpg"
+src = '/images/illustrations/landing-hero.jpg';
 ```
 
 ## 📋 Maintenance
@@ -88,5 +96,6 @@ src="/images/illustrations/landing-hero.jpg"
 - **Archive:** Move unused files to `/unused-images/` folder
 
 ---
-*Last updated: 2025-10-04*
-*Total space saved: ~21MB (87% reduction)*
+
+_Last updated: 2025-10-04_
+_Total space saved: ~21MB (87% reduction)_

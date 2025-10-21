@@ -54,12 +54,12 @@ export function Button({
         // Loading state
         loading && 'cursor-wait',
         // Custom className
-        className,
+        className
       )}
     >
       {loading ? (
-        <div className="flex items-center gap-2">
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        <div className='flex items-center gap-2'>
+          <div className='h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent' />
           {children}
         </div>
       ) : (

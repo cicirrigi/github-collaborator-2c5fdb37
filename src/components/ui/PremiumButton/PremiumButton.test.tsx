@@ -18,7 +18,7 @@ describe('PremiumButton', () => {
   });
 
   it('supports polymorphic as="button"', () => {
-    render(<PremiumButton as="button">Btn</PremiumButton>);
+    render(<PremiumButton as='button'>Btn</PremiumButton>);
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
@@ -44,13 +44,17 @@ describe('PremiumButton', () => {
   });
 
   it('shows type=button when as=button', () => {
-    render(<PremiumButton as="button">Button</PremiumButton>);
+    render(<PremiumButton as='button'>Button</PremiumButton>);
     const btn = screen.getByRole('button');
     expect(btn).toHaveAttribute('type', 'button');
   });
 
   it('adds data attributes for testing', () => {
-    render(<PremiumButton variant="primary" size="lg" data-testid="test">Test</PremiumButton>);
+    render(
+      <PremiumButton variant='primary' size='lg' data-testid='test'>
+        Test
+      </PremiumButton>
+    );
     const el = screen.getByTestId('test');
     expect(el).toHaveAttribute('data-variant', 'primary');
     expect(el).toHaveAttribute('data-size', 'lg');

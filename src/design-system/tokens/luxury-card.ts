@@ -11,10 +11,10 @@ export const luxuryCardTokens = {
   },
   sizes: {
     icon: {
-      sm: { width: '2rem', height: '2rem' },      // 32x32px
-      md: { width: '3rem', height: '3rem' },      // 48x48px
-      lg: { width: '4rem', height: '4rem' },      // 64x64px
-      xl: { width: '4.5rem', height: '4.5rem' },  // 72x72px
+      sm: { width: '2rem', height: '2rem' }, // 32x32px
+      md: { width: '3rem', height: '3rem' }, // 48x48px
+      lg: { width: '4rem', height: '4rem' }, // 64x64px
+      xl: { width: '4.5rem', height: '4.5rem' }, // 72x72px
       vantage: { width: '5rem', height: '5rem' }, // 80x80px
     },
   },
@@ -27,8 +27,8 @@ export const luxuryCardTokens = {
   },
   scales: {
     hover: {
-      container: '1.1',    // scale-110
-      icon: '1.05',        // scale-105
+      container: '1.1', // scale-110
+      icon: '1.05', // scale-105
     },
   },
   effects: {
@@ -55,7 +55,8 @@ export const luxuryCardTokens = {
   },
   shadows: {
     base: '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)',
-    hover: '0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2), 0 0 30px rgba(203, 178, 106, 0.15)',
+    hover:
+      '0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2), 0 0 30px rgba(203, 178, 106, 0.15)',
   },
 } as const;
 

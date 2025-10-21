@@ -94,14 +94,14 @@
 
 ```tsx
 // ✅ Proper imports
-import { cn } from '@/lib/utils/cn'
-import { log } from '@/lib/logger'
+import { cn } from '@/lib/utils/cn';
+import { log } from '@/lib/logger';
 
 // ✅ Proper TypeScript interface
 interface ButtonProps {
-  variant?: 'primary' | 'secondary'
-  size?: 'sm' | 'md' | 'lg'
-  children: React.ReactNode
+  variant?: 'primary' | 'secondary';
+  size?: 'sm' | 'md' | 'lg';
+  children: React.ReactNode;
 }
 
 // ✅ Use design tokens
@@ -111,13 +111,13 @@ const Button = ({ variant = 'primary', size = 'md', children }: ButtonProps) => 
       className={cn(
         'rounded-lg font-medium transition-colors',
         variant === 'primary' && 'bg-brand-primary text-white',
-        size === 'md' && 'px-4 py-2',
+        size === 'md' && 'px-4 py-2'
       )}
     >
       {children}
     </button>
-  )
-}
+  );
+};
 ```
 
 ## 🔄 ERROR HANDLING PATTERNS
@@ -129,14 +129,14 @@ const Button = ({ variant = 'primary', size = 'md', children }: ButtonProps) => 
 export async function POST(request: NextRequest) {
   return logRequest(request, async () => {
     try {
-      const body = await request.json()
+      const body = await request.json();
       // ... logic here
-      return NextResponse.json({ success: true })
+      return NextResponse.json({ success: true });
     } catch (error) {
-      log.error('API Error', error)
-      return NextResponse.json({ error: 'Internal error' }, { status: 500 })
+      log.error('API Error', error);
+      return NextResponse.json({ error: 'Internal error' }, { status: 500 });
     }
-  })
+  });
 }
 ```
 
@@ -144,10 +144,10 @@ export async function POST(request: NextRequest) {
 
 ```tsx
 // ❌ Don't use console.log
-console.log('Debug message')
+console.log('Debug message');
 
 // ❌ Don't use any type
-const data: any = await fetch()
+const data: any = await fetch();
 
 // ❌ Don't create large files
 // Files over 200 lines are forbidden

@@ -19,7 +19,6 @@ interface ThemeToggleProps {
   className?: string | undefined;
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function ThemeToggle({ variant = 'default', size = 'md', className }: ThemeToggleProps) {
   const { currentTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -42,7 +41,7 @@ export function ThemeToggle({ variant = 'default', size = 'md', className }: The
                 lg: 'h-12 w-12',
               }[size]
             : 'px-3 py-2',
-          className,
+          className
         )}
       />
     );
@@ -67,20 +66,20 @@ export function ThemeToggle({ variant = 'default', size = 'md', className }: The
         className={cn(
           'relative rounded-lg border border-neutral-200 bg-white p-2 transition-colors hover:bg-muted/80 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-muted/20',
           sizeClasses[size],
-          className,
+          className
         )}
         aria-label={`Switch to ${currentTheme === 'light' ? 'dark' : 'light'} currentTheme`}
       >
         <Sun
           className={cn(
             'absolute inset-0 m-auto rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0',
-            iconSizes[size],
+            iconSizes[size]
           )}
         />
         <Moon
           className={cn(
             'absolute inset-0 m-auto rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100',
-            iconSizes[size],
+            iconSizes[size]
           )}
         />
       </button>
@@ -93,7 +92,7 @@ export function ThemeToggle({ variant = 'default', size = 'md', className }: The
 
     return (
       <div className={cn('flex flex-col space-y-1', className)}>
-        <div className="mb-2 text-sm font-medium text-neutral-300">Theme</div>
+        <div className='mb-2 text-sm font-medium text-neutral-300'>Theme</div>
         {(['light', 'dark', 'system'] as const).map(currentThemeOption => {
           const Icon = icons[currentThemeOption];
           return (
@@ -103,13 +102,13 @@ export function ThemeToggle({ variant = 'default', size = 'md', className }: The
               className={cn(
                 'flex items-center rounded-lg px-3 py-2 text-sm transition-colors',
                 'hover:bg-muted/80',
-                currentTheme === currentThemeOption && 'bg-brand-primary/20 text-brand-primary',
+                currentTheme === currentThemeOption && 'bg-brand-primary/20 text-brand-primary'
               )}
             >
-              <Icon className="mr-2 h-4 w-4" />
-              <span className="capitalize">{currentThemeOption}</span>
+              <Icon className='mr-2 h-4 w-4' />
+              <span className='capitalize'>{currentThemeOption}</span>
               {currentTheme === currentThemeOption && (
-                <div className="ml-auto h-2 w-2 rounded-full bg-brand-primary" />
+                <div className='ml-auto h-2 w-2 rounded-full bg-brand-primary' />
               )}
             </button>
           );
@@ -122,8 +121,8 @@ export function ThemeToggle({ variant = 'default', size = 'md', className }: The
   return (
     <div
       className={cn('inline-flex items-center rounded-lg bg-neutral-800 p-1', className)}
-      role="tablist"
-      aria-label="Theme selection"
+      role='tablist'
+      aria-label='Theme selection'
     >
       {[
         { value: 'light', icon: Sun, label: 'Light' },
@@ -143,14 +142,14 @@ export function ThemeToggle({ variant = 'default', size = 'md', className }: The
             },
             currentTheme === value
               ? 'bg-brand-primary text-white shadow-sm'
-              : 'text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200',
+              : 'text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200'
           )}
-          role="tab"
+          role='tab'
           aria-selected={currentTheme === value}
           aria-label={`Switch to ${label.toLowerCase()} currentTheme`}
         >
-          <Icon className="h-4 w-4" />
-          <span className="sr-only">{label}</span>
+          <Icon className='h-4 w-4' />
+          <span className='sr-only'>{label}</span>
         </button>
       ))}
     </div>
@@ -161,12 +160,12 @@ export function ThemeToggle({ variant = 'default', size = 'md', className }: The
  * Compact currentTheme toggle for space-constrained areas
  */
 export function CompactThemeToggle({ className }: { className?: string }) {
-  return <ThemeToggle variant="minimal" size="sm" className={className} />;
+  return <ThemeToggle variant='minimal' size='sm' className={className} />;
 }
 
 /**
  * Theme selector for settings pages
  */
 export function ThemeSelector({ className }: { className?: string }) {
-  return <ThemeToggle variant="dropdown" className={className} />;
+  return <ThemeToggle variant='dropdown' className={className} />;
 }

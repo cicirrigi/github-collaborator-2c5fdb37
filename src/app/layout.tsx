@@ -22,16 +22,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang='en' className='dark' suppressHydrationWarning>
       <body
         className={cn(
           inter.className,
           'min-h-screen antialiased transition-colors duration-300',
-          'selection:bg-brand-primary/20 selection:text-brand-primary',
+          'selection:bg-brand-primary/20 selection:text-brand-primary'
         )}
         suppressHydrationWarning
       >
-        <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange={false}>
+        <ThemeProvider attribute='class' defaultTheme='dark' disableTransitionOnChange={false}>
           <Layout>{children}</Layout>
         </ThemeProvider>
       </body>

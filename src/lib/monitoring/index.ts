@@ -5,10 +5,10 @@ export * from '@sentry/nextjs';
 /**
  * Capture user context for monitoring
  */
-export function captureUserContext(user: { id: string; email: string; tier?: string }) {
+export async function captureUserContext(user: { id: string; email: string; tier?: string }) {
   if (typeof window !== 'undefined') {
     // Client-side only
-    const { Sentry } = require('./sentry.client');
+    const { Sentry } = await import('./sentry.client');
     Sentry.setUser({
       id: user.id,
       email: user.email,
@@ -20,12 +20,12 @@ export function captureUserContext(user: { id: string; email: string; tier?: str
 /**
  * Capture business event
  */
-export function captureBusinessEvent(event: string, data?: Record<string, unknown>) {
+export async function captureBusinessEvent(event: string, data?: Record<string, unknown>) {
   if (typeof window !== 'undefined') {
-    const { Sentry } = require('./sentry.client');
+    const { Sentry } = await import('./sentry.client');
     Sentry.addBreadcrumb({
       message: event,
-      data,
+      data: data || {},
       category: 'business',
       level: 'info',
     });
@@ -35,9 +35,9 @@ export function captureBusinessEvent(event: string, data?: Record<string, unknow
 /**
  * Capture API performance
  */
-export function captureAPIPerformance(endpoint: string, duration: number, status: number) {
+export async function captureAPIPerformance(endpoint: string, duration: number, status: number) {
   if (typeof window !== 'undefined') {
-    const { Sentry } = require('./sentry.client');
+    const { Sentry } = await import('./sentry.client');
     Sentry.addBreadcrumb({
       message: `API ${endpoint}`,
       data: { duration, status },

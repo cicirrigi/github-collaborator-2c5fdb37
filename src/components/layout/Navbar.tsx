@@ -64,45 +64,45 @@ export default function Navbar({ className }: NavbarProps): React.JSX.Element {
         'border-neutral-200/20 bg-white/80',
         // Dark mode
         'dark:border-white/10 dark:bg-neutral-950/80',
-        className,
+        className
       )}
     >
-      <Container size="xl" className="overflow-visible">
-        <div className="flex h-16 items-center justify-between">
+      <Container size='xl' className='overflow-visible'>
+        <div className='flex h-16 items-center justify-between'>
           {/* Left - Logo */}
-          <Logo size="lg" />
+          <Logo size='lg' />
 
           {/* Center - Desktop Nav */}
-          <div className="hidden items-center gap-6 md:flex">
-            <NavLinks items={[{ href: '/', label: 'Home' }]} className="gap-0" />
+          <div className='hidden items-center gap-6 md:flex'>
+            <NavLinks items={[{ href: '/', label: 'Home' }]} className='gap-0' />
             <ServicesMenu />
-            <NavLinks items={navItems.slice(1)} className="gap-6" />
+            <NavLinks items={navItems.slice(1)} className='gap-6' />
           </div>
 
           {/* Right - Actions */}
-          <div className="flex items-center gap-3">
-            <div className="hidden items-center gap-3 md:flex">
-              <ThemeToggle variant="minimal" size="sm" />
+          <div className='flex items-center gap-3'>
+            <div className='hidden items-center gap-3 md:flex'>
+              <ThemeToggle variant='minimal' size='sm' />
               <UserMenu />
             </div>
-            <div className="md:hidden">
+            <div className='md:hidden'>
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                aria-label="Toggle mobile menu"
+                aria-label='Toggle mobile menu'
                 className={cn(
                   'rounded-md p-2 text-neutral-600 hover:text-brand-primary dark:text-neutral-300 dark:hover:text-brand-primary',
-                  'transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50',
+                  'transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50'
                 )}
               >
                 {mobileOpen ? (
-                  <X className="h-6 w-6" />
+                  <X className='h-6 w-6' />
                 ) : (
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className='h-6 w-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                     <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
                       strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
+                      d='M4 6h16M4 12h16M4 18h16'
                     />
                   </svg>
                 )}
@@ -126,10 +126,10 @@ export default function Navbar({ className }: NavbarProps): React.JSX.Element {
               // Light mode
               'border-neutral-200/20 bg-white/95',
               // Dark mode
-              'dark:border-white/10 dark:bg-neutral-950/95',
+              'dark:border-white/10 dark:bg-neutral-950/95'
             )}
           >
-            <nav className="flex flex-col space-y-2 p-4">
+            <nav className='flex flex-col space-y-2 p-4'>
               {navItems.map(item => (
                 <Link
                   key={item.href}
@@ -138,7 +138,7 @@ export default function Navbar({ className }: NavbarProps): React.JSX.Element {
                   className={cn(
                     'rounded-md px-3 py-2 text-sm font-medium transition-colors',
                     'text-neutral-700 hover:bg-brand-primary/10 hover:text-brand-primary',
-                    'dark:text-neutral-200 dark:hover:text-brand-primary',
+                    'dark:text-neutral-200 dark:hover:text-brand-primary'
                   )}
                 >
                   {item.label}
@@ -146,11 +146,11 @@ export default function Navbar({ className }: NavbarProps): React.JSX.Element {
               ))}
 
               {/* Services Accordion */}
-              <div className="my-2 border-t border-white/10" />
+              <div className='my-2 border-t border-white/10' />
               <ServicesMenuMobile />
 
               {/* User Actions (mobile simplified) */}
-              <div className="mt-2 border-t border-white/10 pt-3">
+              <div className='mt-2 border-t border-white/10 pt-3'>
                 <UserMenu />
               </div>
             </nav>

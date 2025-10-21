@@ -11,7 +11,7 @@ export const PremiumButtonVariants = cva(
     'inline-flex items-center justify-center',
     'rounded-lg font-medium transition-all duration-300',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50',
-    'select-none'
+    'select-none',
   ].join(' '),
   {
     variants: {
