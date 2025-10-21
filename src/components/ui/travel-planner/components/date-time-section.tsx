@@ -4,7 +4,11 @@ import { Calendar } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { MOTION, TIME_SLOTS, TRAVEL_THEME } from '@/components/ui/travel-planner/constants';
-import { type DateTimeSectionProps, type TimeSlot } from '@/components/ui/travel-planner/types';
+import {
+  type DateTimeSectionProps,
+  type DateTimeSectionSkeletonProps,
+  type TimeSlot,
+} from '@/components/ui/travel-planner/types';
 import { cn } from '@/lib/utils';
 
 import { CalendarPicker } from './calendar-picker';
@@ -137,10 +141,7 @@ export const DateTimeSection = ({
 const DateTimeSectionSkeleton = ({
   showReturn = false,
   className,
-}: {
-  showReturn?: boolean;
-  className?: string;
-}) => (
+}: DateTimeSectionSkeletonProps) => (
   <div className={cn(TRAVEL_THEME.sections.dateTime, className)}>
     <div className='grid gap-6 lg:grid-cols-2'>
       <div className={cn(TRAVEL_THEME.skeleton.base, TRAVEL_THEME.skeleton.calendar)} />

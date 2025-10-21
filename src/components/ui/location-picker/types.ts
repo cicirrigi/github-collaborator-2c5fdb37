@@ -33,7 +33,7 @@ export interface LocationPickerProps {
   googleConfig?: {
     restrictions?: {
       country?: string;
-      bounds?: google.maps.LatLngBounds;
+      bounds?: google.maps.LatLngBounds | null;
     };
     types?: string[];
   };

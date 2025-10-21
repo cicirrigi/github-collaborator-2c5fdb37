@@ -64,7 +64,7 @@ class UIPatternChecker {
       `${componentName}.variants.ts`, // Styling variants
       `${componentName}.stories.tsx`, // Storybook stories
       `${componentName}.test.tsx`, // Jest tests
-      `use${componentName}.ts` // useComponent hook
+      `use${componentName}.ts`, // useComponent hook
       `${componentName}.helpers.ts`, // Utility functions
     ];
 

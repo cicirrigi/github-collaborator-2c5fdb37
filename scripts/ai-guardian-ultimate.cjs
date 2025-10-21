@@ -3,7 +3,7 @@
 /**
  * 🤖 AI Guardian Ultimate - Vantage Lane 2.0
  * Complete Quality Gate Pipeline
- * 
+ *
  * This script runs the full quality gate system combining:
  * - Custom code audit (security, patterns, structure)
  * - Full quality gate pipeline (lint, types, tests, build)
@@ -36,16 +36,16 @@ class AIGuardianUltimate {
       moduleResults.push({ name: 'UI Patterns', passed: false, error: error.message });
     }
 
-    // 2. Page Pattern Checker  
+    // 2. Page Pattern Checker
     console.log('\n📄 Running Page Pattern Checker...');
     try {
       const pageChecker = new PagePatternChecker();
       pageChecker.walk(this.projectRoot + '/src/app');
       const success = pageChecker.generateReport();
-      moduleResults.push({ 
-        name: 'Page Patterns', 
+      moduleResults.push({
+        name: 'Page Patterns',
         passed: success,
-        summary: `${pageChecker.results.compliantPages}/${pageChecker.results.totalPages} pages compliant`
+        summary: `${pageChecker.results.compliantPages}/${pageChecker.results.totalPages} pages compliant`,
       });
     } catch (error) {
       console.log('⚠️  Page Pattern Checker failed:', error.message);
@@ -57,28 +57,31 @@ class AIGuardianUltimate {
     try {
       const deadCodeChecker = new DeadCodeChecker(this.projectRoot);
       const deadCodeResult = await deadCodeChecker.runAllChecks();
-      const passed = deadCodeResult.deadExports.passed && deadCodeResult.duplicateCode.passed;
-      moduleResults.push({ 
-        name: 'Dead Code Analysis', 
+      const passed =
+        deadCodeResult.deadExports.passed &&
+        deadCodeResult.duplicateCode.passed &&
+        deadCodeResult.unusedDependencies.passed;
+      moduleResults.push({
+        name: 'Dead Code Analysis',
         passed,
-        summary: `${deadCodeResult.deadExports.count} unused exports, ${deadCodeResult.duplicateCode.count} duplicates`
+        summary: `${deadCodeResult.deadExports.count} unused exports, ${deadCodeResult.duplicateCode.count} duplicates`,
       });
     } catch (error) {
       console.log('⚠️  Dead Code Checker failed:', error.message);
       moduleResults.push({ name: 'Dead Code Analysis', passed: false, error: error.message });
     }
 
-    // 4. Advanced TypeScript Checker (Build Testing)  
+    // 4. Advanced TypeScript Checker (Build Testing)
     console.log('\n📘 Running Advanced TypeScript Checker...');
     try {
       const tsChecker = new TypeScriptChecker(this.projectRoot);
       const typeResult = await tsChecker.runTypeScriptCheck();
       const buildResult = await tsChecker.runBuildTest();
       const passed = typeResult.passed && buildResult.passed;
-      moduleResults.push({ 
-        name: 'Advanced TypeScript', 
+      moduleResults.push({
+        name: 'Advanced TypeScript',
         passed,
-        summary: `Type check: ${typeResult.passed ? 'PASS' : 'FAIL'}, Build: ${buildResult.passed ? 'PASS' : 'FAIL'}`
+        summary: `Type check: ${typeResult.passed ? 'PASS' : 'FAIL'}, Build: ${buildResult.passed ? 'PASS' : 'FAIL'}`,
       });
     } catch (error) {
       console.log('⚠️  TypeScript Checker failed:', error.message);
@@ -88,14 +91,16 @@ class AIGuardianUltimate {
     // Summary of Advanced Modules
     const passedModules = moduleResults.filter(m => m.passed).length;
     const totalModules = moduleResults.length;
-    
+
     console.log('\n📊 AI GUARDIAN v5.0 MODULES SUMMARY:');
     console.log('====================================');
     moduleResults.forEach(result => {
       const icon = result.passed ? '✅' : '❌';
       console.log(`${icon} ${result.name}: ${result.passed ? 'PASSED' : 'FAILED'}`);
     });
-    console.log(`\n🎯 Advanced Modules Success Rate: ${passedModules}/${totalModules} (${Math.round(passedModules/totalModules*100)}%)`);
+    console.log(
+      `\n🎯 Advanced Modules Success Rate: ${passedModules}/${totalModules} (${Math.round((passedModules / totalModules) * 100)}%)`
+    );
   }
 
   async run() {
@@ -114,9 +119,11 @@ class AIGuardianUltimate {
       console.log('--------------------------------');
       const auditor = new CodeAuditor();
       const auditPassed = await auditor.runAudit();
-      
+
       if (!auditPassed) {
-        console.log('\n⚠️  AI Guardian: Custom audit found issues but continuing with quality gate...\n');
+        console.log(
+          '\n⚠️  AI Guardian: Custom audit found issues but continuing with quality gate...\n'
+        );
         console.log('🔧 Note: Fix audit issues for production deployment.\n');
         // Continue to Phase 2 even with audit issues for development
       }
@@ -138,7 +145,6 @@ class AIGuardianUltimate {
       console.log('🎉 AI GUARDIAN ULTIMATE: ALL SYSTEMS GO! ✅');
       console.log(`⏱️  Total Duration: ${totalDuration}ms`);
       console.log('\n🚀 Code is production-ready and secure!');
-      
     } catch (error) {
       console.error('\n💥 AI Guardian Ultimate failed:', error.message);
       process.exit(1);

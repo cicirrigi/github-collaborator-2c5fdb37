@@ -58,7 +58,7 @@ export function Logo({
       {/* Logo Image */}
       <Image
         src='/logo.svg'
-        alt={`${brandConfig.name} Logo`}
+        alt={`${brandConfig.identity.name} Logo`}
         fill
         className={cn('object-contain drop-shadow-lg', 'dark:brightness-[1.1]')}
         priority
@@ -71,7 +71,7 @@ export function Logo({
       <Link
         href={href}
         className='inline-block rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary/50'
-        aria-label={`${brandConfig.name} - Home`}
+        aria-label={`${brandConfig.identity.name} - Home`}
         {...(onClick && { onClick })}
       >
         {logoElement}

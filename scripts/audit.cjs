@@ -15,11 +15,11 @@ class CodeAuditor {
   checkFileSizes() {
     const maxLines = 250;
     const files = this.getAllTsFiles();
-    
+
     files.forEach(file => {
       const content = fs.readFileSync(file, 'utf8');
       const lines = content.split('\n').length;
-      
+
       if (lines > maxLines) {
         this.errors.push(`File too large: ${file} (${lines} lines > ${maxLines})`);
       }
@@ -29,7 +29,11 @@ class CodeAuditor {
   // 🚫 Check for forbidden patterns
   checkForbiddenPatterns() {
     const patterns = [
-      { pattern: /console\.(log|error|warn|info)/g, type: 'error', message: 'Console statements found' },
+      {
+        pattern: /console\.(log|error|warn|info)/g,
+        type: 'error',
+        message: 'Console statements found',
+      },
       { pattern: /:\s*any\b/g, type: 'error', message: 'Any type usage found' },
       { pattern: /TODO|FIXME|HACK/gi, type: 'warning', message: 'TODO/FIXME comments found' },
       { pattern: /#[0-9a-fA-F]{6}/g, type: 'warning', message: 'Hardcoded colors found' },
@@ -37,10 +41,10 @@ class CodeAuditor {
     ];
 
     const files = this.getAllTsFiles();
-    
+
     files.forEach(file => {
       const content = fs.readFileSync(file, 'utf8');
-      
+
       patterns.forEach(({ pattern, type, message }) => {
         const matches = content.match(pattern);
         if (matches) {
@@ -60,7 +64,7 @@ class CodeAuditor {
     const requiredFolders = [
       'src/app',
       'src/components/ui',
-      'src/components/features', 
+      'src/components/features',
       'src/lib',
       'src/hooks',
       'src/types',
@@ -85,10 +89,10 @@ class CodeAuditor {
     ];
 
     const files = this.getAllTsFiles();
-    
+
     files.forEach(file => {
       const content = fs.readFileSync(file, 'utf8');
-      
+
       securityPatterns.forEach(({ pattern, message }) => {
         if (pattern.test(content)) {
           this.errors.push(`Security issue: ${message} in ${file}`);
@@ -100,11 +104,11 @@ class CodeAuditor {
   // 📦 Check imports compliance
   checkImports() {
     const files = this.getAllTsFiles();
-    
+
     files.forEach(file => {
       const content = fs.readFileSync(file, 'utf8');
       const lines = content.split('\n');
-      
+
       lines.forEach((line, index) => {
         // Check for deep relative imports
         if (line.includes('import') && line.includes('../../../')) {
@@ -117,16 +121,16 @@ class CodeAuditor {
   // 📄 Get all TypeScript files
   getAllTsFiles() {
     const files = [];
-    
-    const walk = (dir) => {
+
+    const walk = dir => {
       if (!fs.existsSync(dir)) return;
-      
+
       const items = fs.readdirSync(dir);
-      
+
       items.forEach(item => {
         const fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isDirectory() && !item.startsWith('.') && item !== 'node_modules') {
           walk(fullPath);
         } else if (item.endsWith('.ts') || item.endsWith('.tsx')) {
@@ -134,7 +138,7 @@ class CodeAuditor {
         }
       });
     };
-    
+
     walk(this.srcDir);
     return files;
   }
@@ -142,15 +146,15 @@ class CodeAuditor {
   // 🏃‍♂️ Run all audits
   async runAudit() {
     console.log('🔍 Running Code Audit...\n');
-    
+
     this.checkFileSizes();
     this.checkForbiddenPatterns();
     this.checkFolderStructure();
     this.checkSecurity();
     this.checkImports();
-    
+
     this.reportResults();
-    
+
     return this.errors.length === 0;
   }
 
@@ -175,7 +179,7 @@ class CodeAuditor {
     }
 
     console.log(`📊 Summary: ${this.errors.length} errors, ${this.warnings.length} warnings`);
-    
+
     if (this.errors.length > 0) {
       console.log('❌ Audit failed due to errors.');
       this.writeReport('failed');
@@ -191,17 +195,17 @@ class CodeAuditor {
     const reportPath = path.join(this.docsDir, 'QUALITY-REPORT.md');
     const date = new Date().toISOString();
     const timestamp = new Date().toLocaleString('ro-RO');
-    
+
     const statusEmoji = {
-      'passed': '✅',
+      passed: '✅',
       'passed-with-warnings': '⚠️',
-      'failed': '❌'
+      failed: '❌',
     };
 
     const statusText = {
-      'passed': 'PASSED',
+      passed: 'PASSED',
       'passed-with-warnings': 'PASSED (with warnings)',
-      'failed': 'FAILED'
+      failed: 'FAILED',
     };
 
     let errorsList = '';
@@ -231,11 +235,13 @@ class CodeAuditor {
 
 ## 📈 Summary
 
-${status === 'passed' 
-  ? '🎉 **All quality checks passed successfully!** Code is ready for production.' 
-  : status === 'passed-with-warnings'
-  ? '⚠️  **Quality checks passed but with warnings.** Consider addressing warnings for better code quality.'
-  : '❌ **Quality checks failed.** Fix errors before proceeding.'}
+${
+  status === 'passed'
+    ? '🎉 **All quality checks passed successfully!** Code is ready for production.'
+    : status === 'passed-with-warnings'
+      ? '⚠️  **Quality checks passed but with warnings.** Consider addressing warnings for better code quality.'
+      : '❌ **Quality checks failed.** Fix errors before proceeding.'
+}
 
 ## 🔍 Last Audit Details
 
@@ -250,19 +256,23 @@ ${errorsList}${warningsList}
 
 ## 🛠️ Quick Actions
 
-${status !== 'passed' ? `
+${
+  status !== 'passed'
+    ? `
 ### To fix issues:
 1. Review the errors/warnings above
 2. Run \`pnpm lint:fix\` to auto-fix lint issues
 3. Run \`pnpm typecheck\` to check TypeScript errors
 4. Run \`pnpm audit:custom\` to re-run this audit
 5. Run \`pnpm quality-gate\` for full verification
-` : `
+`
+    : `
 ### Maintenance:
 - Run \`pnpm quality-gate\` before commits
 - Check \`FREEZE-LIST.md\` before modifying protected files
 - Follow \`CHECKLIST.md\` for new features
-`}
+`
+}
 
 ---
 
@@ -282,12 +292,15 @@ ${status !== 'passed' ? `
 // Run audit if called directly
 if (require.main === module) {
   const auditor = new CodeAuditor();
-  auditor.runAudit().then(passed => {
-    process.exit(passed ? 0 : 1);
-  }).catch(error => {
-    console.error('Audit failed:', error);
-    process.exit(1);
-  });
+  auditor
+    .runAudit()
+    .then(passed => {
+      process.exit(passed ? 0 : 1);
+    })
+    .catch(error => {
+      console.error('Audit failed:', error);
+      process.exit(1);
+    });
 }
 
 module.exports = CodeAuditor;

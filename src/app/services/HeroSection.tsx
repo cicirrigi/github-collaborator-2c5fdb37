@@ -9,7 +9,7 @@ import { brandConfig } from '@/config/brand.config';
  * ✅ No hardcoded colors
  * ✅ Brand consistent
  */
-export function HeroSection(): JSX.Element {
+export function HeroSection(): React.JSX.Element {
   const { primary, secondary, text } = brandConfig.colors;
 
   return (

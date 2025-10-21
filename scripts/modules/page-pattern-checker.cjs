@@ -348,4 +348,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { PagePatternChecker };
+module.exports = PagePatternChecker;

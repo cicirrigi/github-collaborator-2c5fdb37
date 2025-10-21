@@ -1,21 +1,21 @@
 'use client';
 
-import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
-
+import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-
+import type { LocationPickerProps, GooglePlace } from './types';
 import {
   LOCATION_VARIANTS,
   SIZE_CLASSES,
-  SPACING_CONFIG,
   THEME_CLASSES,
   VALIDATION,
+  SPACING_CONFIG,
+  BACKGROUND_CONFIG,
 } from './constants';
-import type { GooglePlace, LocationPickerProps } from './types';
+import { designTokens } from '@/design-system/tokens/colors';
+import { SuggestionsDropdown } from './SuggestionsDropdown';
 
 // Re-export types pentru convenience
-export type { GooglePlace, LocationPickerProps, LocationVariant } from './types';
+export type { LocationPickerProps, GooglePlace, LocationVariant } from './types';
 
 export const LocationPicker = ({
   value,
@@ -28,7 +28,7 @@ export const LocationPicker = ({
   placeholder,
   icon,
   error,
-  _onValidate,
+  onValidate,
 }: LocationPickerProps) => {
   const [inputValue, setInputValue] = useState(value?.address || '');
   const [isOpen, setIsOpen] = useState(false);
@@ -69,7 +69,7 @@ export const LocationPicker = ({
       return;
     }
 
-    const timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(async () => {
       setIsLoading(true);
 
       // TODO: Replace with Google Places API
@@ -164,11 +164,11 @@ export const LocationPicker = ({
   return (
     <div ref={containerRef} className={cn('relative', className)}>
       {/* Input container */}
-      <div className='group relative'>
+      <div className='relative group'>
         {/* Icon */}
         <div
           className={cn(
-            'absolute top-1/2 z-10 -translate-y-1/2 transition-colors',
+            'absolute top-1/2 -translate-y-1/2 transition-colors z-10',
             'text-gray-600 dark:text-gray-400',
             'group-hover:text-yellow-600 dark:group-hover:text-yellow-400',
             !disabled && isOpen && 'text-gray-800 dark:text-gray-200'
@@ -209,38 +209,27 @@ export const LocationPicker = ({
             'text-gray-600 dark:text-gray-400',
             'hover:bg-yellow-50/30 dark:hover:bg-yellow-900/20',
             'hover:border-yellow-300/50',
-            'focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50',
+            'focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500',
             displayError && 'bg-red-50/20 dark:bg-red-900/20',
-            disabled && 'cursor-not-allowed bg-gray-100/20 text-gray-400 dark:bg-gray-800/20'
+            disabled && 'bg-gray-100/20 text-gray-400 cursor-not-allowed dark:bg-gray-800/20'
           )}
         />
 
         {/* Loading indicator */}
         {isLoading && (
           <div className='absolute right-3 top-1/2 -translate-y-1/2'>
-            <div className='h-4 w-4 animate-spin rounded-full border-2 border-blue-500 border-t-transparent' />
+            <div className='w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin' />
           </div>
         )}
       </div>
 
       {/* Suggestions dropdown */}
-      {isOpen && suggestions.length > 0 && (
-        <div className={THEME_CLASSES.suggestions.container}>
-          {suggestions.map(suggestion => (
-            <div
-              key={suggestion.placeId}
-              onMouseDown={e => e.preventDefault()} // Previne blur
-              onClick={() => handleSelectSuggestion(suggestion)}
-              className={THEME_CLASSES.suggestions.item}
-            >
-              <div className='font-medium text-gray-900 dark:text-white'>{suggestion.address}</div>
-              <div className='text-sm text-gray-500 dark:text-gray-400'>
-                {suggestion.type} • {suggestion.components.city}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <SuggestionsDropdown
+        suggestions={suggestions}
+        isLoading={isLoading}
+        isOpen={isOpen}
+        onSelect={handleSelectSuggestion}
+      />
 
       {/* Error message */}
       {displayError && (

@@ -1,7 +1,7 @@
 import { type BookingTabType } from '@/components/ui/booking-tabs/types';
 import { type GooglePlace } from '@/components/ui/location-picker/types';
 
-// Time slot interface
+/** Time slot pentru selectarea orelor */
 export interface TimeSlot {
   value: string;
   label: string;
@@ -9,33 +9,28 @@ export interface TimeSlot {
   category?: 'morning' | 'afternoon' | 'evening';
 }
 
-// Stop interface pentru additional stops
+/** Oprire suplimentară în traseu */
 export interface Stop {
   id: string;
   address: string;
-  place?: GooglePlace | null | undefined;
-  coordinates?: [number, number] | null | undefined;
+  place?: GooglePlace | null;
+  coordinates?: [number, number] | null;
 }
 
-// Travel plan complet
+/** Structura completă a planificării */
 export interface TravelPlan {
-  // Date & Time
-  pickupDate: Date;
-  returnDate?: Date | null;
+  pickupDate: Date | null;
+  returnDate: Date | null;
   pickupTime: TimeSlot | null;
-  returnTime?: TimeSlot | null;
-
-  // Locations
+  returnTime: TimeSlot | null;
   pickup: GooglePlace | null;
   destination: GooglePlace | null;
   additionalStops: Stop[];
-
-  // Meta
   bookingType: BookingTabType;
   totalStops: number;
 }
 
-// Props pentru componente
+/** Props pentru componenta principală */
 export interface TravelPlannerProps {
   bookingType: BookingTabType;
   initialPlan?: Partial<TravelPlan>;
@@ -46,19 +41,21 @@ export interface TravelPlannerProps {
   enableWeatherHints?: boolean;
 }
 
+/** Props pentru secțiunea DateTime */
 export interface DateTimeSectionProps {
   bookingType: BookingTabType;
   pickupDate: Date | null;
-  returnDate?: Date | null;
+  returnDate: Date | null;
   pickupTime: TimeSlot | null;
-  returnTime?: TimeSlot | null;
-  onDateChange: (pickup: Date, returnDate?: Date) => void;
-  onTimeChange: (pickup: TimeSlot, returnTime?: TimeSlot) => void;
+  returnTime: TimeSlot | null;
+  onDateChange: (pickup: Date | null, returnDate: Date | null) => void;
+  onTimeChange: (pickup: TimeSlot | null, returnTime: TimeSlot | null) => void;
   showReturn: boolean;
   isLoading?: boolean;
   className?: string;
 }
 
+/** Props pentru opriri suplimentare */
 export interface AdditionalStopsProps {
   stops: Stop[];
   maxStops?: number;
@@ -68,6 +65,7 @@ export interface AdditionalStopsProps {
   className?: string;
 }
 
+/** Props pentru contorul de opriri */
 export interface StopsCounterProps {
   value: number;
   max: number;
@@ -77,15 +75,15 @@ export interface StopsCounterProps {
   className?: string;
 }
 
-// Map preview types
+/** Props pentru preview-ul hărții */
 export interface MapPreviewProps {
   stops: Stop[];
-  pickup?: GooglePlace;
-  destination?: GooglePlace;
+  pickup?: GooglePlace | null;
+  destination?: GooglePlace | null;
   className?: string;
 }
 
-// Weather hint types
+/** Tipuri pentru sugestii meteo */
 export interface WeatherHint {
   condition: string;
   temperature: number;
@@ -93,8 +91,8 @@ export interface WeatherHint {
   icon: string;
 }
 
-// Skeleton loader types
+/** Skeleton pentru încărcare */
 export interface DateTimeSectionSkeletonProps {
   showReturn?: boolean;
-  className?: string;
+  className?: string | undefined;
 }

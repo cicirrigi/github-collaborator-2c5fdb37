@@ -14,10 +14,10 @@ export const useTravelPlanner = (
 ) => {
   // Estado centralizat
   const [plan, setPlan] = useState<TravelPlan>(() => ({
-    pickupDate: new Date(),
-    returnDate: undefined,
+    pickupDate: null,
+    returnDate: null,
     pickupTime: null,
-    returnTime: undefined,
+    returnTime: null,
     pickup: null,
     destination: null,
     additionalStops: [],
@@ -62,13 +62,13 @@ export const useTravelPlanner = (
       setReturn: (date?: Date, time?: TimeSlot | null) => {
         setPlan(prev => {
           // ✨ UX inteligent pentru Return - previne inversiuni logice
-          if (date && date < prev.pickupDate) {
+          if (date && prev.pickupDate && date < prev.pickupDate) {
             date = prev.pickupDate; // Force same day or next valid
           }
 
           return {
             ...prev,
-            returnDate: date || undefined,
+            returnDate: date || null,
             ...(time !== undefined && { returnTime: time }),
           };
         });
@@ -118,7 +118,7 @@ export const useTravelPlanner = (
             currentStops.push({
               id: `stop-${Date.now()}-${currentStops.length}`,
               address: '',
-              coordinates: undefined,
+              coordinates: null,
             });
           }
 
@@ -137,8 +137,8 @@ export const useTravelPlanner = (
           bookingType,
           // Reset return data if switching from return
           ...(bookingType !== 'return' && {
-            returnDate: undefined,
-            returnTime: undefined,
+            returnDate: null,
+            returnTime: null,
           }),
           // Reset stops for hourly
           ...(bookingType === 'hourly' && {

@@ -44,6 +44,7 @@
     "deploy:netlify": "netlify deploy --prod",
     "//    ": "─────────────── Code Quality ───────────────",
     "lint": "next lint",
+    "lint:eslint": "ESLINT_USE_FLAT_CONFIG=true npx eslint",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

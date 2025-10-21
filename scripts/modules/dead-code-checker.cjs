@@ -23,7 +23,7 @@ class DeadCodeChecker {
     try {
       // Check if ts-prune is available
       execSync('which npx', { stdio: 'pipe' });
-      
+
       const output = execSync('npx ts-prune --error', {
         encoding: 'utf8',
         cwd: this.projectRoot,
@@ -143,7 +143,7 @@ class DeadCodeChecker {
       });
 
       const report = JSON.parse(output);
-      
+
       if (report.dependencies && report.dependencies.length > 0) {
         this.results.unusedDependencies.packages = report.dependencies;
         this.results.unusedDependencies.passed = false;

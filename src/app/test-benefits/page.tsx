@@ -3,6 +3,8 @@
  * Testez LuxuryCard component în context real
  */
 
+'use client';
+
 import { CarFront, Clock, CreditCard, Search, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 
@@ -185,8 +187,4 @@ export default function TestBenefitsPage() {
   );
 }
 
-// SEO pentru test page
-export const metadata = {
-  title: 'Benefits Test - Vantage Lane 2.0',
-  description: 'Test page pentru LuxuryCard component și Benefits section',
-};
+// Note: metadata removed because this is now a Client Component

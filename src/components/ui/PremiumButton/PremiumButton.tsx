@@ -1,29 +1,19 @@
 /**
- * 🧩 PremiumButton – Vantage Lane UI v3.0.0
- * Generated on 2025-10-20T00:29:37.491Z
- * Type: base
+ * 🧩 PremiumButton – Vantage Lane UI v3.0.1
+ * Simplified non-polymorphic component
  */
 
 'use client';
 
-import {
-  type ComponentPropsWithRef,
-  type ElementType,
-  forwardRef,
-  type JSX,
-  type ReactNode,
-} from 'react';
-
+import { forwardRef, type ElementType, type ReactNode } from 'react';
 import { cn } from '@/lib/utils/cn';
-
 import { PremiumButtonVariants } from './PremiumButton.variants';
 
 export type PremiumButtonVariant = 'default' | 'primary' | 'secondary';
 export type PremiumButtonSize = 'sm' | 'md' | 'lg';
 
-export interface PremiumButtonProps<T extends ElementType = 'div'>
-  extends Omit<ComponentPropsWithRef<T>, 'as' | 'color'> {
-  readonly as?: T;
+export interface PremiumButtonProps {
+  readonly as?: ElementType;
   readonly className?: string;
   readonly children?: ReactNode;
   readonly variant?: PremiumButtonVariant;
@@ -31,11 +21,13 @@ export interface PremiumButtonProps<T extends ElementType = 'div'>
   readonly disabled?: boolean;
   readonly loading?: boolean;
   readonly 'aria-label'?: string;
+  readonly onClick?: () => void;
+  readonly onKeyDown?: (e: React.KeyboardEvent) => void;
+  readonly role?: string;
+  readonly tabIndex?: number;
 }
 
-export const PremiumButton = forwardRef<HTMLElement, PremiumButtonProps>(function PremiumButton<
-  T extends ElementType = 'div',
->(
+export const PremiumButton = forwardRef<HTMLElement, PremiumButtonProps>(function PremiumButton(
   {
     as,
     className,
@@ -45,12 +37,14 @@ export const PremiumButton = forwardRef<HTMLElement, PremiumButtonProps>(functio
     disabled = false,
     loading = false,
     'aria-label': ariaLabel,
-    ...rest
-  }: PremiumButtonProps<T>,
+    onClick,
+    onKeyDown,
+    role,
+    tabIndex,
+  },
   ref
-): JSX.Element {
+) {
   const Comp = (as ?? 'div') as ElementType;
-
   const classes = PremiumButtonVariants({ variant, size, disabled });
 
   return (
@@ -60,8 +54,10 @@ export const PremiumButton = forwardRef<HTMLElement, PremiumButtonProps>(functio
       aria-label={ariaLabel}
       aria-disabled={disabled || loading || undefined}
       aria-busy={loading || undefined}
-      role={Comp === 'button' ? 'button' : rest.role}
-      tabIndex={disabled || loading ? -1 : rest.tabIndex || 0}
+      role={Comp === 'button' ? 'button' : role}
+      tabIndex={disabled || loading ? -1 : tabIndex || 0}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
       data-variant={variant}
       data-size={size}
       data-loading={loading || undefined}
@@ -70,7 +66,6 @@ export const PremiumButton = forwardRef<HTMLElement, PremiumButtonProps>(functio
         'select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50',
         className
       )}
-      {...rest}
     >
       {loading ? (
         <span className='flex items-center gap-2'>

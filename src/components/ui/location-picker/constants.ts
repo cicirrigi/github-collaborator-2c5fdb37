@@ -1,6 +1,6 @@
-import { Landmark, MapPin, Navigation } from 'lucide-react';
-
+import { MapPin, Navigation, Landmark } from 'lucide-react';
 import { designTokens } from '@/design-system/tokens/colors';
+import type { LocationVariant } from './types';
 
 // Configurații pentru variante location (nu hardcode)
 export const LOCATION_VARIANTS = {
@@ -27,6 +27,11 @@ export const SIZE_CLASSES = {
     sm: 'h-9 px-3 text-sm',
     md: 'h-11 px-4 text-base',
     lg: 'h-12 px-5 text-lg',
+  },
+  input: {
+    sm: 'h-9 text-sm',
+    md: 'h-11 text-base',
+    lg: 'h-12 text-lg',
   },
   icon: {
     sm: 'w-4 h-4',
