@@ -1,5 +1,9 @@
 'use client';
 
+<<<<<<< HEAD
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
+=======
 import type { BookingTabType } from '@/components/ui/booking-tabs-pro/types';
 import { validateBookingFields } from '@/lib/booking';
 import { useBookingState } from '@/hooks/useBookingState';
@@ -7,14 +11,23 @@ import { cn } from '@/lib/utils';
 import type { TripConfiguration } from '@/types/booking/step1.types';
 import { useEffect, useMemo, useState } from 'react';
 import type { GooglePlace } from '../location-picker/types';
+import { AdditionalStopsSection } from './components/AdditionalStopsSection';
+import { CalendarSection } from './components/CalendarSection';
+import { DurationSection } from './components/DurationSection';
+import { FlightSection } from './components/FlightSection';
+import { LocationsSection } from './components/LocationsSection';
 import { ReturnJourneyCard } from './components/ReturnJourneyCard';
+import { RoutePreviewPro } from './components/RoutePreviewPro';
+import { TripSummaryCard } from './components/TripSummaryCard';
 import { ValidationFeedbackContainer } from '../validation-feedback';
+>>>>>>> 252d0b5 (🚀 Major booking system refactor & optimization)
 import { TRAVEL_PLANNER_PRO_THEME } from './constants';
 import { CalendarPro } from './calendar/calendar-pro';
 import { TimeSlotsPro } from './calendar/time-slots-pro';
 import { StopsCounterPro } from './components/StopsCounterPro';
 import { RoutePreviewPro } from './components/RoutePreviewPro';
 import { LocationPicker } from '../location-picker';
+import type { GooglePlace } from '../location-picker/types';
 
 interface TravelPlannerProProps {
   className?: string;
@@ -34,8 +47,6 @@ export const TravelPlannerPro = ({
   const [destinationLocation, setDestinationLocation] = useState<GooglePlace | null>(null);
   const [stopsCount, setStopsCount] = useState(0);
   const [additionalStops, setAdditionalStops] = useState<GooglePlace[]>([]);
-  const [showValidationErrors, setShowValidationErrors] = useState(false);
-  const [validation, setValidation] = useState({ errors: [] });
 
   // Handlers
   const handleNavigate = (direction: 'prev' | 'next') => {
@@ -66,15 +77,18 @@ export const TravelPlannerPro = ({
 
   return (
     <div className={cn(TRAVEL_PLANNER_PRO_THEME.container, className)}>
+<<<<<<< HEAD
+=======
       {/* Validation Feedback */}
       {showValidationErrors && validation.errors.length > 0 && (
         <ValidationFeedbackContainer
-          errors={validation.errors.map((error: any) => error.message)}
+          errors={validation.errors.map(error => error.message)}
           onDismissErrors={() => setShowValidationErrors(false)}
           className="mb-6"
           showPriorityOnly={true}
         />
       )}
+>>>>>>> 252d0b5 (🚀 Major booking system refactor & optimization)
       <header>
         <h2 className={TRAVEL_PLANNER_PRO_THEME.header}>Travel Planner Pro</h2>
         <p className={TRAVEL_PLANNER_PRO_THEME.subtext}>
