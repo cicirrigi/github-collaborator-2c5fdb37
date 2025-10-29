@@ -3,6 +3,14 @@
  * 100% derivat din TRAVEL_THEME (respectă aurul, transparențele și tonurile neutre)
  */
 export const TRAVEL_PLANNER_PRO_THEME = {
+  colors: {
+    gold: '#CBB26A',
+    lightGold: '#D4AF37',
+    darkGold: '#8B6914',
+    neutral: '#404040',
+    light: '#F5F5F5',
+    dark: '#1A1A1A',
+  },
   container: `
     relative rounded-3xl p-8 backdrop-blur-2xl overflow-hidden
     border border-white/20 shadow-[0_0_60px_-10px_rgba(203,178,106,0.3)]

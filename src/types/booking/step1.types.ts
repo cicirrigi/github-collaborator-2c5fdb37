@@ -41,6 +41,7 @@ export interface TripConfiguration {
   returnFlight?: string;
   returnDate?: Date;
   returnTime?: string;
+  sameDayReturn?: boolean;
   returnAdditionalStops: GooglePlace[];
 
   // Hourly specific

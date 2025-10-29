@@ -138,10 +138,7 @@ export interface TripExtendedActions {
   // Return specific
   setReturnFlight: (flightNumber: string) => void;
   setReturnAdditionalStops: (stops: GooglePlace[]) => void;
-<<<<<<< HEAD
-=======
   setReturnDetails: (details: PartialTripConfig) => void;
->>>>>>> 252d0b5 (🚀 Major booking system refactor & optimization)
 
   // Hourly specific  
   setHoursRequested: (hours: number | string) => void;
@@ -154,165 +151,9 @@ export interface TripExtendedActions {
   validatePassengerLimits: () => boolean;
 }
 
-<<<<<<< HEAD
-export const createTripExtendedActions = (
-  set: ZustandSet,
-  get: ZustandGet
-): TripExtendedActions => ({
-  // === RETURN FLIGHT SPECIFIC ===
-  setReturnFlight: (flightNumber: string) => {
-    set((state: any) => ({
-      tripConfiguration: {
-        ...state.tripConfiguration,
-        returnFlight: flightNumber,
-      },
-      isDirty: true,
-    }));
-  },
-
-  setReturnDateTime: (date: Date | null, time: string) => {
-    set((state: any) => ({
-      tripConfiguration: {
-        ...state.tripConfiguration,
-        returnDate: date,
-        returnTime: time,
-      },
-      isDirty: true,
-    }));
-    get().calculatePricing();
-  },
-
-  setReturnAdditionalStops: (stops: GooglePlace[]) => {
-    set((state: any) => ({
-      tripConfiguration: {
-        ...state.tripConfiguration,
-        returnAdditionalStops: stops.slice(0, BOOKING_CONSTANTS.MAX_ADDITIONAL_STOPS),
-      },
-      isDirty: true,
-    }));
-    get().calculatePricing();
-  },
-
-  // === HOURLY SPECIFIC ===
-  setHoursRequested: (hours: number) => {
-    const validHours = Math.max(
-      BOOKING_CONSTANTS.HOURLY_MIN_HOURS,
-      Math.min(BOOKING_CONSTANTS.HOURLY_MAX_HOURS, hours)
-    );
-
-    set((state: any) => ({
-      tripConfiguration: {
-        ...state.tripConfiguration,
-        hoursRequested: validHours,
-      },
-      isDirty: true,
-    }));
-    get().calculatePricing();
-  },
-
-  // === PASSENGER/BAGGAGE WITH DYNAMIC LIMITS ===
-  setPassengerCount: (count: number) => {
-    const state = get();
-    const maxAllowed = state.limits?.passengers || BOOKING_CONSTANTS.MAX_PASSENGERS_DEFAULT;
-    const validCount = Math.max(BOOKING_CONSTANTS.MIN_PASSENGERS, Math.min(maxAllowed, count));
-
-    set((state: any) => ({
-      tripConfiguration: {
-        ...state.tripConfiguration,
-        passengers: validCount,
-      },
-      isDirty: true,
-    }));
-  },
-
-  setBaggageCount: (count: number) => {
-    const state = get();
-    const maxAllowed = state.limits?.baggage || BOOKING_CONSTANTS.MAX_BAGGAGE_DEFAULT;
-    const validCount = Math.max(BOOKING_CONSTANTS.MIN_BAGGAGE, Math.min(maxAllowed, count));
-
-    set((state: any) => ({
-      tripConfiguration: {
-        ...state.tripConfiguration,
-        baggage: validCount,
-      },
-      isDirty: true,
-    }));
-  },
-
-  getMaxPassengersForSelection: () => {
-    const state = get();
-
-    if (
-      state.tripConfiguration.type === 'fleet' &&
-      state.tripConfiguration.fleetSelection.length > 0
-    ) {
-      return BOOKING_CONSTANTS.MAX_PASSENGERS_DEFAULT;
-    }
-
-    if (state.vehicleSelection?.model) {
-      return state.vehicleSelection.model.maxPassengers;
-    }
-
-    return state.limits?.passengers || BOOKING_CONSTANTS.MAX_PASSENGERS_DEFAULT;
-  },
-
-  getMaxBaggageForSelection: () => {
-    const state = get();
-
-    if (
-      state.tripConfiguration.type === 'fleet' &&
-      state.tripConfiguration.fleetSelection.length > 0
-    ) {
-      return BOOKING_CONSTANTS.MAX_BAGGAGE_DEFAULT;
-    }
-
-    if (state.vehicleSelection?.model) {
-      return state.vehicleSelection.model.maxBaggage;
-    }
-
-    return state.limits?.baggage || BOOKING_CONSTANTS.MAX_BAGGAGE_DEFAULT;
-  },
-
-  validatePassengerLimits: () => {
-    const state = get();
-    const maxPassengers = state.getMaxPassengersForSelection();
-    const maxBaggage = state.getMaxBaggageForSelection();
-
-    let needsUpdate = false;
-    const updates: any = {};
-
-    if (state.tripConfiguration.passengers > maxPassengers) {
-      updates.passengers = maxPassengers;
-      needsUpdate = true;
-    }
-
-    if (state.tripConfiguration.baggage > maxBaggage) {
-      updates.baggage = maxBaggage;
-      needsUpdate = true;
-    }
-
-    if (needsUpdate) {
-      set((state: any) => ({
-        tripConfiguration: {
-          ...state.tripConfiguration,
-          ...updates,
-        },
-        isDirty: true,
-      }));
-
-      if (state.setStepError) {
-        const step = state.currentStep;
-        state.setStepError(step, 'Passenger/baggage count adjusted to vehicle limits');
-      }
-    }
-
-    return !needsUpdate;
-  },
-=======
 // Main factory - combines all action modules
 export const createTripExtendedActions = (set: ZustandSet, get: ZustandGet): TripExtendedActions => ({
   ...createReturnActions(set, get),
   ...createHourlyActions(set, get),
   ...createPassengerActions(set, get),
->>>>>>> 252d0b5 (🚀 Major booking system refactor & optimization)
 });
