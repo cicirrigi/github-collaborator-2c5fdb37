@@ -13,3 +13,7 @@ export * from './typography';
 // Legacy exports for compatibility
 export { breakpoints, containers, mediaQueries } from './breakpoints';
 export { luxuryCardTokens } from './luxury-card';
+
+// UI Surfaces (new)
+export { uiSurfaces, uiColors } from './ui-surfaces';
+export type { UiSurfaces, UiColors } from './ui-surfaces';

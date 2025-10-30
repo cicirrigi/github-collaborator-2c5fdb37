@@ -6,6 +6,7 @@ import type React from 'react';
 import { useState } from 'react';
 
 import { designTokens } from '@/config/theme.config';
+import { uiSurfaces } from '@/design-system/tokens/ui-surfaces';
 import { cn } from '@/lib/utils/cn';
 
 import type { MenuItem } from './menu.config';
@@ -18,6 +19,8 @@ export interface DropdownMenuProps {
   readonly className?: string;
   /** Trigger on click instead of hover */
   readonly clickToOpen?: boolean;
+  /** Dropdown alignment */
+  readonly alignment?: 'left' | 'right';
 }
 
 /**
@@ -33,6 +36,7 @@ export function DropdownMenu({
   item,
   className,
   clickToOpen = false,
+  alignment = 'left',
 }: DropdownMenuProps): React.JSX.Element | null {
   const [open, setOpen] = useState(false);
 
@@ -75,13 +79,13 @@ export function DropdownMenu({
               ease: designTokens.animations.easing.framer.ease,
             }}
             className={cn(
-              'absolute left-0 top-full mt-2 min-w-56 rounded-xl border shadow-2xl',
-              'backdrop-blur-xl z-50 overflow-hidden'
+              'absolute top-full mt-2 min-w-56 rounded-xl border shadow-2xl',
+              'backdrop-blur-xl z-50 overflow-hidden',
+              alignment === 'right' ? 'right-0' : 'left-0'
             )}
             style={{
-              backgroundColor: 'var(--background-elevated)',
-              borderColor: 'var(--border-subtle)',
-              // Luxury glassmorphism
+              ...uiSurfaces.dropdown,
+              // Enhanced luxury glassmorphism
               background: `linear-gradient(135deg, 
                 var(--background-elevated) 0%, 
                 rgba(255,255,255,0.05) 100%)`,
