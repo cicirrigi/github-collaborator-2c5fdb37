@@ -4,7 +4,7 @@ import type React from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
-import Footer from './Footer';
+import Footer from './footer/Footer';
 import Navbar from './navbar/Navbar';
 
 /**

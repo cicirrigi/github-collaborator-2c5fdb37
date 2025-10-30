@@ -3,7 +3,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import type React from 'react';
-import { useRef } from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
@@ -40,13 +39,11 @@ export function NavbarMobile({
   items,
   containerRef,
 }: NavbarMobileProps): React.JSX.Element {
-  const panelRef = useRef<HTMLDivElement>(null);
-
   return (
     <AnimatePresence>
       {open && (
         <motion.div
-          ref={containerRef || panelRef}
+          ref={containerRef}
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
@@ -67,11 +64,12 @@ export function NavbarMobile({
                 key={item.href}
                 href={item.href}
                 onClick={onClose}
+                tabIndex={0}
                 className={cn(
                   'rounded-md px-3 py-2 text-sm font-medium transition-colors',
                   'text-[var(--text-secondary)] hover:bg-[var(--brand-primary)]/10',
                   'hover:text-[var(--brand-primary)] focus:outline-none focus:ring-2',
-                  'focus:ring-[var(--brand-primary)]/50'
+                  'focus:ring-[var(--brand-primary)]/50 focus:ring-offset-2'
                 )}
               >
                 {item.label}

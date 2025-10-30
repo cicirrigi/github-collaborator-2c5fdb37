@@ -1,0 +1,114 @@
+'use client';
+
+import { ArrowRight, ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import type React from 'react';
+import { useState } from 'react';
+
+import { cn } from '@/lib/utils/cn';
+
+import type { FooterConfig } from './footer.config';
+
+export interface FooterLinksProps {
+  /** Links data from config */
+  readonly links: FooterConfig['links'];
+  /** Custom styling */
+  readonly className?: string;
+}
+
+/**
+ * 🔗 FooterLinks - Navigation links section
+ * - Grouped by category
+ * - Luxury hover effects with arrow
+ * - Responsive grid layout
+ * - Design tokens integration
+ * - Zero hardcoded content
+ */
+export function FooterLinks({ links, className }: FooterLinksProps): React.JSX.Element {
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set());
+
+  const toggleSection = (title: string) => {
+    setOpenSections(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(title)) {
+        newSet.delete(title);
+      } else {
+        newSet.add(title);
+      }
+      return newSet;
+    });
+  };
+
+  return (
+    <div className={cn('grid grid-cols-1 gap-6 md:grid-cols-4 md:gap-8', className)}>
+      {links.map(category => {
+        const isOpen = openSections.has(category.title);
+
+        return (
+          <div key={category.title} className='space-y-4'>
+            {/* Category Title - Mobile Accordion Button */}
+            <button
+              onClick={() => toggleSection(category.title)}
+              className={cn(
+                'flex w-full items-center justify-between',
+                'font-semibold text-sm transition-colors duration-200',
+                'md:cursor-default md:pointer-events-none',
+                'focus-visible:outline-none focus-visible:ring-2 md:focus-visible:ring-0',
+                'focus-visible:ring-[var(--brand-primary)]/40 rounded-sm'
+              )}
+              style={{ color: 'var(--text-primary)' }}
+              aria-expanded={isOpen}
+              aria-controls={`footer-section-${category.title}`}
+            >
+              <span>{category.title}</span>
+              <ChevronDown
+                className={cn(
+                  'h-4 w-4 transition-transform duration-200 md:hidden',
+                  isOpen && 'rotate-180'
+                )}
+              />
+            </button>
+
+            {/* Category Links - Collapsible on mobile */}
+            <ul
+              id={`footer-section-${category.title}`}
+              className={cn(
+                'space-y-2 overflow-hidden transition-all duration-300',
+                // Mobile accordion behavior
+                'md:block',
+                isOpen ? 'block max-h-96' : 'hidden max-h-0 md:max-h-none'
+              )}
+            >
+              {category.items.map(item => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      'group flex items-center gap-2 text-sm transition-all duration-200',
+                      'hover:text-[var(--brand-primary)]',
+                      'focus-visible:outline-none focus-visible:ring-2',
+                      'focus-visible:ring-[var(--brand-primary)]/40 focus-visible:ring-offset-2',
+                      'focus-visible:ring-offset-[var(--background-dark)] rounded-sm'
+                    )}
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span className='transition-transform duration-200 group-hover:translate-x-1'>
+                      {item.label}
+                    </span>
+                    <ArrowRight
+                      className={cn(
+                        'h-3 w-3 opacity-0 transition-all duration-200',
+                        'translate-x-[-4px] group-hover:opacity-100 group-hover:translate-x-0'
+                      )}
+                      style={{ color: 'var(--brand-primary)' }}
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  );
+}

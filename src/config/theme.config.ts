@@ -85,6 +85,22 @@ export const designTokens = {
     lg: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
     xl: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
   },
+  // Breakpoints tokens (responsive design)
+  breakpoints: {
+    sm: '640px',
+    md: '768px',
+    lg: '1024px',
+    xl: '1280px',
+    '2xl': '1536px',
+  },
+  // Gradient tokens (luxury backgrounds)
+  gradients: {
+    footerLuxury:
+      'linear-gradient(135deg, var(--brand-primary) 0%, transparent 50%, var(--brand-primary) 100%)',
+    heroGradient:
+      'linear-gradient(180deg, var(--background-dark) 0%, var(--background-elevated) 100%)',
+    cardGlow: 'radial-gradient(circle, var(--brand-primary) 0%, transparent 70%)',
+  },
   // Animation tokens (inline for now, can be moved to tokens/animations.ts)
   animations: {
     duration: {
