@@ -17,3 +17,7 @@ export { luxuryCardTokens } from './luxury-card';
 // UI Surfaces (new)
 export { uiSurfaces, uiColors } from './ui-surfaces';
 export type { UiSurfaces, UiColors } from './ui-surfaces';
+
+// Layout tokens (new)
+export { layoutTokens, layoutCSSVars } from './layout';
+export type { LayoutTokens } from './layout';

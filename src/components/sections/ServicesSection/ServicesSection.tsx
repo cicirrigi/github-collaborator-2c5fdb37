@@ -1,0 +1,129 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import type React from 'react';
+
+import { Container } from '@/components/layout/Container';
+import { LuxuryCard } from '@/components/ui';
+import { cn } from '@/lib/utils/cn';
+import { designTokens } from '@/config/theme.config';
+
+import { servicesConfig } from './ServicesSection.config';
+
+export interface ServicesSectionProps {
+  /** Custom styling */
+  readonly className?: string;
+  /** Override default config */
+  readonly customConfig?: Partial<typeof servicesConfig>;
+}
+
+/**
+ * 🚗 ServicesSection - Benefits & Features showcase
+ *
+ * Features:
+ * - Config-driven services grid
+ * - LuxuryCard components with shimmer effects
+ * - Responsive grid layout
+ * - Staggered animations
+ * - Design tokens integration
+ */
+export function ServicesSection({
+  className,
+  customConfig,
+}: ServicesSectionProps): React.JSX.Element {
+  const config = customConfig ? { ...servicesConfig, ...customConfig } : servicesConfig;
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: config.animation.stagger,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: config.animation.duration,
+        ease: designTokens.animations.easing.framer.ease,
+      },
+    },
+  };
+
+  return (
+    <section
+      className={cn('py-[var(--section-spacing-lg)]', className)}
+      style={
+        {
+          '--section-spacing-lg': '6rem',
+        } as React.CSSProperties
+      }
+    >
+      <Container size='xl'>
+        {/* Section Header */}
+        <motion.div
+          className='mb-12 text-center'
+          initial={config.animation.enabled ? { opacity: 0, y: 20 } : false}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <h2
+            className='mb-4 text-3xl font-bold tracking-tight md:text-4xl'
+            style={{
+              color: 'var(--text-primary)',
+              fontFamily: 'var(--font-display)',
+            }}
+          >
+            {config.title}
+          </h2>
+          <p
+            className='mx-auto max-w-3xl text-lg leading-relaxed'
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            {config.subtitle}
+          </p>
+        </motion.div>
+
+        {/* Services Grid */}
+        <motion.div
+          className={cn(
+            'grid gap-4 md:grid-cols-2 lg:grid-cols-5',
+            `max-w-${config.layout.maxWidth} mx-auto`
+          )}
+          variants={containerVariants}
+          initial={config.animation.enabled ? 'hidden' : 'visible'}
+          whileInView='visible'
+          viewport={{ once: true }}
+        >
+          {config.services.map(service => {
+            const IconComponent = service.icon;
+
+            return (
+              <motion.div key={service.id} variants={itemVariants}>
+                <LuxuryCard
+                  as={Link}
+                  variant='shimmer'
+                  size='md'
+                  hover='shimmer'
+                  href={service.href}
+                  icon={<IconComponent className='h-full w-full' strokeWidth={1.2} />}
+                  title={service.title}
+                  description={service.description}
+                  className='h-full transition-transform duration-300 hover:scale-[1.02]'
+                />
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </Container>
+    </section>
+  );
+}
