@@ -66,7 +66,7 @@ export const servicesConfig = {
       wide: 5, // Pentru 5 servicii
     },
     gap: '1rem',
-    maxWidth: '7xl',
+    maxWidth: '7xl' as '5xl' | '6xl' | '7xl',
   },
 
   // Animation settings

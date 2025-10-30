@@ -5,9 +5,11 @@ import Link from 'next/link';
 import type React from 'react';
 
 import { Container } from '@/components/layout/Container';
+import { Background } from '@/components/ui/Background';
 import { cn } from '@/lib/utils/cn';
 import { homeContent } from '@/config/content.config';
 import { designTokens } from '@/config/theme.config';
+import { layoutTokens } from '@/design-system/tokens/layout';
 
 export interface CTASectionProps {
   /** Custom styling */
@@ -27,13 +29,12 @@ export function CTASection({ className }: CTASectionProps): React.JSX.Element {
       className={cn('relative py-[var(--section-spacing-lg)] overflow-hidden', className)}
       style={
         {
-          '--section-spacing-lg': '6rem',
-          background: designTokens.gradients.footerLuxury,
+          '--section-spacing-lg': layoutTokens.sectionSpacing.lg,
         } as React.CSSProperties
       }
     >
-      {/* Background overlay */}
-      <div className='absolute inset-0 bg-neutral-900/60' />
+      {/* Background using new system */}
+      <Background preset='cta' />
 
       <Container size='xl' className='relative z-10'>
         <motion.div

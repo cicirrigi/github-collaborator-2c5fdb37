@@ -1,9 +1,13 @@
 /**
- * 📦 UI Components - Barrel Export
+ * Export all UI components from their respective folders
  *
  * Enterprise design system components.
  * All connected to theme.config.ts for consistency.
  */
+
+// Background system
+export { Background } from './Background';
+export type { BackgroundProps } from './Background';
 
 // Core UI Primitives
 export type { BadgeProps } from './Badge';

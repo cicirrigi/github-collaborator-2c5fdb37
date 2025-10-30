@@ -8,6 +8,7 @@ import { Container } from '@/components/layout/Container';
 import { LuxuryCard } from '@/components/ui';
 import { cn } from '@/lib/utils/cn';
 import { designTokens } from '@/config/theme.config';
+import { layoutTokens } from '@/design-system/tokens/layout';
 
 import { servicesConfig } from './ServicesSection.config';
 
@@ -62,7 +63,7 @@ export function ServicesSection({
       className={cn('py-[var(--section-spacing-lg)]', className)}
       style={
         {
-          '--section-spacing-lg': '6rem',
+          '--section-spacing-lg': layoutTokens.sectionSpacing.lg,
         } as React.CSSProperties
       }
     >
@@ -94,10 +95,11 @@ export function ServicesSection({
 
         {/* Services Grid */}
         <motion.div
-          className={cn(
-            'grid gap-4 md:grid-cols-2 lg:grid-cols-5',
-            `max-w-${config.layout.maxWidth} mx-auto`
-          )}
+          className={cn('grid gap-4 md:grid-cols-2 lg:grid-cols-5 mx-auto', {
+            'max-w-5xl': config.layout.maxWidth === '5xl',
+            'max-w-6xl': config.layout.maxWidth === '6xl',
+            'max-w-7xl': config.layout.maxWidth === '7xl',
+          })}
           variants={containerVariants}
           initial={config.animation.enabled ? 'hidden' : 'visible'}
           whileInView='visible'

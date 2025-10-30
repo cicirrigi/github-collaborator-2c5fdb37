@@ -103,7 +103,15 @@ export function HeroSection({
         )}
       >
         <motion.div
-          className={cn('mx-auto space-y-8', `max-w-${config.layout.maxWidth}`)}
+          className={cn('mx-auto space-y-8', {
+            'max-w-xl': config.layout.maxWidth === 'xl',
+            'max-w-2xl': config.layout.maxWidth === '2xl',
+            'max-w-3xl': config.layout.maxWidth === '3xl',
+            'max-w-4xl': config.layout.maxWidth === '4xl',
+            'max-w-5xl': config.layout.maxWidth === '5xl',
+            'max-w-6xl': config.layout.maxWidth === '6xl',
+            'max-w-7xl': config.layout.maxWidth === '7xl',
+          })}
           variants={containerVariants}
           initial={config.animation.enabled ? 'hidden' : 'visible'}
           animate='visible'
