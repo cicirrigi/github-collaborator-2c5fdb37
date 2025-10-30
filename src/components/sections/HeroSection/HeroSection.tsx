@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type React from 'react';
 
-import { Container } from '@/components/layout/Container';
+import { SectionOrchestrator } from '@/components/layout/SectionOrchestrator';
 import { cn } from '@/lib/utils/cn';
 import { designTokens } from '@/config/theme.config';
 
@@ -56,13 +56,12 @@ export function HeroSection({
   };
 
   return (
-    <section
+    <div
       className={cn(
-        'relative flex items-center overflow-hidden',
+        'flex items-center',
         variant === 'full-screen' && 'min-h-screen',
         variant === 'minimal' && 'py-24',
-        variant === 'default' && 'h-[var(--hero-height)] min-h-[var(--hero-min-height)]',
-        className
+        variant === 'default' && 'h-[var(--hero-height)] min-h-[var(--hero-min-height)]'
       )}
       style={
         {
@@ -71,106 +70,116 @@ export function HeroSection({
         } as React.CSSProperties
       }
     >
-      {/* Background Image */}
-      {config.background.image && (
-        <Image
-          src={config.background.image}
-          alt='Vantage Lane Hero Background'
-          fill
-          className='object-cover brightness-[0.4]'
-          priority
-          sizes='100vw'
-        />
-      )}
-
-      {/* Background Gradient Overlay */}
-      <div
-        className={cn(
-          'absolute inset-0',
-          `bg-gradient-to-br ${config.background.gradient}`,
-          config.background.overlay
-        )}
-      />
-
-      {/* Content */}
-      <Container
-        size='xl'
-        className={cn(
-          'relative z-10',
-          config.layout.textAlign === 'center' && 'text-center',
-          config.layout.textAlign === 'left' && 'text-left',
-          config.layout.textAlign === 'right' && 'text-right'
-        )}
+      <SectionOrchestrator
+        background='hero'
+        spacing='xl'
+        noContainer
+        className={cn('w-full', className)}
       >
-        <motion.div
-          className={cn('mx-auto space-y-8', {
-            'max-w-xl': config.layout.maxWidth === 'xl',
-            'max-w-2xl': config.layout.maxWidth === '2xl',
-            'max-w-3xl': config.layout.maxWidth === '3xl',
-            'max-w-4xl': config.layout.maxWidth === '4xl',
-            'max-w-5xl': config.layout.maxWidth === '5xl',
-            'max-w-6xl': config.layout.maxWidth === '6xl',
-            'max-w-7xl': config.layout.maxWidth === '7xl',
-          })}
-          variants={containerVariants}
-          initial={config.animation.enabled ? 'hidden' : 'visible'}
-          animate='visible'
-        >
-          {/* Title */}
-          <motion.h1
-            variants={itemVariants}
-            className='text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl'
-            style={{
-              fontFamily: 'var(--font-display)',
-              lineHeight: '1.1',
-            }}
-          >
-            {config.title}
-            {config.subtitle && (
-              <span
-                className='block text-[var(--brand-primary)]'
-                style={{ color: 'var(--brand-primary)' }}
-              >
-                {config.subtitle}
-              </span>
+        {/* Background Image */}
+        {config.background.image && (
+          <Image
+            src={config.background.image}
+            alt='Vantage Lane Hero Background'
+            fill
+            className={cn(
+              'object-cover',
+              // Theme-aware brightness
+              'brightness-[0.4] dark:brightness-[0.3]'
             )}
-          </motion.h1>
+            priority
+            sizes='100vw'
+          />
+        )}
 
-          {/* Description */}
-          {config.description && (
-            <motion.p
-              variants={itemVariants}
-              className='mx-auto max-w-2xl text-lg leading-relaxed text-neutral-200 md:text-xl'
-            >
-              {config.description}
-            </motion.p>
+        {/* Background Gradient Overlay */}
+        <div
+          className={cn(
+            'absolute inset-0',
+            `bg-gradient-to-br ${config.background.gradient}`,
+            config.background.overlay
           )}
+        />
 
-          {/* CTA Button */}
-          <motion.div variants={itemVariants}>
-            <Link
-              href={config.cta.href}
-              className={cn(
-                'inline-flex items-center justify-center rounded-md font-semibold transition-colors',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]/50',
-                // Size variants
-                config.cta.size === 'sm' && 'px-4 py-2 text-sm',
-                config.cta.size === 'md' && 'px-6 py-3 text-base',
-                config.cta.size === 'lg' && 'px-8 py-4 text-lg',
-                // Variant styles
-                config.cta.variant === 'primary' &&
-                  'bg-[var(--brand-primary)] text-black hover:opacity-90',
-                config.cta.variant === 'secondary' &&
-                  'bg-neutral-800 text-white hover:bg-neutral-700',
-                config.cta.variant === 'outline' &&
-                  'border-2 border-[var(--brand-primary)] text-[var(--brand-primary)] hover:bg-[var(--brand-primary)] hover:text-black'
-              )}
+        {/* Content Container */}
+        <div
+          className={cn(
+            'container mx-auto px-4 relative z-10',
+            config.layout.textAlign === 'center' && 'text-center',
+            config.layout.textAlign === 'left' && 'text-left',
+            config.layout.textAlign === 'right' && 'text-right'
+          )}
+        >
+          <motion.div
+            className={cn('mx-auto space-y-8', {
+              'max-w-xl': config.layout.maxWidth === 'xl',
+              'max-w-2xl': config.layout.maxWidth === '2xl',
+              'max-w-3xl': config.layout.maxWidth === '3xl',
+              'max-w-4xl': config.layout.maxWidth === '4xl',
+              'max-w-5xl': config.layout.maxWidth === '5xl',
+              'max-w-6xl': config.layout.maxWidth === '6xl',
+              'max-w-7xl': config.layout.maxWidth === '7xl',
+            })}
+            variants={containerVariants}
+            initial={config.animation.enabled ? 'hidden' : 'visible'}
+            animate='visible'
+          >
+            {/* Title */}
+            <motion.h1
+              variants={itemVariants}
+              className='text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl'
+              style={{
+                fontFamily: 'var(--font-display)',
+                lineHeight: '1.1',
+              }}
             >
-              {config.cta.label}
-            </Link>
+              {config.title}
+              {config.subtitle && (
+                <span
+                  className='block text-[var(--brand-primary)]'
+                  style={{ color: 'var(--brand-primary)' }}
+                >
+                  {config.subtitle}
+                </span>
+              )}
+            </motion.h1>
+
+            {/* Description */}
+            {config.description && (
+              <motion.p
+                variants={itemVariants}
+                className='mx-auto max-w-2xl text-lg leading-relaxed text-neutral-200 md:text-xl'
+              >
+                {config.description}
+              </motion.p>
+            )}
+
+            {/* CTA Button */}
+            <motion.div variants={itemVariants}>
+              <Link
+                href={config.cta.href}
+                className={cn(
+                  'inline-flex items-center justify-center rounded-md font-semibold transition-colors',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]/50',
+                  // Size variants
+                  config.cta.size === 'sm' && 'px-4 py-2 text-sm',
+                  config.cta.size === 'md' && 'px-6 py-3 text-base',
+                  config.cta.size === 'lg' && 'px-8 py-4 text-lg',
+                  // Variant styles
+                  config.cta.variant === 'primary' &&
+                    'bg-[var(--brand-primary)] text-black hover:opacity-90',
+                  config.cta.variant === 'secondary' &&
+                    'bg-neutral-800 text-white hover:bg-neutral-700',
+                  config.cta.variant === 'outline' &&
+                    'border-2 border-[var(--brand-primary)] text-[var(--brand-primary)] hover:bg-[var(--brand-primary)] hover:text-black'
+                )}
+              >
+                {config.cta.label}
+              </Link>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      </Container>
-    </section>
+        </div>
+      </SectionOrchestrator>
+    </div>
   );
 }

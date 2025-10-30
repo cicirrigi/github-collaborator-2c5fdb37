@@ -3,6 +3,7 @@
 import type React from 'react';
 
 import { Background } from '@/components/ui/Background';
+import type { BackgroundPreset } from '@/config/backgrounds.config';
 import { layoutTokens } from '@/design-system/tokens/layout';
 import { cn } from '@/lib/utils/cn';
 
@@ -17,8 +18,10 @@ export interface SectionOrchestratorProps {
   readonly className?: string;
   /** Vertical spacing size */
   readonly spacing?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  /** Section variant (auto-adjusts spacing) */
+  readonly variant?: 'default' | 'compact' | 'spacious';
   /** Background preset */
-  readonly background?: keyof typeof import('@/config/backgrounds.config').backgroundPresets;
+  readonly background?: BackgroundPreset;
   /** Container size */
   readonly containerSize?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   /** Disable container wrapper */
@@ -43,22 +46,31 @@ export function SectionOrchestrator({
   children,
   className,
   spacing = 'lg',
+  variant = 'default',
   background,
   containerSize = 'xl',
   noContainer = false,
   relative = true,
 }: SectionOrchestratorProps): React.JSX.Element {
+  // Calculate spacing based on variant or explicit spacing
+  const spacingValue =
+    variant === 'compact'
+      ? layoutTokens.sectionSpacing.sm
+      : variant === 'spacious'
+        ? layoutTokens.sectionSpacing.xl
+        : layoutTokens.sectionSpacing[spacing];
+
+  // Section styles (clean, testable, extensible)
+  const sectionStyle = {
+    '--section-spacing': spacingValue,
+    paddingBlock: 'var(--section-spacing)',
+  } as React.CSSProperties;
+
   return (
     <section
       id={id}
       className={cn('overflow-hidden', relative && 'relative', className)}
-      style={
-        {
-          '--section-spacing': layoutTokens.sectionSpacing[spacing],
-          paddingTop: 'var(--section-spacing)',
-          paddingBottom: 'var(--section-spacing)',
-        } as React.CSSProperties
-      }
+      style={sectionStyle}
     >
       {/* Background */}
       {background && <Background preset={background} />}
