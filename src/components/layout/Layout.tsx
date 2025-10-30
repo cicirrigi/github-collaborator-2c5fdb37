@@ -5,7 +5,7 @@ import type React from 'react';
 import { cn } from '@/lib/utils/cn';
 
 import Footer from './Footer';
-import Navbar from './Navbar';
+import Navbar from './navbar/Navbar';
 
 /**
  * 🏗️ Main Layout component for Vantage Lane 2.0
