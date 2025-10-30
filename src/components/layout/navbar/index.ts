@@ -2,36 +2,42 @@
  * 📦 Navbar Module - Complete Navigation System
  *
  * Modular navbar with orchestrator pattern:
- * - Navbar: Main orchestrator (80 lines)
+ * - Navbar: Main orchestrator (stable version)
+ * - NavbarLuxury: Enhanced version with luxury effects
  * - NavbarDesktop/Mobile: Responsive components
- * - NavbarActions: Theme + User + Mobile toggle
- * - Design tokens integration
- * - Accessibility compliant
+ * - NavbarActions: Theme/User/Mobile controls
+ * - Logo: Brand component
+ * - Hooks: State management & logic
+ *
+ * 🧪 A/B Testing Ready:
+ * Switch between versions by changing import:
+ * import { Navbar } from './navbar' // Stable
+ * import { NavbarLuxury as Navbar } from './navbar' // Enhanced
  */
 
-// Main orchestrator (recommended import)
+// 🛡️ Stable version (original)
 export { default as Navbar } from './Navbar';
-export type { NavbarProps } from './Navbar';
 
-// Individual components (for custom compositions)
-export { Logo } from './Logo';
-export type { LogoProps } from './Logo';
+// ✨ Enhanced version (luxury effects)
+export { NavbarLuxury } from './NavbarLuxury';
 
-export { NavLinks } from './NavLinks';
-export type { NavLinksProps } from './NavLinks';
-
-export { UserMenu } from './UserMenu';
-export type { UserMenuProps } from './UserMenu';
-
-export { NavbarDesktop } from './NavbarDesktop';
-export type { NavbarDesktopProps } from './NavbarDesktop';
-
-export { NavbarMobile } from './NavbarMobile';
-export type { NavbarMobileProps } from './NavbarMobile';
-
+// Shared components
 export { NavbarActions } from './NavbarActions';
-export type { NavbarActionsProps } from './NavbarActions';
+export { NavbarDesktop } from './NavbarDesktop';
+export { NavbarMobile } from './NavbarMobile';
+export { Logo } from './Logo';
+export { UserMenu } from './UserMenu';
+export { NavLinks } from './NavLinks';
 
-// State management hooks
+// Hooks
 export { useNavbarState } from './hooks';
+
+// Types
+export type { NavbarProps } from './Navbar';
+export type { NavbarLuxuryProps } from './NavbarLuxury';
+export type { NavbarActionsProps } from './NavbarActions';
+export type { NavbarDesktopProps } from './NavbarDesktop';
+export type { NavbarMobileProps } from './NavbarMobile';
+export type { UserMenuProps } from './UserMenu';
+export type { NavLinksProps } from './NavLinks';
 export type { NavbarState } from './hooks';

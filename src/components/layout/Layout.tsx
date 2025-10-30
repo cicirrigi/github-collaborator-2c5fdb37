@@ -5,7 +5,9 @@ import type React from 'react';
 import { cn } from '@/lib/utils/cn';
 
 import Footer from './footer/Footer';
-import Navbar from './navbar/Navbar';
+// import Navbar from './navbar/Navbar'; // 🛡️ Stable version
+import { NavbarLuxury as Navbar } from './navbar'; // ✨ Testing luxury version
+import { NavbarPortal } from './NavbarPortal';
 
 /**
  * 🏗️ Main Layout component for Vantage Lane 2.0
@@ -61,41 +63,47 @@ export default function Layout({
   pageTitle,
 }: LayoutProps): React.JSX.Element {
   return (
-    <div
-      className={cn(
-        'flex flex-col',
-        fullHeight && 'min-h-screen',
-        'transition-colors duration-300 ease-in-out'
-      )}
-    >
+    <>
       {/* SEO Title */}
       {pageTitle && <title>{pageTitle} | Vantage Lane</title>}
 
-      {/* Navigation */}
-      {!hideNavbar && <Navbar />}
+      {/* 🛡️ Portal-based Navbar (always fixed to viewport) */}
+      {!hideNavbar && (
+        <NavbarPortal>
+          <Navbar />
+        </NavbarPortal>
+      )}
 
-      {/* Main Content Area */}
-      <main
+      <div
         className={cn(
-          'flex-1',
-          fullHeight && !hideNavbar && !hideFooter && 'flex flex-col',
-          containerClassName
+          'flex flex-col',
+          fullHeight && 'min-h-screen',
+          'transition-colors duration-300 ease-in-out'
         )}
-        role='main'
-        aria-label='Main content'
       >
-        <div
+        {/* Main Content Area */}
+        <main
           className={cn(
-            fullHeight && !hideNavbar && !hideFooter && 'flex flex-1 flex-col',
-            className
+            'flex-1',
+            fullHeight && !hideNavbar && !hideFooter && 'flex flex-col',
+            containerClassName
           )}
+          role='main'
+          aria-label='Main content'
         >
-          {children}
-        </div>
-      </main>
+          <div
+            className={cn(
+              fullHeight && !hideNavbar && !hideFooter && 'flex flex-1 flex-col',
+              className
+            )}
+          >
+            {children}
+          </div>
+        </main>
 
-      {/* Footer */}
-      {!hideFooter && <Footer />}
-    </div>
+        {/* Footer */}
+        {!hideFooter && <Footer />}
+      </div>
+    </>
   );
 }
