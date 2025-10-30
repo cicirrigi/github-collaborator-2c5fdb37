@@ -3,21 +3,11 @@
 import type React from 'react';
 
 import { cn } from '@/lib/utils/cn';
-
-import ServicesMenu from '../ServicesMenu';
-import { NavLinks } from './NavLinks';
-
-interface NavItem {
-  readonly href: string;
-  readonly label: string;
-  readonly external?: boolean;
-}
+import { DropdownMenu, MenuItemComponent, mainMenu } from '@/components/ui/navigation';
 
 export interface NavbarDesktopProps {
-  /** Navigation items */
-  readonly items: readonly NavItem[];
-  /** Hide services menu */
-  readonly hideServices?: boolean;
+  /** Custom menu override */
+  readonly customMenu?: typeof mainMenu;
   /** Custom menu items */
   readonly customMenus?: React.ReactNode;
   /** Custom styling */
@@ -25,26 +15,33 @@ export interface NavbarDesktopProps {
 }
 
 /**
- * 🖥️ NavbarDesktop - Desktop navigation section
+ * 🖥️ NavbarDesktop - Desktop navigation section (Orchestrated)
  * - Hidden on mobile (md:flex)
- * - NavLinks integration
- * - Services dropdown
- * - Extensible with custom menus
- * - Theme-aware styling
+ * - Config-driven navigation from menu.config.ts
+ * - Auto dropdown detection
+ * - Design tokens integration
+ * - Zero hardcoded content
  */
 export function NavbarDesktop({
-  items,
-  hideServices = false,
+  customMenu,
   customMenus,
   className,
 }: NavbarDesktopProps): React.JSX.Element {
+  // Use custom menu or default from config
+  const menuItems = customMenu || mainMenu;
+
   return (
     <div className={cn('hidden items-center gap-6 md:flex', className)}>
-      {/* Main Navigation Links */}
-      <NavLinks items={items} className='flex items-center gap-6' />
-
-      {/* Services Dropdown */}
-      {!hideServices && <ServicesMenu />}
+      {/* Orchestrated Navigation - Auto dropdown/link detection */}
+      <nav className='flex items-center gap-6' role='navigation'>
+        {menuItems.map(item =>
+          item.children ? (
+            <DropdownMenu key={item.label} item={item} />
+          ) : (
+            <MenuItemComponent key={item.label} item={item} />
+          )
+        )}
+      </nav>
 
       {/* Custom Menu Items */}
       {customMenus}

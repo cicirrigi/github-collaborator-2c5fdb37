@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import type React from 'react';
 
+import { DropdownMenu, MenuItemComponent, mainMenu } from '@/components/ui/navigation';
+
 import { cn } from '@/lib/utils/cn';
 
 import ServicesMenuMobile from '../ServicesMenuMobile';
@@ -59,6 +61,16 @@ export function NavbarMobile({
           }}
         >
           <nav className='flex flex-col space-y-2 p-4' aria-label='Mobile navigation'>
+            {/* Orchestrated Navigation */}
+            {mainMenu.map(item =>
+              item.children ? (
+                <DropdownMenu key={item.label} item={item} clickToOpen={true} />
+              ) : (
+                <MenuItemComponent key={item.label} item={item} onClick={onClose} />
+              )
+            )}
+
+            {/* Legacy items (backward compatibility) */}
             {items.map(item => (
               <Link
                 key={item.href}

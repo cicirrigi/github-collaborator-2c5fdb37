@@ -15,8 +15,6 @@ import { NavbarMobile } from './NavbarMobile';
 export interface NavbarProps {
   /** Custom styling */
   readonly className?: string;
-  /** Hide services menu */
-  readonly hideServices?: boolean;
   /** Hide theme toggle */
   readonly hideThemeToggle?: boolean;
   /** Hide user menu */
@@ -40,7 +38,6 @@ export interface NavbarProps {
  */
 export default function Navbar({
   className,
-  hideServices = false,
   hideThemeToggle = false,
   hideUserMenu = false,
   customNavItems,
@@ -64,8 +61,8 @@ export default function Navbar({
           {/* Brand Logo */}
           <Logo size='md' />
 
-          {/* Desktop Navigation */}
-          <NavbarDesktop items={navItems} hideServices={hideServices} />
+          {/* Desktop Navigation - Now orchestrated */}
+          <NavbarDesktop />
 
           {/* Actions (Theme, User, Mobile Toggle) */}
           <NavbarActions
