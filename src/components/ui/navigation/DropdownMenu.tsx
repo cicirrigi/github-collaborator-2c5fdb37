@@ -72,7 +72,7 @@ export function DropdownMenu({
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{
               duration: 0.2,
-              ease: designTokens.animations.easing.ease,
+              ease: designTokens.animations.easing.framer.ease,
             }}
             className={cn(
               'absolute left-0 top-full mt-2 min-w-56 rounded-xl border shadow-2xl',

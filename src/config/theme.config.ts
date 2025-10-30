@@ -109,9 +109,20 @@ export const designTokens = {
       slow: '500ms',
     },
     easing: {
-      linear: 'linear',
-      ease: 'cubic-bezier(0.4, 0, 0.2, 1)',
-      bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+      // CSS strings for regular CSS animations
+      css: {
+        linear: 'linear',
+        ease: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+      },
+      // Framer Motion compatible (arrays of 4 numbers)
+      framer: {
+        linear: 'linear',
+        ease: [0.4, 0, 0.2, 1],
+        bounce: [0.68, -0.55, 0.265, 1.55],
+        easeOut: 'easeOut',
+        easeIn: 'easeIn',
+      },
     },
   },
 } as const;
