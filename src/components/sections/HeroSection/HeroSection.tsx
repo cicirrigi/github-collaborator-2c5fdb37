@@ -70,12 +70,7 @@ export function HeroSection({
         } as React.CSSProperties
       }
     >
-      <SectionOrchestrator
-        background='hero'
-        spacing='xl'
-        noContainer
-        className={cn('w-full', className)}
-      >
+      <SectionOrchestrator spacing='xl' noContainer className={cn('w-full', className)}>
         {/* Background Image */}
         {config.background.image && (
           <Image
@@ -84,22 +79,13 @@ export function HeroSection({
             fill
             className={cn(
               'object-cover',
-              // Theme-aware brightness
-              'brightness-[0.4] dark:brightness-[0.3]'
+              // Theme-aware brightness (more readable)
+              'brightness-[0.7] dark:brightness-[0.5]'
             )}
             priority
             sizes='100vw'
           />
         )}
-
-        {/* Background Gradient Overlay */}
-        <div
-          className={cn(
-            'absolute inset-0',
-            `bg-gradient-to-br ${config.background.gradient}`,
-            config.background.overlay
-          )}
-        />
 
         {/* Content Container */}
         <div
