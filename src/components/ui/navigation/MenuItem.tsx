@@ -42,7 +42,7 @@ export function MenuItemComponent({
   const isExternal = item.external;
 
   const baseClasses = cn(
-    'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium',
+    'flex items-center gap-2 rounded-md px-3 py-2 text-base font-medium',
     'transition-all duration-200 group relative overflow-hidden',
     'text-[var(--text-secondary)] hover:text-[var(--brand-primary)]',
     'hover:bg-[var(--brand-primary)]/10',
