@@ -84,6 +84,10 @@ html,
 body {
   scroll-behavior: smooth;
   font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* ✨ Text Selection */

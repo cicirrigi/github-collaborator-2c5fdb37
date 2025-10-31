@@ -80,24 +80,18 @@ export function DropdownMenu({
             }}
             className={cn(
               'absolute top-full mt-2 min-w-56 rounded-xl border shadow-2xl',
-              'backdrop-blur-xl z-50 overflow-hidden',
+              'backdrop-blur-2xl saturate-150 z-50 overflow-hidden',
               alignment === 'right' ? 'right-0' : 'left-0'
             )}
             style={{
               ...uiSurfaces.dropdown,
-              // Enhanced luxury glassmorphism
-              background: `linear-gradient(135deg, 
-                var(--background-elevated) 0%, 
-                rgba(255,255,255,0.05) 100%)`,
+              // Mai transparent, fără glow auriu
+              backgroundColor: 'color-mix(in srgb, var(--background-elevated) 75%, transparent)',
+              // Elimină gradient-ul care creează glow
+              backgroundImage: 'none',
             }}
           >
-            {/* Luxury gradient overlay */}
-            <div
-              className='absolute inset-0 opacity-10'
-              style={{
-                background: designTokens.gradients.cardGlow,
-              }}
-            />
+            {/* Clean background - no golden glow */}
 
             {/* Menu Items */}
             <nav className='relative py-2' role='menu'>
@@ -109,7 +103,7 @@ export function DropdownMenu({
                   className={cn(
                     'group flex items-center gap-3 px-4 py-3 text-sm',
                     'transition-all duration-200',
-                    'text-[var(--text-secondary)] hover:text-[var(--brand-primary)]',
+                    'text-[var(--text-primary)] hover:text-[var(--brand-primary)]',
                     'hover:bg-[var(--brand-primary)]/10',
                     'focus-visible:outline-none focus-visible:ring-2',
                     'focus-visible:ring-[var(--brand-primary)]/40',

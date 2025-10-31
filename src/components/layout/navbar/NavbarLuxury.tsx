@@ -1,8 +1,14 @@
 'use client';
 
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
-import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import {
+  motion,
+  useMotionTemplate,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from 'framer-motion';
+import { useRef } from 'react';
 
 import { navigation } from '@/config/site.config';
 import { cn } from '@/lib/utils/cn';
@@ -41,114 +47,101 @@ export function NavbarLuxury({
   className,
   hideThemeToggle = false,
   hideUserMenu = false,
-  dockedThreshold = 120, // 👈 Faster response
+  dockedThreshold = 120,
   customNavItems,
 }: NavbarLuxuryProps): React.JSX.Element {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
   const { mobileOpen, setMobileOpen, panelRef } = useNavbarState();
   const prefersReducedMotion = useReducedMotion();
-
-  const [isDocked, setIsDocked] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const navItems = customNavItems || navigation.main;
 
-  // 🔍 Detect when to dock
-  useEffect(() => {
-    const unsub = scrollY.on('change', v => setIsDocked(v > dockedThreshold));
-    return () => unsub();
-  }, [scrollY, dockedThreshold]);
-
-  // 🧠 Motion transforms — totul controlat de Framer Motion
-  const width = useTransform(scrollY, [0, dockedThreshold], ['100%', '90%']);
-  const borderRadius = useTransform(scrollY, [0, dockedThreshold], [0, 24]);
-  const top = useTransform(scrollY, [0, dockedThreshold], [0, 12]);
-  const rawScale = useTransform(scrollY, [0, dockedThreshold], [1, 0.94]);
-  const rawY = useTransform(scrollY, [0, dockedThreshold], [0, 14]);
-  const rawOpacity = useTransform(scrollY, [0, dockedThreshold], [1, 0.96]);
-  const bgOpacity = useTransform(scrollY, [0, dockedThreshold], [0.85, 0.65]);
-  const logoScale = useTransform(scrollY, [0, dockedThreshold], [1, 0.88]);
-  const logoOpacity = useTransform(scrollY, [0, dockedThreshold], [1, 0.85]);
-
-  // 💎 Luxury spring physics
+  // 💎 physics config
   const springConfig = prefersReducedMotion
     ? { duration: 0 }
     : { stiffness: 180, damping: 18, mass: 0.35 };
 
-  // 🎨 Premium smooth easing
-  const premiumEase = [0.25, 0.46, 0.45, 0.94] as const;
+  // 🧠 transforms - ALL with consistent spring physics
+  const scale = useSpring(useTransform(scrollY, [0, dockedThreshold], [1, 0.94]), springConfig);
+  const y = useSpring(useTransform(scrollY, [0, dockedThreshold], [0, 14]), springConfig);
+  const opacity = useSpring(useTransform(scrollY, [0, dockedThreshold], [1, 0.96]), springConfig);
+  const borderRadius = useSpring(
+    useTransform(scrollY, [0, dockedThreshold], [0, 24]),
+    springConfig
+  );
+  const top = useSpring(useTransform(scrollY, [0, dockedThreshold], [0, 12]), springConfig);
+  const bgOpacity = useTransform(scrollY, [0, dockedThreshold], [0.85, 0.65]);
+  const paddingY = useSpring(useTransform(scrollY, [0, dockedThreshold], [12, 8]), springConfig);
+  // Width shrinking handled by scale only - Motion width conflicts with CSS centering
 
-  const scale = useSpring(rawScale, springConfig);
-  const y = useSpring(rawY, springConfig);
-  const opacity = useSpring(rawOpacity, springConfig);
   const accentOpacity = useSpring(
     useTransform(scrollY, [0, dockedThreshold], [0.25, 0.08]),
     springConfig
   );
+  const glowOpacity = useSpring(
+    useTransform(scrollY, [0, dockedThreshold], [0, 0.1]),
+    springConfig
+  );
+  const logoScale = useSpring(useTransform(scrollY, [0, dockedThreshold], [1, 0.88]), springConfig);
+  const logoOpacity = useSpring(
+    useTransform(scrollY, [0, dockedThreshold], [1, 0.85]),
+    springConfig
+  );
+
+  // 🎨 dynamic background
+  const background = useMotionTemplate`
+    color-mix(in srgb, var(--background-elevated) ${bgOpacity}%, transparent)
+  `;
 
   return (
     <motion.header
       ref={ref}
+      layout
       style={{
-        // 🎯 Perfect centering with Motion
-        left: '50%',
-        translateX: '-50%',
-        // 🧠 All transforms controlled by Motion
-        width,
         top,
         scale,
         y,
         opacity,
         borderRadius,
-        // 🎨 Background with design tokens
-        background: `color-mix(in srgb, var(--background-elevated) ${Math.round(
-          bgOpacity.get() * 100
-        )}%, transparent)`,
+        background,
         borderColor: 'transparent',
-        // ⚡ Performance optimization
-        willChange: 'transform, opacity, width, border-radius',
+        willChange: 'transform, opacity, border-radius, padding',
       }}
-      transition={{ ease: premiumEase, duration: 0.8 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
+      transition={{ duration: 0.8 }}
       className={cn(
-        'fixed z-50',
+        // 🔍 DEBUG: Centrare clasică
+        'fixed left-0 right-0 z-50',
         'backdrop-blur-3xl dark:saturate-110 saturate-150 contrast-125',
         'shadow-lg',
-        // Clean static classes only
         'supports-[backdrop-filter]:bg-[var(--background-elevated)]/70',
         'dark:supports-[backdrop-filter]:bg-[var(--background-dark)]/70',
         className
       )}
     >
-      <div
-        className={cn(
-          'flex items-center justify-between w-full mx-auto',
-          'px-6 md:px-10 lg:px-12',
-          'transition-all duration-500',
-          isDocked ? 'py-3 max-w-6xl' : 'py-1 max-w-7xl'
-        )}
+      {/* 🧱 Inner fluid container */}
+      <motion.div
+        layout
+        className='flex items-center justify-between w-full px-6 md:px-10 lg:px-12'
+        style={{
+          paddingTop: paddingY,
+          paddingBottom: paddingY,
+          width: '100%', // ✅ Fix width - nu Motion
+          margin: '0 auto', // ✅ ensures centered proportional layout
+        }}
       >
-        {/* ✨ Logo with separate animations */}
-        <motion.div
-          style={{ scale: logoScale, opacity: logoOpacity }}
-          animate={{ scale: isHovered ? 1.05 : 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Logo size={isDocked ? 'sm' : 'md'} />
+        <motion.div style={{ scale: logoScale, opacity: logoOpacity }}>
+          <Logo />
         </motion.div>
 
         <NavbarDesktop />
-
         <NavbarActions
           mobileOpen={mobileOpen}
           setMobileOpen={setMobileOpen}
           hideThemeToggle={hideThemeToggle}
           hideUserMenu={hideUserMenu}
         />
-      </div>
+      </motion.div>
 
-      {/* ✨ Subtle golden accent line */}
       <motion.div
         className='absolute bottom-0 left-0 h-[1px] w-full'
         style={{
@@ -157,19 +150,15 @@ export function NavbarLuxury({
         }}
       />
 
-      {/* 🌟 Gentle glow when docked */}
-      {isDocked && (
-        <motion.div
-          className='pointer-events-none absolute inset-x-0 bottom-[-2px] h-[2px] rounded-full blur-md'
-          animate={{ opacity: isHovered ? 0.15 : 0.08 }}
-          transition={{ duration: 0.5 }}
-          style={{
-            background: `radial-gradient(ellipse at center, var(--brand-primary) 0%, transparent 70%)`,
-          }}
-        />
-      )}
+      <motion.div
+        className='pointer-events-none absolute inset-x-0 bottom-[-2px] h-[2px] rounded-full blur-md'
+        style={{
+          opacity: glowOpacity,
+          background:
+            'radial-gradient(ellipse at center, var(--brand-primary) 0%, transparent 70%)',
+        }}
+      />
 
-      {/* 📱 Mobile Menu */}
       <NavbarMobile
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}

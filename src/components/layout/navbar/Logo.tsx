@@ -20,8 +20,6 @@ export interface LogoProps {
   readonly size?: 'sm' | 'md' | 'lg';
   /** Link destination */
   readonly href?: string;
-  /** Disable floating animation */
-  readonly static?: boolean;
   /** Disable shimmer effect */
   readonly noShimmer?: boolean;
   /** Extra classes */
@@ -33,36 +31,49 @@ export interface LogoProps {
 export function Logo({
   size = 'md',
   href = '/',
-  static: isStatic = false,
   noShimmer = false,
   className,
   onClick,
 }: LogoProps): React.JSX.Element {
-  const sizeClasses = {
-    sm: 'w-10 h-10',
-    md: 'w-14 h-14',
-    lg: 'w-20 h-20',
+  const logoSizeClasses = {
+    sm: 'w-8 h-8',
+    md: 'w-10 h-10',
+    lg: 'w-12 h-12',
+  };
+
+  const textSizeClasses = {
+    sm: 'text-sm',
+    md: 'text-lg',
+    lg: 'text-2xl',
   };
 
   const logoElement = (
     <div
       className={cn(
-        'relative inline-flex items-center justify-center',
-        sizeClasses[size],
-        !isStatic && 'animate-luxuryFloat',
+        'relative inline-flex items-center gap-3',
+        // Removed animate-luxuryFloat (breathe effect)
         !noShimmer && 'animate-logoShimmer',
         'transition-transform duration-300 hover:scale-[1.05]',
         className
       )}
     >
-      {/* Logo Image */}
-      <Image
-        src='/logo.svg'
-        alt={`${brandConfig.identity.name} Logo`}
-        fill
-        className={cn('object-contain drop-shadow-lg', 'dark:brightness-[1.1]')}
-        priority
-      />
+      {/* Clean Logo - scaled up without affecting navbar height */}
+      <div className={cn('relative', logoSizeClasses[size])} style={{ transform: 'scale(1.3)' }}>
+        <Image
+          src='/LOGO/logo transparent.png'
+          alt='Vantage Lane Logo'
+          fill
+          className={cn('object-contain drop-shadow-lg', 'dark:brightness-[1.1]')}
+          priority
+          unoptimized
+        />
+      </div>
+
+      {/* Brand Text with Geist-like styling */}
+      <div className={cn('font-sans font-bold tracking-tight', textSizeClasses[size])}>
+        <span className='text-black dark:text-white'>VANTAGE</span>
+        <span className='text-[var(--brand-primary)] ml-1'>LANE</span>
+      </div>
     </div>
   );
 

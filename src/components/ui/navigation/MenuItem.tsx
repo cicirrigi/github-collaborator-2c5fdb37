@@ -44,7 +44,7 @@ export function MenuItemComponent({
   const baseClasses = cn(
     'flex items-center gap-2 rounded-md px-3 py-2 text-base font-medium',
     'transition-all duration-200 group relative overflow-hidden',
-    'text-[var(--text-secondary)] hover:text-[var(--brand-primary)]',
+    'text-[var(--text-primary)] hover:text-[var(--brand-primary)]',
     'hover:bg-[var(--brand-primary)]/10',
     'focus-visible:outline-none focus-visible:ring-2',
     'focus-visible:ring-[var(--brand-primary)]/40 focus-visible:ring-offset-2',
