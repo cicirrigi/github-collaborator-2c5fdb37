@@ -10,6 +10,7 @@ import { spacing } from '../design-system/tokens/spacing';
 import { gradients } from '../design-system/tokens/gradients';
 import { buttonVariants } from '../design-system/variants/button.variants';
 import { textVariants } from '../design-system/variants/text.variants';
+import { newsletterVariants } from '../design-system/variants/newsletter.variants';
 
 // Consolidated design tokens (imported from modular files)
 export const designTokens = {
@@ -67,6 +68,7 @@ export const propTokens = {
 export const componentVariants = {
   button: buttonVariants,
   text: textVariants,
+  newsletter: newsletterVariants,
 } as const;
 
 /**

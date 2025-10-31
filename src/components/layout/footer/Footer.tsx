@@ -70,7 +70,7 @@ const Footer = memo(function Footer({
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
           viewport={{ once: true, margin: '-50px' }}
-          className='grid grid-cols-1 gap-12 lg:grid-cols-12'
+          className='grid grid-cols-1 gap-8 lg:grid-cols-12'
         >
           {/* Brand Section - Takes more space */}
           {!hideBrand && (

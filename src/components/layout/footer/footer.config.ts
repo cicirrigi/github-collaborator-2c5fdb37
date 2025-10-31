@@ -94,6 +94,19 @@ export const footerConfig = {
     email: 'hello@vantagelane.com',
     address: 'London, United Kingdom',
   },
+
+  newsletter: {
+    title: 'Stay Elevated',
+    subtitle: 'Exclusive luxury travel insights & VIP offers',
+    placeholder: 'your@email.com',
+    cta: 'Join VIP List',
+    benefits: [
+      { icon: '🎯', text: 'Early access to new routes' },
+      { icon: '✨', text: 'VIP rates & exclusive offers' },
+      { icon: '🚗', text: 'Private event invitations' },
+    ],
+    privacy: 'We respect your privacy. Unsubscribe anytime.',
+  },
 } as const;
 
 export type FooterConfig = typeof footerConfig;

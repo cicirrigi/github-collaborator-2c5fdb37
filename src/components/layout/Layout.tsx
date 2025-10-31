@@ -8,6 +8,7 @@ import Footer from './footer/Footer';
 // import Navbar from './navbar/Navbar'; // 🛡️ Stable version
 import { NavbarLuxury as Navbar } from './navbar'; // ✨ Testing luxury version
 import { NavbarPortal } from './NavbarPortal';
+import { NewsletterSection } from '@/components/sections/NewsletterSection';
 
 /**
  * 🏗️ Main Layout component for Vantage Lane 2.0
@@ -100,6 +101,9 @@ export default function Layout({
             {children}
           </div>
         </main>
+
+        {/* Newsletter Section - Luxury VIP area above footer */}
+        {!hideFooter && <NewsletterSection />}
 
         {/* Footer */}
         {!hideFooter && <Footer />}
