@@ -14,9 +14,9 @@ import { brandConfig } from '@/config/brand.config';
 
 export const footerConfig = {
   brand: {
-    logo: '/images/vantage-lane-logo.png',
+    logo: '/LOGO/logo transparent.png',
     name: brandConfig.identity.name,
-    tagline: brandConfig.identity.slogan,
+    tagline: 'The art of redefined motion',
     description: brandConfig.service.detailed,
   },
 

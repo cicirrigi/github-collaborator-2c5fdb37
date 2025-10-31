@@ -74,28 +74,28 @@ export const stepperKeyframes = {
 // Animation variants cu design tokens
 export const stepperAnimations = {
   pulse: {
-    animation: `stepperPulse 2.5s ${designTokens.animations.easing.ease} infinite`,
+    animation: `stepperPulse 2.5s ${designTokens.animations.easing.css.ease} infinite`,
   },
 
   slideIn: {
-    animation: `stepperSlideIn ${designTokens.animations.duration.slow} ${designTokens.animations.easing.ease}`,
+    animation: `stepperSlideIn ${designTokens.animations.duration.slow} ${designTokens.animations.easing.css.ease}`,
   },
 
   progress: {
-    animation: `stepperProgress 1s ${designTokens.animations.easing.ease}`,
+    animation: `stepperProgress 1s ${designTokens.animations.easing.css.ease}`,
   },
 
   ripple: {
-    animation: `stepperRipple 0.8s ${designTokens.animations.easing.ease}`,
+    animation: `stepperRipple 0.8s ${designTokens.animations.easing.css.ease}`,
   },
 
   // Transition presets
   smooth: {
-    transition: `all ${designTokens.animations.duration.slow} ${designTokens.animations.easing.ease}`,
+    transition: `all ${designTokens.animations.duration.slow} ${designTokens.animations.easing.css.ease}`,
   },
 
   gentle: {
-    transition: `all 0.6s ${designTokens.animations.easing.ease}`,
+    transition: `all 0.6s ${designTokens.animations.easing.css.ease}`,
   },
 } as const;
 

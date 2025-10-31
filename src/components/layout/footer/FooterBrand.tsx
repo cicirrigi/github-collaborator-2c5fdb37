@@ -1,10 +1,13 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import type React from 'react';
+import { memo } from 'react';
 
 import { cn } from '@/lib/utils/cn';
+import { useThemeTokens } from '@/hooks/useThemeTokens';
 
 import type { FooterConfig } from './footer.config';
 
@@ -24,41 +27,68 @@ export interface FooterBrandProps {
  * - Contact information
  * - Design tokens integration
  * - Zero hardcoded content
+ * - Motion animations & memoized
  */
-export function FooterBrand({ brand, contact, className }: FooterBrandProps): React.JSX.Element {
+const FooterBrand = memo(function FooterBrand({
+  brand,
+  contact,
+  className,
+}: FooterBrandProps): React.JSX.Element {
+  const tokens = useThemeTokens();
   return (
-    <div className={cn('space-y-6', className)}>
+    <motion.div
+      className={cn('space-y-6', className)}
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6, ease: tokens.motion.easing.ease }}
+      viewport={{ once: true }}
+    >
       {/* Logo & Brand Name */}
       <div className='space-y-4'>
         <Link
           href='/'
-          className='group inline-flex items-center gap-3 transition-transform duration-300 hover:scale-105'
+          className='group inline-flex items-center gap-3 transition-transform hover:scale-105'
+          style={{ transitionDuration: tokens.motion.duration.normal }}
         >
-          <div className='relative'>
+          <motion.div
+            className='relative'
+            whileHover={{ rotate: 12 }}
+            transition={{ duration: 0.3 }}
+          >
             <Image
               src={brand.logo}
               alt={`${brand.name} logo`}
-              width={40}
-              height={40}
-              className='h-10 w-10 transition-transform duration-300 group-hover:rotate-12'
+              width={48}
+              height={48}
+              className='h-12 w-12'
             />
-            <div
-              className='absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-20'
+            <motion.div
+              className='absolute inset-0 rounded-full'
               style={{
-                background: `radial-gradient(circle, var(--brand-primary) 0%, transparent 70%)`,
+                background: `radial-gradient(circle, ${tokens.colors.brand.primary} 0%, transparent 70%)`,
               }}
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 0.2 }}
+              transition={{ duration: 0.3 }}
             />
-          </div>
+          </motion.div>
           <div>
-            <h3
-              className='text-xl font-bold transition-colors duration-200'
-              style={{ color: 'var(--text-primary)' }}
+            {/* Brand Text with same styling as Navbar */}
+            <div
+              className='text-xl font-bold tracking-tight transition-colors'
+              style={{ transitionDuration: tokens.motion.duration.fast }}
             >
-              {brand.name}
-            </h3>
+              <span style={{ color: tokens.colors.text.primary }}>VANTAGE</span>
+              <span style={{ color: tokens.colors.brand.primary }} className='ml-1'>
+                LANE
+              </span>
+            </div>
             <p
-              className='text-sm transition-colors duration-200'
-              style={{ color: 'var(--text-secondary)' }}
+              className='text-sm transition-colors'
+              style={{
+                color: tokens.colors.text.secondary,
+                transitionDuration: tokens.motion.duration.fast,
+              }}
             >
               {brand.tagline}
             </p>
@@ -102,6 +132,8 @@ export function FooterBrand({ brand, contact, className }: FooterBrandProps): Re
           </p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
-}
+});
+
+export { FooterBrand };

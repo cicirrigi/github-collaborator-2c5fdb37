@@ -85,8 +85,8 @@ export function DropdownMenu({
             )}
             style={{
               ...uiSurfaces.dropdown,
-              // Mai transparent, fără glow auriu
-              backgroundColor: 'color-mix(in srgb, var(--background-elevated) 75%, transparent)',
+              // Pas 1: Mai puțin translucid - 75% → 85%
+              backgroundColor: 'color-mix(in srgb, var(--background-elevated) 85%, transparent)',
               // Elimină gradient-ul care creează glow
               backgroundImage: 'none',
             }}

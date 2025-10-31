@@ -1,6 +1,5 @@
 import { MapPin, Navigation, Landmark } from 'lucide-react';
-import { designTokens } from '@/design-system/tokens/colors';
-import type { LocationVariant } from './types';
+import { colors } from '@/design-system/tokens/colors';
 
 // Configurații pentru variante location (nu hardcode)
 export const LOCATION_VARIANTS = {
@@ -72,7 +71,7 @@ export const THEME_CLASSES = {
 // Background variants calculat dinamic
 export const BACKGROUND_CONFIG = {
   input: {
-    default: designTokens.background.light,
+    default: colors.background.elevated,
     error: 'rgba(239, 68, 68, 0.1)', // red-500/10
     disabled: 'rgba(156, 163, 175, 0.2)', // gray-400/20
   },

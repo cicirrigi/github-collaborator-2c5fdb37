@@ -9,9 +9,7 @@ import {
   THEME_CLASSES,
   VALIDATION,
   SPACING_CONFIG,
-  BACKGROUND_CONFIG,
 } from './constants';
-import { designTokens } from '@/design-system/tokens/colors';
 import { SuggestionsDropdown } from './SuggestionsDropdown';
 
 // Re-export types pentru convenience
@@ -28,7 +26,7 @@ export const LocationPicker = ({
   placeholder,
   icon,
   error,
-  onValidate,
+  onValidate: _onValidate,
 }: LocationPickerProps) => {
   const [inputValue, setInputValue] = useState(value?.address || '');
   const [isOpen, setIsOpen] = useState(false);

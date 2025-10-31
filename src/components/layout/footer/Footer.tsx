@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import type React from 'react';
 import { memo } from 'react';
 
@@ -44,10 +45,11 @@ const Footer = memo(function Footer({
 
   return (
     <footer
-      className={cn('relative mt-auto border-t transition-colors duration-300', className)}
+      role='contentinfo'
+      className={cn('relative mt-auto border-t backdrop-blur-lg transition-colors', className)}
       style={{
-        backgroundColor: 'var(--background-dark)',
-        borderTopColor: 'var(--border-subtle)',
+        backgroundColor: designTokens.colors.background?.dark || 'var(--background-dark)',
+        borderTopColor: designTokens.colors.border?.subtle || 'var(--border-subtle)',
       }}
     >
       {/* Luxury gradient overlay - Using design token */}
@@ -61,9 +63,15 @@ const Footer = memo(function Footer({
         }}
       />
 
-      {/* Main Content */}
+      {/* Main Content with Motion */}
       <Container size='xl' className='relative py-16'>
-        <div className='grid grid-cols-1 gap-12 lg:grid-cols-12'>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+          viewport={{ once: true, margin: '-50px' }}
+          className='grid grid-cols-1 gap-12 lg:grid-cols-12'
+        >
           {/* Brand Section - Takes more space */}
           {!hideBrand && (
             <div className='lg:col-span-4'>
@@ -82,7 +90,7 @@ const Footer = memo(function Footer({
               <FooterSocials socials={config.socials} />
             </div>
           )}
-        </div>
+        </motion.div>
       </Container>
 
       {/* Bottom Section */}
