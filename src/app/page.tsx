@@ -1,12 +1,6 @@
 import { Section } from '@/components/layout';
-import {
-  PinContainerDemo,
-  BookingTabsDemo,
-  LocationPickerDemo,
-  TravelPlannerDemo,
-  Text,
-} from '@/components/ui';
-import { HeroSection, ServicesSection, CTASection } from '@/components/sections';
+import { CTASection, HeroSection, ServicesSection } from '@/components/sections';
+import { PinContainerDemo, Text } from '@/components/ui';
 
 /**
  * 🏠 Homepage - Orchestrated modular page
@@ -27,7 +21,7 @@ export default function HomePage() {
       {/* Services/Benefits Section - Config driven */}
       <ServicesSection />
 
-      {/* Premium Fleet Showcase - Legacy component */}
+      {/* Premium Fleet Showcase */}
       <Section spacing='lg' align='center'>
         <div className='text-center mb-12'>
           <Text variant='h2' className='mb-4'>
@@ -36,33 +30,6 @@ export default function HomePage() {
           <Text variant='lead'>Experience luxury with our BMW executive collection</Text>
         </div>
         <PinContainerDemo />
-      </Section>
-
-      {/* Booking Navigation Demo Section - Legacy component */}
-      <Section spacing='lg' align='center'>
-        <div className='text-center mb-12'>
-          <Text variant='h2' className='mb-4'>
-            Modern Booking Interface
-          </Text>
-          <Text variant='lead'>Elegant pill-shaped navigation for seamless booking experience</Text>
-        </div>
-        <BookingTabsDemo />
-      </Section>
-
-      {/* Location Picker Demo Section - Legacy component */}
-      <Section spacing='lg' align='center'>
-        <div className='text-center mb-12'>
-          <Text variant='h2' className='mb-4'>
-            Smart Location Selection
-          </Text>
-          <Text variant='lead'>Google Places integration with elegant pill-shaped inputs</Text>
-        </div>
-        <LocationPickerDemo />
-      </Section>
-
-      {/* Travel Planner Demo Section - Legacy component */}
-      <Section spacing='xl' align='center'>
-        <TravelPlannerDemo />
       </Section>
 
       {/* CTA Section - Config driven */}
