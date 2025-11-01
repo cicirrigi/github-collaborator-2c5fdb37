@@ -7,7 +7,9 @@
 
 // Main Components
 export { FleetSection } from './FleetSection';
+export { FleetSection3D } from './FleetSection3D';
 export { FleetCardRefactored as FleetCard } from './FleetCard.refactored';
+export { FleetCard3D } from './FleetCard3D';
 
 // Subcomponents
 export { FleetCardHeader } from './FleetCardHeader';

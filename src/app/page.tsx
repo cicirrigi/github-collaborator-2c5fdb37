@@ -1,5 +1,5 @@
 import { CTASection, HeroSection, ServicesSection } from '@/components/sections';
-import { FleetSection } from '@/components/sections/FleetSection';
+import { FleetSection3D } from '@/components/sections/FleetSection/FleetSection3D';
 
 /**
  * 🏠 Homepage - Orchestrated modular page
@@ -20,8 +20,8 @@ export default function HomePage() {
       {/* Services/Benefits Section - Config driven */}
       <ServicesSection />
 
-      {/* Premium Fleet Showcase - New Refactored */}
-      <FleetSection maxVehicles={6} />
+      {/* Premium Fleet Showcase - 3D Flip Cards */}
+      <FleetSection3D maxVehicles={6} />
 
       {/* CTA Section - Config driven */}
       <CTASection />

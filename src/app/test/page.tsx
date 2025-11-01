@@ -6,6 +6,7 @@
  */
 
 import { FleetSection } from '@/components/sections/FleetSection';
+import { FleetSection3D } from '@/components/sections/FleetSection/FleetSection3D';
 
 export default function TestPage() {
   return (
@@ -18,34 +19,45 @@ export default function TestPage() {
           </p>
         </div>
 
-        {/* Fleet Section Test - Full */}
-        <FleetSection />
-
-        {/* Fleet Section Test - Luxury Only */}
-        <div className='mt-32'>
-          <FleetSection
-            categories={['Luxury']}
-            maxVehicles={2}
-            config={{
-              title: {
-                primary: 'Luxury',
-                accent: 'Collection',
-              },
-              subtitle: 'Our most exclusive vehicles for VIP experiences.',
-              vehicles: [], // Va folosi config default filtrat
-              cta: {
-                text: 'Book Luxury Service',
-                description: 'Experience the pinnacle of automotive luxury.',
-                action: () => {
-                  // TODO: Navigate to luxury booking
-                },
-              },
-            }}
-          />
+        {/* Fleet Section 3D Test - Full with Flip Cards */}
+        <div className='mb-32'>
+          <div className='text-center mb-8'>
+            <h2 className='text-2xl font-bold text-[var(--brand-primary)]'>
+              🎪 Fleet Section 3D - Flip Cards
+            </h2>
+            <p className='text-[var(--text-secondary)]'>Hover pe carduri pentru flip effect</p>
+          </div>
+          <FleetSection3D maxVehicles={6} />
         </div>
 
-        {/* Fleet Section Test - Compact */}
+        {/* Fleet Section Test - Regular */}
+        <div className='mb-32'>
+          <div className='text-center mb-8'>
+            <h2 className='text-2xl font-bold text-[var(--brand-primary)]'>
+              📄 Fleet Section - Regular
+            </h2>
+            <p className='text-[var(--text-secondary)]'>Design standard fără flip</p>
+          </div>
+          <FleetSection maxVehicles={3} />
+        </div>
+
+        {/* Fleet Section 3D Test - Luxury Only */}
         <div className='mt-32'>
+          <div className='text-center mb-8'>
+            <h2 className='text-2xl font-bold text-[var(--brand-primary)]'>
+              💎 Luxury Collection 3D
+            </h2>
+          </div>
+          <FleetSection3D categories={['Luxury']} maxVehicles={2} />
+        </div>
+
+        {/* Fleet Section Test - Compact Regular */}
+        <div className='mt-32'>
+          <div className='text-center mb-8'>
+            <h2 className='text-2xl font-bold text-[var(--brand-primary)]'>
+              📱 Compact Fleet - No Title
+            </h2>
+          </div>
           <FleetSection
             hideTitle={true}
             maxVehicles={3}
