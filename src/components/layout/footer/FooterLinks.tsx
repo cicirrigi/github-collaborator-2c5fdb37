@@ -6,6 +6,7 @@ import type React from 'react';
 import { useState } from 'react';
 
 import { cn } from '@/lib/utils/cn';
+import { designTokens } from '@/config/theme.config';
 
 import type { FooterConfig } from './footer.config';
 
@@ -40,17 +41,22 @@ export function FooterLinks({ links, className }: FooterLinksProps): React.JSX.E
   };
 
   return (
-    <div className={cn('grid grid-cols-1 gap-6 md:grid-cols-4 md:gap-8', className)}>
+    <div
+      className={cn('grid items-start grid-cols-1 md:grid-cols-4', className)}
+      style={{
+        gap: designTokens.footer.spacing.gridGap,
+      }}
+    >
       {links.map(category => {
         const isOpen = openSections.has(category.title);
 
         return (
-          <div key={category.title} className='space-y-4'>
+          <div key={category.title}>
             {/* Category Title - Mobile Accordion Button */}
             <button
               onClick={() => toggleSection(category.title)}
               className={cn(
-                'flex w-full items-center justify-between',
+                'flex w-full items-center justify-between mb-4',
                 'font-semibold text-sm transition-colors duration-200',
                 'md:cursor-default md:pointer-events-none',
                 'focus-visible:outline-none focus-visible:ring-2 md:focus-visible:ring-0',
@@ -73,11 +79,14 @@ export function FooterLinks({ links, className }: FooterLinksProps): React.JSX.E
             <ul
               id={`footer-section-${category.title}`}
               className={cn(
-                'space-y-2 overflow-hidden transition-all duration-300',
+                'flex flex-col overflow-hidden transition-all duration-300',
                 // Mobile accordion behavior
-                'md:block',
-                isOpen ? 'block max-h-96' : 'hidden max-h-0 md:max-h-none'
+                'md:flex',
+                isOpen ? 'flex max-h-96' : 'hidden max-h-0 md:max-h-none'
               )}
+              style={{
+                gap: designTokens.footer.spacing.linkGap,
+              }}
             >
               {category.items.map(item => (
                 <li key={item.href}>

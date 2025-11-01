@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type React from 'react';
@@ -11,11 +12,19 @@ import { useThemeTokens } from '@/hooks/useThemeTokens';
 
 import type { FooterConfig } from './footer.config';
 
+// Icon mapping for type safety
+const iconMap = {
+  instagram: Instagram,
+  linkedin: Linkedin,
+  twitter: Twitter,
+  facebook: Facebook,
+} as const;
+
 export interface FooterBrandProps {
   /** Brand data from config */
   readonly brand: FooterConfig['brand'];
-  /** Contact data from config */
-  readonly contact: FooterConfig['contact'];
+  /** Social links from config */
+  readonly socials?: FooterConfig['socials'];
   /** Custom styling */
   readonly className?: string;
 }
@@ -24,14 +33,13 @@ export interface FooterBrandProps {
  * 🏛️ FooterBrand - Brand identity section
  * - Logo with luxury animation
  * - Company tagline and description
- * - Contact information
  * - Design tokens integration
  * - Zero hardcoded content
  * - Motion animations & memoized
  */
 const FooterBrand = memo(function FooterBrand({
   brand,
-  contact,
+  socials,
   className,
 }: FooterBrandProps): React.JSX.Element {
   const tokens = useThemeTokens();
@@ -95,42 +103,49 @@ const FooterBrand = memo(function FooterBrand({
           </div>
         </Link>
 
-        {/* Description */}
-        <p
-          className='max-w-md text-sm leading-relaxed transition-colors duration-200'
-          style={{ color: 'var(--text-secondary)' }}
-        >
-          {brand.description}
-        </p>
-      </div>
+        {/* Social Icons */}
+        {socials && socials.length > 0 && (
+          <div className='flex gap-3 justify-center md:justify-start'>
+            {socials.map(social => {
+              const IconComponent = iconMap[social.icon];
 
-      {/* Contact Information */}
-      <div className='space-y-2'>
-        <h4
-          className='font-medium text-sm transition-colors duration-200'
-          style={{ color: 'var(--text-primary)' }}
-        >
-          Contact
-        </h4>
-        <div className='space-y-1 text-sm'>
-          <a
-            href={`tel:${contact.phone}`}
-            className='block transition-colors duration-200 hover:text-[var(--brand-primary)]'
-            style={{ color: 'var(--text-secondary)' }}
-          >
-            {contact.phone}
-          </a>
-          <a
-            href={`mailto:${contact.email}`}
-            className='block transition-colors duration-200 hover:text-[var(--brand-primary)]'
-            style={{ color: 'var(--text-secondary)' }}
-          >
-            {contact.email}
-          </a>
-          <p className='transition-colors duration-200' style={{ color: 'var(--text-secondary)' }}>
-            {contact.address}
-          </p>
-        </div>
+              return (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  aria-label={`Follow us on ${social.name}`}
+                  className={cn(
+                    'group relative rounded-full p-3 transition-all duration-300',
+                    'hover:scale-110',
+                    'focus-visible:outline-none focus-visible:ring-2',
+                    'focus-visible:ring-[var(--brand-primary)]/40 focus-visible:ring-offset-2',
+                    'focus-visible:ring-offset-[var(--background-dark)]'
+                  )}
+                  style={{
+                    backgroundColor: 'var(--background-elevated)',
+                    borderColor: 'var(--border-subtle)',
+                  }}
+                >
+                  {/* Glow effect on hover */}
+                  <div
+                    className='absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-20'
+                    style={{
+                      background: `radial-gradient(circle, var(--brand-primary) 0%, transparent 70%)`,
+                    }}
+                  />
+
+                  {/* Icon */}
+                  <IconComponent
+                    className='relative h-5 w-5 transition-all duration-200 group-hover:text-[var(--brand-primary)]'
+                    style={{ color: 'var(--text-secondary)' }}
+                  />
+                </a>
+              );
+            })}
+          </div>
+        )}
       </div>
     </motion.div>
   );

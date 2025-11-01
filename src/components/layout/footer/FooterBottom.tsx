@@ -28,8 +28,18 @@ export function FooterBottom({ legal, className }: FooterBottomProps): React.JSX
       style={{ borderTopColor: 'var(--border-subtle)' }}
     >
       <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
-        {/* Copyright */}
+        {/* Location */}
         <div className='text-center md:text-left'>
+          <p
+            className='text-sm font-medium transition-colors duration-200'
+            style={{ color: 'var(--text-primary)' }}
+          >
+            {legal.location}
+          </p>
+        </div>
+
+        {/* Copyright */}
+        <div className='text-center md:text-right'>
           <p
             className='text-sm transition-colors duration-200'
             style={{ color: 'var(--text-secondary)' }}
@@ -41,22 +51,6 @@ export function FooterBottom({ legal, className }: FooterBottomProps): React.JSX
             style={{ color: 'var(--text-muted)' }}
           >
             {legal.company} • {legal.registration}
-          </p>
-        </div>
-
-        {/* Location */}
-        <div className='text-center md:text-right'>
-          <p
-            className='text-sm font-medium transition-colors duration-200'
-            style={{ color: 'var(--text-primary)' }}
-          >
-            {legal.location}
-          </p>
-          <p
-            className='text-xs transition-colors duration-200'
-            style={{ color: 'var(--text-muted)' }}
-          >
-            Premium Transportation
           </p>
         </div>
       </div>

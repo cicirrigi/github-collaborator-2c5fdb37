@@ -42,30 +42,36 @@ export function MenuItemComponent({
   const isExternal = item.external;
 
   const baseClasses = cn(
-    'flex items-center gap-2 rounded-md px-3 py-2 text-base font-medium',
-    'transition-all duration-200 group relative overflow-hidden',
+    'flex items-center gap-2 rounded-lg px-3 py-2 text-base font-medium',
+    'transition-all duration-300 ease-out group relative overflow-hidden',
     'text-[var(--text-primary)] hover:text-[var(--brand-primary)]',
-    'hover:bg-[var(--brand-primary)]/10',
+    'hover:bg-[var(--brand-primary)]/10 hover:backdrop-blur-sm',
+    'hover:shadow-lg hover:shadow-[var(--brand-primary)]/20',
     'focus-visible:outline-none focus-visible:ring-2',
     'focus-visible:ring-[var(--brand-primary)]/40 focus-visible:ring-offset-2',
     'focus-visible:ring-offset-[var(--background-elevated)]',
+    'transform-gpu hover:scale-[1.02]',
     className
   );
 
-  // Luxury underline effect
+  // Enhanced luxury underline effect
   const underlineClasses = cn(
-    'absolute bottom-0 left-0 h-0.5 w-0 transition-all duration-300',
-    'bg-gradient-to-r from-[var(--brand-primary)] to-transparent',
-    'group-hover:w-full'
+    'absolute bottom-0 left-1/2 h-0.5 w-0 transition-all duration-500 ease-out',
+    'bg-gradient-to-r from-transparent via-[var(--brand-primary)] to-transparent',
+    'group-hover:w-full group-hover:left-0',
+    'shadow-[0_0_4px_var(--brand-primary)] opacity-0 group-hover:opacity-60',
+    'transform-gpu'
   );
 
   const content = (
     <>
       {/* Icon */}
-      {Icon && <Icon className='h-4 w-4 transition-transform duration-200 group-hover:scale-110' />}
+      {Icon && (
+        <Icon className='h-4 w-4 transition-all duration-300 ease-out group-hover:scale-110 group-hover:rotate-3 group-hover:drop-shadow-sm' />
+      )}
 
       {/* Label */}
-      <span className='transition-transform duration-200 group-hover:translate-x-0.5'>
+      <span className='transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:font-semibold group-hover:drop-shadow-sm'>
         {item.label}
       </span>
 

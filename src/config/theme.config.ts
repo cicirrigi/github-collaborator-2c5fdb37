@@ -20,6 +20,61 @@ export const designTokens = {
   gradients,
   animations,
   motion,
+  // Footer specific spacing tokens
+  footer: {
+    spacing: {
+      mainGrid: '2rem', // gap-8 equivalent for main grid (32px)
+      gridGap: '1.75rem', // gap-7 unified for grid columns and rows (28px)
+      categoryGap: '1rem', // space-y-4 for category spacing (16px)
+      linkGap: '0.75rem', // space-y-3 for link spacing (12px) - slightly increased
+      containerPadding: '4rem', // py-16 for main container (64px)
+      bottomPadding: '1.5rem', // py-6 for bottom section (24px)
+    },
+  },
+
+  // Fleet section specific tokens
+  fleet: {
+    spacing: {
+      sectionPadding: '6rem', // py-24 for section padding (96px)
+      cardGap: '2rem', // gap-8 for vehicle cards (32px)
+      cardPadding: '1.5rem', // p-6 for card internal padding (24px)
+      featureGap: '0.75rem', // gap-3 for feature spacing (12px)
+      badgeSpacing: '1rem', // spacing for badges (16px)
+    },
+    effects: {
+      hoverScale: 1.02, // hover:scale-[1.02] for cards (number for framer)
+      imageScale: 1.1, // hover:scale-110 for images (number for framer)
+      borderRadius: '0.75rem', // rounded-xl for cards (12px)
+      glowOpacity: 0.1, // glow effect opacity (number for framer)
+      transition: {
+        duration: 0.3, // 300ms transitions
+        ease: 'easeOut', // smooth easing
+      },
+    },
+    categoryColors: {
+      Executive: '#1E40AF', // blue-800 for business
+      Luxury: '#CBB26A', // gold brand color
+      SUV: '#059669', // emerald-600 for adventure
+      Van: '#7C3AED', // violet-600 for groups
+      Sports: '#DC2626', // red-600 for performance
+    },
+    typography: {
+      cardTitle: {
+        fontSize: '1.25rem', // text-xl
+        fontWeight: '500', // font-medium
+        lineHeight: '1.75rem', // leading-7
+      },
+      cardDescription: {
+        fontSize: '0.875rem', // text-sm
+        lineHeight: '1.5rem', // leading-6
+      },
+      cardPrice: {
+        fontSize: '0.875rem', // text-sm
+        fontWeight: '500', // font-medium
+      },
+    },
+  },
+
   // Border radius tokens
   borderRadius: {
     sm: '0.25rem',

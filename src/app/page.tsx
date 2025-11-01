@@ -1,6 +1,5 @@
-import { Section } from '@/components/layout';
 import { CTASection, HeroSection, ServicesSection } from '@/components/sections';
-import { PinContainerDemo, Text } from '@/components/ui';
+import { FleetSection } from '@/components/sections/FleetSection';
 
 /**
  * 🏠 Homepage - Orchestrated modular page
@@ -21,16 +20,8 @@ export default function HomePage() {
       {/* Services/Benefits Section - Config driven */}
       <ServicesSection />
 
-      {/* Premium Fleet Showcase */}
-      <Section spacing='lg' align='center'>
-        <div className='text-center mb-12'>
-          <Text variant='h2' className='mb-4'>
-            Our Premium Fleet
-          </Text>
-          <Text variant='lead'>Experience luxury with our BMW executive collection</Text>
-        </div>
-        <PinContainerDemo />
-      </Section>
+      {/* Premium Fleet Showcase - New Refactored */}
+      <FleetSection maxVehicles={6} />
 
       {/* CTA Section - Config driven */}
       <CTASection />

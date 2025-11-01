@@ -82,22 +82,6 @@ export function FooterSocials({ socials, className }: FooterSocialsProps): React
           );
         })}
       </div>
-
-      {/* Social Links Text Alternative */}
-      <div className='space-y-1'>
-        {socials.map(social => (
-          <a
-            key={`${social.name}-text`}
-            href={social.href}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='block text-xs transition-colors duration-200 hover:text-[var(--brand-primary)]'
-            style={{ color: 'var(--text-secondary)' }}
-          >
-            {social.name}
-          </a>
-        ))}
-      </div>
     </div>
   );
 }

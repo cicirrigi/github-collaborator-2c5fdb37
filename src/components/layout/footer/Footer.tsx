@@ -12,7 +12,6 @@ import { footerConfig } from './footer.config';
 import { FooterBottom } from './FooterBottom';
 import { FooterBrand } from './FooterBrand';
 import { FooterLinks } from './FooterLinks';
-import { FooterSocials } from './FooterSocials';
 
 export interface FooterProps {
   /** Custom styling */
@@ -46,10 +45,9 @@ const Footer = memo(function Footer({
   return (
     <footer
       role='contentinfo'
-      className={cn('relative mt-auto border-t backdrop-blur-lg transition-colors', className)}
+      className={cn('relative mt-auto backdrop-blur-lg transition-colors', className)}
       style={{
         backgroundColor: designTokens.colors.background?.dark || 'var(--background-dark)',
-        borderTopColor: designTokens.colors.border?.subtle || 'var(--border-subtle)',
       }}
     >
       {/* Luxury gradient overlay - Using design token */}
@@ -70,26 +68,23 @@ const Footer = memo(function Footer({
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
           viewport={{ once: true, margin: '-50px' }}
-          className='grid grid-cols-1 gap-8 lg:grid-cols-12'
+          className='grid grid-cols-1 lg:grid-cols-12'
+          style={{ gap: designTokens.footer.spacing.mainGrid }}
         >
-          {/* Brand Section - Takes more space */}
+          {/* Brand Section with Social Icons */}
           {!hideBrand && (
             <div className='lg:col-span-4'>
-              <FooterBrand brand={config.brand} contact={config.contact} />
+              <FooterBrand
+                brand={config.brand}
+                socials={hideSocials ? undefined : config.socials}
+              />
             </div>
           )}
 
-          {/* Links Section - Responsive columns */}
-          <div className={cn(!hideBrand ? 'lg:col-span-6' : 'lg:col-span-10')}>
+          {/* Links Section */}
+          <div className={cn(!hideBrand ? 'lg:col-span-8' : 'lg:col-span-12')}>
             <FooterLinks links={config.links} />
           </div>
-
-          {/* Socials Section */}
-          {!hideSocials && (
-            <div className='lg:col-span-2'>
-              <FooterSocials socials={config.socials} />
-            </div>
-          )}
         </motion.div>
       </Container>
 
