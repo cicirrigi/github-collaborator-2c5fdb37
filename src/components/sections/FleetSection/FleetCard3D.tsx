@@ -32,17 +32,19 @@ const FleetCardBack = memo(function FleetCardBack({
 }): React.JSX.Element {
   return (
     <div className='absolute inset-0 p-6 flex flex-col justify-between rounded-xl overflow-hidden'>
-      {/* Background with luxury gradient */}
+      {/* Theme-adaptive background */}
       <div
-        className='absolute inset-0 opacity-95'
+        className='absolute inset-0'
         style={{
-          background: 'linear-gradient(135deg, var(--background-dark) 0%, #0a0a0a 100%)',
+          backgroundColor: 'var(--background-elevated)',
+          backgroundImage: `linear-gradient(135deg, var(--background) 0%, var(--background-muted, var(--background-elevated)) 100%)`,
           backdropFilter: 'blur(10px)',
+          border: '1px solid var(--border-subtle)',
         }}
       />
 
       {/* Content */}
-      <div className='relative z-10 text-white'>
+      <div className='relative z-10' style={{ color: designTokens.fleet.colors.backText }}>
         {/* Header */}
         <div className='text-center mb-6'>
           <h3 className='text-2xl font-medium mb-2' style={{ color: 'var(--brand-primary)' }}>
@@ -84,7 +86,19 @@ const FleetCardBack = memo(function FleetCardBack({
             </div>
             <div className='flex justify-between items-center'>
               <span className='text-sm opacity-80'>STATUS</span>
-              <span className='text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-300'>
+              <span
+                className='text-xs px-2 py-1 rounded-full'
+                style={{
+                  backgroundColor:
+                    designTokens.fleet.statusColors[
+                      vehicle.availability as keyof typeof designTokens.fleet.statusColors
+                    ]?.bgOpacity || designTokens.fleet.statusColors.available.bgOpacity,
+                  color:
+                    designTokens.fleet.statusColors[
+                      vehicle.availability as keyof typeof designTokens.fleet.statusColors
+                    ]?.text || designTokens.fleet.statusColors.available.text,
+                }}
+              >
                 {vehicle.availability}
               </span>
             </div>
@@ -178,8 +192,7 @@ export const FleetCard3D = memo(function FleetCard3D({
           className='absolute inset-0 [backface-visibility:hidden] rounded-xl overflow-hidden'
           style={{
             transform: 'rotateY(180deg)',
-            background:
-              'linear-gradient(135deg, rgba(15, 15, 15, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%)',
+            backgroundColor: 'var(--background-elevated)',
             backdropFilter: 'blur(10px)',
             border: '1px solid var(--brand-primary-20)',
             boxShadow: '0 0 40px var(--brand-primary-10)',

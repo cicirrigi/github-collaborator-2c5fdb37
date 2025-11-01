@@ -58,6 +58,30 @@ export const designTokens = {
       Van: '#7C3AED', // violet-600 for groups
       Sports: '#DC2626', // red-600 for performance
     },
+    statusColors: {
+      available: {
+        bg: '#059669', // emerald-600
+        bgOpacity: 'rgba(5, 150, 105, 0.2)', // emerald-600/20
+        text: '#34D399', // emerald-400
+      },
+      limited: {
+        bg: '#D97706', // amber-600
+        bgOpacity: 'rgba(217, 119, 6, 0.2)', // amber-600/20
+        text: '#FCD34D', // amber-300
+      },
+      unavailable: {
+        bg: '#DC2626', // red-600
+        bgOpacity: 'rgba(220, 38, 38, 0.2)', // red-600/20
+        text: '#F87171', // red-400
+      },
+    },
+    colors: {
+      backGradientStart: 'var(--background)',
+      backGradientEnd: 'var(--background-muted, var(--background))',
+      backText: 'var(--text-primary)',
+      backTextMuted: 'var(--text-muted)',
+      backOverlay: 'var(--background-elevated)',
+    },
     typography: {
       cardTitle: {
         fontSize: '1.25rem', // text-xl
