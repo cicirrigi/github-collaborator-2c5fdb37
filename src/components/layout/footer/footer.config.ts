@@ -22,39 +22,40 @@ export const footerConfig = {
 
   links: [
     {
+      title: 'Our Services',
+      items: [
+        { label: 'All Services', href: '/services', icon: 'car' as const },
+        { label: 'Airport Transfers', href: '/services/airport-transfers', icon: 'plane' as const },
+        { label: 'City-to-City Rides', href: '/services/city-to-city', icon: 'map-pin' as const },
+        { label: 'Hourly Hire', href: '/services/hourly-hire', icon: 'clock' as const },
+        { label: 'Limousine Service', href: '/services/limousine', icon: 'crown' as const },
+      ],
+    },
+    {
       title: 'Company',
       items: [
-        { label: 'About Us', href: '/about' },
-        { label: 'Our Story', href: '/about#story' },
-        { label: 'Careers', href: '/careers' },
-        { label: 'Press', href: '/press' },
+        { label: 'About Us', href: '/about', icon: 'info' as const },
+        { label: 'Members', href: '/members', icon: 'users' as const },
+        { label: 'Corporate', href: '/corporate', icon: 'building-2' as const },
+        { label: 'Partners', href: '/partners', icon: 'handshake' as const },
       ],
     },
     {
-      title: 'Services',
+      title: 'Events & Support',
       items: [
-        { label: 'Chauffeur Service', href: '/services/chauffeur' },
-        { label: 'Airport Transfers', href: '/services/airport' },
-        { label: 'Business Travel', href: '/services/business' },
-        { label: 'Special Events', href: '/services/events' },
-      ],
-    },
-    {
-      title: 'Support',
-      items: [
-        { label: 'Contact Us', href: '/contact' },
-        { label: 'Help Center', href: '/help' },
-        { label: 'Book Online', href: '/booking' },
-        { label: 'Track Journey', href: '/tracking' },
+        { label: 'Events', href: '/events', icon: 'calendar-heart' as const },
+        { label: 'Contact Us', href: '/contact', icon: 'mail' as const },
+        { label: 'Book Online', href: '/#booking', icon: 'calendar-check' as const },
+        { label: 'Help Center', href: '/help', icon: 'help-circle' as const },
       ],
     },
     {
       title: 'Legal',
       items: [
-        { label: 'Privacy Policy', href: '/privacy' },
-        { label: 'Terms of Service', href: '/terms' },
-        { label: 'Cookie Policy', href: '/cookies' },
-        { label: 'GDPR', href: '/gdpr' },
+        { label: 'Privacy Policy', href: '/privacy', icon: 'shield-check' as const },
+        { label: 'Terms of Service', href: '/terms', icon: 'file-text' as const },
+        { label: 'Cookie Policy', href: '/cookies', icon: 'cookie' as const },
+        { label: 'GDPR', href: '/gdpr', icon: 'lock' as const },
       ],
     },
   ],

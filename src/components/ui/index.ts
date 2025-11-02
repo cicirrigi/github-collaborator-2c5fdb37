@@ -18,6 +18,8 @@ export type { CardProps } from './Card';
 export { Card } from './Card';
 export type { TextProps } from './Text';
 export { Text } from './Text';
+export type { FooterIconProps } from './FooterIcon';
+export { FooterIcon } from './FooterIcon';
 
 // Luxury Components
 export type {

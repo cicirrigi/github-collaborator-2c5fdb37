@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 import { cn } from '@/lib/utils/cn';
 import { designTokens } from '@/config/theme.config';
+import { FooterIcon } from '@/components/ui/FooterIcon';
 
 import type { FooterConfig } from './footer.config';
 
@@ -93,7 +94,7 @@ export function FooterLinks({ links, className }: FooterLinksProps): React.JSX.E
                   <Link
                     href={item.href}
                     className={cn(
-                      'group flex items-center gap-2 text-sm transition-all duration-200',
+                      'group flex items-center gap-3 text-sm transition-all duration-200',
                       'hover:text-[var(--brand-primary)]',
                       'focus-visible:outline-none focus-visible:ring-2',
                       'focus-visible:ring-[var(--brand-primary)]/40 focus-visible:ring-offset-2',
@@ -101,9 +102,18 @@ export function FooterLinks({ links, className }: FooterLinksProps): React.JSX.E
                     )}
                     style={{ color: 'var(--text-secondary)' }}
                   >
+                    {/* Semantic Icon */}
+                    <FooterIcon
+                      name={item.icon}
+                      size={18}
+                      className='flex-shrink-0 transition-colors duration-200'
+                      style={{ color: 'var(--brand-primary)' }}
+                    />
+
                     <span className='transition-transform duration-200 group-hover:translate-x-1'>
                       {item.label}
                     </span>
+
                     <ArrowRight
                       className={cn(
                         'h-3 w-3 opacity-0 transition-all duration-200',
