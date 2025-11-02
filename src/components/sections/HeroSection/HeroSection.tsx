@@ -6,8 +6,8 @@ import Link from 'next/link';
 import type React from 'react';
 
 import { SectionOrchestrator } from '@/components/layout/SectionOrchestrator';
-import { cn } from '@/lib/utils/cn';
 import { designTokens } from '@/config/theme.config';
+import { cn } from '@/lib/utils/cn';
 
 import { heroConfig } from './HeroSection.config';
 import type { HeroProps } from './HeroSection.types';
@@ -146,18 +146,18 @@ export function HeroSection({
                 href={config.cta.href}
                 className={cn(
                   'inline-flex items-center justify-center rounded-md font-semibold transition-colors',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]/50',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50',
                   // Size variants
                   config.cta.size === 'sm' && 'px-4 py-2 text-sm',
                   config.cta.size === 'md' && 'px-6 py-3 text-base',
                   config.cta.size === 'lg' && 'px-8 py-4 text-lg',
                   // Variant styles
                   config.cta.variant === 'primary' &&
-                    'bg-[var(--brand-primary)] text-black hover:opacity-90',
+                    'bg-brand-primary text-black hover:bg-brand-primary/90',
                   config.cta.variant === 'secondary' &&
                     'bg-neutral-800 text-white hover:bg-neutral-700',
                   config.cta.variant === 'outline' &&
-                    'border-2 border-[var(--brand-primary)] text-[var(--brand-primary)] hover:bg-[var(--brand-primary)] hover:text-black'
+                    'border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black'
                 )}
               >
                 {config.cta.label}

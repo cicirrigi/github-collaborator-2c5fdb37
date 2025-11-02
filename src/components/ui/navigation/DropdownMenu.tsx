@@ -107,11 +107,12 @@ export function DropdownMenu({
               {/* Elegant vertical divider for 2-column layout */}
               {item.children.length > 6 && (
                 <div
-                  className='absolute left-1/2 top-4 bottom-4 w-0.5 -translate-x-px'
+                  className='absolute left-1/2 top-4 bottom-4 -translate-x-px'
                   style={{
                     background:
                       'linear-gradient(to bottom, transparent 0%, var(--brand-primary) 20%, var(--brand-primary) 80%, transparent 100%)',
                     opacity: 0.3,
+                    width: '1px',
                   }}
                   aria-hidden='true'
                 />

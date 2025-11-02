@@ -19,7 +19,17 @@ export const buttonVariants = {
     lg: 'px-6 py-3 text-lg',
     xl: 'px-8 py-4 text-xl',
   },
-  base: `inline-flex items-center justify-center font-semibold rounded-lg transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary/50`,
+  base: `inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-primary)]/50`,
+  hover: {
+    scale: 'hover:scale-105 active:scale-95',
+    glow: 'hover:shadow-lg hover:shadow-brand-primary/30',
+    brightness: 'hover:brightness-110',
+  },
+  shimmer: {
+    base: 'relative overflow-hidden',
+    effect:
+      'before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-1000 before:ease-out',
+  },
 } as const;
 
 export type ButtonVariants = typeof buttonVariants;

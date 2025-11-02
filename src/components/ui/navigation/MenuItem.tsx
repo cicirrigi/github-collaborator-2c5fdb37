@@ -54,9 +54,9 @@ export function MenuItemComponent({
     className
   );
 
-  // Refined thin underline effect
+  // Refined gradient underline with tapered ends
   const underlineClasses = cn(
-    'absolute bottom-0 left-1/2 h-px w-0 transition-all duration-400 ease-out',
+    'absolute bottom-0 left-1/2 w-0 transition-all duration-400 ease-out',
     'group-hover:w-full group-hover:left-0',
     'transform-gpu'
   );
@@ -93,12 +93,14 @@ export function MenuItemComponent({
         />
       )}
 
-      {/* Refined thin underline */}
+      {/* Refined tapered underline */}
       <div
         className={underlineClasses}
         style={{
-          backgroundColor: 'var(--brand-primary)',
+          background:
+            'linear-gradient(to right, transparent 0%, transparent 5%, var(--brand-primary) 15%, var(--brand-primary) 85%, transparent 95%, transparent 100%)',
           opacity: '0.8',
+          height: '0.75px',
         }}
       />
     </>

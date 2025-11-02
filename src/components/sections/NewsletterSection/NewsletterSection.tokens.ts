@@ -22,19 +22,19 @@ export const newsletterTokens = {
       border border-neutral-300 dark:border-white/10 
       text-neutral-900 dark:text-white 
       placeholder:text-neutral-500 dark:placeholder:text-neutral-400
-      focus:ring-2 focus:ring-[var(--brand-primary)]/40 outline-none
-      focus-visible:shadow-[0_0_0_3px_var(--brand-primary)/20]
+      focus:ring-2 focus:ring-brand-primary/40 outline-none
+      focus-visible:shadow-[0_0_0_3px_brand-primary/20]
     `,
     error: 'ring-red-500 dark:ring-red-400/60 border-red-500 dark:border-red-400/60',
   },
   button: {
     base: `
       rounded-xl px-6 py-3 text-sm font-semibold transition-all transform-gpu
-      bg-[var(--brand-primary)] text-black
-      hover:bg-[var(--brand-primary)]/90 active:scale-[0.98]
-      focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]/40
+      bg-brand-primary text-black
+      hover:bg-brand-primary/90 active:scale-[0.98]
+      focus-visible:ring-2 focus-visible:ring-brand-primary/40
       focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-black
-      shadow-[0_0_30px_-10px_var(--brand-primary)/40]
+      shadow-[0_0_30px_-10px_brand-primary/40]
     `,
   },
   privacy: {
