@@ -42,42 +42,46 @@ export function Logo({
     lg: 'w-12 h-12',
   };
 
-  const textSizeClasses = {
-    sm: 'text-sm',
-    md: 'text-lg',
-    lg: 'text-2xl',
-  };
-
   const logoElement = (
     <div
       className={cn(
-        'relative inline-flex items-center gap-3',
-        // Removed animate-luxuryFloat (breathe effect)
+        // fluid, fără width fix
+        'relative flex items-center gap-1 sm:gap-2 flex-shrink-0',
         !noShimmer && 'animate-logoShimmer',
-        'transition-transform duration-300 hover:scale-[1.05]',
+        'transition-transform duration-300 hover:scale-[1.03]',
         className
       )}
     >
-      {/* Clean Logo - scaled up without affecting navbar height */}
-      <div className={cn('relative', logoSizeClasses[size])} style={{ transform: 'scale(1.3)' }}>
+      {/* imagine fluidă, cu min-width pentru protecție */}
+      <div
+        className={cn(
+          'relative min-w-[32px] sm:min-w-[40px]',
+          logoSizeClasses[size],
+          'scale-[1.2] sm:scale-[1.4] md:scale-[1.6] lg:scale-[1.7]',
+          'translate-y-[1px] transition-transform duration-300 ease-out'
+        )}
+      >
         <Image
           src='/LOGO/logo transparent.png'
           alt='Vantage Lane Logo'
           fill
-          className={cn('object-contain drop-shadow-lg', 'dark:brightness-[1.1]')}
+          className='object-contain drop-shadow-lg dark:brightness-[1.1]'
           priority
           unoptimized
         />
       </div>
 
-      {/* Brand Text from config */}
-      <div className={cn('font-sans tracking-wide uppercase font-light', textSizeClasses[size])}>
-        <span style={{ color: brandConfig.logo.colors.primary }}>
+      {/* text fluid - optically centered */}
+      <div
+        className={cn(
+          'font-sans tracking-wide uppercase font-light select-none -translate-y-[1px]',
+          'text-base sm:text-lg md:text-xl lg:text-xl leading-none transition-all duration-300'
+        )}
+      >
+        <span className='bg-gradient-to-r from-[#d4b870] to-[#bfa156] bg-clip-text text-transparent'>
           {brandConfig.logo.text.primary}
         </span>
-        <span className='ml-1' style={{ color: brandConfig.logo.colors.secondary }}>
-          {brandConfig.logo.text.secondary}
-        </span>
+        <span className='ml-1 text-white'>{brandConfig.logo.text.secondary}</span>
       </div>
     </div>
   );
@@ -86,7 +90,7 @@ export function Logo({
     return (
       <Link
         href={href}
-        className='inline-block rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary/50'
+        className='inline-block rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary/50 mr-4 sm:mr-6 md:mr-8 lg:mr-10'
         aria-label={`${brandConfig.identity.name} - Home`}
         {...(onClick && { onClick })}
       >
