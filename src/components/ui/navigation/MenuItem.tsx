@@ -54,12 +54,10 @@ export function MenuItemComponent({
     className
   );
 
-  // Enhanced luxury underline effect
+  // Refined thin underline effect
   const underlineClasses = cn(
-    'absolute bottom-0 left-1/2 h-0.5 w-0 transition-all duration-500 ease-out',
-    'bg-gradient-to-r from-transparent via-[var(--brand-primary)] to-transparent',
+    'absolute bottom-0 left-1/2 h-px w-0 transition-all duration-400 ease-out',
     'group-hover:w-full group-hover:left-0',
-    'shadow-[0_0_4px_var(--brand-primary)] opacity-0 group-hover:opacity-60',
     'transform-gpu'
   );
 
@@ -95,8 +93,14 @@ export function MenuItemComponent({
         />
       )}
 
-      {/* Luxury underline */}
-      <div className={underlineClasses} />
+      {/* Refined thin underline */}
+      <div
+        className={underlineClasses}
+        style={{
+          backgroundColor: 'var(--brand-primary)',
+          opacity: '0.8',
+        }}
+      />
     </>
   );
 
