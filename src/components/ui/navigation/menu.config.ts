@@ -14,8 +14,6 @@ import {
   Car,
   User,
   Settings,
-  Phone,
-  Info,
   MapPin,
   Clock,
   Shield,
@@ -24,6 +22,13 @@ import {
   CreditCard,
   FileText,
   HelpCircle,
+  Navigation,
+  Users,
+  Building2,
+  Handshake,
+  BookOpen,
+  Heart,
+  Camera,
 } from 'lucide-react';
 
 export interface MenuItem {
@@ -60,12 +65,17 @@ export const mainMenu: MenuItem[] = [
       },
       {
         label: 'Airport Transfers',
-        href: '/services/airport',
+        href: '/services/airport-transfers',
         icon: MapPin,
       },
       {
+        label: 'City-to-City Rides',
+        href: '/services/city-to-city',
+        icon: Navigation,
+      },
+      {
         label: 'Hourly Hire',
-        href: '/services/hourly',
+        href: '/services/hourly-hire',
         icon: Clock,
       },
       {
@@ -78,17 +88,47 @@ export const mainMenu: MenuItem[] = [
         href: '/services/events',
         icon: Star,
       },
+      {
+        label: 'Corporate Events',
+        href: '/services/corporate-events',
+        icon: Building2,
+      },
+      {
+        label: 'Wedding Services',
+        href: '/services/wedding',
+        icon: Heart,
+      },
+      {
+        label: 'Group Travel',
+        href: '/services/group-travel',
+        icon: Users,
+      },
+      {
+        label: 'Sightseeing Tours',
+        href: '/services/sightseeing-tours',
+        icon: Camera,
+      },
     ],
   },
   {
-    label: 'About',
-    href: '/about',
-    icon: Info,
+    label: 'Members',
+    href: '/members',
+    icon: Users,
   },
   {
-    label: 'Contact',
-    href: '/contact',
-    icon: Phone,
+    label: 'Corporate',
+    href: '/corporate',
+    icon: Building2,
+  },
+  {
+    label: 'Partners',
+    href: '/partners',
+    icon: Handshake,
+  },
+  {
+    label: 'Blog',
+    href: '/blog',
+    icon: BookOpen,
   },
 ];
 

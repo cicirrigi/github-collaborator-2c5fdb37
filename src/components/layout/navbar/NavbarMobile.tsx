@@ -1,14 +1,11 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import Link from 'next/link';
 import type React from 'react';
 
 import { DropdownMenu, MenuItemComponent, mainMenu } from '@/components/ui/navigation';
-
 import { cn } from '@/lib/utils/cn';
 
-import ServicesMenuMobile from '../ServicesMenuMobile';
 import { UserMenu } from './UserMenu';
 
 interface NavItem {
@@ -22,8 +19,8 @@ export interface NavbarMobileProps {
   readonly open: boolean;
   /** Close handler */
   readonly onClose: () => void;
-  /** Navigation items */
-  readonly items: readonly NavItem[];
+  /** Navigation items (deprecated - using mainMenu) */
+  readonly items?: readonly NavItem[];
   /** Container ref for outside click detection */
   readonly containerRef?: React.RefObject<HTMLDivElement | null>;
 }
@@ -38,7 +35,7 @@ export interface NavbarMobileProps {
 export function NavbarMobile({
   open,
   onClose,
-  items,
+  items: _items, // Deprecated parameter, marked as unused
   containerRef,
 }: NavbarMobileProps): React.JSX.Element {
   return (
@@ -82,27 +79,7 @@ export function NavbarMobile({
                 )
               )}
 
-              {/* Legacy items (backward compatibility) */}
-              {items.map(item => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  tabIndex={0}
-                  className={cn(
-                    'rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                    'text-[var(--text-secondary)] hover:bg-[var(--brand-primary)]/10',
-                    'hover:text-[var(--brand-primary)] focus:outline-none focus:ring-2',
-                    'focus:ring-[var(--brand-primary)]/50 focus:ring-offset-2'
-                  )}
-                >
-                  {item.label}
-                </Link>
-              ))}
-
-              {/* Services Section */}
-              <div className='my-2 border-t border-[var(--border-subtle)]' />
-              <ServicesMenuMobile />
+              {/* All navigation now handled by mainMenu above */}
 
               {/* User Actions */}
               <div className='mt-2 border-t border-[var(--border-subtle)] pt-3'>

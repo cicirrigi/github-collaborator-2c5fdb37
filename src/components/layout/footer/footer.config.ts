@@ -22,9 +22,8 @@ export const footerConfig = {
 
   links: [
     {
-      title: 'Our Services',
+      title: 'Quick Links',
       items: [
-        { label: 'All Services', href: '/services', icon: 'car' as const },
         { label: 'Airport Transfers', href: '/services/airport-transfers', icon: 'plane' as const },
         { label: 'City-to-City Rides', href: '/services/city-to-city', icon: 'map-pin' as const },
         { label: 'Hourly Hire', href: '/services/hourly-hire', icon: 'clock' as const },
@@ -62,24 +61,29 @@ export const footerConfig = {
 
   socials: [
     {
+      name: 'Facebook',
+      href: 'https://facebook.com/vantagelane',
+      icon: 'facebook' as const,
+    },
+    {
       name: 'Instagram',
       href: 'https://instagram.com/vantagelane',
       icon: 'instagram' as const,
     },
     {
-      name: 'LinkedIn',
-      href: 'https://linkedin.com/company/vantagelane',
-      icon: 'linkedin' as const,
+      name: 'TikTok',
+      href: 'https://tiktok.com/@vantagelane',
+      icon: 'tiktok' as const,
     },
     {
-      name: 'Twitter',
-      href: 'https://twitter.com/vantagelane',
-      icon: 'twitter' as const,
+      name: 'YouTube',
+      href: 'https://youtube.com/@vantagelane',
+      icon: 'youtube' as const,
     },
     {
-      name: 'Facebook',
-      href: 'https://facebook.com/vantagelane',
-      icon: 'facebook' as const,
+      name: 'X',
+      href: 'https://x.com/vantagelane',
+      icon: 'x' as const,
     },
   ],
 

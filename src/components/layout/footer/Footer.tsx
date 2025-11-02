@@ -48,6 +48,11 @@ const Footer = memo(function Footer({
       className={cn('relative mt-auto backdrop-blur-lg transition-colors', className)}
       style={{
         backgroundColor: designTokens.colors.background?.dark || 'var(--background-dark)',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        width: '100%',
+        paddingLeft: '0',
+        paddingRight: '0',
       }}
     >
       {/* Luxury gradient overlay - Using design token */}
@@ -62,7 +67,7 @@ const Footer = memo(function Footer({
       />
 
       {/* Main Content with Motion */}
-      <Container size='xl' className='relative py-16'>
+      <Container size='xl' className='relative py-16 ml-0'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -76,7 +81,7 @@ const Footer = memo(function Footer({
             <div className='lg:col-span-4'>
               <FooterBrand
                 brand={config.brand}
-                socials={hideSocials ? undefined : config.socials}
+                {...(!hideSocials && { socials: config.socials })}
               />
             </div>
           )}

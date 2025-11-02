@@ -8,11 +8,12 @@ import { brandConfig } from '@/config/brand.config';
 import { cn } from '@/lib/utils/cn';
 
 /**
- * 🎨 Vantage Lane Logo (final version)
- * - Floating luxury animation
+ * 🎨 Vantage Lane Logo (config-driven version)
+ * - Text styling from brand.config.ts
  * - Optional shimmer effect
- * - Light/dark adaptive
- * - Fully reusable
+ * - Theme adaptive colors
+ * - Zero hardcodări
+ * - Matches original site styling
  */
 
 export interface LogoProps {
@@ -69,10 +70,14 @@ export function Logo({
         />
       </div>
 
-      {/* Brand Text with Geist-like styling */}
-      <div className={cn('font-sans font-bold tracking-tight', textSizeClasses[size])}>
-        <span className='text-black dark:text-white'>VANTAGE</span>
-        <span className='text-[var(--brand-primary)] ml-1'>LANE</span>
+      {/* Brand Text from config */}
+      <div className={cn('font-sans tracking-wide uppercase font-light', textSizeClasses[size])}>
+        <span style={{ color: brandConfig.logo.colors.primary }}>
+          {brandConfig.logo.text.primary}
+        </span>
+        <span className='ml-1' style={{ color: brandConfig.logo.colors.secondary }}>
+          {brandConfig.logo.text.secondary}
+        </span>
       </div>
     </div>
   );

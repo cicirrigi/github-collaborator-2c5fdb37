@@ -79,14 +79,16 @@ export function DropdownMenu({
               ease: designTokens.animations.easing.framer.ease,
             }}
             className={cn(
-              'absolute top-full mt-2 min-w-56 rounded-xl border shadow-2xl',
+              'absolute top-full mt-2 rounded-xl border shadow-2xl',
               'backdrop-blur-2xl saturate-150 z-50 overflow-hidden',
-              alignment === 'right' ? 'right-0' : 'left-0'
+              alignment === 'right' ? 'right-0' : 'left-0',
+              // Dynamic width based on number of items
+              item.children.length > 6 ? 'min-w-96' : 'min-w-56'
             )}
             style={{
               ...uiSurfaces.dropdown,
-              // Pas 1: Mai puțin translucid - 75% → 85%
-              backgroundColor: 'color-mix(in srgb, var(--background-elevated) 85%, transparent)',
+              // Opacitate ajustată la 90% pentru mai multă soliditate
+              backgroundColor: 'color-mix(in srgb, var(--background-elevated) 90%, transparent)',
               // Elimină gradient-ul care creează glow
               backgroundImage: 'none',
             }}
@@ -94,7 +96,26 @@ export function DropdownMenu({
             {/* Clean background - no golden glow */}
 
             {/* Menu Items */}
-            <nav className='relative py-2' role='menu'>
+            <nav
+              className={cn(
+                'relative py-2',
+                // Grid layout for many items (2 columns when > 6 items)
+                item.children.length > 6 ? 'grid grid-cols-2 gap-0' : 'block'
+              )}
+              role='menu'
+            >
+              {/* Elegant vertical divider for 2-column layout */}
+              {item.children.length > 6 && (
+                <div
+                  className='absolute left-1/2 top-4 bottom-4 w-0.5 -translate-x-px'
+                  style={{
+                    background:
+                      'linear-gradient(to bottom, transparent 0%, var(--brand-primary) 20%, var(--brand-primary) 80%, transparent 100%)',
+                    opacity: 0.3,
+                  }}
+                  aria-hidden='true'
+                />
+              )}
               {item.children.map((subItem, index) => (
                 <Link
                   key={subItem.href || index}
