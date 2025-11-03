@@ -41,6 +41,11 @@ export const designTokens = {
       featureGap: '0.75rem', // gap-3 for feature spacing (12px)
       badgeSpacing: '1rem', // spacing for badges (16px)
     },
+    dimensions: {
+      cardImageHeight: '14rem', // h-56 (224px) - taller than square
+      cardMinHeight: '28rem', // min-h-[28rem] for vertical aspect ratio
+      cardAspectRatio: '3/4', // vertical aspect ratio for elegant look
+    },
     effects: {
       hoverScale: 1.02, // hover:scale-[1.02] for cards (number for framer)
       imageScale: 1.1, // hover:scale-110 for images (number for framer)

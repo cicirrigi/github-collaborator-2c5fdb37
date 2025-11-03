@@ -45,12 +45,14 @@ const FleetCardRefactored = memo(function FleetCardRefactored({
         className={cn(
           'relative overflow-hidden border transition-all duration-300',
           'cursor-pointer focus-within:ring-2 focus-within:ring-offset-2',
-          'focus-within:ring-[var(--brand-primary)] focus-within:ring-offset-[var(--background-elevated)]'
+          'focus-within:ring-[var(--brand-primary)] focus-within:ring-offset-[var(--background-elevated)]',
+          'flex flex-col fleet-card-vertical'
         )}
         style={{
           backgroundColor: 'var(--background-elevated)',
           borderColor: 'var(--border-subtle)',
           borderRadius: designTokens.fleet.effects.borderRadius,
+          minHeight: designTokens.fleet.dimensions.cardMinHeight,
         }}
       >
         {/* Header with Badges */}

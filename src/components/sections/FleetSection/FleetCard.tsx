@@ -48,7 +48,7 @@ const FleetCard = memo(function FleetCard({
       <div
         className={cn(
           'relative overflow-hidden border transition-all duration-500',
-          'hover:transform cursor-pointer',
+          'hover:transform cursor-pointer flex flex-col',
           'focus-within:ring-2 focus-within:ring-offset-2',
           'focus-within:ring-[var(--brand-primary)] focus-within:ring-offset-[var(--background-dark)]'
         )}
@@ -57,6 +57,8 @@ const FleetCard = memo(function FleetCard({
           borderColor: 'var(--border-subtle)',
           borderRadius: designTokens.fleet.effects.borderRadius,
           transform: `scale(1)`,
+          minHeight: designTokens.fleet.dimensions.cardMinHeight,
+          aspectRatio: designTokens.fleet.dimensions.cardAspectRatio,
         }}
         onMouseEnter={e => {
           e.currentTarget.style.transform = `scale(${designTokens.fleet.effects.hoverScale})`;
@@ -95,7 +97,10 @@ const FleetCard = memo(function FleetCard({
         </div>
 
         {/* Vehicle Image */}
-        <div className='relative h-48 overflow-hidden'>
+        <div
+          className='relative overflow-hidden flex-shrink-0'
+          style={{ height: designTokens.fleet.dimensions.cardImageHeight }}
+        >
           <Image
             src={vehicle.image}
             alt={`${vehicle.name} - ${vehicle.category} vehicle`}
@@ -108,7 +113,7 @@ const FleetCard = memo(function FleetCard({
               transform: 'scale(1)',
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.transform = `scale(${designTokens.fleet.effects.imagScale})`;
+              e.currentTarget.style.transform = `scale(${designTokens.fleet.effects.imageScale})`;
             }}
             onMouseLeave={e => {
               e.currentTarget.style.transform = 'scale(1)';
@@ -127,7 +132,10 @@ const FleetCard = memo(function FleetCard({
         </div>
 
         {/* Content */}
-        <div style={{ padding: designTokens.fleet.spacing.cardPadding }}>
+        <div
+          className='flex-1 flex flex-col justify-between'
+          style={{ padding: designTokens.fleet.spacing.cardPadding }}
+        >
           {/* Vehicle Name */}
           <h3 className='text-xl font-medium mb-2' style={{ color: 'var(--text-primary)' }}>
             {vehicle.name}

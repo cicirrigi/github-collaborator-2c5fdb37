@@ -29,7 +29,10 @@ export const FleetCardImage = memo(function FleetCardImage({
   className,
 }: FleetCardImageProps): React.JSX.Element {
   return (
-    <div className={`relative h-48 overflow-hidden ${className || ''}`}>
+    <div
+      className={`relative overflow-hidden flex-shrink-0 ${className || ''}`}
+      style={{ height: designTokens.fleet.dimensions.cardImageHeight }}
+    >
       <motion.div
         whileHover={{ scale: designTokens.fleet.effects.imageScale }}
         transition={{

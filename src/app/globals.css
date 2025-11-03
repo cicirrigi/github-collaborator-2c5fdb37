@@ -2,61 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+/* --- 🏛 1. FOUNDATION --- */
 @layer base {
-  /**
-   * 🌙 INSTANT DARK MODE (Zero-Flicker)
-   * Sets dark mode immediately at root render.
-   */
   :root {
     color-scheme: dark;
 
-    /* 🎯 Vantage Lane Brand Colors */
-    --brand-primary: #cbb26a; /* Gold */
-    --brand-secondary: #1a1a1a; /* Black */
-    --brand-accent: #d4af37; /* Champagne Gold */
+    /* Brand core */
+    --brand-primary: #cbb26a;
+    --brand-secondary: #1a1a1a;
+    --brand-accent: #d4af37;
 
-    /* 🎨 Background Palette */
+    /* Backgrounds */
     --background-light: #f9f9f9;
     --background-dark: #0a0a0a;
     --background-elevated: #1a1a1a;
 
-    /* 📝 Text Palette */
+    /* Text */
     --text-primary: #ffffff;
     --text-secondary: #a3a3a3;
     --text-muted: #737373;
 
-    /* 🚦 Status Colors */
+    /* System states */
     --status-success: #10b981;
     --status-warning: #f59e0b;
     --status-error: #ef4444;
 
-    /* 🪄 Animation Durations (Tailwind-compatible) */
-    --luxury-duration-fast: 150ms;
-    --luxury-duration-normal: 300ms;
-    --luxury-duration-slow: 500ms;
-    --luxury-shimmer-duration: 1000ms;
-    --luxury-glow-duration: 300ms;
+    /* Durations */
+    --duration-fast: 150ms;
+    --duration-normal: 300ms;
+    --duration-slow: 500ms;
   }
 
-  /**
-   * ☀️ LIGHT MODE OVERRIDES
-   */
   .light {
     color-scheme: light;
-
-    --background-light: #ffffff;
-    --background-dark: #f3f3f3;
-    --background-elevated: #ffffff;
-
     --text-primary: #1a1a1a;
     --text-secondary: #404040;
     --text-muted: #737373;
+    --background-light: #ffffff;
+    --background-dark: #f3f3f3;
+    --background-elevated: #ffffff;
   }
 
-  /**
-   * 🧱 LEGACY VARS (Read-Only)
-   * Compatibility layer for shadcn components.
-   */
+  /* Shadcn/ui compatibility */
   :root {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -79,49 +66,65 @@
   }
 }
 
-/* 🧭 Global Styling */
+/* --- 🧱 2. BASE STYLING --- */
 html,
 body {
-  scroll-behavior: smooth;
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
   width: 100%;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
-/* ✨ Text Selection */
 ::selection {
-  background-color: rgba(203, 178, 106, 0.3);
+  background-color: rgba(203, 178, 106, 0.25);
   color: var(--brand-primary);
 }
 
-/* ⚡ Smooth Theme Transitions */
-* {
+/* Controlled theme transitions - only when needed */
+.theme-transition * {
   transition:
-    color 0.3s ease,
-    background-color 0.3s ease,
-    border-color 0.3s ease;
+    color var(--duration-normal) ease,
+    background-color var(--duration-normal) ease,
+    border-color var(--duration-normal) ease;
 }
 
-/* 🪄 Animations */
+/* --- ⚡ 3. EFFECTS & ANIMATIONS --- */
+
+/* 🪩 Shimmer text-only (for logo text) */
+@keyframes shimmerText {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ✨ Glow for icons/logos */
+@keyframes logoGlow {
+  0%,
+  100% {
+    filter: brightness(1) drop-shadow(0 0 8px rgba(203, 178, 106, 0.3));
+  }
+  50% {
+    filter: brightness(1.1) drop-shadow(0 0 12px rgba(203, 178, 106, 0.6));
+  }
+}
+
+/* 💨 Subtle float */
 @keyframes luxuryFloat {
   0%,
   100% {
-    transform: translateY(0px) scale(1);
-    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.4));
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-2px) scale(1.03);
-    filter: drop-shadow(0 4px 16px rgba(251, 191, 36, 0.6));
+    transform: translateY(-2px);
   }
 }
 
-.animate-luxuryFloat {
-  animation: luxuryFloat 5s ease-in-out infinite;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
+/* 🎯 Tilt effect */
 @keyframes tilt {
   0%,
   100% {
@@ -132,40 +135,35 @@ body {
   }
 }
 
+/* 👑 Class utilities */
+.animate-logoGlow {
+  animation: logoGlow 2.5s ease-in-out infinite;
+}
+.animate-luxuryFloat {
+  animation: luxuryFloat 4s ease-in-out infinite;
+}
+.animate-shimmerText {
+  animation: shimmerText 4s linear infinite;
+}
 .animate-tilt {
   animation: tilt 10s infinite linear;
 }
 
-@keyframes shimmerSweep {
-  0%,
-  95%,
-  100% {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
-  45%,
-  55% {
-    opacity: 0.25;
-    transform: translateX(100%);
-  }
-}
-
-.animate-logoShimmer {
+/* ✅ Modern shimmer — masked version (no rectangular artifacts) */
+.logo-shimmer {
   position: relative;
-  overflow: hidden;
+  display: inline-block;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmerText 3s linear infinite;
 }
 
-.animate-logoShimmer::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    transparent 100%
-  );
-  animation: shimmerSweep 6s infinite;
+/* 🎨 Fleet card vertical aspect ratio */
+.fleet-card-vertical {
+  aspect-ratio: 3/4;
 }
 
 /* ✅ Backdrop blur for navbars */

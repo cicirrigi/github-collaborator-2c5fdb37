@@ -134,9 +134,10 @@ export const FleetCard3D = memo(function FleetCard3D({
 }: FleetCardProps): React.JSX.Element {
   return (
     <div
-      className={cn('group h-80 w-full [perspective:1000px]', className)}
+      className={cn('group w-full [perspective:1000px] fleet-card-vertical', className)}
       role='article'
       aria-label={`${vehicle.name} vehicle details`}
+      style={{ minHeight: designTokens.fleet.dimensions.cardMinHeight }}
     >
       {/* Flip Container */}
       <div
@@ -160,7 +161,7 @@ export const FleetCard3D = memo(function FleetCard3D({
           <motion.div
             className={cn(
               'relative h-full w-full border transition-all duration-300',
-              'cursor-pointer'
+              'cursor-pointer flex flex-col'
             )}
             style={{
               backgroundColor: 'var(--background-elevated)',
