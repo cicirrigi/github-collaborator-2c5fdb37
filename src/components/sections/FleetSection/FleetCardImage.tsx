@@ -44,7 +44,7 @@ export const FleetCardImage = memo(function FleetCardImage({
           duration: designTokens.fleet.effects.transition.duration,
           ease: designTokens.fleet.effects.transition.ease,
         }}
-        className='w-full h-full will-change-transform bg-white rounded-lg'
+        className='relative w-full h-full will-change-transform bg-white rounded-lg'
       >
         <Image
           src={vehicle.image}
