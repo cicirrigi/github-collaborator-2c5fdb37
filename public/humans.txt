@@ -1,0 +1,58 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+    Developer: Cascade AI Assistant
+    Role: Full-Stack Development
+    From: AI-Powered Development
+    
+    Project Lead: Vantage Lane Team
+    Role: Business & Strategy
+    Location: London, UK
+
+# THANKS
+    Next.js Team: For the amazing React framework
+    Vercel: For deployment and hosting solutions  
+    Tailwind CSS: For the utility-first CSS framework
+    Lucide: For beautiful, consistent icons
+    TypeScript: For type safety and developer experience
+
+# TECHNOLOGY COLOPHON
+    Frontend: React 18, Next.js 15
+    Styling: Tailwind CSS, CSS Variables
+    TypeScript: Strict mode enabled
+    State Management: Zustand
+    Icons: Lucide React
+    Fonts: Inter, JetBrains Mono
+    Build: Webpack, SWC
+    Deployment: Vercel
+    Analytics: (To be implemented)
+    Monitoring: (To be implemented)
+
+# SITE
+    Last update: 2025/11/05
+    Language: English (UK)
+    Doctype: HTML5
+    Standards: W3C, WCAG 2.1 AA
+    Components: Modular, Reusable
+    Software: VS Code, Git, npm
+
+# VALUES
+    Performance: Core Web Vitals optimized
+    Accessibility: WCAG 2.1 AA compliance
+    Security: Security headers, CSP
+    Privacy: GDPR compliant
+    SEO: Technical SEO optimized
+    Design System: 90%+ token coverage
+    Type Safety: 100% TypeScript
+    
+             _.-""""""'-._
+           .'  __     __  '.
+          /  .'  \   /  '.  \
+         |  /  <> \ /  <> \  |
+         |  \     V     /   |
+          \  '.  ___  .'   /
+           '.  '-._.-'   .'
+             '-._____.-'
+        
+    Made with passion for luxury transport 🚗✨

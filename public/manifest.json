@@ -1,0 +1,153 @@
+{
+  "id": "/?source=pwa",
+  "name": "Vantage Lane - Premium Chauffeur Services",
+  "short_name": "Vantage Lane",
+  "description": "Experience luxury transportation in London with professional chauffeurs and exceptional service.",
+  "start_url": "/?utm_source=pwa",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#CBB26A",
+  "dark_theme_color": "#CBB26A",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "iarc_rating_id": "pending",
+  "categories": ["travel", "business", "lifestyle"],
+  "lang": "en-GB",
+  "dir": "ltr",
+
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Vantage Lane Homepage - Desktop"
+    },
+    {
+      "src": "/screenshots/mobile-booking.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Booking Interface - Mobile"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "Book Now",
+      "short_name": "Book",
+      "description": "Quick booking for chauffeur services",
+      "url": "/booking?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-book.png",
+          "sizes": "96x96",
+          "purpose": "any maskable"
+        }
+      ]
+    },
+    {
+      "name": "Our Fleet",
+      "short_name": "Fleet",
+      "description": "View our luxury vehicle fleet",
+      "url": "/fleet?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-fleet.png",
+          "sizes": "96x96",
+          "purpose": "any maskable"
+        }
+      ]
+    },
+    {
+      "name": "Contact Us",
+      "short_name": "Contact",
+      "description": "Get in touch with our team",
+      "url": "/contact?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-contact.png",
+          "sizes": "96x96",
+          "purpose": "any maskable"
+        }
+      ]
+    }
+  ],
+
+  "related_applications": [],
+  "prefer_related_applications": false,
+
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+
+  "protocol_handlers": [
+    {
+      "protocol": "web+booking",
+      "url": "/booking?protocol=%s"
+    }
+  ],
+
+  "file_handlers": [],
+
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}

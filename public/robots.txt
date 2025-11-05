@@ -1,0 +1,47 @@
+# Robots.txt for Vantage Lane - Premium Chauffeur Services
+# https://vantagelane.com/robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://vantagelane.com/sitemap.xml
+
+# Crawl-delay for respectful crawling (optional)
+Crawl-delay: 1
+
+# Allow important pages for SEO
+Allow: /about
+Allow: /services
+Allow: /contact
+Allow: /sitemap
+Allow: /fleet
+
+# Block demo and test pages from search engines
+Disallow: /demo-*
+Disallow: /test*
+Disallow: /*-test
+Disallow: /dock-test
+Disallow: /flip-test
+Disallow: /footer-*test
+Disallow: /services-dropdown-test
+Disallow: /social-icons-test
+Disallow: /theme-test
+
+# Block potentially sensitive or unnecessary paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /booking/private/
+
+# Allow static assets
+Allow: /images/
+Allow: /fonts/
+Allow: /icons/
+Allow: /.well-known/
+
+# Block specific file types that shouldn't be indexed
+Disallow: /*.json$
+Disallow: /*.log$
+Disallow: /*.tmp$

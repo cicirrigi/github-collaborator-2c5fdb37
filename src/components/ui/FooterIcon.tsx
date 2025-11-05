@@ -96,7 +96,7 @@ export function FooterIcon({
 
   if (!IconComponent) {
     // TODO: Add proper error logging system
-    return <div className={`w-[${size}px] h-[${size}px] ${className}`} style={style} />;
+    return <div className={className} style={{ width: size, height: size, ...style }} />;
   }
 
   return <IconComponent size={size} className={className} style={style} />;

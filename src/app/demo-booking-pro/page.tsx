@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { BookingTabsPro } from '@/components/ui/booking-tabs-pro';
+import { demoTokens } from '@/lib/design-tokens/demo.tokens';
 import type { BookingTabType } from '@/components/ui/booking-tabs-pro/types';
 
 export default function DemoBookingProPage() {
@@ -18,27 +19,22 @@ export default function DemoBookingProPage() {
 
       <div className='mt-10 text-center'>
         <h2 className='text-2xl font-semibold text-white mb-2'>Selected:</h2>
-        <p className='text-[#CBB26A] text-xl font-medium capitalize'>{tab}</p>
+        <p
+          className={`${demoTokens.typography.subtitle.size} ${demoTokens.typography.subtitle.weight} ${demoTokens.typography.subtitle.color} ${demoTokens.typography.subtitle.transform}`}
+        >
+          {tab}
+        </p>
       </div>
 
       {/* Test colors */}
       <div className='mt-8 flex gap-4'>
         <div
           className='w-20 h-10 rounded'
-          style={{ background: 'linear-gradient(to right, #CBB26A, #D4AF37)' }}
+          style={{ background: demoTokens.gradients.primary }}
         ></div>
-        <div
-          className='w-20 h-10 rounded'
-          style={{ background: 'linear-gradient(to right, #FFD479, #E2B64C)' }}
-        ></div>
-        <div
-          className='w-20 h-10 rounded'
-          style={{ background: 'linear-gradient(to right, #EAB308, #CBB26A)' }}
-        ></div>
-        <div
-          className='w-20 h-10 rounded'
-          style={{ background: 'linear-gradient(to right, #D4AF37, #A07F3E)' }}
-        ></div>
+        <div className='w-20 h-10 rounded' style={{ background: demoTokens.gradients.gold }}></div>
+        <div className='w-20 h-10 rounded' style={{ background: demoTokens.gradients.warm }}></div>
+        <div className='w-20 h-10 rounded' style={{ background: demoTokens.gradients.rich }}></div>
       </div>
     </div>
   );

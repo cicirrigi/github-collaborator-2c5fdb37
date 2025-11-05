@@ -1,0 +1,37 @@
+# Security Policy for Vantage Lane - Premium Chauffeur Services
+# Compliant with IETF RFC 9116
+# https://vantagelane.com/.well-known/security.txt
+
+Contact: security@vantagelane.com
+Contact: https://vantagelane.com/contact
+Expires: 2025-12-31T23:59:59.999Z
+Encryption: https://keybase.io/vantagelane/pgp_keys.asc
+Acknowledgments: https://vantagelane.com/security-acknowledgments
+Policy: https://vantagelane.com/security-policy
+Hiring: https://vantagelane.com/careers
+
+# Preferred Languages
+Preferred-Languages: en, ro
+
+# Canonical URL  
+Canonical: https://vantagelane.com/.well-known/security.txt
+
+# Additional Information
+Comment: We welcome security research and responsible disclosure
+Comment: Acknowledgments page under preparation - verified researchers will be listed
+Comment: We welcome applications from security researchers and developers
+Comment: Bug bounty program details available in our security policy
+
+# Scope
+# This security.txt applies to all Vantage Lane web properties:
+# - vantagelane.com (main website)
+# - www.vantagelane.com (www redirect)
+# - api.vantagelane.com (API services)
+# - booking.vantagelane.com (booking platform)
+
+# Responsible Disclosure Guidelines
+# 1. Report vulnerabilities through official channels only
+# 2. Do not perform testing that could harm our systems or users
+# 3. Do not access, modify, or delete user data
+# 4. Allow reasonable time for remediation before disclosure
+# 5. We commit to acknowledging reports within 48 hours

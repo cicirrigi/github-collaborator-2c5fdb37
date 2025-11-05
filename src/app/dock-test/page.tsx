@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
+import { demoTokens } from '@/lib/design-tokens/demo.tokens';
 import { Dock, DockIcon, DockSeparator } from '@/components/ui/dock-v2';
 import {
   ArrowRight,
@@ -105,7 +107,7 @@ export default function DockTestPage() {
           </div>
           <div className='text-center'>
             <p className='text-neutral-400'>Selected Mode:</p>
-            <p className='text-xl font-semibold text-[#CBB26A]'>
+            <p className='text-xl font-semibold text-[var(--brand-primary)]'>
               {selectedMode.charAt(0).toUpperCase() + selectedMode.slice(1)}
             </p>
           </div>
@@ -154,19 +156,19 @@ export default function DockTestPage() {
             <h3 className='text-xl font-semibold text-white'>⚙️ Design Tokens</h3>
             <div className='grid md:grid-cols-2 gap-4 text-sm'>
               <div>
-                <p className='text-[#CBB26A] font-semibold'>Motion:</p>
+                <p className='text-[var(--brand-primary)] font-semibold'>Motion:</p>
                 <p className='text-neutral-400'>Stiffness: 240, Damping: 18</p>
               </div>
               <div>
-                <p className='text-[#CBB26A] font-semibold'>Scale Range:</p>
+                <p className='text-[var(--brand-primary)] font-semibold'>Scale Range:</p>
                 <p className='text-neutral-400'>Min: 1.0, Max: 1.8</p>
               </div>
               <div>
-                <p className='text-[#CBB26A] font-semibold'>Kernel:</p>
+                <p className='text-[var(--brand-primary)] font-semibold'>Kernel:</p>
                 <p className='text-neutral-400'>Distance: 120px, Sigma: 80</p>
               </div>
               <div>
-                <p className='text-[#CBB26A] font-semibold'>Glass:</p>
+                <p className='text-[var(--brand-primary)] font-semibold'>Glass:</p>
                 <p className='text-neutral-400'>Backdrop blur + gradients</p>
               </div>
             </div>
