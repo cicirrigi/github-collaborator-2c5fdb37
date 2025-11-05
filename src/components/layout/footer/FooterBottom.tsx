@@ -23,23 +23,20 @@ export interface FooterBottomProps {
  */
 export function FooterBottom({ legal, className }: FooterBottomProps): React.JSX.Element {
   return (
-    <div
-      className={cn('border-t py-6', className)}
-      style={{ borderTopColor: 'var(--border-subtle)' }}
-    >
-      <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
-        {/* Location */}
-        <div className='text-center md:text-left'>
-          <p
-            className='text-sm font-medium transition-colors duration-200'
-            style={{ color: 'var(--text-primary)' }}
-          >
-            {legal.location}
-          </p>
-        </div>
+    <div className={cn('py-6 relative', className)}>
+      {/* Golden separator line - elegant gradient */}
+      <div
+        className='absolute top-0 left-0 right-0'
+        style={{
+          height: '1px',
+          background: `linear-gradient(to right, transparent, var(--brand-primary), transparent)`,
+          opacity: 0.6,
+        }}
+      />
 
-        {/* Copyright */}
-        <div className='text-center md:text-right'>
+      <div className='flex flex-col items-center justify-center gap-4'>
+        {/* Copyright - centered */}
+        <div className='text-center'>
           <p
             className='text-sm transition-colors duration-200'
             style={{ color: 'var(--text-secondary)' }}

@@ -77,13 +77,19 @@ export function ServicesSection({
           viewport={{ once: true }}
         >
           <h2
-            className='mb-4 text-3xl font-bold tracking-tight md:text-4xl'
-            style={{
-              color: 'var(--text-primary)',
-              fontFamily: 'var(--font-display)',
-            }}
+            className='mb-4 tracking-wide text-4xl md:text-5xl font-light text-center'
+            style={{ color: 'var(--text-primary)' }}
           >
-            {config.title}
+            <span style={{ color: 'var(--text-primary)' }}>{config.title.primary}</span>{' '}
+            <span
+              style={{
+                color: 'var(--brand-primary)',
+                textShadow: '0 0 25px rgba(203, 178, 106, 0.7), 0 0 35px rgba(203, 178, 106, 0.4)',
+                filter: 'brightness(1.2)',
+              }}
+            >
+              {config.title.accent}
+            </span>
           </h2>
           <p
             className='mx-auto max-w-3xl text-lg leading-relaxed'

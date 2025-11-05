@@ -79,11 +79,15 @@ export function DropdownMenu({
               ease: designTokens.animations.easing.framer.ease,
             }}
             className={cn(
-              'absolute top-full mt-2 rounded-xl border shadow-2xl',
-              'backdrop-blur-2xl saturate-150 z-50 overflow-hidden',
-              alignment === 'right' ? 'right-0' : 'left-0',
-              // Dynamic width based on number of items
-              item.children.length > 6 ? 'min-w-96' : 'min-w-56'
+              // Desktop: absolute dropdown
+              'md:absolute md:top-full md:mt-2 md:rounded-xl md:border md:shadow-2xl',
+              'md:backdrop-blur-2xl md:saturate-150 md:z-50 md:overflow-hidden',
+              alignment === 'right' ? 'md:right-0' : 'md:left-0',
+              // Mobile: accordion-style block
+              'block mt-2 rounded-lg border-0 shadow-none',
+              'bg-[var(--background-elevated)] overflow-hidden',
+              // Dynamic width based on number of items (desktop only)
+              item.children.length > 6 ? 'md:min-w-96' : 'md:min-w-56'
             )}
             style={{
               ...uiSurfaces.dropdown,
@@ -99,15 +103,15 @@ export function DropdownMenu({
             <nav
               className={cn(
                 'relative py-2',
-                // Grid layout for many items (2 columns when > 6 items)
-                item.children.length > 6 ? 'grid grid-cols-2 gap-0' : 'block'
+                // Grid layout for many items (2 columns when > 6 items) - desktop only
+                item.children.length > 6 ? 'block md:grid md:grid-cols-2 md:gap-0' : 'block'
               )}
               role='menu'
             >
-              {/* Elegant vertical divider for 2-column layout */}
+              {/* Elegant vertical divider for 2-column layout - desktop only */}
               {item.children.length > 6 && (
                 <div
-                  className='absolute left-1/2 top-4 bottom-4 -translate-x-px'
+                  className='hidden md:absolute md:left-1/2 md:top-4 md:bottom-4 md:-translate-x-px md:block'
                   style={{
                     background:
                       'linear-gradient(to bottom, transparent 0%, var(--brand-primary) 20%, var(--brand-primary) 80%, transparent 100%)',

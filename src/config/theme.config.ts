@@ -62,11 +62,11 @@ export const designTokens = {
       },
     },
     categoryColors: {
-      Executive: '#1E40AF', // blue-800 for business
+      Executive: '#CBB26A', // gold brand color (unified)
       Luxury: '#CBB26A', // gold brand color
-      SUV: '#059669', // emerald-600 for adventure
-      Van: '#7C3AED', // violet-600 for groups
-      Sports: '#DC2626', // red-600 for performance
+      SUV: '#CBB26A', // gold brand color (unified)
+      MPV: '#CBB26A', // gold brand color (unified)
+      Sports: '#CBB26A', // gold brand color (unified)
     },
     statusColors: {
       available: {

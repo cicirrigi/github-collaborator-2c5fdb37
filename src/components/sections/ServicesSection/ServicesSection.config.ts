@@ -6,8 +6,12 @@ import { CalendarCheck, Clock2, ShieldCheck, UserCheck, Star } from 'lucide-reac
 
 export const servicesConfig = {
   // Section content
-  title: 'Why Choose Our Service',
-  subtitle: "We're London's premium chauffeur platform where choice meets transparency.",
+  title: {
+    primary: 'The Difference is in the',
+    accent: 'Details',
+  },
+  subtitle:
+    'Discover why discerning clients choose Vantage Lane — where precision, discretion, and comfort define every journey.',
 
   // Services/Benefits grid
   services: [

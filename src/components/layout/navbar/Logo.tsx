@@ -74,7 +74,7 @@ export function Logo({
       {/* text fluid - optically centered */}
       <div
         className={cn(
-          'font-sans tracking-wide uppercase font-light select-none -translate-y-[1px]',
+          'font-sans tracking-wide uppercase font-light select-none -translate-y-[1px] -translate-x-[6px]',
           'text-base sm:text-lg md:text-xl lg:text-xl leading-none transition-all duration-300'
         )}
       >

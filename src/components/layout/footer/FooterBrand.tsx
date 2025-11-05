@@ -2,12 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { Facebook, Instagram, Youtube } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
 import type React from 'react';
 import { memo } from 'react';
 
-import { brandConfig } from '@/config/brand.config';
+import { Logo } from '@/components/layout/navbar/Logo';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
 import { cn } from '@/lib/utils/cn';
 
@@ -86,50 +84,21 @@ const FooterBrand = memo(function FooterBrand({
       transition={{ duration: 0.6, ease: tokens.motion.easing.ease }}
       viewport={{ once: true }}
     >
-      {/* Logo & Brand Name */}
+      {/* Logo & Brand Name - Identical to Header but smaller */}
       <div className='space-y-4'>
-        <Link
-          href='/'
-          className='group inline-flex items-center gap-3 transition-transform hover:scale-105'
-          style={{ transitionDuration: tokens.motion.duration.normal }}
-        >
-          <motion.div
-            className='relative'
-            whileHover={{ rotate: 12 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Image
-              src={brand.logo}
-              alt={`${brand.name} logo`}
-              width={48}
-              height={48}
-              className='h-12 w-12'
+        <div className='flex flex-col items-center md:items-start gap-1'>
+          {/* Same Logo component as Header but medium size - responsive */}
+          <div className='md:ml-8 flex flex-col gap-1 items-center md:items-start'>
+            <Logo
+              size='md'
+              href='/'
+              noShimmer={false}
+              className='[&>div:last-child]:-translate-x-[6px]'
             />
-            <motion.div
-              className='absolute inset-0 rounded-full'
-              style={{
-                background: `radial-gradient(circle, ${tokens.colors.brand.primary} 0%, transparent 70%)`,
-              }}
-              initial={{ opacity: 0 }}
-              whileHover={{ opacity: 0.2 }}
-              transition={{ duration: 0.3 }}
-            />
-          </motion.div>
-          <div>
-            {/* Brand Text from config (consistent with navbar) */}
-            <div
-              className='text-xl font-light tracking-wide uppercase transition-colors'
-              style={{ transitionDuration: tokens.motion.duration.fast }}
-            >
-              <span style={{ color: brandConfig.logo.colors.primary }}>
-                {brandConfig.logo.text.primary}
-              </span>
-              <span style={{ color: brandConfig.logo.colors.secondary }} className='ml-1'>
-                {brandConfig.logo.text.secondary}
-              </span>
-            </div>
+
+            {/* Slogan aligned with start of VANTAGE text - responsive */}
             <p
-              className='text-sm transition-colors'
+              className='text-xs transition-colors md:ml-[42px] -translate-y-2'
               style={{
                 color: tokens.colors.text.secondary,
                 transitionDuration: tokens.motion.duration.fast,
@@ -138,7 +107,7 @@ const FooterBrand = memo(function FooterBrand({
               {brand.tagline}
             </p>
           </div>
-        </Link>
+        </div>
 
         {/* Social Icons */}
         {socials && socials.length > 0 && (
@@ -165,11 +134,12 @@ const FooterBrand = memo(function FooterBrand({
                     borderColor: 'var(--border-subtle)',
                   }}
                 >
-                  {/* Glow effect on hover */}
+                  {/* Clean golden glow effect on hover */}
                   <div
-                    className='absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-20'
+                    className='absolute inset-0 rounded-full opacity-0 transition-all duration-300 group-hover:opacity-60'
                     style={{
-                      background: `radial-gradient(circle, var(--brand-primary) 0%, transparent 70%)`,
+                      background: `radial-gradient(circle, rgba(203, 178, 106, 0.3) 0%, transparent 60%)`,
+                      boxShadow: '0 0 8px rgba(203, 178, 106, 0.7)',
                     }}
                   />
 

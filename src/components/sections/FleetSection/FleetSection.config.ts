@@ -9,11 +9,11 @@ import type { FleetSectionConfig } from './FleetSection.types';
 
 export const fleetConfig: FleetSectionConfig = {
   title: {
-    primary: 'Our Premium',
+    primary: 'The Vantage Lane',
     accent: 'Fleet',
   },
   subtitle:
-    'Meticulously maintained prestige vehicles for every occasion, from executive transfers to special celebrations.',
+    'A curated selection of meticulously maintained prestige vehicles — tailored for every journey, from executive transfers to special occasions. Hover to discover more.',
 
   vehicles: [
     {
@@ -100,7 +100,7 @@ export const fleetConfig: FleetSectionConfig = {
     {
       id: 'mercedes-v-class',
       name: 'Mercedes V-Class',
-      category: 'Van',
+      category: 'MPV',
       image: '/images/vehicles-webp/V class Left side angle.webp',
       description: 'Spacious comfort for larger groups',
       passengers: 8,
@@ -126,7 +126,7 @@ export const fleetConfig: FleetSectionConfig = {
 } as const;
 
 // Export individual vehicle categories for filtering
-export const vehicleCategories = ['Executive', 'Luxury', 'SUV', 'Van'] as const;
+export const vehicleCategories = ['Executive', 'Luxury', 'SUV', 'MPV'] as const;
 
 // Export vehicles by category helper
 export const getVehiclesByCategory = (category: string) =>

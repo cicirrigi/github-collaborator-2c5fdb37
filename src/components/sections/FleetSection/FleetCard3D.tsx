@@ -77,7 +77,16 @@ const FleetCardBack = memo(function FleetCardBack({
           </div>
 
           {/* Price & Availability */}
-          <div className='border-t border-[var(--brand-primary-30)] pt-4'>
+          <div className='relative pt-4'>
+            {/* Golden separator line - identical to front card */}
+            <div
+              className='absolute top-0 left-0 right-0'
+              style={{
+                height: '1px',
+                background: `linear-gradient(to right, transparent, var(--brand-primary), transparent)`,
+                opacity: 0.6,
+              }}
+            />
             <div className='flex justify-between items-center mb-2'>
               <span className='text-sm opacity-80'>PRICING</span>
               <span className='font-medium' style={{ color: 'var(--brand-primary)' }}>

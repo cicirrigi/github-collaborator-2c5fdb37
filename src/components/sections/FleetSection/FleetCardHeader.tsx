@@ -45,19 +45,6 @@ export const FleetCardHeader = memo(function FleetCardHeader({
       >
         {vehicle.category}
       </span>
-
-      {/* Popular Badge */}
-      {vehicle.popular && (
-        <span
-          className='px-3 py-1 text-xs font-medium rounded-full'
-          style={{
-            backgroundColor: 'var(--brand-primary)',
-            color: 'var(--background-dark)',
-          }}
-        >
-          Popular
-        </span>
-      )}
     </div>
   );
 });

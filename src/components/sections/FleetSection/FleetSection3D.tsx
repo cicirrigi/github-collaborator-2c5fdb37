@@ -9,6 +9,7 @@
 
 import type React from 'react';
 import { memo } from 'react';
+import { motion } from 'framer-motion';
 
 import { Container } from '@/components/layout/Container';
 import { SectionOrchestrator } from '@/components/layout/SectionOrchestrator';
@@ -53,18 +54,34 @@ const FleetSection3D = memo(function FleetSection3D({
         {/* Header */}
         {!hideTitle && (
           <div className='text-center mb-16'>
-            <Text variant='h2' className='mb-4'>
-              <span className='text-[var(--text-primary)]'>{config.title.primary}</span>{' '}
-              <span className='text-[var(--brand-primary)]'>{config.title.accent}</span>
-            </Text>
+            <h2
+              className='mb-4 tracking-wide text-4xl md:text-5xl font-light text-center'
+              style={{ color: 'var(--text-primary)' }}
+            >
+              <span style={{ color: 'var(--text-primary)' }}>{config.title.primary}</span>{' '}
+              <span
+                style={{
+                  color: 'var(--brand-primary)',
+                  textShadow:
+                    '0 0 25px rgba(203, 178, 106, 0.7), 0 0 35px rgba(203, 178, 106, 0.4)',
+                  filter: 'brightness(1.2)',
+                }}
+              >
+                {config.title.accent}
+              </span>
+            </h2>
 
-            {/* Golden divider */}
-            <div
-              className='w-24 h-1 mx-auto mb-6'
-              style={{
-                background:
-                  'linear-gradient(to right, var(--brand-primary), var(--brand-secondary, #E5D485))',
+            {/* Gold separator line - identical to Newsletter */}
+            <motion.div
+              initial={{ opacity: 0, width: 0 }}
+              whileInView={{ opacity: 1, width: '6rem' }}
+              transition={{
+                duration: 0.8,
+                ease: [0.4, 0.0, 0.2, 1],
+                delay: 0.3,
               }}
+              viewport={{ once: true }}
+              className='h-1 bg-gradient-to-r from-[var(--brand-primary)] to-[#E5D485] mx-auto mb-6'
             />
 
             <Text variant='lead' className='max-w-2xl mx-auto text-[var(--text-secondary)]'>
@@ -73,8 +90,11 @@ const FleetSection3D = memo(function FleetSection3D({
 
             {/* Flip instruction */}
             <div className='mt-4'>
-              <span className='text-sm opacity-60 italic'>
-                ✨ Hover over cards to see detailed information
+              <span
+                className='text-sm italic'
+                style={{ color: 'var(--brand-primary)', opacity: 0.8 }}
+              >
+                Hover over cards to see detailed information
               </span>
             </div>
           </div>

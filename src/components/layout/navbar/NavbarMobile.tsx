@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import type React from 'react';
+import { useEffect } from 'react';
 
 import { DropdownMenu, MenuItemComponent, mainMenu } from '@/components/ui/navigation';
 import { cn } from '@/lib/utils/cn';
@@ -38,6 +39,21 @@ export function NavbarMobile({
   items: _items, // Deprecated parameter, marked as unused
   containerRef,
 }: NavbarMobileProps): React.JSX.Element {
+  // Scroll lock management
+  useEffect(() => {
+    if (open) {
+      // Lock scroll when menu is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Restore scroll when menu is closed
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [open]);
   return (
     <AnimatePresence>
       {open && (
@@ -62,7 +78,9 @@ export function NavbarMobile({
             className={cn(
               'absolute left-0 top-16 z-40 w-full border-t shadow-xl backdrop-blur-xl md:hidden',
               // Use CSS variables for theming
-              'bg-[var(--background-elevated)] border-[var(--border-subtle)]'
+              'bg-[var(--background-elevated)] border-[var(--border-subtle)]',
+              // Scrollable menu with max height
+              'max-h-[calc(100vh-8rem)] overflow-y-auto'
             )}
             style={{
               backgroundColor: 'var(--background-elevated)',

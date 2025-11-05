@@ -53,10 +53,31 @@ const FleetSection = memo(function FleetSection({
         {/* Header */}
         {!hideTitle && (
           <div className='text-center mb-16'>
-            <Text variant='h2' className='mb-4'>
-              <span className='text-[var(--text-primary)]'>{config.title.primary}</span>{' '}
-              <span className='text-[var(--brand-primary)]'>{config.title.accent}</span>
-            </Text>
+            <h2
+              className='mb-4 tracking-wide text-4xl md:text-5xl font-light text-center'
+              style={{ color: 'var(--text-primary)' }}
+            >
+              <span
+                style={{
+                  color: 'var(--text-primary)',
+                  textShadow:
+                    '0 0 18px rgba(220, 220, 255, 0.5), 0 0 30px rgba(180, 180, 255, 0.3)',
+                  filter: 'brightness(1.18)',
+                }}
+              >
+                {config.title.primary}
+              </span>{' '}
+              <span
+                style={{
+                  color: 'var(--brand-primary)',
+                  textShadow:
+                    '0 0 22px rgba(203, 178, 106, 0.6), 0 0 32px rgba(203, 178, 106, 0.35)',
+                  filter: 'brightness(1.18)',
+                }}
+              >
+                {config.title.accent}
+              </span>
+            </h2>
 
             {/* Golden divider */}
             <div

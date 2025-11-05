@@ -68,6 +68,35 @@ export const FleetCardImage = memo(function FleetCardImage({
           background: 'linear-gradient(to top, var(--background-elevated) 0%, transparent 50%)',
         }}
       />
+
+      {/* Popular Badge - Premium minimal design positioned above separator */}
+      {vehicle.popular && (
+        <div className='absolute bottom-3 right-4 z-10'>
+          <span
+            className='px-3 py-1 text-xs font-medium rounded-full backdrop-blur-sm'
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(203, 178, 106, 0.9), rgba(203, 178, 106, 0.7))',
+              color: 'var(--background-dark)',
+              border: '1px solid rgba(203, 178, 106, 0.3)',
+              boxShadow:
+                '0 2px 8px rgba(203, 178, 106, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+            }}
+          >
+            ★ Popular
+          </span>
+        </div>
+      )}
+
+      {/* Golden separator line */}
+      <div
+        className='absolute bottom-0 left-0 right-0'
+        style={{
+          height: '1px',
+          background: `linear-gradient(to right, transparent, var(--brand-primary), transparent)`,
+          opacity: 0.6,
+        }}
+      />
     </div>
   );
 });

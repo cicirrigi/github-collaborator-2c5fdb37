@@ -54,7 +54,10 @@ export function NewsletterSection({
           }}
           viewport={{ once: true }}
         >
-          <h2 className="tracking-wide text-4xl md:text-5xl font-light text-center" style={{ color: 'var(--text-primary)' }}>
+          <h2
+            className='tracking-wide text-4xl md:text-5xl font-light text-center'
+            style={{ color: 'var(--text-primary)' }}
+          >
             Join The{' '}
             <span
               style={{
@@ -68,8 +71,8 @@ export function NewsletterSection({
             <span
               style={{
                 color: 'var(--brand-primary)',
-                textShadow: '0 0 22px rgba(203, 178, 106, 0.6), 0 0 32px rgba(203, 178, 106, 0.35)',
-                filter: 'brightness(1.18)',
+                textShadow: '0 0 25px rgba(203, 178, 106, 0.7), 0 0 35px rgba(203, 178, 106, 0.4)',
+                filter: 'brightness(1.2)',
               }}
             >
               Circle
@@ -87,7 +90,7 @@ export function NewsletterSection({
             delay: newsletterTokens.animations.stagger.heading + 0.3,
           }}
           viewport={{ once: true }}
-          className="h-1 bg-gradient-to-r from-[var(--brand-primary)] to-[#E5D485] mx-auto mb-6"
+          className='h-1 bg-gradient-to-r from-[var(--brand-primary)] to-[#E5D485] mx-auto mb-6'
         />
 
         <motion.p
@@ -106,9 +109,9 @@ export function NewsletterSection({
         </motion.p>
 
         {/* Premium Newsletter Card */}
-        <div className="mt-12 max-w-4xl mx-auto">
+        <div className='mt-12 max-w-4xl mx-auto'>
           <NewsletterCard
-            onSubmit={async (_data) => {
+            onSubmit={async _data => {
               // Here you would implement the actual submission logic
               // Example: await newsletterService.subscribe(_data);
             }}
@@ -146,17 +149,18 @@ export function NewsletterSection({
         >
           We value your privacy — no spam, only refined updates.{' '}
           <button
-            className="underline hover:no-underline transition-all duration-200 hover:text-[var(--brand-primary)]"
+            className='underline hover:no-underline transition-all duration-200 hover:text-[var(--brand-primary)]'
             onClick={() => setShowUnsubscribeModal(true)}
           >
             Unsubscribe anytime
-          </button>.
+          </button>
+          .
         </motion.p>
       </div>
 
       {/* Bottom gold reflection line */}
       <div className='absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--brand-primary)]/25 to-transparent blur-[1px]' />
-      
+
       {/* Unsubscribe Modal */}
       <UnsubscribeModal
         isOpen={showUnsubscribeModal}

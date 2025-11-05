@@ -5,7 +5,7 @@
  * Ensures type safety and consistent data structure.
  */
 
-export type VehicleCategory = 'Executive' | 'Luxury' | 'SUV' | 'Van' | 'Sports';
+export type VehicleCategory = 'Executive' | 'Luxury' | 'SUV' | 'MPV' | 'Sports';
 
 export interface VehicleFeature {
   readonly icon?: string;
