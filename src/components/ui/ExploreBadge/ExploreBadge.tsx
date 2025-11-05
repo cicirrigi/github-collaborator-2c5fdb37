@@ -38,7 +38,7 @@ export const ExploreBadge: ExploreBadgeComponent = forwardRef<HTMLDivElement, Ex
     const sizeTokens = tokens.sizes[size];
 
     return (
-      <div className='flex flex-col items-end' ref={ref} {...rest}>
+      <div className='flex flex-col items-center' ref={ref} {...rest}>
         {/* Main Badge */}
         <div
           className={cn(
@@ -111,26 +111,19 @@ export const ExploreBadge: ExploreBadgeComponent = forwardRef<HTMLDivElement, Ex
           )}
         </div>
 
-        {/* Mobile "Tap to view" text - înlocuiește "Explore" pe mobile */}
+        {/* Mobile "Tap to view" text - centrat sub badge */}
         <div
           className={cn(
-            'block md:hidden transition-opacity duration-200',
+            'block md:hidden text-center transition-opacity duration-200',
             'opacity-70' // Vizibil pe mobile, nu pe hover
           )}
           style={{
+            fontSize: tokens.mobile.tapText.fontSize,
             marginTop: tokens.mobile.tapText.marginTop,
+            color: 'var(--text-secondary)',
           }}
         >
-          <span
-            style={{
-              fontSize: tokens.mobile.tapText.fontSize,
-              marginLeft: tokens.mobile.tapText.marginLeft, // Doar textul la dreapta
-              color: 'var(--text-secondary)',
-              display: 'inline-block',
-            }}
-          >
-            {mobileText || tokens.mobile.tapText.text}
-          </span>
+          {mobileText || tokens.mobile.tapText.text}
         </div>
       </div>
     );

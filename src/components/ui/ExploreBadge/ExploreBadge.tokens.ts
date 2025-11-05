@@ -69,8 +69,7 @@ export const exploreBadgeTokens = {
     tapText: {
       fontSize: '0.625rem', // 10px
       opacity: '0.7',
-      marginTop: '0.125rem', // 2px pentru aliniere mai bună
-      marginLeft: '0.25rem', // 4px offset la dreapta pentru aliniere cu săgeata
+      marginTop: '0.125rem', // 2px spațiu între badge și text
       text: 'Tap to view', // Design token pentru text
     },
   },
