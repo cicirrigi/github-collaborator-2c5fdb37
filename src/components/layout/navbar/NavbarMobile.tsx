@@ -5,6 +5,7 @@ import type React from 'react';
 import { useEffect } from 'react';
 
 import { DropdownMenu, MenuItemComponent, mainMenu } from '@/components/ui/navigation';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { cn } from '@/lib/utils/cn';
 
 import { UserMenu } from './UserMenu';
@@ -100,7 +101,16 @@ export function NavbarMobile({
               {/* All navigation now handled by mainMenu above */}
 
               {/* User Actions */}
-              <div className='mt-2 border-t border-[var(--border-subtle)] pt-3'>
+              <div className='mt-2 border-t border-[var(--border-subtle)] pt-3 space-y-2'>
+                {/* Theme Toggle */}
+                <div className='flex items-center justify-between px-3 py-2'>
+                  <span className='text-sm font-medium' style={{ color: 'var(--text-primary)' }}>
+                    Theme
+                  </span>
+                  <ThemeToggle variant='minimal' size='sm' />
+                </div>
+
+                {/* User Menu */}
                 <UserMenu />
               </div>
             </nav>
