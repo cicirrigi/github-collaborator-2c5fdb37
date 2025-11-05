@@ -9,13 +9,10 @@ export const unsubscribeModalTokens = {
     backgroundColor: 'var(--background-elevated)', // Dark modal background
     borderColor: 'var(--border-subtle)', // Subtle border
     borderRadius: '1rem', // rounded-xl
-    padding: {
-      mobile: '1.5rem', // p-6
-      desktop: '2rem', // p-8
-    },
+    padding: '1.5rem', // p-6 (simplified for CSS)
     maxWidth: '28rem', // max-w-md
     backdropBlur: 'blur(8px)',
-    shadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', // shadow-2xl
+    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', // shadow-2xl
   },
 
   // Backdrop/overlay
@@ -24,25 +21,31 @@ export const unsubscribeModalTokens = {
     backdropBlur: 'blur(4px)',
   },
 
-  // Typography
-  typography: {
-    title: {
-      fontSize: '1.5rem', // text-2xl
-      lineHeight: '2rem',
-      fontWeight: '600', // font-semibold
-      color: 'var(--text-primary)',
-      marginBottom: '1rem', // mb-4
-    },
-    description: {
-      fontSize: '0.875rem', // text-sm
-      lineHeight: '1.25rem',
-      color: 'var(--text-secondary)',
-      marginBottom: '1.5rem', // mb-6
-    },
+  // Individual elements
+  icon: {
+    color: 'var(--brand-primary)',
+  },
+  title: {
+    color: 'var(--text-primary)',
+    fontSize: '1.125rem',
+    fontWeight: '600',
+  },
+  description: {
+    color: 'var(--text-secondary)',
+    fontSize: '0.875rem',
+  },
+  closeButton: {
+    color: 'var(--text-muted)',
   },
 
   // Form elements
   form: {
+    label: {
+      color: 'var(--text-primary)',
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      marginBottom: '0.5rem',
+    },
     input: {
       padding: '0.75rem 1rem', // px-4 py-3
       backgroundColor: 'var(--background-subtle)',
@@ -50,31 +53,46 @@ export const unsubscribeModalTokens = {
       borderRadius: '0.5rem', // rounded-lg
       fontSize: '0.875rem', // text-sm
       color: 'var(--text-primary)',
-      placeholderColor: 'var(--text-placeholder)',
+      border: '2px solid var(--border-default)', // Chenar mai vizibil
       focusBorderColor: 'var(--brand-primary)',
-      focusRingColor: 'var(--brand-primary-20)',
-      marginBottom: '1rem', // mb-4
+      focusBoxShadow: '0 0 0 2px var(--brand-primary-20)',
+      placeholderColor: 'var(--text-muted)',
+      transition: 'all 0.2s ease-in-out',
     },
   },
 
   // Buttons
   buttons: {
-    spacing: '0.75rem', // gap-3
     cancel: {
-      padding: '0.5rem 1rem', // px-4 py-2
+      padding: '0.5rem 1rem',
       backgroundColor: 'transparent',
       borderColor: 'var(--border-default)',
       color: 'var(--text-secondary)',
-      hoverBackgroundColor: 'var(--background-subtle)',
+      border: '1px solid var(--border-default)',
       borderRadius: '0.5rem',
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease-in-out',
+      hoverBackgroundColor: 'var(--brand-primary)',
+      hoverBorderColor: 'var(--brand-primary)',
+      hoverTextColor: 'var(--brand-secondary)',
     },
     confirm: {
-      padding: '0.5rem 1rem', // px-4 py-2
+      padding: '0.5rem 1rem',
       backgroundColor: 'var(--destructive)',
+      borderColor: 'var(--destructive)',
       color: 'var(--destructive-foreground)',
-      hoverBackgroundColor: 'var(--destructive-hover)',
+      border: '1px solid var(--destructive)',
       borderRadius: '0.5rem',
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease-in-out',
+      hoverBackgroundColor: 'var(--destructive-hover)',
+      hoverBorderColor: 'var(--destructive-hover)',
     },
+    spacing: '0.75rem', // gap between buttons
   },
 
   // States
@@ -94,12 +112,12 @@ export const unsubscribeModalTokens = {
   // Animations
   animations: {
     modal: {
-      duration: '0.2s',
-      ease: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      enter: 'ease-out duration-200',
+      leave: 'ease-in duration-200',
     },
     backdrop: {
-      duration: '0.15s',
-      ease: 'ease-in-out',
+      enter: 'ease-out duration-150',
+      leave: 'ease-in duration-150',
     },
   },
 } as const;

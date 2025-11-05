@@ -1,11 +1,12 @@
 /**
- * 📧 UnsubscribeModal Component
- * Reusable modal for unsubscribe functionality
+ * 📧 UnsubscribeModal - Clean & Modular Implementation
+ * Premium unsubscribe modal following project architecture
  */
 
 'use client';
 
 import { useState, useEffect, Fragment } from 'react';
+import { createPortal } from 'react-dom';
 import { Dialog, Transition } from '@headlessui/react';
 import { motion } from 'framer-motion';
 import { X, Mail, Check, AlertCircle } from 'lucide-react';
@@ -15,21 +16,19 @@ import { unsubscribeModalTokens } from './UnsubscribeModal.tokens';
 import type { UnsubscribeModalProps, UnsubscribeState } from './UnsubscribeModal.types';
 
 /**
- * UnsubscribeModal - Premium unsubscribe modal
- *
- * @example
- * <UnsubscribeModal
- *   isOpen={showModal}
- *   onClose={() => setShowModal(false)}
- *   onConfirm={handleUnsubscribe}
- * />
+ * UnsubscribeModal - Premium unsubscribe modal with Portal
+ * - Clean modular architecture
+ * - Design tokens orchestration
+ * - Portal rendering to escape container constraints
+ * - Body scroll lock
+ * - Accessibility compliant
  */
 export function UnsubscribeModal({
   isOpen,
   onClose,
   onConfirm,
   title = 'Unsubscribe from Newsletter',
-  description = 'We&rsquo;re sorry to see you go. Please confirm your email address to unsubscribe from our newsletter.',
+  description = "We're sorry to see you go. Please confirm your email address to unsubscribe.",
   showEmailInput = true,
   isLoading: externalLoading = false,
   isSuccess: externalSuccess = false,
@@ -56,6 +55,25 @@ export function UnsubscribeModal({
     }
   }, [isOpen]);
 
+  // Body scroll lock when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.position = 'unset';
+      document.body.style.width = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.position = 'unset';
+      document.body.style.width = 'unset';
+    };
+  }, [isOpen]);
+
   const handleConfirm = async () => {
     if (showEmailInput && !email.trim()) {
       setInternalError('Please enter your email address.');
@@ -75,14 +93,8 @@ export function UnsubscribeModal({
     setInternalState('loading');
 
     try {
-      if (onConfirm) {
-        await onConfirm(showEmailInput ? email : undefined);
-      }
+      await onConfirm?.(showEmailInput ? email : undefined);
       setInternalState('success');
-      // Auto-close after success
-      setTimeout(() => {
-        onClose();
-      }, 2000);
     } catch (err) {
       setInternalError(err instanceof Error ? err.message : 'Failed to unsubscribe');
       setInternalState('error');
@@ -95,16 +107,19 @@ export function UnsubscribeModal({
     }
   };
 
-  return (
+  // Render modal in document.body using Portal to escape parent containers
+  if (typeof window === 'undefined') return null;
+
+  return createPortal(
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as='div' className='relative z-50' onClose={handleClose}>
+      <Dialog as='div' className='relative z-[9999]' onClose={handleClose}>
         {/* Backdrop */}
         <Transition.Child
           as={Fragment}
-          enter={`ease-out duration-150`}
+          enter={tokens.animations.backdrop.enter}
           enterFrom='opacity-0'
           enterTo='opacity-100'
-          leave={`ease-in duration-150`}
+          leave={tokens.animations.backdrop.leave}
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
@@ -113,62 +128,55 @@ export function UnsubscribeModal({
             style={{
               backgroundColor: tokens.backdrop.backgroundColor,
               backdropFilter: tokens.backdrop.backdropBlur,
+              zIndex: 9998,
             }}
           />
         </Transition.Child>
 
         {/* Modal container */}
-        <div className='fixed inset-0 overflow-y-auto'>
-          <div className='flex min-h-full items-center justify-center p-4 text-center'>
+        <div className='fixed inset-0 overflow-y-auto' style={{ zIndex: 9999 }}>
+          <div className='flex min-h-full items-center justify-center p-4'>
             <Transition.Child
               as={Fragment}
-              enter={`ease-out duration-200`}
+              enter={tokens.animations.modal.enter}
               enterFrom='opacity-0 scale-95'
               enterTo='opacity-100 scale-100'
-              leave={`ease-in duration-200`}
+              leave={tokens.animations.modal.leave}
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
               <Dialog.Panel
                 className={cn(
-                  'w-full transform overflow-hidden border text-left align-middle transition-all',
+                  'w-full transform overflow-hidden text-left transition-all',
                   className
                 )}
                 style={{
-                  maxWidth: tokens.modal.maxWidth,
                   backgroundColor: tokens.modal.backgroundColor,
-                  borderColor: tokens.modal.borderColor,
+                  border: `1px solid ${tokens.modal.borderColor}`,
                   borderRadius: tokens.modal.borderRadius,
-                  padding: `${tokens.modal.padding.mobile}`,
+                  padding: tokens.modal.padding,
+                  maxWidth: tokens.modal.maxWidth,
+                  boxShadow: tokens.modal.boxShadow,
                   backdropFilter: tokens.modal.backdropBlur,
-                  boxShadow: tokens.modal.shadow,
                 }}
               >
                 {/* Header */}
                 <div className='flex items-start justify-between mb-4'>
                   <div className='flex items-center gap-3'>
-                    <div className='flex-shrink-0'>
-                      <Mail className='w-5 h-5' style={{ color: 'var(--text-secondary)' }} />
-                    </div>
+                    <Mail className='w-5 h-5' style={{ color: tokens.icon.color }} />
                     <Dialog.Title
-                      style={{
-                        fontSize: tokens.typography.title.fontSize,
-                        lineHeight: tokens.typography.title.lineHeight,
-                        fontWeight: tokens.typography.title.fontWeight,
-                        color: tokens.typography.title.color,
-                        margin: 0,
-                      }}
+                      className='text-lg font-semibold'
+                      style={{ color: tokens.title.color }}
                     >
                       {title}
                     </Dialog.Title>
                   </div>
-
                   <button
+                    className='rounded-lg p-2 hover:bg-white/5 transition-colors'
                     onClick={handleClose}
                     disabled={isLoading}
-                    className='flex-shrink-0 p-1 rounded-md transition-colors hover:bg-neutral-800/50'
                   >
-                    <X className='w-4 h-4' style={{ color: 'var(--text-secondary)' }} />
+                    <X className='w-4 h-4' style={{ color: tokens.closeButton.color }} />
                   </button>
                 </div>
 
@@ -200,13 +208,10 @@ export function UnsubscribeModal({
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     className='flex items-center gap-2 p-3 rounded-lg mb-4'
-                    style={{
-                      backgroundColor: tokens.states.error.backgroundColor,
-                      border: `1px solid ${tokens.states.error.iconColor}`,
-                    }}
+                    style={{ backgroundColor: tokens.states.error.backgroundColor }}
                   >
                     <AlertCircle
-                      className='w-4 h-4'
+                      className='w-5 h-5'
                       style={{ color: tokens.states.error.iconColor }}
                     />
                     <p
@@ -225,76 +230,89 @@ export function UnsubscribeModal({
                 {!isSuccess && (
                   <>
                     <p
+                      className='mb-6'
                       style={{
-                        fontSize: tokens.typography.description.fontSize,
-                        lineHeight: tokens.typography.description.lineHeight,
-                        color: tokens.typography.description.color,
-                        marginBottom: tokens.typography.description.marginBottom,
+                        color: tokens.description.color,
+                        fontSize: tokens.description.fontSize,
                       }}
                     >
                       {description}
                     </p>
 
-                    {/* Email Input */}
                     {showEmailInput && (
-                      <div style={{ marginBottom: tokens.form.input.marginBottom }}>
+                      <div className='mb-6'>
+                        <label
+                          className='block mb-2'
+                          style={{
+                            color: tokens.form.label.color,
+                            fontSize: tokens.form.label.fontSize,
+                            fontWeight: tokens.form.label.fontWeight,
+                            marginBottom: tokens.form.label.marginBottom,
+                          }}
+                        >
+                          Email Address
+                        </label>
                         <input
                           type='email'
-                          placeholder='Enter your email address'
                           value={email}
                           onChange={e => setEmail(e.target.value)}
+                          onFocus={e => {
+                            (e.target as HTMLInputElement).style.borderColor =
+                              tokens.form.input.focusBorderColor;
+                            (e.target as HTMLInputElement).style.boxShadow =
+                              tokens.form.input.focusBoxShadow;
+                          }}
+                          onBlur={e => {
+                            (e.target as HTMLInputElement).style.border = tokens.form.input.border;
+                            (e.target as HTMLInputElement).style.boxShadow = 'none';
+                          }}
+                          placeholder='Enter your email address'
                           disabled={isLoading}
-                          className='w-full border focus:outline-none focus:ring-2 transition-all'
                           style={{
                             padding: tokens.form.input.padding,
                             backgroundColor: tokens.form.input.backgroundColor,
-                            borderColor:
-                              error && !isSuccess
-                                ? tokens.states.error.iconColor
-                                : tokens.form.input.borderColor,
+                            border: tokens.form.input.border,
                             borderRadius: tokens.form.input.borderRadius,
                             fontSize: tokens.form.input.fontSize,
                             color: tokens.form.input.color,
-                          }}
-                          onFocus={e => {
-                            e.target.style.borderColor = tokens.form.input.focusBorderColor;
-                            e.target.style.boxShadow = `0 0 0 2px ${tokens.form.input.focusRingColor}`;
-                          }}
-                          onBlur={e => {
-                            e.target.style.borderColor = tokens.form.input.borderColor;
-                            e.target.style.boxShadow = 'none';
+                            transition: tokens.form.input.transition,
+                            width: '100%',
                           }}
                         />
                       </div>
                     )}
 
-                    {/* Action Buttons */}
+                    {/* Actions */}
                     <div className='flex justify-end' style={{ gap: tokens.buttons.spacing }}>
                       <button
                         onClick={handleClose}
                         disabled={isLoading}
-                        className='border transition-colors'
-                        style={{
-                          padding: tokens.buttons.cancel.padding,
-                          backgroundColor: tokens.buttons.cancel.backgroundColor,
-                          borderColor: tokens.buttons.cancel.borderColor,
-                          color: tokens.buttons.cancel.color,
-                          borderRadius: tokens.buttons.cancel.borderRadius,
-                        }}
                         onMouseEnter={e => {
-                          (e.target as HTMLElement).style.backgroundColor =
+                          (e.target as HTMLButtonElement).style.backgroundColor =
                             tokens.buttons.cancel.hoverBackgroundColor;
+                          (e.target as HTMLButtonElement).style.borderColor =
+                            tokens.buttons.cancel.hoverBorderColor;
+                          (e.target as HTMLButtonElement).style.color =
+                            tokens.buttons.cancel.hoverTextColor;
                         }}
                         onMouseLeave={e => {
-                          (e.target as HTMLElement).style.backgroundColor =
+                          (e.target as HTMLButtonElement).style.backgroundColor =
                             tokens.buttons.cancel.backgroundColor;
+                          (e.target as HTMLButtonElement).style.borderColor =
+                            tokens.buttons.cancel.borderColor;
+                          (e.target as HTMLButtonElement).style.color = tokens.buttons.cancel.color;
+                        }}
+                        style={{
+                          ...tokens.buttons.cancel,
+                          cursor: isLoading ? 'not-allowed' : tokens.buttons.cancel.cursor,
+                          opacity: isLoading ? 0.6 : 1,
                         }}
                       >
                         Cancel
                       </button>
 
                       <PremiumButton
-                        variant='secondary'
+                        variant='primary'
                         size='sm'
                         loading={isLoading}
                         disabled={isLoading}
@@ -310,8 +328,7 @@ export function UnsubscribeModal({
           </div>
         </div>
       </Dialog>
-    </Transition>
+    </Transition>,
+    document.body
   );
 }
-
-export type { UnsubscribeModalProps, UnsubscribeState } from './UnsubscribeModal.types';

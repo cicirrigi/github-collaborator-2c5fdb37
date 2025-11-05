@@ -3,10 +3,7 @@
  * Clean exports for unsubscribe modal component
  */
 
-export { UnsubscribeModal } from './UnsubscribeModal.simple';
-export type { 
-  UnsubscribeModalProps, 
-  UnsubscribeState 
-} from './UnsubscribeModal.types';
+export { UnsubscribeModal } from './UnsubscribeModal.clean';
+export type { UnsubscribeModalProps, UnsubscribeState } from './UnsubscribeModal.types';
 export { unsubscribeModalTokens } from './UnsubscribeModal.tokens';
 export type { UnsubscribeModalTokens } from './UnsubscribeModal.tokens';
