@@ -80,6 +80,7 @@ const LuxuryCard = forwardRef<HTMLElement, LuxuryCardProps>(
       title,
       description,
       footer,
+      bottomBadge,
 
       // Flexible API
       children,
@@ -132,6 +133,7 @@ const LuxuryCard = forwardRef<HTMLElement, LuxuryCardProps>(
             title,
             description,
             footer,
+            bottomBadge,
             glowColor,
             shimmerColor,
             iconSize,

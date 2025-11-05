@@ -14,17 +14,15 @@ export const servicesConfig = {
     {
       id: 'book-instantly',
       title: 'Book Instantly',
-      description:
-        'Competitive rates with full transparency, premium vehicles, and instant confirmation - all in seconds.',
+      description: 'Effortless bookings. Instant confirmation. Pure convenience.',
       icon: Search,
       href: '/book-instantly',
       color: 'blue',
     },
     {
       id: 'professional-chauffeurs',
-      title: 'Professional Chauffeurs',
-      description:
-        'Licensed, vetted, and experienced drivers providing exceptional service and local knowledge.',
+      title: 'Elite Chauffeurs',
+      description: 'Licensed experts. Impeccable etiquette. Absolute discretion.',
       icon: UserCheck,
       href: '/chauffeurs',
       color: 'green',
@@ -32,7 +30,7 @@ export const servicesConfig = {
     {
       id: 'finest-fleet',
       title: 'The Finest Fleet',
-      description: 'Prestige vehicles, curated with care from fully licensed operators.',
+      description: 'Hand-picked vehicles. Crafted for prestige and comfort.',
       icon: CarFront,
       href: '/fleet-details',
       color: 'purple',
@@ -40,8 +38,7 @@ export const servicesConfig = {
     {
       id: 'secure-payments',
       title: 'Secure Payments',
-      description:
-        'Safe and convenient payment options with transparent pricing and instant confirmation.',
+      description: 'Transparent pricing. Trusted transactions, every time.',
       icon: CreditCard,
       href: '/payments',
       color: 'yellow',
@@ -49,8 +46,7 @@ export const servicesConfig = {
     {
       id: '24-7-available',
       title: 'Available 24/7',
-      description:
-        'Round-the-clock service for airport transfers, business meetings, and special occasions.',
+      description: 'At your service — any hour, any destination.',
       icon: Clock,
       href: '/support',
       color: 'red',

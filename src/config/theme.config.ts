@@ -51,6 +51,11 @@ export const designTokens = {
       imageScale: 1.1, // hover:scale-110 for images (number for framer)
       borderRadius: '0.75rem', // rounded-xl for cards (12px)
       glowOpacity: 0.1, // glow effect opacity (number for framer)
+      // 3D Floating Effects
+      shadowElevated: '0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.08)',
+      shadowFloat: '0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)',
+      goldBorder: '2px solid var(--brand-primary)',
+      goldGlow: '0 0 20px rgba(203, 178, 106, 0.3), 0 0 40px rgba(203, 178, 106, 0.1)',
       transition: {
         duration: 0.3, // 300ms transitions
         ease: 'easeOut', // smooth easing

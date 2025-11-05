@@ -137,7 +137,10 @@ export const FleetCard3D = memo(function FleetCard3D({
       className={cn('group w-full [perspective:1000px] fleet-card-vertical', className)}
       role='article'
       aria-label={`${vehicle.name} vehicle details`}
-      style={{ minHeight: designTokens.fleet.dimensions.cardMinHeight }}
+      style={{
+        minHeight: designTokens.fleet.dimensions.cardMinHeight,
+        filter: 'drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1))',
+      }}
     >
       {/* Flip Container */}
       <div
@@ -159,18 +162,20 @@ export const FleetCard3D = memo(function FleetCard3D({
           }}
         >
           <motion.div
+            initial={false}
             className={cn(
-              'relative h-full w-full border transition-all duration-300',
-              'cursor-pointer flex flex-col'
+              'relative h-full w-full cursor-pointer flex flex-col',
+              'transition-all duration-300'
             )}
             style={{
               backgroundColor: 'var(--background-elevated)',
-              borderColor: 'var(--border-subtle)',
+              border: designTokens.fleet.effects.goldBorder,
               borderRadius: designTokens.fleet.effects.borderRadius,
+              boxShadow: designTokens.fleet.effects.shadowElevated,
             }}
             whileHover={{
-              borderColor: 'var(--brand-primary-30)',
-              boxShadow: `0 0 30px var(--brand-primary-10)`,
+              boxShadow: `${designTokens.fleet.effects.shadowFloat}, ${designTokens.fleet.effects.goldGlow}`,
+              transform: 'translateY(-8px)',
             }}
           >
             {/* Header with Badges */}

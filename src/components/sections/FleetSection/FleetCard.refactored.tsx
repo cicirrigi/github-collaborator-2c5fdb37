@@ -37,6 +37,7 @@ const FleetCardRefactored = memo(function FleetCardRefactored({
     >
       {/* Motion Card Container */}
       <motion.div
+        initial={false}
         whileHover={{ scale: designTokens.fleet.effects.hoverScale }}
         transition={{
           duration: designTokens.fleet.effects.transition.duration,

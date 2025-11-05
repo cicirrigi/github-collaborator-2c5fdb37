@@ -31,26 +31,33 @@ export const FleetCardImage = memo(function FleetCardImage({
   return (
     <div
       className={`relative overflow-hidden flex-shrink-0 ${className || ''}`}
-      style={{ height: designTokens.fleet.dimensions.cardImageHeight }}
+      style={{
+        height: designTokens.fleet.dimensions.cardImageHeight,
+        minHeight: designTokens.fleet.dimensions.cardImageHeight,
+      }}
     >
       <motion.div
+        initial={false}
         whileHover={{ scale: designTokens.fleet.effects.imageScale }}
         transition={{
           duration: designTokens.fleet.effects.transition.duration,
           ease: designTokens.fleet.effects.transition.ease,
         }}
-        className='w-full h-full'
+        className='w-full h-full will-change-transform bg-white rounded-lg'
       >
         <Image
           src={vehicle.image}
           alt={`${vehicle.name} - ${vehicle.category} vehicle`}
           fill
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-          priority={false}
+          priority={true}
           quality={85}
+          loading='eager'
           className='object-cover'
-          placeholder='blur'
-          blurDataURL='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJceliyjqTzSlT54b6bk+h0R//2Q=='
+          style={{
+            opacity: 1,
+            transition: 'none',
+          }}
         />
       </motion.div>
 

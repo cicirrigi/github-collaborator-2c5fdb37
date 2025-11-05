@@ -9,7 +9,7 @@ import { createPortal } from 'react-dom';
  * Renderează navbar-ul direct în document.body pentru
  * position: fixed corect față de viewport, nu față de container.
  *
- * Folosit de: Stripe, Vercel, Linear, etc.
+ * Fixed hydration issue - shows immediately on mount
  */
 export function NavbarPortal({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
@@ -18,7 +18,18 @@ export function NavbarPortal({ children }: { children: React.ReactNode }) {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  // ✅ Show immediately during hydration
+  if (typeof window === 'undefined') {
+    return (
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50 }}>{children}</div>
+    );
+  }
+
+  if (!mounted) {
+    return (
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50 }}>{children}</div>
+    );
+  }
 
   return createPortal(children, document.body);
 }

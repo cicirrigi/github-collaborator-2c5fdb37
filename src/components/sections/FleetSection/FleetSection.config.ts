@@ -20,8 +20,7 @@ export const fleetConfig: FleetSectionConfig = {
       id: 'bmw-5-series',
       name: 'BMW 5 Series',
       category: 'Executive',
-      image:
-        'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&h=300&fit=crop&crop=center',
+      image: '/images/vehicles-webp/5 Series Left side angle.webp',
       description: 'Perfect for business meetings and airport transfers',
       passengers: 4,
       features: [
@@ -37,8 +36,7 @@ export const fleetConfig: FleetSectionConfig = {
       id: 'mercedes-e-class',
       name: 'Mercedes E-Class',
       category: 'Executive',
-      image:
-        'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=400&h=300&fit=crop&crop=center',
+      image: '/images/vehicles-webp/E class Left side angle.webp',
       description: 'Sophisticated comfort for discerning clients',
       passengers: 4,
       features: [
@@ -54,8 +52,7 @@ export const fleetConfig: FleetSectionConfig = {
       id: 'bmw-7-series',
       name: 'BMW 7 Series',
       category: 'Luxury',
-      image:
-        'https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=400&h=300&fit=crop&crop=center',
+      image: '/images/vehicles-webp/7 Series Left side angle.webp',
       description: 'Ultimate luxury for special occasions',
       passengers: 4,
       features: [
@@ -72,8 +69,7 @@ export const fleetConfig: FleetSectionConfig = {
       id: 'mercedes-s-class',
       name: 'Mercedes S-Class',
       category: 'Luxury',
-      image:
-        'https://images.unsplash.com/photo-1563720223185-11003d516935?w=400&h=300&fit=crop&crop=center',
+      image: '/images/vehicles-webp/S class Left side angle.webp',
       description: 'The pinnacle of automotive luxury',
       passengers: 4,
       features: [
@@ -89,8 +85,7 @@ export const fleetConfig: FleetSectionConfig = {
       id: 'range-rover',
       name: 'Range Rover',
       category: 'SUV',
-      image:
-        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&crop=center',
+      image: '/images/vehicles-webp/Range Rover Left side angle.webp',
       description: 'Versatile luxury for groups and families',
       passengers: 7,
       features: [
@@ -106,8 +101,7 @@ export const fleetConfig: FleetSectionConfig = {
       id: 'mercedes-v-class',
       name: 'Mercedes V-Class',
       category: 'Van',
-      image:
-        'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&h=300&fit=crop&crop=center',
+      image: '/images/vehicles-webp/V class Left side angle.webp',
       description: 'Spacious comfort for larger groups',
       passengers: 8,
       features: [

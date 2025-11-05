@@ -5,10 +5,10 @@ import Link from 'next/link';
 import type React from 'react';
 
 import { Container } from '@/components/layout/Container';
-import { LuxuryCard } from '@/components/ui';
-import { cn } from '@/lib/utils/cn';
+import { LuxuryCard, ExploreBadge } from '@/components/ui';
 import { designTokens } from '@/config/theme.config';
 import { layoutTokens } from '@/design-system/tokens/layout';
+import { cn } from '@/lib/utils/cn';
 
 import { servicesConfig } from './ServicesSection.config';
 
@@ -115,10 +115,22 @@ export function ServicesSection({
                   variant='shimmer'
                   size='md'
                   hover='shimmer'
+                  iconSize='vantage'
                   href={service.href}
-                  icon={<IconComponent className='h-full w-full' strokeWidth={1.2} />}
+                  icon={
+                    <IconComponent
+                      className='h-full w-full transition-colors duration-200'
+                      strokeWidth={1.2}
+                      style={{ color: 'var(--brand-primary)' }}
+                    />
+                  }
                   title={service.title}
                   description={service.description}
+                  bottomBadge={
+                    <ExploreBadge size='sm' variant='translucent' hover='gold' showArrow={true}>
+                      Explore
+                    </ExploreBadge>
+                  }
                   className='h-full transition-transform duration-300 hover:scale-[1.02]'
                 />
               </motion.div>

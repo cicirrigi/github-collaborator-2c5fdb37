@@ -9,6 +9,15 @@
 export { Background } from './Background';
 export type { BackgroundProps } from './Background';
 
+// ExploreBadge system
+export { ExploreBadge } from './ExploreBadge';
+export type {
+  ExploreBadgeProps,
+  ExploreBadgeSize,
+  ExploreBadgeVariant,
+  ExploreBadgeHover,
+} from './ExploreBadge';
+
 // Core UI Primitives
 export type { BadgeProps } from './Badge';
 export { Badge } from './Badge';

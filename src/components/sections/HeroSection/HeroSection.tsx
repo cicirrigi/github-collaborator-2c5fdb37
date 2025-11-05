@@ -107,7 +107,7 @@ export function HeroSection({
               'max-w-7xl': config.layout.maxWidth === '7xl',
             })}
             variants={containerVariants}
-            initial={config.animation.enabled ? 'hidden' : 'visible'}
+            initial={false}
             animate='visible'
           >
             {/* Title */}
