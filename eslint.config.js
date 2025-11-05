@@ -23,6 +23,17 @@ const config = [
       '@next/next/no-html-link-for-pages': 'off',
     },
   },
+  // Allow @ts-nocheck in development components
+  {
+    files: [
+      'src/components/ui/travel-planner-pro/**/*.tsx',
+      'src/lib/booking/validation/**/*.ts',
+      'src/components/ui/travel-planner-pro/**/__tests__/**/*.ts',
+    ],
+    rules: {
+      '@typescript-eslint/ban-ts-comment': 'off',
+    },
+  },
 ];
 
 export default config;

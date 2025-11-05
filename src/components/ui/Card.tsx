@@ -7,10 +7,9 @@
 
 import type React from 'react';
 
-import { themeConfig } from '@/config/theme.config';
 import { cn } from '@/lib/utils/cn';
 
-type CardVariant = keyof typeof themeConfig.components.card.variants;
+type CardVariant = 'default' | 'elevated' | 'outline' | 'ghost';
 
 export interface CardProps {
   readonly variant?: CardVariant;
@@ -38,13 +37,22 @@ export function Card({
     xl: 'p-8',
   };
 
+  // Card variant styles
+  const cardVariants = {
+    default:
+      'bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm',
+    elevated: 'bg-white dark:bg-neutral-900 shadow-lg border-0',
+    outline: 'bg-transparent border-2 border-neutral-300 dark:border-neutral-600',
+    ghost: 'bg-transparent border-0 shadow-none',
+  };
+
   return (
     <div
       className={cn(
-        // Base styles from theme config
-        themeConfig.components.card.base,
-        // Variant styles from theme config
-        themeConfig.components.card.variants[variant],
+        // Base styles
+        'rounded-lg transition-colors',
+        // Variant styles
+        cardVariants[variant],
         // Padding
         paddingClasses[padding],
         // Hover effect

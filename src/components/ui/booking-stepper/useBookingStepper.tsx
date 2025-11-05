@@ -74,7 +74,7 @@ export const useBookingStepper = (
   // Validează că avem numărul corect de pași
   const validatedSteps = useMemo(() => {
     if (steps.length !== totalSteps) {
-      console.warn(`BookingStepper: Expected ${totalSteps} steps, got ${steps.length}`);
+      // console.warn(`BookingStepper: Expected ${totalSteps} steps, got ${steps.length}`);
     }
     return steps.slice(0, totalSteps);
   }, [steps, totalSteps]);

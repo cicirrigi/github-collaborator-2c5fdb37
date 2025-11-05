@@ -22,7 +22,7 @@ async function convertToWebP() {
     const files = fs.readdirSync(sourceDir);
     const pngFiles = files.filter(file => file.toLowerCase().endsWith('.png'));
 
-    console.log(`🚀 Converting ${pngFiles.length} PNG images to WebP...`);
+    // console.log(`🚀 Converting ${pngFiles.length} PNG images to WebP...`);
 
     for (let i = 0; i < pngFiles.length; i++) {
       const file = pngFiles[i];
@@ -30,7 +30,7 @@ async function convertToWebP() {
       const outputFileName = file.replace(/\.png$/i, '.webp');
       const outputPath = path.join(outputDir, outputFileName);
 
-      console.log(`📸 Converting ${i + 1}/${pngFiles.length}: ${file}`);
+      // console.log(`📸 Converting ${i + 1}/${pngFiles.length}: ${file}`);
 
       await sharp(inputPath)
         .webp({
@@ -43,15 +43,15 @@ async function convertToWebP() {
 
       const inputStats = fs.statSync(inputPath);
       const outputStats = fs.statSync(outputPath);
-      const savings = (((inputStats.size - outputStats.size) / inputStats.size) * 100).toFixed(1);
+      const _savings = (((inputStats.size - outputStats.size) / inputStats.size) * 100).toFixed(1);
 
-      console.log(`✅ ${file} → ${outputFileName} (${savings}% smaller)`);
+      // console.log(`✅ ${file} → ${outputFileName} (${savings}% smaller)`);
     }
 
-    console.log(`🎉 Successfully converted ${pngFiles.length} images to WebP format!`);
-    console.log(`📁 Output directory: ${outputDir}`);
-  } catch (error) {
-    console.error('❌ Error converting images:', error.message);
+    // console.log(`🎉 Successfully converted ${pngFiles.length} images to WebP format!`);
+    // console.log(`📁 Output directory: ${outputDir}`);
+  } catch (_error) {
+    // console.error('❌ Error converting images:', error.message);
     process.exit(1);
   }
 }

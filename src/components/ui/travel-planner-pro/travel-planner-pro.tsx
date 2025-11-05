@@ -1,13 +1,8 @@
 'use client';
 
-import type { BookingTabType } from '@/components/ui/booking-tabs-pro/types';
-import { validateBookingFields } from '@/lib/booking';
-import { useBookingState } from '@/hooks/useBookingState';
 import { cn } from '@/lib/utils';
-import type { TripConfiguration } from '@/types/booking/step1.types';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { GooglePlace } from '../location-picker/types';
-import { ReturnJourneyCard } from './components/ReturnJourneyCard';
 import { ValidationFeedbackContainer } from '../validation-feedback';
 import { TRAVEL_PLANNER_PRO_THEME } from './constants';
 import { CalendarPro } from './calendar/calendar-pro';
@@ -18,7 +13,7 @@ import { LocationPicker } from '../location-picker';
 
 interface TravelPlannerProProps {
   className?: string;
-  onPlanChange?: (plan: any) => void;
+  onPlanChange?: (plan: { startDate: Date; endDate?: Date; passengers: number }) => void;
 }
 
 export const TravelPlannerPro = ({
@@ -35,7 +30,7 @@ export const TravelPlannerPro = ({
   const [stopsCount, setStopsCount] = useState(0);
   const [additionalStops, setAdditionalStops] = useState<GooglePlace[]>([]);
   const [showValidationErrors, setShowValidationErrors] = useState(false);
-  const [validation, setValidation] = useState({ errors: [] });
+  const [validation, _setValidation] = useState({ errors: [] });
 
   // Handlers
   const handleNavigate = (direction: 'prev' | 'next') => {
@@ -69,9 +64,9 @@ export const TravelPlannerPro = ({
       {/* Validation Feedback */}
       {showValidationErrors && validation.errors.length > 0 && (
         <ValidationFeedbackContainer
-          errors={validation.errors.map((error: any) => error.message)}
+          errors={validation.errors.map((error: { message: string }) => error.message)}
           onDismissErrors={() => setShowValidationErrors(false)}
-          className="mb-6"
+          className='mb-6'
           showPriorityOnly={true}
         />
       )}

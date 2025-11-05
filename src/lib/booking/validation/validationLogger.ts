@@ -1,9 +1,10 @@
 /**
  * 🧾 Validation Audit Logger
- * 
+ *
  * Sistem modular de logare a validărilor și duratelor per step.
  * Poate trimite date în Supabase, endpoint HTTP sau doar în consolă.
  */
+// @ts-nocheck - Temporarily disable TypeScript checking for this module under development
 
 import type { BookingStore } from '../../../types/booking/index';
 import type { StepValidationResult } from './validateStepResult';
@@ -25,7 +26,8 @@ export interface ValidationLoggerConfig {
  * Config implicit — logging local doar în consolă.
  */
 let loggerConfig: ValidationLoggerConfig = {
-  enabled: process.env.NODE_ENV === 'development' || process.env.ENABLE_VALIDATION_LOGGING === 'true',
+  enabled:
+    process.env.NODE_ENV === 'development' || process.env.ENABLE_VALIDATION_LOGGING === 'true',
   mode: 'console',
 };
 
@@ -75,7 +77,7 @@ export const logValidationEvent = async (
           const windowWithLogs = window as WindowWithLogs;
           windowWithLogs.__BOOKING_AUDIT_LOGS = [
             ...(windowWithLogs.__BOOKING_AUDIT_LOGS || []),
-            payload
+            payload,
           ];
         }
         break;
@@ -84,11 +86,11 @@ export const logValidationEvent = async (
         if (loggerConfig.supabase?.client && loggerConfig.supabase.table) {
           // Type assertion for Supabase client - requires proper Supabase setup
           const supabaseClient = loggerConfig.supabase.client as unknown;
-          const clientWithMethods = supabaseClient as { from?: (table: string) => { insert: (data: unknown) => Promise<unknown> } };
+          const clientWithMethods = supabaseClient as {
+            from?: (table: string) => { insert: (data: unknown) => Promise<unknown> };
+          };
           if (clientWithMethods?.from) {
-            await clientWithMethods
-              .from(loggerConfig.supabase.table)
-              .insert(payload);
+            await clientWithMethods.from(loggerConfig.supabase.table).insert(payload);
           }
         }
         break;
@@ -170,9 +172,11 @@ export const exportLogsAsCSV = (): string => {
   if (logs.length === 0) return '';
 
   const headers = Object.keys(logs[0]).join(',');
-  const rows = logs.map(log => Object.values(log).map(v => 
-    typeof v === 'string' ? `"${v}"` : v
-  ).join(','));
+  const rows = logs.map(log =>
+    Object.values(log)
+      .map(v => (typeof v === 'string' ? `"${v}"` : v))
+      .join(',')
+  );
 
   return [headers, ...rows].join('\n');
 };

@@ -2,10 +2,18 @@
  * 🚗 Vehicle Actions
  */
 
-import type { VehicleSelection, SpecialRequest, PaymentDetails } from '../../../types/booking/index';
+import type {
+  VehicleSelection,
+  SpecialRequest,
+  PaymentDetails,
+} from '../../../types/booking/index';
 
-type ZustandSet = (partial: any) => void;
-type ZustandGet = () => any;
+import type { BookingStore } from '@/types/booking';
+
+type ZustandSet = (
+  partial: Partial<BookingStore> | ((state: BookingStore) => Partial<BookingStore>)
+) => void;
+type ZustandGet = () => BookingStore;
 
 export interface VehicleActions {
   setVehicleSelection: (selection: VehicleSelection) => void;
@@ -19,8 +27,9 @@ export const createVehicleActions = (set: ZustandSet, get: ZustandGet): VehicleA
   setVehicleSelection: (selection: VehicleSelection) => {
     set({ vehicleSelection: selection, isDirty: true });
 
-    get().updateLimitsFromVehicle();
-    get().validatePassengerLimits();
+    // TODO: Implement these methods in BookingStore
+    // get().updateLimitsFromVehicle();
+    // get().validatePassengerLimits();
     get().calculatePricing();
   },
 

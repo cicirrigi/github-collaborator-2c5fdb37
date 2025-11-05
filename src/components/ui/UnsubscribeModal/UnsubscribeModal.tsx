@@ -16,7 +16,7 @@ import type { UnsubscribeModalProps, UnsubscribeState } from './UnsubscribeModal
 
 /**
  * UnsubscribeModal - Premium unsubscribe modal
- * 
+ *
  * @example
  * <UnsubscribeModal
  *   isOpen={showModal}
@@ -28,8 +28,8 @@ export function UnsubscribeModal({
   isOpen,
   onClose,
   onConfirm,
-  title = "Unsubscribe from Newsletter",
-  description = "We're sorry to see you go. Please confirm your email address to unsubscribe from our newsletter.",
+  title = 'Unsubscribe from Newsletter',
+  description = 'We&rsquo;re sorry to see you go. Please confirm your email address to unsubscribe from our newsletter.',
   showEmailInput = true,
   isLoading: externalLoading = false,
   isSuccess: externalSuccess = false,
@@ -37,11 +37,11 @@ export function UnsubscribeModal({
   className,
 }: UnsubscribeModalProps) {
   const tokens = unsubscribeModalTokens;
-  
+
   const [email, setEmail] = useState('');
   const [internalState, setInternalState] = useState<UnsubscribeState>('idle');
   const [internalError, setInternalError] = useState('');
-  
+
   // Use external state if provided, otherwise use internal
   const isLoading = externalLoading || internalState === 'loading';
   const isSuccess = externalSuccess || internalState === 'success';
@@ -61,7 +61,7 @@ export function UnsubscribeModal({
       setInternalError('Please enter your email address.');
       return;
     }
-    
+
     // Email validation if input is shown
     if (showEmailInput) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,10 +70,10 @@ export function UnsubscribeModal({
         return;
       }
     }
-    
+
     setInternalError('');
     setInternalState('loading');
-    
+
     try {
       if (onConfirm) {
         await onConfirm(showEmailInput ? email : undefined);
@@ -97,19 +97,19 @@ export function UnsubscribeModal({
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={handleClose}>
+      <Dialog as='div' className='relative z-50' onClose={handleClose}>
         {/* Backdrop */}
         <Transition.Child
           as={Fragment}
           enter={`ease-out duration-150`}
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
+          enterFrom='opacity-0'
+          enterTo='opacity-100'
           leave={`ease-in duration-150`}
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+          leaveFrom='opacity-100'
+          leaveTo='opacity-0'
         >
-          <div 
-            className="fixed inset-0"
+          <div
+            className='fixed inset-0'
             style={{
               backgroundColor: tokens.backdrop.backgroundColor,
               backdropFilter: tokens.backdrop.backdropBlur,
@@ -118,16 +118,16 @@ export function UnsubscribeModal({
         </Transition.Child>
 
         {/* Modal container */}
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
+        <div className='fixed inset-0 overflow-y-auto'>
+          <div className='flex min-h-full items-center justify-center p-4 text-center'>
             <Transition.Child
               as={Fragment}
               enter={`ease-out duration-200`}
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
+              enterFrom='opacity-0 scale-95'
+              enterTo='opacity-100 scale-100'
               leave={`ease-in duration-200`}
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
+              leaveFrom='opacity-100 scale-100'
+              leaveTo='opacity-0 scale-95'
             >
               <Dialog.Panel
                 className={cn(
@@ -145,10 +145,10 @@ export function UnsubscribeModal({
                 }}
               >
                 {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex-shrink-0">
-                      <Mail className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                <div className='flex items-start justify-between mb-4'>
+                  <div className='flex items-center gap-3'>
+                    <div className='flex-shrink-0'>
+                      <Mail className='w-5 h-5' style={{ color: 'var(--text-secondary)' }} />
                     </div>
                     <Dialog.Title
                       style={{
@@ -162,13 +162,13 @@ export function UnsubscribeModal({
                       {title}
                     </Dialog.Title>
                   </div>
-                  
+
                   <button
                     onClick={handleClose}
                     disabled={isLoading}
-                    className="flex-shrink-0 p-1 rounded-md transition-colors hover:bg-neutral-800/50"
+                    className='flex-shrink-0 p-1 rounded-md transition-colors hover:bg-neutral-800/50'
                   >
-                    <X className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+                    <X className='w-4 h-4' style={{ color: 'var(--text-secondary)' }} />
                   </button>
                 </div>
 
@@ -177,14 +177,19 @@ export function UnsubscribeModal({
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-4"
+                    className='text-center py-4'
                   >
-                    <div className="mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-4"
-                         style={{ backgroundColor: tokens.states.success.backgroundColor }}>
-                      <Check className="w-6 h-6" style={{ color: tokens.states.success.iconColor }} />
+                    <div
+                      className='mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-4'
+                      style={{ backgroundColor: tokens.states.success.backgroundColor }}
+                    >
+                      <Check
+                        className='w-6 h-6'
+                        style={{ color: tokens.states.success.iconColor }}
+                      />
                     </div>
                     <p style={{ color: tokens.states.success.textColor, fontSize: '0.875rem' }}>
-                      You've been successfully unsubscribed. We're sorry to see you go!
+                      You&rsquo;ve been successfully unsubscribed. We&rsquo;re sorry to see you go!
                     </p>
                   </motion.div>
                 )}
@@ -194,14 +199,23 @@ export function UnsubscribeModal({
                   <motion.div
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="flex items-center gap-2 p-3 rounded-lg mb-4"
-                    style={{ 
+                    className='flex items-center gap-2 p-3 rounded-lg mb-4'
+                    style={{
                       backgroundColor: tokens.states.error.backgroundColor,
                       border: `1px solid ${tokens.states.error.iconColor}`,
                     }}
                   >
-                    <AlertCircle className="w-4 h-4" style={{ color: tokens.states.error.iconColor }} />
-                    <p style={{ color: tokens.states.error.textColor, fontSize: '0.875rem', margin: 0 }}>
+                    <AlertCircle
+                      className='w-4 h-4'
+                      style={{ color: tokens.states.error.iconColor }}
+                    />
+                    <p
+                      style={{
+                        color: tokens.states.error.textColor,
+                        fontSize: '0.875rem',
+                        margin: 0,
+                      }}
+                    >
                       {error}
                     </p>
                   </motion.div>
@@ -225,25 +239,28 @@ export function UnsubscribeModal({
                     {showEmailInput && (
                       <div style={{ marginBottom: tokens.form.input.marginBottom }}>
                         <input
-                          type="email"
-                          placeholder="Enter your email address"
+                          type='email'
+                          placeholder='Enter your email address'
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={e => setEmail(e.target.value)}
                           disabled={isLoading}
-                          className="w-full border focus:outline-none focus:ring-2 transition-all"
+                          className='w-full border focus:outline-none focus:ring-2 transition-all'
                           style={{
                             padding: tokens.form.input.padding,
                             backgroundColor: tokens.form.input.backgroundColor,
-                            borderColor: error && !isSuccess ? tokens.states.error.iconColor : tokens.form.input.borderColor,
+                            borderColor:
+                              error && !isSuccess
+                                ? tokens.states.error.iconColor
+                                : tokens.form.input.borderColor,
                             borderRadius: tokens.form.input.borderRadius,
                             fontSize: tokens.form.input.fontSize,
                             color: tokens.form.input.color,
                           }}
-                          onFocus={(e) => {
+                          onFocus={e => {
                             e.target.style.borderColor = tokens.form.input.focusBorderColor;
                             e.target.style.boxShadow = `0 0 0 2px ${tokens.form.input.focusRingColor}`;
                           }}
-                          onBlur={(e) => {
+                          onBlur={e => {
                             e.target.style.borderColor = tokens.form.input.borderColor;
                             e.target.style.boxShadow = 'none';
                           }}
@@ -252,11 +269,11 @@ export function UnsubscribeModal({
                     )}
 
                     {/* Action Buttons */}
-                    <div className="flex justify-end" style={{ gap: tokens.buttons.spacing }}>
+                    <div className='flex justify-end' style={{ gap: tokens.buttons.spacing }}>
                       <button
                         onClick={handleClose}
                         disabled={isLoading}
-                        className="border transition-colors"
+                        className='border transition-colors'
                         style={{
                           padding: tokens.buttons.cancel.padding,
                           backgroundColor: tokens.buttons.cancel.backgroundColor,
@@ -264,19 +281,21 @@ export function UnsubscribeModal({
                           color: tokens.buttons.cancel.color,
                           borderRadius: tokens.buttons.cancel.borderRadius,
                         }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = tokens.buttons.cancel.hoverBackgroundColor;
+                        onMouseEnter={e => {
+                          (e.target as HTMLElement).style.backgroundColor =
+                            tokens.buttons.cancel.hoverBackgroundColor;
                         }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = tokens.buttons.cancel.backgroundColor;
+                        onMouseLeave={e => {
+                          (e.target as HTMLElement).style.backgroundColor =
+                            tokens.buttons.cancel.backgroundColor;
                         }}
                       >
                         Cancel
                       </button>
-                      
+
                       <PremiumButton
-                        variant="destructive"
-                        size="sm"
+                        variant='secondary'
+                        size='sm'
                         loading={isLoading}
                         disabled={isLoading}
                         onClick={handleConfirm}

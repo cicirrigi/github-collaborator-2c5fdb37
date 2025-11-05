@@ -83,4 +83,4 @@ export const FleetCardRefactored = memo(function FleetCardRefactored({
   );
 });
 
-export { FleetCardRefactored };
+// Export handled by const declaration above

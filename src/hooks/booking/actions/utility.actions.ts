@@ -2,14 +2,16 @@
  * ⚙️ Utility Actions
  */
 
-import type { BookingSummary, BookingStore } from '../../../types/booking/index';
+import type { BookingSummary, BookingStore, VehicleSelection } from '../../../types/booking/index';
 import {
   calculateBookingPricing,
   validateStepBoolean,
   getInitialTripConfiguration,
 } from '../../../lib/booking/index';
 
-type ZustandSet = (partial: Partial<BookingStore> | ((state: BookingStore) => Partial<BookingStore>)) => void;
+type ZustandSet = (
+  partial: Partial<BookingStore> | ((state: BookingStore) => Partial<BookingStore>)
+) => void;
 type ZustandGet = () => BookingStore;
 
 export interface UtilityActions {
@@ -61,14 +63,14 @@ export const createUtilityActions = (set: ZustandSet, get: ZustandGet): UtilityA
       currentStep: 1,
       completedSteps: [],
       tripConfiguration: getInitialTripConfiguration(),
-      vehicleSelection: undefined,
+      vehicleSelection: null,
       services: [],
       specialRequests: [],
-      paymentDetails: undefined,
-      pricing: undefined,
+      paymentDetails: null,
+      pricing: null,
       isValid: false,
       isDirty: false,
-      lastSaved: undefined,
+      lastSaved: null,
       stepErrors: {},
       stepDurations: {},
       isFleetModalOpen: false,
@@ -93,7 +95,7 @@ export const createUtilityActions = (set: ZustandSet, get: ZustandGet): UtilityA
 
     return {
       tripConfiguration: state.tripConfiguration,
-      vehicleSelection: state.vehicleSelection || undefined,
+      vehicleSelection: state.vehicleSelection as VehicleSelection, // Type assertion for now
       services: state.services.filter(s => s.isSelected),
       specialRequests: state.specialRequests,
       pricing: state.pricing!,
@@ -126,7 +128,7 @@ export const createUtilityActions = (set: ZustandSet, get: ZustandGet): UtilityA
         break;
       case 4:
         set({
-          paymentDetails: undefined,
+          paymentDetails: null,
           isDirty: true,
         });
         break;

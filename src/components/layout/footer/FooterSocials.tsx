@@ -1,6 +1,6 @@
 'use client';
 
-import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
 import type React from 'react';
 
 import { cn } from '@/lib/utils/cn';
@@ -13,6 +13,9 @@ const iconMap = {
   linkedin: Linkedin,
   twitter: Twitter,
   facebook: Facebook,
+  youtube: Youtube,
+  tiktok: Instagram, // Using Instagram icon as placeholder for TikTok
+  x: Twitter, // Using Twitter icon for X (formerly Twitter)
 } as const;
 
 export interface FooterSocialsProps {

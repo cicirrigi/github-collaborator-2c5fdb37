@@ -65,7 +65,7 @@ export const CalendarPro = ({
     pickupDate && returnDate && date > pickupDate && date < returnDate;
 
   const getDayStyle = (date: Date) => {
-    const classes = [TRAVEL_PLANNER_PRO_THEME.calendar.dayBase];
+    const classes: string[] = [TRAVEL_PLANNER_PRO_THEME.calendar.dayBase];
 
     if (isPast(date)) {
       classes.push(TRAVEL_PLANNER_PRO_THEME.calendar.dayDisabled);

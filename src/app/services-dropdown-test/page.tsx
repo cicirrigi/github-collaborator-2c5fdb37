@@ -54,7 +54,7 @@ export default function ServicesDropdownTestPage() {
 
           <div className='max-w-md mx-auto p-4 rounded-lg border border-[var(--border-subtle)] bg-[var(--background)]'>
             <div className='grid grid-cols-2 gap-0'>
-              {servicesMenu?.children?.map((service, index) => (
+              {servicesMenu?.children?.map((service, _index) => (
                 <div
                   key={service.href}
                   className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[var(--brand-primary)]/10 transition-colors'

@@ -36,6 +36,7 @@ const FleetCard = memo(function FleetCard({
     SUV: 'bg-green-500/90',
     Van: 'bg-purple-500/90',
     Sports: 'bg-red-500/90',
+    MPV: 'bg-indigo-500/90', // Multi-Purpose Vehicle
   } as const;
 
   return (

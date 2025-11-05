@@ -19,7 +19,7 @@ export interface ValidationFeedbackProps {
 
 /**
  * 🎯 ValidationFeedbackContainer - Smart validation display
- * 
+ *
  * Features:
  * - Integrare cu validateStepResult din @/lib/booking
  * - Prioritate vizuală: errors > warnings > success
@@ -39,10 +39,10 @@ export const ValidationFeedbackContainer = ({
   autoDismissAfter,
   showPriorityOnly = false,
 }: ValidationFeedbackProps) => {
-  const [visible, setVisible] = useState({ 
-    errors: true, 
-    warnings: true, 
-    success: true 
+  const [visible, setVisible] = useState({
+    errors: true,
+    warnings: true,
+    success: true,
   });
 
   // Auto-dismiss logic
@@ -53,6 +53,7 @@ export const ValidationFeedbackContainer = ({
       }, autoDismissAfter);
       return () => clearTimeout(timer);
     }
+    return undefined; // Explicit return for all code paths
   }, [autoDismissAfter]);
 
   // Determine what to show based on priority
@@ -76,7 +77,7 @@ export const ValidationFeedbackContainer = ({
       {/* Errors - Highest Priority */}
       {showErrors && (
         <ValidationAlert
-          type="error"
+          type='error'
           messages={errors}
           onDismiss={() => {
             setVisible(prev => ({ ...prev, errors: false }));
@@ -89,7 +90,7 @@ export const ValidationFeedbackContainer = ({
       {/* Warnings - Medium Priority */}
       {showWarnings && (
         <ValidationAlert
-          type="warning"
+          type='warning'
           messages={warnings}
           onDismiss={() => {
             setVisible(prev => ({ ...prev, warnings: false }));
@@ -102,7 +103,7 @@ export const ValidationFeedbackContainer = ({
       {/* Success - Lowest Priority */}
       {showSuccess && (
         <ValidationAlert
-          type="success"
+          type='success'
           messages={success}
           onDismiss={() => {
             setVisible(prev => ({ ...prev, success: false }));

@@ -27,7 +27,7 @@ export default function SocialIconsTestPage() {
           </h2>
 
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {footerConfig.socials.map((social, index) => (
+            {footerConfig.socials.map((social, _index) => (
               <div
                 key={social.name}
                 className='flex items-center gap-4 p-4 rounded-lg border border-[var(--border-subtle)] hover:border-[var(--brand-primary-30)] transition-colors'

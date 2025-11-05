@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   typedRoutes: false,
   images: {
     formats: ['image/webp', 'image/avif'],
+    qualities: [50, 75, 90, 95],
     remotePatterns: [
       {
         protocol: 'https',
