@@ -64,6 +64,14 @@ export const sitemapTokens = {
     marginY: '2rem',
   },
 
+  // Text effects - no hardcoded values
+  effects: {
+    goldShadow: '0 0 25px rgba(203, 178, 106, 0.7), 0 0 35px rgba(203, 178, 106, 0.4)',
+    whiteShadow: '0 0 18px rgba(220, 220, 255, 0.5), 0 0 30px rgba(180, 180, 255, 0.3)',
+    goldBrightness: 'brightness(1.2)',
+    whiteBrightness: 'brightness(1.18)',
+  },
+
   // Section card - theme compatible
   sectionCard: {
     background: 'var(--background-elevated)',
@@ -72,7 +80,7 @@ export const sitemapTokens = {
     borderRadius: '1rem',
     padding: '1.5rem',
     hoverTransform: 'translateY(-2px)',
-    hoverShadow: '0 8px 32px rgba(203, 178, 106, 0.1)',
+    hoverShadow: '0 8px 32px var(--brand-primary-alpha-10, rgba(203, 178, 106, 0.1)),',
     transition: 'all 0.3s ease',
   },
 
@@ -130,7 +138,7 @@ export const sitemapTokens = {
   // Help section - theme compatible
   helpSection: {
     background:
-      'linear-gradient(to right, var(--brand-primary-subtle, rgba(203, 178, 106, 0.1)), var(--brand-accent-subtle, rgba(229, 212, 133, 0.1)))',
+      'linear-gradient(to right, var(--brand-primary-subtle), var(--brand-accent-subtle)),',
     borderColor: 'var(--brand-primary-20)',
     borderRadius: '1rem',
     padding: '2rem',
@@ -156,8 +164,8 @@ export const sitemapTokens = {
   // CTA buttons
   ctaButton: {
     primary: {
-      background: 'linear-gradient(to right, var(--brand-primary), #E5D485)',
-      color: '#000000',
+      background: 'linear-gradient(to right, var(--brand-primary), var(--brand-accent))',
+      color: 'var(--text-contrast)',
       padding: '0.75rem 2rem',
       borderRadius: '0.5rem',
       fontWeight: '500',

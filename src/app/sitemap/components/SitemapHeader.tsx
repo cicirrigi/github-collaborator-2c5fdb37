@@ -81,8 +81,8 @@ export function SitemapHeader({ title: _title, subtitle, backUrl = '/' }: Sitema
             <span
               style={{
                 color: 'var(--brand-primary)',
-                textShadow: '0 0 25px rgba(203, 178, 106, 0.7), 0 0 35px rgba(203, 178, 106, 0.4)',
-                filter: 'brightness(1.2)',
+                textShadow: sitemapTokens.effects.goldShadow,
+                filter: sitemapTokens.effects.goldBrightness,
               }}
             >
               Site
@@ -91,8 +91,8 @@ export function SitemapHeader({ title: _title, subtitle, backUrl = '/' }: Sitema
             <span
               style={{
                 color: 'var(--text-primary)',
-                textShadow: '0 0 18px rgba(220, 220, 255, 0.5), 0 0 30px rgba(180, 180, 255, 0.3)',
-                filter: 'brightness(1.18)',
+                textShadow: sitemapTokens.effects.whiteShadow,
+                filter: sitemapTokens.effects.whiteBrightness,
               }}
             >
               Map

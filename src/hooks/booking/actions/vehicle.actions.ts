@@ -34,8 +34,8 @@ export const createVehicleActions = (set: ZustandSet, get: ZustandGet): VehicleA
   },
 
   toggleService: (serviceId: string) => {
-    set((state: any) => ({
-      services: state.services.map((service: any) =>
+    set((state: BookingStore) => ({
+      services: state.services.map(service =>
         service.id === serviceId ? { ...service, isSelected: !service.isSelected } : service
       ),
       isDirty: true,
@@ -50,15 +50,15 @@ export const createVehicleActions = (set: ZustandSet, get: ZustandGet): VehicleA
       category,
     };
 
-    set((state: any) => ({
+    set((state: BookingStore) => ({
       specialRequests: [...state.specialRequests, request],
       isDirty: true,
     }));
   },
 
   removeSpecialRequest: (id: string) => {
-    set((state: any) => ({
-      specialRequests: state.specialRequests.filter((req: any) => req.id !== id),
+    set((state: BookingStore) => ({
+      specialRequests: state.specialRequests.filter(req => req.id !== id),
       isDirty: true,
     }));
   },

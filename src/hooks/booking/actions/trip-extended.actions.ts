@@ -6,6 +6,7 @@
 import { BOOKING_CONSTANTS } from '../../../types/booking/index';
 import type { BookingStore, TripConfiguration } from '../../../types/booking/index';
 import type { GooglePlace } from '../../../components/ui/location-picker/types';
+import type { FleetSelection } from '../../../types/booking';
 
 // ================== 🔧 SHARED HELPERS ==================
 type ZustandSet = (
@@ -168,7 +169,7 @@ export interface TripExtendedActions {
   setPickupLocation: (location: GooglePlace | null) => void;
   setDropoffLocation: (location: GooglePlace | null) => void;
   setAdditionalStops: (stops: GooglePlace[]) => void;
-  setFleetSelection: (selection: any) => void;
+  setFleetSelection: (selection: FleetSelection[]) => void;
   setDateTime: (date: Date | null, time: string) => void;
 }
 
@@ -200,7 +201,7 @@ export const createTripExtendedActions = (
       isDirty: true,
     }));
   },
-  setFleetSelection: (selection: any) => {
+  setFleetSelection: (selection: FleetSelection[]) => {
     set(state => ({
       tripConfiguration: { ...state.tripConfiguration, fleetSelection: selection },
       isDirty: true,
