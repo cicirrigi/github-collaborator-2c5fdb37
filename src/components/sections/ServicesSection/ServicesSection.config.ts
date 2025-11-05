@@ -2,7 +2,7 @@
  * 🚗 ServicesSection Configuration - Benefits & Features
  */
 
-import { CarFront, Clock, CreditCard, Search, UserCheck } from 'lucide-react';
+import { CalendarCheck, Clock2, ShieldCheck, UserCheck, Star } from 'lucide-react';
 
 export const servicesConfig = {
   // Section content
@@ -15,7 +15,7 @@ export const servicesConfig = {
       id: 'book-instantly',
       title: 'Book Instantly',
       description: 'Effortless bookings. Instant confirmation. Pure convenience.',
-      icon: Search,
+      icon: CalendarCheck,
       href: '/book-instantly',
       color: 'blue',
     },
@@ -31,7 +31,7 @@ export const servicesConfig = {
       id: 'finest-fleet',
       title: 'The Finest Fleet',
       description: 'Hand-picked vehicles. Crafted for prestige and comfort.',
-      icon: CarFront,
+      icon: Star,
       href: '/fleet-details',
       color: 'purple',
     },
@@ -39,7 +39,7 @@ export const servicesConfig = {
       id: 'secure-payments',
       title: 'Secure Payments',
       description: 'Transparent pricing. Trusted transactions, every time.',
-      icon: CreditCard,
+      icon: ShieldCheck,
       href: '/payments',
       color: 'yellow',
     },
@@ -47,7 +47,7 @@ export const servicesConfig = {
       id: '24-7-available',
       title: 'Available 24/7',
       description: 'At your service — any hour, any destination.',
-      icon: Clock,
+      icon: Clock2,
       href: '/support',
       color: 'red',
     },
