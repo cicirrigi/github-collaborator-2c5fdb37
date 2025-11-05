@@ -52,12 +52,33 @@
 
   .light {
     color-scheme: light;
+
+    /* Text */
     --text-primary: #1a1a1a;
     --text-secondary: #404040;
     --text-muted: #737373;
+
+    /* Backgrounds */
     --background-light: #ffffff;
     --background-dark: #f3f3f3;
     --background-elevated: #ffffff;
+    --background-subtle: #f8f8f8;
+
+    /* Borders */
+    --border-default: rgba(0, 0, 0, 0.1);
+    --border-subtle: rgba(0, 0, 0, 0.05);
+
+    /* Brand variants - same gold but with light transparency */
+    --brand-primary-20: rgba(203, 178, 106, 0.2);
+    --brand-primary-30: rgba(203, 178, 106, 0.3);
+
+    /* States */
+    --success: #059669;
+    --success-subtle: rgba(5, 150, 105, 0.1);
+    --destructive: #dc2626;
+    --destructive-foreground: #ffffff;
+    --destructive-hover: #b91c1c;
+    --destructive-subtle: rgba(220, 38, 38, 0.1);
   }
 
   /* Shadcn/ui compatibility */
@@ -105,6 +126,11 @@ body {
     color var(--duration-normal) ease,
     background-color var(--duration-normal) ease,
     border-color var(--duration-normal) ease;
+}
+
+input::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.7;
 }
 
 /* --- ⚡ 3. EFFECTS & ANIMATIONS --- */

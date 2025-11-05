@@ -41,16 +41,16 @@ async function convertToWebP() {
         })
         .toFile(outputPath);
 
-      const inputStats = fs.statSync(inputPath);
-      const outputStats = fs.statSync(outputPath);
-      const _savings = (((inputStats.size - outputStats.size) / inputStats.size) * 100).toFixed(1);
+      // const inputStats = fs.statSync(inputPath);
+      // const outputStats = fs.statSync(outputPath);
+      // const savings = (((inputStats.size - outputStats.size) / inputStats.size) * 100).toFixed(1);
 
       // console.log(`✅ ${file} → ${outputFileName} (${savings}% smaller)`);
     }
 
     // console.log(`🎉 Successfully converted ${pngFiles.length} images to WebP format!`);
     // console.log(`📁 Output directory: ${outputDir}`);
-  } catch (_error) {
+  } catch {
     // console.error('❌ Error converting images:', error.message);
     process.exit(1);
   }
