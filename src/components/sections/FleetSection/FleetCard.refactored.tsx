@@ -23,7 +23,7 @@ import type { FleetCardProps } from './FleetSection.types';
  * 🎨 Refactored Fleet Card - Motion + Tokens + Modular
  * Under 100 lines with clean architecture
  */
-const FleetCardRefactored = memo(function FleetCardRefactored({
+export const FleetCardRefactored = memo(function FleetCardRefactored({
   vehicle,
   onSelect,
   className,

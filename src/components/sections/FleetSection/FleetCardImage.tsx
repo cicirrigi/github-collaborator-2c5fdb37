@@ -28,6 +28,7 @@ export const FleetCardImage = memo(function FleetCardImage({
   vehicle,
   className,
 }: FleetCardImageProps): React.JSX.Element {
+  // const [imageLoaded, setImageLoaded] = useState(false); // Dezactivat pentru test
   return (
     <div
       className={`relative overflow-hidden flex-shrink-0 ${className || ''}`}
@@ -51,13 +52,11 @@ export const FleetCardImage = memo(function FleetCardImage({
           fill
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           priority={true}
-          quality={85}
+          quality={90}
           loading='eager'
+          placeholder='blur'
+          blurDataURL='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAAAAAAB/8QAFxEAAwEAAAAAAAAAAAAAAAAAAAECEf/aAAwDAQACEQMRAD8A0xjlmFGfGEwmhpelEigjkBgHmxgZmGfHVTlmFGe2TlmFGe'
           className='object-cover'
-          style={{
-            opacity: 1,
-            transition: 'none',
-          }}
         />
       </motion.div>
 
