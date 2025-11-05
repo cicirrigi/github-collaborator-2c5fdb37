@@ -9,18 +9,14 @@ if (edgeDSN) {
     // 🎯 Edge Runtime Sentry DSN (uses backend project)
     dsn: edgeDSN,
 
-    // 📊 Common configuration with edge-specific overrides
-    ...sentryCommonConfig,
-
-    // 📊 Performance Monitoring (lower sampling for edge)
+    // 📊 Basic configuration for edge runtime (minimal config)
+    environment: sentryCommonConfig.environment,
+    release: sentryCommonConfig.release,
     tracesSampleRate: 0.1, // Lower sampling for edge runtime
-
-    // 🔧 Edge-specific configuration
     debug: false, // Always false for edge runtime
 
     // 🎨 Edge-specific tags
     initialScope: {
-      ...sentryCommonConfig.initialScope,
       tags: {
         ...sentryCommonConfig.initialScope.tags,
         component: 'edge',

@@ -18,8 +18,10 @@ const logger = {
   // eslint-disable-next-line no-console
   error: (message: string, data?: Record<string, unknown>) => console.error(message, data),
   // eslint-disable-next-line no-console
-  fatal: (message: string, data?: Record<string, unknown>) =>
-    console.error('FATAL:', message, data),
+  fatal: (message: string, data?: Record<string, unknown>) => {
+    // eslint-disable-next-line no-console
+    console.error('FATAL:', message, data);
+  },
   fmt: (template: TemplateStringsArray, ...values: unknown[]) =>
     template.reduce((acc, part, i) => acc + part + (values[i] || ''), ''),
 };

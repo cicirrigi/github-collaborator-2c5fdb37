@@ -3,6 +3,8 @@
  * Shared settings between client, server, and edge runtime
  */
 
+import * as Sentry from '@sentry/nextjs';
+
 export const sentryCommonConfig = {
   // 🎯 Environment & Release
   environment: process.env.NODE_ENV || 'development',
@@ -24,8 +26,7 @@ export const sentryCommonConfig = {
   },
 
   // 🛡️ Privacy & Security Filters
-  beforeSend(event: any, _hint?: any) {
-    // eslint-disable-line @typescript-eslint/no-explicit-any
+  beforeSend(event: Sentry.Event, _hint?: Sentry.EventHint) {
     // Filter out potentially sensitive errors in development
     if (process.env.NODE_ENV === 'development') {
       // eslint-disable-next-line no-console
@@ -53,8 +54,7 @@ export const sentryCommonConfig = {
   },
 
   // 🔒 Sensitive data filtering for breadcrumbs
-  beforeBreadcrumb(breadcrumb: any) {
-    // eslint-disable-line @typescript-eslint/no-explicit-any
+  beforeBreadcrumb(breadcrumb: Sentry.Breadcrumb) {
     // Filter out sensitive data from breadcrumbs
     if (breadcrumb.category === 'http' && breadcrumb.data?.url) {
       // Remove query parameters that might contain sensitive data
