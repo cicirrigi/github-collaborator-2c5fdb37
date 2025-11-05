@@ -71,7 +71,14 @@ export type { Stop, TimeSlot, TravelPlan, TravelPlannerProps } from './travel-pl
 export * from './travel-planner';
 export * from './travel-planner-pro';
 
+// Complex UI Components
+export * from './LuxuryCard';
+export * from './ExploreBadge';
+export * from './BiColorText';
+export * from './NewsletterCard';
+export * from './UnsubscribeModal';
+export { ThemeToggle } from './theme-toggle';
+
 // Theme Controls
 export * from './PremiumButton';
 export * from './TestButton';
-export { ThemeToggle } from './theme-toggle';
