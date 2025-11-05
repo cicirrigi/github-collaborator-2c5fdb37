@@ -50,6 +50,17 @@ export function FooterBottom({ legal, className }: FooterBottomProps): React.JSX
             {legal.company} • {legal.registration}
           </p>
         </div>
+
+        {/* Sitemap link - centered below */}
+        <div className='flex gap-6 text-sm'>
+          <a
+            href='/sitemap'
+            className='transition-colors duration-200 hover:text-[var(--brand-primary)]'
+            style={{ color: 'var(--text-muted)' }}
+          >
+            Sitemap
+          </a>
+        </div>
       </div>
     </div>
   );

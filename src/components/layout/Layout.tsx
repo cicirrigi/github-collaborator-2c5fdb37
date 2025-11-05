@@ -40,6 +40,8 @@ export interface LayoutProps {
   readonly hideNavbar?: boolean;
   /** Hide footer */
   readonly hideFooter?: boolean;
+  /** Hide newsletter section */
+  readonly hideNewsletter?: boolean;
   /** Custom main content styling */
   readonly className?: string;
   /** Main content container styling */
@@ -58,6 +60,7 @@ export default function Layout({
   children,
   hideNavbar = false,
   hideFooter = false,
+  hideNewsletter = false,
   className,
   containerClassName,
   fullHeight = false,
@@ -103,7 +106,7 @@ export default function Layout({
         </main>
 
         {/* Newsletter Section - Luxury VIP area above footer */}
-        {!hideFooter && <NewsletterSection />}
+        {!hideFooter && !hideNewsletter && <NewsletterSection />}
 
         {/* Footer */}
         {!hideFooter && <Footer />}
