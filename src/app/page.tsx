@@ -1,4 +1,9 @@
-import { CTASection, HeroSection, ServicesSection } from '@/components/sections';
+import {
+  CTASection,
+  HeroSection,
+  ServicesSection,
+  TestimonialsSection,
+} from '@/components/sections';
 import { FleetSection3D } from '@/components/sections/FleetSection/FleetSection3D';
 import { getPageMetadata } from '@/lib/seo';
 
@@ -26,6 +31,9 @@ export default function HomePage() {
 
       {/* Premium Fleet Showcase - 3D Flip Cards */}
       <FleetSection3D maxVehicles={6} />
+
+      {/* Client Testimonials - Config driven */}
+      <TestimonialsSection />
 
       {/* CTA Section - Config driven */}
       <CTASection />

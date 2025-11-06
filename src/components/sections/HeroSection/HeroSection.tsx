@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type React from 'react';
 
-import { SectionOrchestrator } from '@/components/layout/SectionOrchestrator';
 import { designTokens } from '@/config/theme.config';
 import { cn } from '@/lib/utils/cn';
 
@@ -56,12 +55,13 @@ export function HeroSection({
   };
 
   return (
-    <div
+    <section
       className={cn(
-        'flex items-center',
+        'relative flex items-center w-full overflow-hidden',
         variant === 'full-screen' && 'min-h-screen',
         variant === 'minimal' && 'py-24',
-        variant === 'default' && 'h-[var(--hero-height)] min-h-[var(--hero-min-height)]'
+        variant === 'default' && 'h-[var(--hero-height)] min-h-[var(--hero-min-height)]',
+        className
       )}
       style={
         {
@@ -70,102 +70,100 @@ export function HeroSection({
         } as React.CSSProperties
       }
     >
-      <SectionOrchestrator spacing='xl' noContainer className={cn('w-full', className)}>
-        {/* Background Image */}
-        {config.background.image && (
-          <Image
-            src={config.background.image}
-            alt='Vantage Lane Hero Background'
-            fill
-            className={cn(
-              'object-cover',
-              // Theme-aware brightness (more readable)
-              'brightness-[0.7] dark:brightness-[0.5]'
-            )}
-            priority
-            sizes='100vw'
-          />
-        )}
-
-        {/* Content Container */}
-        <div
+      {/* Background Image */}
+      {config.background.image && (
+        <Image
+          src={config.background.image}
+          alt='Vantage Lane Hero Background'
+          fill
           className={cn(
-            'container mx-auto px-4 relative z-10',
-            config.layout.textAlign === 'center' && 'text-center',
-            config.layout.textAlign === 'left' && 'text-left',
-            config.layout.textAlign === 'right' && 'text-right'
+            'object-cover',
+            // Theme-aware brightness (more readable)
+            'brightness-[0.7] dark:brightness-[0.5]'
           )}
+          priority
+          sizes='100vw'
+        />
+      )}
+
+      {/* Content Container */}
+      <div
+        className={cn(
+          'container mx-auto px-4 relative z-10',
+          config.layout.textAlign === 'center' && 'text-center',
+          config.layout.textAlign === 'left' && 'text-left',
+          config.layout.textAlign === 'right' && 'text-right'
+        )}
+      >
+        <motion.div
+          className={cn('mx-auto space-y-8', {
+            'max-w-xl': config.layout.maxWidth === 'xl',
+            'max-w-2xl': config.layout.maxWidth === '2xl',
+            'max-w-3xl': config.layout.maxWidth === '3xl',
+            'max-w-4xl': config.layout.maxWidth === '4xl',
+            'max-w-5xl': config.layout.maxWidth === '5xl',
+            'max-w-6xl': config.layout.maxWidth === '6xl',
+            'max-w-7xl': config.layout.maxWidth === '7xl',
+          })}
+          variants={containerVariants}
+          initial={false}
+          animate='visible'
         >
-          <motion.div
-            className={cn('mx-auto space-y-8', {
-              'max-w-xl': config.layout.maxWidth === 'xl',
-              'max-w-2xl': config.layout.maxWidth === '2xl',
-              'max-w-3xl': config.layout.maxWidth === '3xl',
-              'max-w-4xl': config.layout.maxWidth === '4xl',
-              'max-w-5xl': config.layout.maxWidth === '5xl',
-              'max-w-6xl': config.layout.maxWidth === '6xl',
-              'max-w-7xl': config.layout.maxWidth === '7xl',
-            })}
-            variants={containerVariants}
-            initial={false}
-            animate='visible'
+          {/* Title */}
+          <motion.h1
+            variants={itemVariants}
+            className='text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl'
+            style={{
+              fontFamily: 'var(--font-display)',
+              lineHeight: '1.1',
+            }}
           >
-            {/* Title */}
-            <motion.h1
-              variants={itemVariants}
-              className='text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl'
-              style={{
-                fontFamily: 'var(--font-display)',
-                lineHeight: '1.1',
-              }}
-            >
-              {config.title}
-              {config.subtitle && (
-                <span
-                  className='block text-[var(--brand-primary)]'
-                  style={{ color: 'var(--brand-primary)' }}
-                >
-                  {config.subtitle}
-                </span>
-              )}
-            </motion.h1>
-
-            {/* Description */}
-            {config.description && (
-              <motion.p
-                variants={itemVariants}
-                className='mx-auto max-w-2xl text-lg leading-relaxed text-neutral-200 md:text-xl'
+            {config.title}
+            {config.subtitle && (
+              <span
+                className='block text-[var(--brand-primary)]'
+                style={{ color: 'var(--brand-primary)' }}
               >
-                {config.description}
-              </motion.p>
+                {config.subtitle}
+              </span>
             )}
+          </motion.h1>
 
-            {/* CTA Button */}
-            <motion.div variants={itemVariants}>
-              <Link
-                href={config.cta.href}
-                className={cn(
-                  'inline-flex items-center justify-center rounded-md font-semibold transition-colors',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50',
-                  // Size variants
-                  config.cta.size === 'sm' && 'px-4 py-2 text-sm',
-                  config.cta.size === 'md' && 'px-6 py-3 text-base',
-                  config.cta.size === 'lg' && 'px-8 py-4 text-lg',
-                  // Variant styles
-                  config.cta.variant === 'primary' &&
-                    'bg-brand-primary text-black hover:bg-brand-primary/90',
-                  config.cta.variant === 'secondary' &&
-                    'bg-neutral-800 text-white hover:bg-neutral-700',
-                  config.cta.variant === 'outline' &&
-                    'border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black'
-                )}
-              >
-                {config.cta.label}
-              </Link>
-            </motion.div>
+          {/* Description */}
+          {config.description && (
+            <motion.p
+              variants={itemVariants}
+              className='mx-auto max-w-2xl text-lg leading-relaxed text-neutral-200 md:text-xl'
+            >
+              {config.description}
+            </motion.p>
+          )}
+
+          {/* CTA Button */}
+          <motion.div variants={itemVariants}>
+            <Link
+              href={config.cta.href}
+              className={cn(
+                'inline-flex items-center justify-center rounded-md font-semibold transition-colors',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50',
+                // Size variants
+                config.cta.size === 'sm' && 'px-4 py-2 text-sm',
+                config.cta.size === 'md' && 'px-6 py-3 text-base',
+                config.cta.size === 'lg' && 'px-8 py-4 text-lg',
+                // Variant styles
+                config.cta.variant === 'primary' &&
+                  'bg-brand-primary text-black hover:bg-brand-primary/90',
+                config.cta.variant === 'secondary' &&
+                  'bg-neutral-800 text-white hover:bg-neutral-700',
+                config.cta.variant === 'outline' &&
+                  'border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black'
+              )}
+            >
+              {config.cta.label}
+            </Link>
           </motion.div>
-        </div>
-      </SectionOrchestrator>
-    </div>
+        </motion.div>
+      </div>
+    </section>
   );
 }

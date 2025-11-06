@@ -25,6 +25,14 @@ export type { CTASectionProps } from './CTASection';
 export { NewsletterSection } from './NewsletterSection';
 export type { NewsletterSectionProps } from './NewsletterSection';
 
+// Testimonials Section
+export { TestimonialsSection, TestimonialCard } from './TestimonialsSection';
+export type {
+  TestimonialsSectionProps,
+  TestimonialCardProps,
+  TestimonialData,
+} from './TestimonialsSection';
+
 // Config exports for reuse
 export { heroConfig, heroConfigServices, heroConfigAbout } from './HeroSection';
 export { servicesConfig } from './ServicesSection';
