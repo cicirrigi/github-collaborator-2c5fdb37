@@ -1,10 +1,10 @@
 import HeroSection from './HeroSection';
 import BaseSection from './BaseSection';
-import type { Metadata } from 'next';
-import { ServicesMeta } from './Services.meta';
 import { ServicesConfig } from './Services.config';
+import { getPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = ServicesMeta;
+// 🎯 Migrat la sistemul SEO centralizat
+export const metadata = getPageMetadata('/services');
 
 export default function ServicesPage() {
   return (

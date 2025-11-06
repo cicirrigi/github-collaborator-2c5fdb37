@@ -1,5 +1,9 @@
 import { CTASection, HeroSection, ServicesSection } from '@/components/sections';
 import { FleetSection3D } from '@/components/sections/FleetSection/FleetSection3D';
+import { getPageMetadata } from '@/lib/seo';
+
+// 🎯 SEO Metadata pentru Homepage - CRITIC pentru SEO!
+export const metadata = getPageMetadata('/');
 
 /**
  * 🏠 Homepage - Orchestrated modular page

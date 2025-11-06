@@ -35,6 +35,17 @@ export const sitemapConfig: SitemapData = {
           description: "Learn about Vantage Lane's story, mission and values",
           priority: 0.8,
           lastModified: '2025-11-05',
+          meta: {
+            title: 'About Vantage Lane - Premium Chauffeur Services Story',
+            description:
+              "Discover Vantage Lane's commitment to luxury transportation and exceptional service in London.",
+            keywords: [
+              'about vantage lane',
+              'luxury chauffeur company',
+              'london transport',
+              'premium service',
+            ],
+          },
         },
         {
           name: 'Contact',
@@ -42,6 +53,17 @@ export const sitemapConfig: SitemapData = {
           description: 'Get in touch with our premium customer service team',
           priority: 0.9,
           lastModified: '2025-11-05',
+          meta: {
+            title: 'Contact Vantage Lane - Premium Chauffeur Booking',
+            description:
+              'Get in touch with our premium chauffeur service team for luxury transportation bookings and inquiries.',
+            keywords: [
+              'contact vantage lane',
+              'chauffeur booking',
+              'luxury transport inquiry',
+              'london chauffeur',
+            ],
+          },
         },
       ],
     },
@@ -54,11 +76,40 @@ export const sitemapConfig: SitemapData = {
       accent: 'gold',
       links: [
         {
+          name: 'Services Overview',
+          url: '/services',
+          description: 'Comprehensive overview of our luxury chauffeur services',
+          priority: 0.9,
+          lastModified: '2025-11-05',
+          meta: {
+            title: 'Premium Chauffeur Services - Luxury Transport | Vantage Lane',
+            description:
+              'Discover our comprehensive range of luxury chauffeur services in London. Airport transfers, corporate travel, weddings and special occasions.',
+            keywords: [
+              'chauffeur services',
+              'luxury transport',
+              'london services',
+              'premium car hire',
+            ],
+          },
+        },
+        {
           name: 'Airport Transfers',
           url: '/services/airport-transfers',
           description: 'Premium airport transportation with meet & greet service',
           priority: 0.9,
           lastModified: '2025-11-05',
+          meta: {
+            title: 'Premium Airport Transfers London | Vantage Lane Chauffeurs',
+            description:
+              'Professional meet & greet airport transfer service to all London airports. Luxury vehicles, flight monitoring, experienced chauffeurs.',
+            keywords: [
+              'airport transfers',
+              'heathrow transfers',
+              'gatwick transfers',
+              'airport chauffeur',
+            ],
+          },
         },
         {
           name: 'Executive Travel',
@@ -223,6 +274,19 @@ export const sitemapConfig: SitemapData = {
           description: 'Frequently asked questions and helpful information',
           priority: 0.6,
           lastModified: '2025-11-05',
+        },
+        {
+          name: 'Sitemap',
+          url: '/sitemap',
+          description: 'Complete site navigation and page directory',
+          priority: 0.5,
+          lastModified: '2025-11-05',
+          meta: {
+            title: 'Sitemap - Vantage Lane Website Navigation',
+            description:
+              'Complete directory of all pages and services available on Vantage Lane premium chauffeur website.',
+            keywords: ['sitemap', 'site navigation', 'page directory', 'vantage lane pages'],
+          },
         },
       ],
     },

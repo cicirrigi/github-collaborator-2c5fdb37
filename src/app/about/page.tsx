@@ -1,6 +1,10 @@
 import { Section } from '@/components/layout';
 import { Button, Card, Text } from '@/components/ui';
 import { aboutContent } from '@/config/content.config';
+import { getPageMetadata } from '@/lib/seo';
+
+// 🎯 SEO Metadata pentru About Page
+export const metadata = getPageMetadata('/about');
 
 export default function AboutPage() {
   return (

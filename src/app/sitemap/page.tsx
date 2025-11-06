@@ -3,11 +3,15 @@
  * Complete sitemap with design tokens and reusable components
  */
 
+import { getPageMetadata } from '@/lib/seo';
 import { sitemapTokens } from './sitemap.tokens';
 import { sitemapConfig } from './sitemap.config';
 import { SitemapHeader } from './components/SitemapHeader';
 import { SitemapSection } from './components/SitemapSection';
 import { SitemapHelp } from './components/SitemapHelp';
+
+// 🎯 SEO Metadata pentru Sitemap Page
+export const metadata = getPageMetadata('/sitemap');
 
 export default function SitemapPage() {
   return (
