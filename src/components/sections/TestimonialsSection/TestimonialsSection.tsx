@@ -7,6 +7,7 @@ import { SectionOrchestrator } from '@/components/layout/SectionOrchestrator';
 import { cn } from '@/lib/utils/cn';
 
 import { TestimonialCard } from './TestimonialCard';
+import { TestimonialsHorizontal } from './TestimonialsHorizontal';
 import { testimonialsConfig } from './TestimonialsSection.config';
 import type { TestimonialsSectionProps, TrustIndicator } from './TestimonialsSection.types';
 
@@ -85,30 +86,34 @@ export function TestimonialsSection({
         </motion.p>
       </div>
 
-      {/* Testimonials Grid */}
-      <div
-        className={cn(
-          'grid gap-8',
-          variant === 'compact' ? 'md:grid-cols-2' : 'md:grid-cols-2 lg:grid-cols-3',
-          variant === 'carousel' && 'md:grid-cols-1 lg:grid-cols-2'
-        )}
-      >
-        {displayTestimonials.map((testimonial, index) => (
-          <motion.div
-            key={testimonial.id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.5,
-              delay: index * 0.1,
-              ease: 'easeOut',
-            }}
-          >
-            <TestimonialCard testimonial={testimonial} />
-          </motion.div>
-        ))}
-      </div>
+      {/* Testimonials Display - Grid or Horizontal */}
+      {variant === 'horizontal' ? (
+        <TestimonialsHorizontal testimonials={displayTestimonials} />
+      ) : (
+        <div
+          className={cn(
+            'grid gap-8',
+            variant === 'compact' ? 'md:grid-cols-2' : 'md:grid-cols-2 lg:grid-cols-3',
+            variant === 'carousel' && 'md:grid-cols-1 lg:grid-cols-2'
+          )}
+        >
+          {displayTestimonials.map((testimonial, index) => (
+            <motion.div
+              key={testimonial.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+                ease: 'easeOut',
+              }}
+            >
+              <TestimonialCard testimonial={testimonial} />
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       {/* Trust Indicators */}
       {showTrustIndicators && (

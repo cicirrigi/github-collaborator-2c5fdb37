@@ -31,7 +31,7 @@ export interface TestimonialsSectionProps {
   /** Custom CSS class */
   readonly className?: string;
   /** Section variant */
-  readonly variant?: 'default' | 'compact' | 'carousel';
+  readonly variant?: 'default' | 'compact' | 'carousel' | 'horizontal';
   /** Maximum testimonials to show */
   readonly maxItems?: number;
 }

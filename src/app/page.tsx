@@ -32,8 +32,8 @@ export default function HomePage() {
       {/* Premium Fleet Showcase - 3D Flip Cards */}
       <FleetSection3D maxVehicles={6} />
 
-      {/* Client Testimonials - Config driven */}
-      <TestimonialsSection />
+      {/* Client Testimonials - Horizontal Layout */}
+      <TestimonialsSection variant='horizontal' />
 
       {/* CTA Section - Config driven */}
       <CTASection />
