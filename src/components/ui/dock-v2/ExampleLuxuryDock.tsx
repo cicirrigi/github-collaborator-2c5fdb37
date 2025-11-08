@@ -9,7 +9,7 @@ export default function ExampleLuxuryDock() {
         <DockIcon
           label='One Way'
           onClick={() => {
-            /* console.log('One Way') */
+            // Handle One Way selection
           }}
         >
           <ArrowRight className='h-6 w-6' />
@@ -17,7 +17,7 @@ export default function ExampleLuxuryDock() {
         <DockIcon
           label='Return'
           onClick={() => {
-            /* console.log('Return') */
+            // Handle Return selection
           }}
         >
           <RefreshCw className='h-6 w-6' />
@@ -26,7 +26,7 @@ export default function ExampleLuxuryDock() {
         <DockIcon
           label='By Hour'
           onClick={() => {
-            /* console.log('By Hour') */
+            // Handle By Hour selection
           }}
         >
           <Clock className='h-6 w-6' />
@@ -34,7 +34,7 @@ export default function ExampleLuxuryDock() {
         <DockIcon
           label='Fleet'
           onClick={() => {
-            /* console.log('Fleet') */
+            // Handle Fleet selection
           }}
         >
           <Car className='h-6 w-6' />

@@ -94,7 +94,8 @@ export const createUIActions = (set: ZustandSet, get: ZustandGet): UIActions => 
 
   clearStepError: (step: number) => {
     set((state: BookingStore) => {
-      const { [step]: _, ...rest } = state.stepErrors || {};
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [step]: _removed, ...rest } = state.stepErrors || {};
       return { stepErrors: rest };
     });
   },
@@ -136,7 +137,8 @@ export const createUIActions = (set: ZustandSet, get: ZustandGet): UIActions => 
         set(sessionData);
         localStorage.removeItem('pendingBookingState');
         get().calculatePricing();
-      } catch (error) {
+      } catch {
+        // Failed to parse session data, remove invalid data
         localStorage.removeItem('pendingBookingState');
       }
     }

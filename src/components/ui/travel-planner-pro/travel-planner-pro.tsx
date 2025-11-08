@@ -30,7 +30,7 @@ export const TravelPlannerPro = ({
   const [stopsCount, setStopsCount] = useState(0);
   const [additionalStops, setAdditionalStops] = useState<GooglePlace[]>([]);
   const [showValidationErrors, setShowValidationErrors] = useState(false);
-  const [validation, _setValidation] = useState({ errors: [] });
+  const [validation] = useState({ errors: [] });
 
   // Handlers
   const handleNavigate = (direction: 'prev' | 'next') => {

@@ -4,11 +4,7 @@ import { useState } from 'react';
 import type React from 'react';
 
 // Import componenta noastră
-import {
-  TestimonialsNew,
-  type Testimonial,
-  type GridVariant,
-} from '@/components/sections/TestimonialsNew';
+import { TestimonialsNew, type GridVariant } from '@/components/sections/TestimonialsNew';
 
 /**
  * 🧪 TestimonialsNew Test Page

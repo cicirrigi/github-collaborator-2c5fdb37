@@ -87,9 +87,8 @@ export const validateStepResult = async (
     }
 
     // Execută validarea reală cu măsurarea timpului
-    const start = performance.now();
     const validation = validateStep(step, state);
-    const _durationMs = performance.now() - start;
+    // Performance timing removed (was unused)
 
     const result: StepValidationResult = {
       isValid: validation.isValid,

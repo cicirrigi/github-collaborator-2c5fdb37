@@ -17,7 +17,6 @@ const logger = {
   warn: (message: string, data?: Record<string, unknown>) => console.warn(message, data),
   // eslint-disable-next-line no-console
   error: (message: string, data?: Record<string, unknown>) => console.error(message, data),
-  // eslint-disable-next-line no-console
   fatal: (message: string, data?: Record<string, unknown>) => {
     // eslint-disable-next-line no-console
     console.error('FATAL:', message, data);

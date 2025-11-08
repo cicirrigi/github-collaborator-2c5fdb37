@@ -55,8 +55,7 @@ export function TestimonialsNew({
       const isDark = theme === 'dark' || classTheme || mediaQuery;
       setIsDarkMode(isDark);
 
-      // Debug logging
-      console.log('Theme detection:', { theme, classTheme, mediaQuery, isDark });
+      // Debug logging removed for production
     };
 
     checkTheme();

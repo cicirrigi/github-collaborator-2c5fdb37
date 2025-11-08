@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { demoTokens } from '@/lib/design-tokens/demo.tokens';
 import { Dock, DockIcon, DockSeparator } from '@/components/ui/dock-v2';
 import {
   ArrowRight,
