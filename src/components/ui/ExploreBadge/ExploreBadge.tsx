@@ -6,7 +6,7 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { Eye } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
 import { exploreBadgeTokens } from './ExploreBadge.tokens';
@@ -15,7 +15,7 @@ import type { ExploreBadgeComponent, ExploreBadgeProps } from './ExploreBadge.ty
 /**
  * Elegant explore badge cu hover animations
  * - Translucent by default, gold on hover
- * - Arrow animation translateX(4px)
+ * - Eye icon animation scale(1.1x)
  * - Mobile "Tap to view" text
  * - Design tokens orchestrated
  */
@@ -125,12 +125,12 @@ export const ExploreBadge: ExploreBadgeComponent = forwardRef<HTMLDivElement, Ex
           {/* Badge Text - ascuns pe mobile */}
           <span className='whitespace-nowrap hidden md:inline'>{children}</span>
 
-          {/* Arrow Icon cu animation */}
+          {/* Eye Icon cu animation */}
           {showArrow && (
-            <ArrowRight
+            <Eye
               className={cn(
                 'transition-transform duration-200 ease-out',
-                'group-hover:translate-x-1' // translateX(4px)
+                'group-hover:scale-110' // scale for eye zoom effect
               )}
               style={{
                 width: `calc(${sizeTokens.fontSize} * 1.1)`,

@@ -151,7 +151,7 @@ export const FleetCard3D = memo(function FleetCard3D({
 
   return (
     <div
-      className={cn('group w-full [perspective:1000px] fleet-card-vertical', className)}
+      className={cn('group w-full h-full [perspective:1000px] fleet-card-vertical', className)}
       role='article'
       aria-label={`${vehicle.name} vehicle details`}
       style={{

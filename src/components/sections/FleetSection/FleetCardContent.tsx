@@ -37,7 +37,7 @@ export const FleetCardContent = memo(function FleetCardContent({
 
   return (
     <div
-      className={`flex-1 flex flex-col justify-between ${className || ''}`}
+      className={`flex-1 h-full flex flex-col justify-between ${className || ''}`}
       style={{ padding: designTokens.fleet.spacing.cardPadding }}
     >
       {/* Vehicle Name */}

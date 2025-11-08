@@ -9,11 +9,12 @@
 
 import { motion } from 'framer-motion';
 import type React from 'react';
-import { memo } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import { Container } from '@/components/layout/Container';
 import { SectionOrchestrator } from '@/components/layout/SectionOrchestrator';
 import { Text } from '@/components/ui';
+import { SlideIndicator } from '@/components/ui/SlideIndicator';
 import { designTokens } from '@/config/theme.config';
 import { cn } from '@/lib/utils/cn';
 
@@ -26,12 +27,67 @@ import type { FleetSectionProps, Vehicle } from './FleetSection.types';
  * Orchestrates header, 3D vehicle grid, and CTA
  */
 const FleetSection3D = memo(function FleetSection3D({
-  config = fleetConfig,
+  customConfig,
   className,
   hideTitle = false,
   maxVehicles,
   categories,
 }: FleetSectionProps): React.JSX.Element {
+  const config = customConfig ? { ...fleetConfig, ...customConfig } : fleetConfig;
+
+  // Smart auto-hide/show logic pentru fleet swipe indicator
+  const fleetCarouselRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  useEffect(() => {
+    const carousel = fleetCarouselRef.current;
+    if (!carousel) return;
+
+    // Smart timer system
+    let autoHideTimer: NodeJS.Timeout;
+    let reappearTimer: NodeJS.Timeout;
+
+    // Auto-hide după 6 secunde
+    const startAutoHide = () => {
+      autoHideTimer = setTimeout(() => {
+        setIsVisible(false);
+
+        // Dacă nu a făcut scroll, reapare după încă 6 secunde
+        if (!hasScrolled) {
+          reappearTimer = setTimeout(() => {
+            setIsVisible(true);
+            // Și se ascunde din nou după 6 secunde
+            startAutoHide();
+          }, 6000);
+        }
+      }, 6000);
+    };
+
+    startAutoHide();
+
+    // Simple scroll listener - marchează că user-ul a făcut scroll
+    const handleScroll = () => {
+      // Marchează că user-ul a făcut scroll
+      setHasScrolled(true);
+
+      // Clear toate timer-ele - nu mai reapare
+      clearTimeout(autoHideTimer);
+      clearTimeout(reappearTimer);
+
+      // Ascunde indicatorul permanent
+      setIsVisible(false);
+    };
+
+    carousel.addEventListener('scroll', handleScroll, { passive: true, once: true });
+
+    return () => {
+      clearTimeout(autoHideTimer);
+      clearTimeout(reappearTimer);
+      carousel.removeEventListener('scroll', handleScroll);
+    };
+  }, [hasScrolled]);
+
   // Filter vehicles if categories specified
   const filteredVehicles = categories
     ? config.vehicles.filter(vehicle => categories.includes(vehicle.category))
@@ -109,11 +165,12 @@ const FleetSection3D = memo(function FleetSection3D({
           </div>
         )}
 
-        {/* 3D Vehicle Grid */}
+        {/* Vehicle Grid/Carousel */}
         <div
+          ref={fleetCarouselRef}
           className={cn(
             // Mobile: horizontal carousel cu scroll
-            'flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory scrollbar-hide',
+            'flex overflow-x-auto gap-4 snap-x snap-mandatory scrollbar-hide',
             // Desktop: grid layout ca înainte
             'md:grid md:overflow-visible md:pb-0 md:snap-none md:grid-cols-2 lg:grid-cols-3',
             config.cta && 'mb-16'
@@ -137,40 +194,24 @@ const FleetSection3D = memo(function FleetSection3D({
                 animationDelay: `${index * 0.1}s`,
               }}
             >
-              <FleetCard3D vehicle={vehicle} onSelect={handleVehicleSelect} showPrice={true} />
+              <div className='h-full w-full'>
+                <FleetCard3D vehicle={vehicle} onSelect={handleVehicleSelect} showPrice={true} />
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Mobile Swipe indicator - doar pe mobil sub fleet */}
-        <div className='md:hidden flex justify-center mt-3'>
-          <motion.div
-            className='inline-flex items-center px-4 py-2 rounded-full text-sm font-medium gap-2'
-            style={{
-              backgroundColor: 'var(--brand-primary-05)',
-              color: 'var(--brand-primary)',
-              border: '1px solid var(--brand-primary-20)',
-            }}
-            initial={{ x: 0 }}
-            animate={{ x: [0, 8, 0] }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          >
-            <span>Swipe to see our fleet</span>
-            <motion.div
-              animate={{ x: [0, 4, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            >
-              →
-            </motion.div>
-          </motion.div>
+        {/* Mobile Swipe indicator - doar pe mobil sub fleet cu smart auto-hide */}
+        <div
+          className='md:hidden flex justify-start pl-12 -mt-12 mb-8'
+          style={{
+            opacity: isVisible ? 1 : 0,
+            scale: isVisible ? 1 : 0.95,
+            transition:
+              'opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), scale 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)',
+          }}
+        >
+          <SlideIndicator text='Swipe to see our fleet' />
         </div>
 
         {/* CTA Section */}
