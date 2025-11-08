@@ -1,0 +1,213 @@
+/**
+ * 🏗️ TestimonialsNew - Grid CSS Module
+ * Responsive grid layout pentru testimoniale
+ * Auto-fit system care se adaptează perfect pe orice device
+ */
+
+/* 📐 Main Grid Container */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  justify-items: center;
+  overflow: visible; /* Pentru hover effects */
+}
+
+/* 🎭 Section Wrapper */
+.sectionWrapper {
+  padding: clamp(3rem, 6vw, 5rem) 0;
+  overflow: visible; /* Pentru hover effects */
+}
+
+/* 📄 Section Header */
+.header {
+  text-align: center;
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 📋 Grid Section */
+.gridSection {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  overflow: visible; /* Pentru hover effects */
+}
+
+/* 📱 Mobile Responsive (< 640px) */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding: 0 1rem;
+  }
+
+  .sectionWrapper {
+    padding: clamp(2rem, 4vw, 3rem) 0;
+  }
+
+  .header {
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  }
+}
+
+/* 📟 Tablet Responsive (641px - 1024px) */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.75rem;
+    padding: 0 1.5rem;
+  }
+}
+
+/* 💻 Desktop Responsive (1025px+) */
+@media (min-width: 1025px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding: 0 2rem;
+  }
+}
+
+/* 🖥️ Wide Desktop (1400px+) */
+@media (min-width: 1400px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+    max-width: 1400px;
+  }
+}
+
+/* 🎯 Grid Variants */
+
+/* Compact Grid */
+.gridCompact {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+  max-width: 960px;
+}
+
+/* Carousel Grid (Horizontal Scroll) */
+.gridCarousel {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  scroll-snap-type: x mandatory;
+
+  /* Hide scrollbar but keep functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.gridCarousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.gridCarousel > * {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+}
+
+/* Featured Grid (Larger Cards) */
+.gridFeatured {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: clamp(2rem, 4vw, 3rem);
+  max-width: 1080px;
+}
+
+/* 🎪 Animation Support */
+.gridAnimated {
+  /* Grid items vor fi animate prin Framer Motion */
+  /* CSS-ul doar stabilește layout-ul */
+  position: relative;
+}
+
+/* 🔧 Utility Classes */
+
+/* Center single item when grid has odd number */
+.centerSingle {
+  justify-content: center;
+}
+
+/* Equal height enforcement (backup pentru CSS Grid) */
+.equalHeight {
+  align-items: stretch;
+}
+
+.equalHeight > * {
+  height: 100%;
+}
+
+/* 📱 Carousel Navigation Buttons (if needed) */
+.carouselNav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.navButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid var(--testimonial-border);
+  background: var(--testimonial-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navButton:hover {
+  background: var(--testimonial-bg-hover);
+  border-color: var(--testimonial-border-hover);
+  transform: scale(1.05);
+}
+
+.navButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 🎯 Grid Performance Optimizations */
+
+/* GPU hinting pentru smooth stagger animation */
+.grid > * {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Container queries support (modern browsers) */
+@container (min-width: 320px) {
+  .grid {
+    container-type: inline-size;
+  }
+}
+
+/* 🔧 Print Styles */
+@media print {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    break-inside: avoid;
+  }
+
+  .gridCarousel {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    overflow: visible;
+  }
+}

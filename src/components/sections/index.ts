@@ -11,7 +11,7 @@
 
 // Hero Section
 export { HeroSection } from './HeroSection';
-export type { HeroProps, HeroConfig } from './HeroSection';
+export type { HeroConfig, HeroProps } from './HeroSection';
 
 // Services Section
 export { ServicesSection } from './ServicesSection';
@@ -25,14 +25,10 @@ export type { CTASectionProps } from './CTASection';
 export { NewsletterSection } from './NewsletterSection';
 export type { NewsletterSectionProps } from './NewsletterSection';
 
-// Testimonials Section
-export { TestimonialsSection, TestimonialCard } from './TestimonialsSection';
-export type {
-  TestimonialsSectionProps,
-  TestimonialCardProps,
-  TestimonialData,
-} from './TestimonialsSection';
+// Testimonials Section - New Component
+export { TestimonialsNew } from './TestimonialsNew';
+export type { TestimonialsNewProps } from './TestimonialsNew';
 
 // Config exports for reuse
-export { heroConfig, heroConfigServices, heroConfigAbout } from './HeroSection';
+export { heroConfig, heroConfigAbout, heroConfigServices } from './HeroSection';
 export { servicesConfig } from './ServicesSection';
