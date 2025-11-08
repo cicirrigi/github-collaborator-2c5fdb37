@@ -41,6 +41,7 @@ export interface FleetSectionConfig {
 
 export interface FleetSectionProps {
   readonly config?: FleetSectionConfig;
+  readonly customConfig?: Partial<FleetSectionConfig>;
   readonly className?: string;
   readonly hideTitle?: boolean;
   readonly maxVehicles?: number;
