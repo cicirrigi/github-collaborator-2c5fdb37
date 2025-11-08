@@ -5,7 +5,7 @@ import Link from 'next/link';
 import type React from 'react';
 
 import { Container } from '@/components/layout/Container';
-import { LuxuryCard, ExploreBadge } from '@/components/ui';
+import { ExploreBadge, LuxuryCard } from '@/components/ui';
 import { designTokens } from '@/config/theme.config';
 import { layoutTokens } from '@/design-system/tokens/layout';
 import { cn } from '@/lib/utils/cn';
@@ -101,11 +101,22 @@ export function ServicesSection({
 
         {/* Services Grid */}
         <motion.div
-          className={cn('grid gap-4 md:grid-cols-2 lg:grid-cols-5 mx-auto', {
-            'max-w-5xl': config.layout.maxWidth === '5xl',
-            'max-w-6xl': config.layout.maxWidth === '6xl',
-            'max-w-7xl': config.layout.maxWidth === '7xl',
-          })}
+          className={cn(
+            // Mobile: horizontal scroll carousel
+            'flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory scrollbar-hide',
+            // Desktop: normal grid
+            'md:grid md:overflow-visible md:pb-0 md:snap-none md:grid-cols-2 lg:grid-cols-5 mx-auto',
+            {
+              'md:max-w-5xl': config.layout.maxWidth === '5xl',
+              'md:max-w-6xl': config.layout.maxWidth === '6xl',
+              'md:max-w-7xl': config.layout.maxWidth === '7xl',
+            }
+          )}
+          style={{
+            // Mobile carousel styling
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
+          }}
           variants={containerVariants}
           initial={config.animation.enabled ? 'hidden' : 'visible'}
           whileInView='visible'
@@ -115,7 +126,11 @@ export function ServicesSection({
             const IconComponent = service.icon;
 
             return (
-              <motion.div key={service.id} variants={itemVariants}>
+              <motion.div
+                key={service.id}
+                variants={itemVariants}
+                className='flex-shrink-0 w-[280px] snap-center md:w-auto'
+              >
                 <LuxuryCard
                   as={Link}
                   variant='shimmer'
@@ -142,6 +157,38 @@ export function ServicesSection({
               </motion.div>
             );
           })}
+        </motion.div>
+
+        {/* Mobile Swipe Indicator - doar pe mobil */}
+        <motion.div
+          className='flex items-center justify-center gap-2 mt-4 text-sm md:hidden'
+          style={{ color: 'var(--brand-primary)' }}
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <span>Slide To Explore</span>
+          <motion.div
+            animate={{ x: [0, 8, 0] }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              repeatType: 'loop',
+              ease: 'easeInOut',
+            }}
+          >
+            <svg
+              width='16'
+              height='16'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='2'
+            >
+              <path d='M5 12h14M12 5l7 7-7 7' />
+            </svg>
+          </motion.div>
         </motion.div>
       </Container>
     </section>

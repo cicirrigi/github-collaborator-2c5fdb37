@@ -39,6 +39,7 @@ export function NewsletterSection({
         newsletterTokens.container.paddingY,
         className
       )}
+      suppressHydrationWarning
     >
       {/* Radial gold backdrop glow */}
       <div className={cn('absolute inset-0', newsletterTokens.container.bg)} />
@@ -53,6 +54,7 @@ export function NewsletterSection({
             delay: newsletterTokens.animations.stagger.heading,
           }}
           viewport={{ once: true }}
+          suppressHydrationWarning
         >
           <h2
             className='tracking-wide text-4xl md:text-5xl font-light text-center'
@@ -91,6 +93,7 @@ export function NewsletterSection({
           }}
           viewport={{ once: true }}
           className='h-1 bg-gradient-to-r from-[var(--brand-primary)] to-[#E5D485] mx-auto mb-6'
+          suppressHydrationWarning
         />
 
         <motion.p
@@ -104,6 +107,7 @@ export function NewsletterSection({
           viewport={{ once: true }}
           className={cn('mt-3 mx-auto max-w-2xl', newsletterTokens.text.size)}
           style={{ color: 'var(--text-secondary)' }}
+          suppressHydrationWarning
         >
           Exclusive access to refined travel insights and members-only privileges.
         </motion.p>

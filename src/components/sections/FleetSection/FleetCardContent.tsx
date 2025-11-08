@@ -42,7 +42,7 @@ export const FleetCardContent = memo(function FleetCardContent({
     >
       {/* Vehicle Name */}
       <h3
-        className='mb-2'
+        className='mb-2 text-center'
         style={{
           color: 'var(--text-primary)',
           fontSize: designTokens.fleet.typography.cardTitle.fontSize,
@@ -55,7 +55,7 @@ export const FleetCardContent = memo(function FleetCardContent({
 
       {/* Description */}
       <p
-        className='mb-4 leading-relaxed'
+        className='mb-4 leading-relaxed text-center'
         style={{
           color: 'var(--text-secondary)',
           fontSize: designTokens.fleet.typography.cardDescription.fontSize,
@@ -67,7 +67,7 @@ export const FleetCardContent = memo(function FleetCardContent({
 
       {/* Price */}
       {showPrice && vehicle.priceFrom && (
-        <div className='mb-4'>
+        <div className='mb-4 text-center'>
           <span
             style={{
               color: 'var(--brand-primary)',
@@ -81,7 +81,10 @@ export const FleetCardContent = memo(function FleetCardContent({
       )}
 
       {/* Features */}
-      <div className='space-y-2 mb-6' style={{ gap: designTokens.fleet.spacing.featureGap }}>
+      <div
+        className='space-y-2 mb-6 flex flex-col items-center'
+        style={{ gap: designTokens.fleet.spacing.featureGap }}
+      >
         {vehicle.features.map((feature, index) => (
           <div key={index} className='flex items-center gap-2'>
             <div

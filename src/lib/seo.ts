@@ -7,10 +7,10 @@
  * - Type-safe and consistent across all pages
  */
 
-import type { Metadata } from 'next';
 import { sitemapConfig } from '@/app/sitemap/sitemap.config';
 import type { SitemapLink } from '@/app/sitemap/sitemap.types';
 import { siteMetadata } from '@/config/site.config';
+import type { Metadata } from 'next';
 
 /**
  * 🎯 Get Page Metadata from Centralized Config

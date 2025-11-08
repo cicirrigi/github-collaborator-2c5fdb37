@@ -2,7 +2,7 @@
  * 🚗 ServicesSection Configuration - Benefits & Features
  */
 
-import { CalendarCheck, Clock2, ShieldCheck, UserCheck, Star } from 'lucide-react';
+import { CalendarCheck, Clock2, ShieldCheck, Star, UserCheck } from 'lucide-react';
 
 export const servicesConfig = {
   // Section content

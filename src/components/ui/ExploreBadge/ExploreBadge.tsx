@@ -91,6 +91,36 @@ export const ExploreBadge: ExploreBadgeComponent = forwardRef<HTMLDivElement, Ex
               target.style.boxShadow = 'none';
             }
           }}
+          onFocus={e => {
+            // Reset la focus pentru a evita persistarea stării
+            const target = e.currentTarget;
+            target.style.backgroundColor = tokens.colors.translucent.background;
+            target.style.color = tokens.colors.translucent.text;
+            target.style.boxShadow = 'none';
+          }}
+          onBlur={e => {
+            // Reset la blur pentru a evita persistarea stării
+            const target = e.currentTarget;
+            target.style.backgroundColor = tokens.colors.translucent.background;
+            target.style.color = tokens.colors.translucent.text;
+            target.style.boxShadow = 'none';
+          }}
+          onTouchEnd={e => {
+            // Reset la touch end pe mobil pentru a evita persistarea stării
+            const target = e.currentTarget;
+            setTimeout(() => {
+              target.style.backgroundColor = tokens.colors.translucent.background;
+              target.style.color = tokens.colors.translucent.text;
+              target.style.boxShadow = 'none';
+            }, 100); // Mic delay pentru a permite vizualizarea hover-ului
+          }}
+          onTouchCancel={e => {
+            // Reset la touch cancel pe mobil
+            const target = e.currentTarget;
+            target.style.backgroundColor = tokens.colors.translucent.background;
+            target.style.color = tokens.colors.translucent.text;
+            target.style.boxShadow = 'none';
+          }}
         >
           {/* Badge Text - ascuns pe mobile */}
           <span className='whitespace-nowrap hidden md:inline'>{children}</span>

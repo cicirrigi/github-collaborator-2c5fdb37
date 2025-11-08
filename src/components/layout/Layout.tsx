@@ -6,9 +6,9 @@ import { cn } from '@/lib/utils/cn';
 
 import Footer from './footer/Footer';
 // import Navbar from './navbar/Navbar'; // 🛡️ Stable version
+import { NewsletterSection } from '@/components/sections/NewsletterSection';
 import { NavbarLuxury as Navbar } from './navbar'; // ✨ Testing luxury version
 import { NavbarPortal } from './NavbarPortal';
-import { NewsletterSection } from '@/components/sections/NewsletterSection';
 
 /**
  * 🏗️ Main Layout component for Vantage Lane 2.0

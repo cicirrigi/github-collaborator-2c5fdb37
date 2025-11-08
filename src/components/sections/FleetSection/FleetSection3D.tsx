@@ -7,9 +7,9 @@
 
 'use client';
 
+import { motion } from 'framer-motion';
 import type React from 'react';
 import { memo } from 'react';
-import { motion } from 'framer-motion';
 
 import { Container } from '@/components/layout/Container';
 import { SectionOrchestrator } from '@/components/layout/SectionOrchestrator';
@@ -89,12 +89,21 @@ const FleetSection3D = memo(function FleetSection3D({
             </Text>
 
             {/* Flip instruction */}
-            <div className='mt-4'>
-              <span
-                className='text-sm italic'
-                style={{ color: 'var(--brand-primary)', opacity: 0.8 }}
-              >
-                Hover over cards to see detailed information
+            <div className='mt-6'>
+              <span className='text-sm italic block'>
+                <span
+                  className='inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium'
+                  style={{
+                    backgroundColor: 'var(--brand-primary-05)',
+                    color: 'var(--brand-primary)',
+                    border: '1px solid var(--brand-primary-20)',
+                  }}
+                >
+                  <span className='hidden md:inline'>
+                    Hover over cards to see detailed information.
+                  </span>
+                  <span className='md:hidden'>Tap on cards to see detailed information.</span>
+                </span>
               </span>
             </div>
           </div>
@@ -102,13 +111,27 @@ const FleetSection3D = memo(function FleetSection3D({
 
         {/* 3D Vehicle Grid */}
         <div
-          className={cn('grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3', config.cta && 'mb-16')}
-          style={{ gap: designTokens.fleet.spacing.cardGap }}
+          className={cn(
+            // Mobile: horizontal carousel cu scroll
+            'flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory scrollbar-hide',
+            // Desktop: grid layout ca înainte
+            'md:grid md:overflow-visible md:pb-0 md:snap-none md:grid-cols-2 lg:grid-cols-3',
+            config.cta && 'mb-16'
+          )}
+          style={{
+            gap: designTokens.fleet.spacing.cardGap,
+          }}
         >
           {displayVehicles.map((vehicle, index) => (
             <div
               key={vehicle.id}
-              className='transform-gpu'
+              className={cn(
+                'transform-gpu',
+                // Mobile: fixed width pentru carousel + snap
+                'flex-shrink-0 w-[280px] snap-center',
+                // Desktop: auto width pentru grid
+                'md:w-auto md:flex-shrink'
+              )}
               style={{
                 // Stagger animation delay
                 animationDelay: `${index * 0.1}s`,
@@ -117,6 +140,37 @@ const FleetSection3D = memo(function FleetSection3D({
               <FleetCard3D vehicle={vehicle} onSelect={handleVehicleSelect} showPrice={true} />
             </div>
           ))}
+        </div>
+
+        {/* Mobile Swipe indicator - doar pe mobil sub fleet */}
+        <div className='md:hidden flex justify-center mt-3'>
+          <motion.div
+            className='inline-flex items-center px-4 py-2 rounded-full text-sm font-medium gap-2'
+            style={{
+              backgroundColor: 'var(--brand-primary-05)',
+              color: 'var(--brand-primary)',
+              border: '1px solid var(--brand-primary-20)',
+            }}
+            initial={{ x: 0 }}
+            animate={{ x: [0, 8, 0] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          >
+            <span>Swipe to see our fleet</span>
+            <motion.div
+              animate={{ x: [0, 4, 0] }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            >
+              →
+            </motion.div>
+          </motion.div>
         </div>
 
         {/* CTA Section */}

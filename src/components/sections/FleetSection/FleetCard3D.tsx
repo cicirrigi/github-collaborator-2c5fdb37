@@ -10,7 +10,7 @@
 
 import { motion } from 'framer-motion';
 import type React from 'react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 
 import { designTokens } from '@/config/theme.config';
 import { cn } from '@/lib/utils/cn';
@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils/cn';
 import { FleetCardContent } from './FleetCardContent';
 import { FleetCardHeader } from './FleetCardHeader';
 import { FleetCardImage } from './FleetCardImage';
+import { TapIndicator } from '@/components/ui/TapIndicator';
 import type { FleetCardProps, Vehicle } from './FleetSection.types';
 
 /**
@@ -141,6 +142,13 @@ export const FleetCard3D = memo(function FleetCard3D({
   className,
   showPrice = true,
 }: FleetCardProps): React.JSX.Element {
+  // State pentru mobile flip (click to flip)
+  const [isFlippedMobile, setIsFlippedMobile] = useState(false);
+
+  const handleMobileClick = () => {
+    setIsFlippedMobile(prev => !prev);
+  };
+
   return (
     <div
       className={cn('group w-full [perspective:1000px] fleet-card-vertical', className)}
@@ -156,11 +164,15 @@ export const FleetCard3D = memo(function FleetCard3D({
         className={cn(
           'relative h-full w-full transition-transform duration-700 ease-out',
           'transform-gpu [transform-style:preserve-3d]',
-          'group-hover:[transform:rotateY(180deg)]'
+          // Desktop: hover to flip
+          'md:group-hover:[transform:rotateY(180deg)]',
+          // Mobile: click to flip
+          isFlippedMobile && 'md:![transform:rotateY(0deg)] [transform:rotateY(180deg)]'
         )}
         style={{
           borderRadius: designTokens.fleet.effects.borderRadius,
         }}
+        onClick={handleMobileClick}
       >
         {/* Front Face */}
         <div
@@ -199,6 +211,9 @@ export const FleetCard3D = memo(function FleetCard3D({
               {...(onSelect && { onSelect })}
               showPrice={showPrice}
             />
+
+            {/* Tap Indicator - doar pe mobil */}
+            <TapIndicator />
           </motion.div>
         </div>
 
