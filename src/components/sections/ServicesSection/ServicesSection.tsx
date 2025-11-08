@@ -3,16 +3,16 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
 
 import { Container } from '@/components/layout/Container';
 import { ExploreBadge } from '@/components/ui/ExploreBadge';
 import { LuxuryCard } from '@/components/ui/LuxuryCard';
-import { SlideIndicator } from '@/components/ui/SlideIndicator';
 import { designTokens } from '@/config/theme.config';
 import { layoutTokens } from '@/design-system/tokens/layout';
 import { cn } from '@/lib/utils/cn';
 
+import { ServicesSwipeIndicator } from './components';
+import { useServicesAutoHide } from './hooks';
 import { servicesConfig } from './ServicesSection.config';
 
 export interface ServicesSectionProps {
@@ -38,58 +38,8 @@ export function ServicesSection({
 }: ServicesSectionProps): React.JSX.Element {
   const config = customConfig ? { ...servicesConfig, ...customConfig } : servicesConfig;
 
-  // Simple auto-hide/show logic
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(true);
-  const [hasScrolled, setHasScrolled] = useState(false);
-
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    // Smart timer system
-    let autoHideTimer: NodeJS.Timeout;
-    let reappearTimer: NodeJS.Timeout;
-
-    // Auto-hide după 6 secunde
-    const startAutoHide = () => {
-      autoHideTimer = setTimeout(() => {
-        setIsVisible(false);
-
-        // Dacă nu a făcut scroll, reapare după încă 6 secunde
-        if (!hasScrolled) {
-          reappearTimer = setTimeout(() => {
-            setIsVisible(true);
-            // Și se ascunde din nou după 6 secunde
-            startAutoHide();
-          }, 6000);
-        }
-      }, 6000);
-    };
-
-    startAutoHide();
-
-    // Simple scroll listener - marchează că user-ul a făcut scroll
-    const handleScroll = () => {
-      // Marchează că user-ul a făcut scroll
-      setHasScrolled(true);
-
-      // Clear toate timer-ele - nu mai reapare
-      clearTimeout(autoHideTimer);
-      clearTimeout(reappearTimer);
-
-      // Ascunde indicatorul permanent
-      setIsVisible(false);
-    };
-
-    carousel.addEventListener('scroll', handleScroll, { passive: true, once: true });
-
-    return () => {
-      clearTimeout(autoHideTimer);
-      clearTimeout(reappearTimer);
-      carousel.removeEventListener('scroll', handleScroll);
-    };
-  }, [hasScrolled]);
+  // Use extracted auto-hide hook
+  const autoHide = useServicesAutoHide();
 
   // Animation variants
   const containerVariants = {
@@ -157,7 +107,7 @@ export function ServicesSection({
 
         {/* Services Grid */}
         <motion.div
-          ref={carouselRef}
+          ref={autoHide.carouselRef}
           className={cn(
             // Mobile: horizontal scroll carousel
             'flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory scrollbar-hide',
@@ -218,25 +168,7 @@ export function ServicesSection({
       </Container>
 
       {/* Mobile Swipe Indicator - doar pe mobil, simple auto-hide cu offset pentru primul card */}
-      <div
-        className='flex items-center justify-center mt-4 md:hidden'
-        style={{
-          opacity: isVisible ? 1 : 0,
-          scale: isVisible ? 1 : 0.95,
-          marginLeft: '-3rem', // Aproape centrul perfect
-          transition:
-            'opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), scale 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)',
-        }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <SlideIndicator text='Slide to explore' />
-        </motion.div>
-      </div>
+      <ServicesSwipeIndicator autoHide={autoHide} />
     </section>
   );
 }
