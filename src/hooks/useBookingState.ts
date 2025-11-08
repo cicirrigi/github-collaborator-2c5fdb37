@@ -19,14 +19,14 @@ export const useBookingState = create<BookingStore>()(
       currentStep: 1,
       completedSteps: [],
       tripConfiguration: getInitialTripConfiguration(),
-      vehicleSelection: undefined,
+      vehicleSelection: null,
       services: [],
       specialRequests: [],
-      paymentDetails: undefined,
-      pricing: undefined,
+      paymentDetails: null,
+      pricing: null,
       isValid: false,
       isDirty: false,
-      lastSaved: undefined,
+      lastSaved: null,
 
       // === COMPUTED PROPERTIES ===
       canProceedToStep: (step: number) => {
@@ -40,7 +40,8 @@ export const useBookingState = create<BookingStore>()(
         if (step <= currentStep) return true;
 
         // Pentru următorul pas, verifică validarea
-        return validateStep(currentStep, state);
+        const validation = validateStep(currentStep, state);
+        return typeof validation === 'boolean' ? validation : validation.isValid;
       },
 
       // === ACTIONS (imported from actions module) ===

@@ -1,16 +1,32 @@
+/**
+ * ✍️ Typography Tokens - Vantage Lane Design System
+ * Font families, sizes, weights, and line heights
+ */
+
 export const typography = {
-  fontPrimary: 'var(--font-primary, Inter, sans-serif)',
-  fontAccent: 'var(--font-accent, Playfair Display, serif)',
-  baseSize: '16px',
-  lineHeights: {
-    tight: '1.1',
-    normal: '1.5',
-    relaxed: '1.75',
+  fontFamily: {
+    sans: ['Inter', 'system-ui', 'sans-serif'],
+    display: ['Playfair Display', 'serif'],
   },
-  weights: {
-    regular: 400,
-    medium: 500,
-    semibold: 600,
-    bold: 700,
+  fontSize: {
+    xs: '0.75rem',
+    sm: '0.875rem',
+    base: '1rem',
+    lg: '1.125rem',
+    xl: '1.25rem',
+    '2xl': '1.5rem',
+    '3xl': '1.875rem',
+    '4xl': '2.25rem',
+    '5xl': '3rem',
+    '6xl': '3.75rem',
+  },
+  fontWeight: {
+    light: '300',
+    normal: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
   },
 } as const;
+
+export type TypographyTokens = typeof typography;

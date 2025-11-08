@@ -1,9 +1,22 @@
 /**
- * 📦 UI Components - Barrel Export
+ * Export all UI components from their respective folders
  *
  * Enterprise design system components.
  * All connected to theme.config.ts for consistency.
  */
+
+// Background system
+export { Background } from './Background';
+export type { BackgroundProps } from './Background';
+
+// ExploreBadge system
+export { ExploreBadge } from './ExploreBadge';
+export type {
+  ExploreBadgeProps,
+  ExploreBadgeSize,
+  ExploreBadgeVariant,
+  ExploreBadgeHover,
+} from './ExploreBadge';
 
 // Core UI Primitives
 export type { BadgeProps } from './Badge';
@@ -14,6 +27,8 @@ export type { CardProps } from './Card';
 export { Card } from './Card';
 export type { TextProps } from './Text';
 export { Text } from './Text';
+export type { FooterIconProps } from './FooterIcon';
+export { FooterIcon } from './FooterIcon';
 
 // Luxury Components
 export type {
@@ -56,7 +71,14 @@ export type { Stop, TimeSlot, TravelPlan, TravelPlannerProps } from './travel-pl
 export * from './travel-planner';
 export * from './travel-planner-pro';
 
+// Complex UI Components
+export * from './LuxuryCard';
+export * from './ExploreBadge';
+export * from './BiColorText';
+export * from './NewsletterCard';
+export * from './UnsubscribeModal';
+export { ThemeToggle } from './theme-toggle';
+
 // Theme Controls
 export * from './PremiumButton';
 export * from './TestButton';
-export { ThemeToggle } from './theme-toggle';

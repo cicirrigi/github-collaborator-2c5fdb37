@@ -1,21 +1,33 @@
-export interface TripActionPayload {
+export interface TripActionPayload<T = unknown> {
   type: string;
-  payload?: any;
+  payload?: T;
 }
 
 export type TripActionHandler = (payload: TripActionPayload) => void;
 
+import type { TripType } from '../../../types/booking';
+
 export interface TripActions {
-  setTripType: (type: string) => void;
+  setTripType: (type: TripType) => void;
 }
 
-export const createTripActions = (set: any, _get: any): TripActions => ({
-  setTripType: (type: string) => {
-    set((state: any) => ({
-      tripConfiguration: {
-        ...state.tripConfiguration,
-        type,
-      },
-    }));
+import type { BookingStore } from '@/types/booking';
+
+type ZustandSet = (
+  partial: Partial<BookingStore> | ((state: BookingStore) => Partial<BookingStore>)
+) => void;
+type ZustandGet = () => BookingStore;
+
+export const createTripActions = (set: ZustandSet, _get: ZustandGet): TripActions => ({
+  setTripType: (type: TripType) => {
+    set(
+      (state: BookingStore) =>
+        ({
+          tripConfiguration: {
+            ...state.tripConfiguration,
+            type,
+          },
+        }) as Partial<BookingStore>
+    );
   },
 });

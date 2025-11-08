@@ -19,12 +19,12 @@
 
 export type { ContainerProps } from './Container';
 export { Container } from './Container';
-export type { FooterProps } from './Footer';
-export { default as Footer } from './Footer';
+export type { FooterProps } from './footer/Footer';
+export { default as Footer } from './footer/Footer';
 export type { LayoutProps } from './Layout';
 export { default as Layout } from './Layout';
-export type { NavbarProps } from './Navbar';
-export { default as Navbar } from './Navbar';
+export type { NavbarProps } from './navbar/Navbar';
+export { default as Navbar } from './navbar/Navbar';
 export type { SectionProps } from './Section';
 export { Section } from './Section';
 

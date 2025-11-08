@@ -1,4 +1,8 @@
+import tailwindcssForms from '@tailwindcss/forms';
+import tailwindcssTypography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
+import tailwindcssAnimate from 'tailwindcss-animate';
+
 import { designTokens } from './src/config/theme.config';
 
 const config: Config = {
@@ -85,7 +89,7 @@ const config: Config = {
 
       // Animation timing from theme.config.ts
       transitionDuration: designTokens.animations.duration,
-      transitionTimingFunction: designTokens.animations.easing,
+      transitionTimingFunction: designTokens.animations.easing.css,
 
       // Custom keyframes
       keyframes: {
@@ -120,11 +124,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    require('tailwindcss-animate'),
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [tailwindcssAnimate, tailwindcssForms, tailwindcssTypography],
 };
 
 export default config;

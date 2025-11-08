@@ -15,6 +15,22 @@ export const brandConfig = {
     domain: 'vantagelane.com',
   },
 
+  /** 🎨 LOGO CONFIGURATION */
+  logo: {
+    text: {
+      primary: 'VANTAGE',
+      secondary: 'LANE',
+      spacing: ' ',
+      transform: 'uppercase',
+      tracking: 'wide',
+      weight: 'light',
+    },
+    colors: {
+      primary: '#CBB26A', // Gold for VANTAGE
+      secondary: 'var(--text-primary)', // White/theme for LANE
+    },
+  },
+
   /** 🎯 SERVICE DESCRIPTION */
   service: {
     short: 'Premium chauffeur service',

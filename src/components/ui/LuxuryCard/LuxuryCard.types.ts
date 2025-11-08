@@ -84,6 +84,9 @@ export interface LuxuryCardBaseProps {
 
   /** Footer content */
   footer?: ReactNode;
+
+  /** Bottom center badge content */
+  bottomBadge?: ReactNode;
 }
 
 // Polymorphic luxury card props

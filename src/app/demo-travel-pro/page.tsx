@@ -24,8 +24,8 @@ export default function DemoTravelProPage() {
 
         {/* Travel Planner */}
         <TravelPlannerPro
-          onPlanChange={plan => {
-            console.log('Plan changed:', plan, 'for booking type:', bookingType);
+          onPlanChange={_plan => {
+            // Plan changed handler - reserved for future implementation
           }}
         />
 

@@ -7,11 +7,11 @@
 
 import type React from 'react';
 
-import { themeConfig } from '@/config/theme.config';
+// Badge styles directly defined (no theme config dependency)
 import { cn } from '@/lib/utils/cn';
 
-type BadgeVariant = keyof typeof themeConfig.components.badge.variants;
-type BadgeSize = keyof typeof themeConfig.components.badge.sizes;
+type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning';
+type BadgeSize = 'sm' | 'md' | 'lg';
 
 export interface BadgeProps {
   readonly variant?: BadgeVariant;
@@ -19,6 +19,23 @@ export interface BadgeProps {
   readonly className?: string;
   readonly children: React.ReactNode;
 }
+
+// Badge variant styles
+const badgeVariants = {
+  default: 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100',
+  secondary: 'bg-neutral-200 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-200',
+  destructive: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+  outline:
+    'border border-neutral-300 bg-transparent text-neutral-900 dark:border-neutral-600 dark:text-neutral-100',
+  success: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+  warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+};
+
+const badgeSizes = {
+  sm: 'px-2 py-0.5 text-xs',
+  md: 'px-2.5 py-1 text-sm',
+  lg: 'px-3 py-1.5 text-base',
+};
 
 /**
  * 🎯 Universal badge component with theme variants
@@ -32,12 +49,12 @@ export function Badge({
   return (
     <span
       className={cn(
-        // Base styles from theme config
-        themeConfig.components.badge.base,
-        // Variant styles from theme config
-        themeConfig.components.badge.variants[variant],
-        // Size styles from theme config
-        themeConfig.components.badge.sizes[size],
+        // Base styles
+        'inline-flex items-center rounded-full font-medium transition-colors',
+        // Variant styles
+        badgeVariants[variant],
+        // Size styles
+        badgeSizes[size],
         // Custom className
         className
       )}

@@ -7,10 +7,10 @@
 
 import type React from 'react';
 
-import { themeConfig } from '@/config/theme.config';
 import { cn } from '@/lib/utils/cn';
+import { cardTokens } from './Card.tokens';
 
-type CardVariant = keyof typeof themeConfig.components.card.variants;
+type CardVariant = 'default' | 'elevated' | 'outline' | 'ghost';
 
 export interface CardProps {
   readonly variant?: CardVariant;
@@ -30,25 +30,27 @@ export function Card({
   padding = 'md',
   hover = false,
 }: CardProps): React.JSX.Element {
-  const paddingClasses = {
-    none: '',
-    sm: 'p-3',
-    md: 'p-4',
-    lg: 'p-6',
-    xl: 'p-8',
+  // Use design tokens instead of magic numbers
+  const paddingClasses = cardTokens.padding;
+
+  // Use design tokens for variant styles
+  const getVariantClasses = (variant: CardVariant) => {
+    const variantConfig = cardTokens.variants[variant];
+    return `${variantConfig.background} ${variantConfig.border} ${variantConfig.shadow}`;
   };
 
   return (
     <div
       className={cn(
-        // Base styles from theme config
-        themeConfig.components.card.base,
-        // Variant styles from theme config
-        themeConfig.components.card.variants[variant],
+        // Base styles
+        'rounded-lg transition-colors',
+        // Variant styles
+        getVariantClasses(variant),
         // Padding
         paddingClasses[padding],
         // Hover effect
-        hover && 'transition-all duration-300 hover:scale-[1.02] hover:shadow-lg',
+        hover &&
+          `${cardTokens.hover.transition} ${cardTokens.hover.scale} ${cardTokens.hover.shadow}`,
         // Custom className
         className
       )}

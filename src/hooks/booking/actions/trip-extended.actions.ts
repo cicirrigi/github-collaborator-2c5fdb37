@@ -6,11 +6,19 @@
 import { BOOKING_CONSTANTS } from '../../../types/booking/index';
 import type { BookingStore, TripConfiguration } from '../../../types/booking/index';
 import type { GooglePlace } from '../../../components/ui/location-picker/types';
+import type { FleetSelection } from '../../../types/booking';
 
 // ================== 🔧 SHARED HELPERS ==================
-type ZustandSet = (partial: Partial<BookingStore> | ((state: BookingStore) => Partial<BookingStore>)) => void;
+type ZustandSet = (
+  partial: Partial<BookingStore> | ((state: BookingStore) => Partial<BookingStore>)
+) => void;
 type ZustandGet = () => BookingStore;
-type PartialTripConfig = Partial<Pick<TripConfiguration, 'returnFlight' | 'returnDate' | 'returnTime' | 'sameDayReturn' | 'returnAdditionalStops'>>;
+type PartialTripConfig = Partial<
+  Pick<
+    TripConfiguration,
+    'returnFlight' | 'returnDate' | 'returnTime' | 'sameDayReturn' | 'returnAdditionalStops'
+  >
+>;
 
 // Unified pricing recalculation (eliminates 7x duplication)
 const safeRecalculatePricing = (get: ZustandGet) => {
@@ -18,15 +26,22 @@ const safeRecalculatePricing = (get: ZustandGet) => {
   if (typeof calculatePricing === 'function') calculatePricing();
 };
 
-// Unified limit calculator (eliminates 3x duplication)  
+// Unified limit calculator (eliminates 3x duplication)
 const getVehicleLimits = (state: BookingStore) => {
-  const isFleet = state.tripConfiguration.type === 'fleet' && state.tripConfiguration.fleetSelection.length > 0;
-  const model = state.vehicleSelection?.model as { maxPassengers?: number; maxBaggage?: number } | undefined;
+  const isFleet =
+    state.tripConfiguration.type === 'fleet' && state.tripConfiguration.fleetSelection.length > 0;
+  const model = state.vehicleSelection?.model as
+    | { maxPassengers?: number; maxBaggage?: number }
+    | undefined;
 
   return {
-    maxPassengers: isFleet ? BOOKING_CONSTANTS.MAX_PASSENGERS_DEFAULT 
-      : model?.maxPassengers || state.limits?.passengers || BOOKING_CONSTANTS.MAX_PASSENGERS_DEFAULT,
-    maxBaggage: isFleet ? BOOKING_CONSTANTS.MAX_BAGGAGE_DEFAULT 
+    maxPassengers: isFleet
+      ? BOOKING_CONSTANTS.MAX_PASSENGERS_DEFAULT
+      : model?.maxPassengers ||
+        state.limits?.passengers ||
+        BOOKING_CONSTANTS.MAX_PASSENGERS_DEFAULT,
+    maxBaggage: isFleet
+      ? BOOKING_CONSTANTS.MAX_BAGGAGE_DEFAULT
       : model?.maxBaggage || state.limits?.baggage || BOOKING_CONSTANTS.MAX_BAGGAGE_DEFAULT,
   };
 };
@@ -34,7 +49,7 @@ const getVehicleLimits = (state: BookingStore) => {
 // ================== ✈️ RETURN ACTIONS ==================
 const createReturnActions = (set: ZustandSet, get: ZustandGet) => ({
   setReturnFlight: (flightNumber: string) => {
-    set((state) => ({
+    set(state => ({
       tripConfiguration: { ...state.tripConfiguration, returnFlight: flightNumber },
       isDirty: true,
     }));
@@ -42,7 +57,7 @@ const createReturnActions = (set: ZustandSet, get: ZustandGet) => ({
   },
 
   setReturnAdditionalStops: (stops: GooglePlace[]) => {
-    set((state) => ({
+    set(state => ({
       tripConfiguration: {
         ...state.tripConfiguration,
         returnAdditionalStops: stops.slice(0, BOOKING_CONSTANTS.MAX_ADDITIONAL_STOPS),
@@ -53,7 +68,7 @@ const createReturnActions = (set: ZustandSet, get: ZustandGet) => ({
   },
 
   setReturnDetails: (details: PartialTripConfig) => {
-    set((state) => ({
+    set(state => ({
       tripConfiguration: { ...state.tripConfiguration, ...details },
       isDirty: true,
     }));
@@ -140,7 +155,7 @@ export interface TripExtendedActions {
   setReturnAdditionalStops: (stops: GooglePlace[]) => void;
   setReturnDetails: (details: PartialTripConfig) => void;
 
-  // Hourly specific  
+  // Hourly specific
   setHoursRequested: (hours: number | string) => void;
 
   // Passenger/Baggage with validation
@@ -149,11 +164,53 @@ export interface TripExtendedActions {
   getMaxPassengersForSelection: () => number;
   getMaxBaggageForSelection: () => number;
   validatePassengerLimits: () => boolean;
+
+  // Missing BookingActions methods (TODO: move to proper modules)
+  setPickupLocation: (location: GooglePlace | null) => void;
+  setDropoffLocation: (location: GooglePlace | null) => void;
+  setAdditionalStops: (stops: GooglePlace[]) => void;
+  setFleetSelection: (selection: FleetSelection[]) => void;
+  setDateTime: (date: Date | null, time: string) => void;
 }
 
 // Main factory - combines all action modules
-export const createTripExtendedActions = (set: ZustandSet, get: ZustandGet): TripExtendedActions => ({
+export const createTripExtendedActions = (
+  set: ZustandSet,
+  get: ZustandGet
+): TripExtendedActions => ({
   ...createReturnActions(set, get),
   ...createHourlyActions(set, get),
   ...createPassengerActions(set, get),
+
+  // TODO: Implement missing BookingActions methods properly
+  setPickupLocation: (location: GooglePlace | null) => {
+    set(state => ({
+      tripConfiguration: { ...state.tripConfiguration, pickupLocation: location },
+      isDirty: true,
+    }));
+  },
+  setDropoffLocation: (location: GooglePlace | null) => {
+    set(state => ({
+      tripConfiguration: { ...state.tripConfiguration, dropoffLocation: location },
+      isDirty: true,
+    }));
+  },
+  setAdditionalStops: (stops: GooglePlace[]) => {
+    set(state => ({
+      tripConfiguration: { ...state.tripConfiguration, additionalStops: stops },
+      isDirty: true,
+    }));
+  },
+  setFleetSelection: (selection: FleetSelection[]) => {
+    set(state => ({
+      tripConfiguration: { ...state.tripConfiguration, fleetSelection: selection },
+      isDirty: true,
+    }));
+  },
+  setDateTime: (date: Date | null, time: string) => {
+    set(state => ({
+      tripConfiguration: { ...state.tripConfiguration, date, time },
+      isDirty: true,
+    }));
+  },
 });

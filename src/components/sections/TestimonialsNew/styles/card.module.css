@@ -1,0 +1,280 @@
+/**
+ * 🎴 TestimonialCardNew - CSS Module
+ * Card styling cu CSS Grid pentru înălțimi egale
+ * Responsive și theme-aware styling
+ */
+
+/* 📦 Card Container - CSS Grid Layout */
+.card {
+  /* Grid Layout pentru înălțimi egale - soluția principală */
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* Header / Content / Footer */
+
+  /* Dimensions & Aspect Ratio */
+  width: 100%;
+  max-width: 320px;
+  height: 420px; /* Înălțime FIXĂ în loc de min-height */
+
+  /* Spacing */
+  gap: 1rem;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+
+  /* Visual Styling */
+  border-radius: 1rem;
+  position: relative;
+  overflow: visible; /* Permite hover effects să nu fie tăiate */
+
+  /* Transitions pentru smooth interactions */
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🎯 HEADER SECTION - flex: 0 0 auto */
+.cardHeader {
+  /* Flex: 0 0 auto - nu se întinde, păstrează dimensiunea */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrează badge-ul */
+  flex: 0 0 auto;
+}
+
+.cardContent {
+  /* Flex: 1 1 auto - se întinde să ocupe spațiul disponibil */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex: 1 1 auto;
+  min-height: 8rem; /* Spațiu minim garantat pentru echilibrare */
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  padding: 0 0.5rem;
+}
+
+/* 🎯 FOOTER SECTION - flex: 0 0 auto */
+.cardFooter {
+  /* Flex: 0 0 auto - nu se întinde, păstrează dimensiunea */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Mută la stânga în loc de center */
+  gap: 0.75rem;
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding-left: 1rem; /* Adaugă spațiu de la margine */
+}
+
+/* 💬 Quote Styling */
+.quote {
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  line-height: 1.6;
+  color: var(--testimonial-text);
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+  padding: 0 0.5rem;
+
+  /* Flex pentru centrare verticală */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Grid item care se întinde - 1fr din grid-template-rows */
+  grid-row: 2;
+
+  /* Înlătur scroll-ul - las CSS Grid să își facă treaba */
+  position: relative;
+}
+
+/* 🌊 Subtle separator line - fină și elegantă */
+.card::before {
+  content: '';
+  position: absolute;
+  bottom: 7rem; /* Ridicat mai sus la 7rem de jos */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px; /* Fină și subtilă */
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--testimonial-border) 20%,
+    var(--testimonial-accent) 50%,
+    var(--testimonial-border) 80%,
+    transparent 100%
+  );
+  opacity: 0.4; /* Subtilă și elegantă */
+  z-index: 2;
+}
+
+/* 🏷️ Quote Icon */
+.quoteIcon {
+  font-size: 2.5rem;
+  color: var(--testimonial-accent);
+  opacity: 0.3;
+  font-family: serif;
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  position: absolute;
+  top: 1rem;
+  right: 0.75rem; /* Mutat mai la dreapta cu 0.25rem */
+}
+
+/* ⭐ Rating Stars Container */
+.starsContainer {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.star {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--testimonial-accent);
+  filter: drop-shadow(0 1px 2px var(--testimonial-accent-glow));
+}
+
+/* 👤 Avatar Styling */
+.avatar {
+  width: 3.5rem; /* Mărită de la 2.5rem la 3.5rem */
+  height: 3.5rem; /* Mărită de la 2.5rem la 3.5rem */
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  border: 2px solid var(--testimonial-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatarImage {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+/* 📝 Client Info Text */
+.clientName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--testimonial-text-primary);
+  margin: 0;
+  display: block;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.clientRole {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--testimonial-text-secondary);
+  margin: 0;
+  display: block;
+  line-height: 1.4;
+}
+
+.clientCompany {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--testimonial-accent);
+  margin: 0;
+  display: block;
+  line-height: 1.4;
+}
+
+/* 🎪 Interactive States */
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* .card:focus-within removed - cards are no longer interactive */
+
+/* 🌟 Subtle Hover Pulse Effect */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(203, 178, 106, 0.08), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+/* 📱 Responsive Adjustments */
+@media (max-width: 640px) {
+  .card {
+    max-width: 280px;
+    min-height: 360px;
+    padding: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .cardContent {
+    min-height: 7rem;
+    gap: clamp(0.5rem, 1vw, 1rem);
+  }
+
+  .quote {
+    font-size: clamp(0.85rem, 1vw + 0.4rem, 1rem);
+    line-height: 1.5;
+  }
+
+  .quoteIcon {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    max-width: 320px;
+    min-height: 380px;
+  }
+}
+
+/* 🎯 Variant Classes */
+.compact {
+  max-width: 280px;
+  min-height: 320px;
+  aspect-ratio: 1/1;
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.featured {
+  max-width: 360px;
+  min-height: 420px;
+  aspect-ratio: 5/6;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.featured .quote {
+  font-size: clamp(1rem, 1.2vw + 0.6rem, 1.25rem);
+}
+
+.featured .quoteIcon {
+  font-size: 3rem;
+}
+
+/* 🔧 Accessibility & Motion */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card {
+    border-width: 2px;
+  }
+
+  .quote {
+    font-weight: 500;
+  }
+}

@@ -1,75 +1,115 @@
 /**
  * 🎨 Theme Configuration - Vantage Lane 2.0
- * Scalable orchestrator that imports from design-system/tokens
+ * Modular orchestrator importing from design-system/tokens
  */
 
-// Consolidated design tokens (inline for stability)
+import { colors } from '../design-system/tokens/colors';
+import { animations, motion } from '../design-system/tokens/animations';
+import { typography } from '../design-system/tokens/typography';
+import { spacing } from '../design-system/tokens/spacing';
+import { gradients } from '../design-system/tokens/gradients';
+import { buttonVariants } from '../design-system/variants/button.variants';
+import { textVariants } from '../design-system/variants/text.variants';
+import { newsletterVariants } from '../design-system/variants/newsletter.variants';
+
+// Consolidated design tokens (imported from modular files)
 export const designTokens = {
-  colors: {
-    brand: {
-      primary: '#CBB26A', // Gold primary
-      secondary: '#F59E0B', // Amber secondary
-      accent: '#FACC15', // Bright accent
-    },
-    neutral: {
-      50: '#FAFAFA',
-      100: '#F5F5F5',
-      200: '#E5E5E5',
-      300: '#D4D4D4',
-      400: '#A3A3A3',
-      500: '#737373',
-      600: '#525252',
-      700: '#404040',
-      800: '#262626',
-      900: '#171717',
-      950: '#0A0A0A',
-    },
-    semantic: {
-      success: '#10B981',
-      warning: '#F59E0B',
-      error: '#EF4444',
-      info: '#3B82F6',
+  colors,
+  typography,
+  spacing,
+  gradients,
+  animations,
+  motion,
+  // Footer specific spacing tokens
+  footer: {
+    spacing: {
+      mainGrid: '2rem', // gap-8 equivalent for main grid (32px)
+      gridGap: '1.75rem', // gap-7 unified for grid columns and rows (28px)
+      categoryGap: '1rem', // space-y-4 for category spacing (16px)
+      linkGap: '0.75rem', // space-y-3 for link spacing (12px) - slightly increased
+      containerPadding: '4rem', // py-16 for main container (64px)
+      bottomPadding: '1.5rem', // py-6 for bottom section (24px)
     },
   },
-  // Typography tokens (inline for now, can be moved to tokens/typography.ts)
-  typography: {
-    fontFamily: {
-      sans: ['Inter', 'system-ui', 'sans-serif'],
-      display: ['Playfair Display', 'serif'],
+
+  // Fleet section specific tokens
+  fleet: {
+    spacing: {
+      sectionPadding: '6rem', // py-24 for section padding (96px)
+      cardGap: '2rem', // gap-8 for vehicle cards (32px)
+      cardPadding: '1.5rem', // p-6 for card internal padding (24px)
+      featureGap: '0.75rem', // gap-3 for feature spacing (12px)
+      badgeSpacing: '1rem', // spacing for badges (16px)
     },
-    fontSize: {
-      xs: '0.75rem',
-      sm: '0.875rem',
-      base: '1rem',
-      lg: '1.125rem',
-      xl: '1.25rem',
-      '2xl': '1.5rem',
-      '3xl': '1.875rem',
-      '4xl': '2.25rem',
-      '5xl': '3rem',
-      '6xl': '3.75rem',
+    dimensions: {
+      cardImageHeight: '14rem', // h-56 (224px) - taller than square
+      cardMinHeight: '28rem', // min-h-[28rem] for vertical aspect ratio
+      cardAspectRatio: '3/4', // vertical aspect ratio for elegant look
     },
-    fontWeight: {
-      light: '300',
-      normal: '400',
-      medium: '500',
-      semibold: '600',
-      bold: '700',
+    effects: {
+      hoverScale: 1.02, // hover:scale-[1.02] for cards (number for framer)
+      imageScale: 1.1, // hover:scale-110 for images (number for framer)
+      borderRadius: '0.75rem', // rounded-xl for cards (12px)
+      glowOpacity: 0.1, // glow effect opacity (number for framer)
+      // 3D Floating Effects
+      shadowElevated: '0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.08)',
+      shadowFloat: '0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)',
+      goldBorder: '2px solid var(--brand-primary)',
+      goldGlow: '0 0 20px rgba(203, 178, 106, 0.3), 0 0 40px rgba(203, 178, 106, 0.1)',
+      transition: {
+        duration: 0.3, // 300ms transitions
+        ease: 'easeOut', // smooth easing
+      },
+    },
+    categoryColors: {
+      Executive: '#CBB26A', // gold brand color (unified)
+      Luxury: '#CBB26A', // gold brand color
+      SUV: '#CBB26A', // gold brand color (unified)
+      MPV: '#CBB26A', // gold brand color (unified)
+      Sports: '#CBB26A', // gold brand color (unified)
+    },
+    statusColors: {
+      available: {
+        bg: '#059669', // emerald-600
+        bgOpacity: 'rgba(5, 150, 105, 0.2)', // emerald-600/20
+        text: '#34D399', // emerald-400
+      },
+      limited: {
+        bg: '#D97706', // amber-600
+        bgOpacity: 'rgba(217, 119, 6, 0.2)', // amber-600/20
+        text: '#FCD34D', // amber-300
+      },
+      unavailable: {
+        bg: '#DC2626', // red-600
+        bgOpacity: 'rgba(220, 38, 38, 0.2)', // red-600/20
+        text: '#F87171', // red-400
+      },
+    },
+    colors: {
+      backGradientStart: 'var(--background)',
+      backGradientEnd: 'var(--background-muted, var(--background))',
+      backText: 'var(--text-primary)',
+      backTextMuted: 'var(--text-muted)',
+      backOverlay: 'var(--background-elevated)',
+    },
+    typography: {
+      cardTitle: {
+        fontSize: '1.25rem', // text-xl
+        fontWeight: '500', // font-medium
+        lineHeight: '1.75rem', // leading-7
+      },
+      cardDescription: {
+        fontSize: '0.875rem', // text-sm
+        lineHeight: '1.5rem', // leading-6
+      },
+      cardPrice: {
+        fontSize: '0.875rem', // text-sm
+        fontWeight: '500', // font-medium
+      },
     },
   },
-  // Spacing tokens (inline for now, can be moved to tokens/spacing.ts)
-  spacing: {
-    xs: '0.5rem',
-    sm: '0.75rem',
-    md: '1rem',
-    lg: '1.5rem',
-    xl: '2rem',
-    '2xl': '3rem',
-    '3xl': '4rem',
-    '4xl': '6rem',
-    '5xl': '8rem',
-  },
-  // Border radius tokens (inline for now, can be moved to tokens/radius.ts)
+
+  // Border radius tokens
   borderRadius: {
     sm: '0.25rem',
     md: '0.375rem',
@@ -78,25 +118,20 @@ export const designTokens = {
     '2xl': '1rem',
     full: '9999px',
   },
-  // Shadow tokens (inline for now, can be moved to tokens/shadows.ts)
+  // Shadow tokens
   shadows: {
     sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
     md: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
     lg: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
     xl: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
   },
-  // Animation tokens (inline for now, can be moved to tokens/animations.ts)
-  animations: {
-    duration: {
-      fast: '150ms',
-      normal: '300ms',
-      slow: '500ms',
-    },
-    easing: {
-      linear: 'linear',
-      ease: 'cubic-bezier(0.4, 0, 0.2, 1)',
-      bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-    },
+  // Breakpoints tokens (responsive design)
+  breakpoints: {
+    sm: '640px',
+    md: '768px',
+    lg: '1024px',
+    xl: '1280px',
+    '2xl': '1536px',
   },
 } as const;
 
@@ -117,66 +152,12 @@ export const propTokens = {
 } as const;
 
 /**
- * 🧩 Component Variants (will be moved to variants/ folder)
+ * 🧩 Component Variants (imported from design-system/variants)
  */
 export const componentVariants = {
-  button: {
-    variants: {
-      primary: 'bg-brand-primary hover:bg-brand-primary/90 text-black',
-      secondary:
-        'bg-neutral-200 hover:bg-neutral-300 text-neutral-900 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100',
-      outline:
-        'border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black',
-      ghost: 'text-brand-primary hover:bg-brand-primary/10',
-      destructive: 'bg-red-500 hover:bg-red-600 text-white',
-    },
-    sizes: {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-4 py-2 text-base',
-      lg: 'px-6 py-3 text-lg',
-      xl: 'px-8 py-4 text-xl',
-    },
-    base: `inline-flex items-center justify-center font-semibold rounded-lg transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary/50`,
-  },
-  card: {
-    variants: {
-      default: 'bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800',
-      elevated:
-        'bg-white dark:bg-neutral-900 shadow-lg border border-neutral-200 dark:border-neutral-800',
-      glass: 'bg-white/10 backdrop-blur-md border border-white/10',
-    },
-    base: `rounded-lg transition-colors duration-300 ease-in-out`,
-  },
-  text: {
-    variants: {
-      h1: 'text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100',
-      h2: 'text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100',
-      h3: 'text-2xl md:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100',
-      h4: 'text-xl md:text-2xl font-semibold text-neutral-900 dark:text-neutral-100',
-      h5: 'text-lg md:text-xl font-semibold text-neutral-900 dark:text-neutral-100',
-      h6: 'text-base md:text-lg font-semibold text-neutral-900 dark:text-neutral-100',
-      body: 'text-base leading-relaxed text-neutral-700 dark:text-neutral-300',
-      lead: 'text-lg md:text-xl leading-relaxed text-neutral-700 dark:text-neutral-300',
-      small: 'text-sm text-neutral-600 dark:text-neutral-400',
-      muted: 'text-neutral-500 dark:text-neutral-500',
-    },
-  },
-  badge: {
-    variants: {
-      default: 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100',
-      primary: 'bg-brand-primary text-black',
-      secondary: 'bg-neutral-200 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100',
-      success: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
-      warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
-      error: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
-    },
-    sizes: {
-      sm: 'px-2 py-1 text-xs',
-      md: 'px-2.5 py-1.5 text-sm',
-      lg: 'px-3 py-2 text-base',
-    },
-    base: 'inline-flex items-center font-medium rounded-full',
-  },
+  button: buttonVariants,
+  text: textVariants,
+  newsletter: newsletterVariants,
 } as const;
 
 /**

@@ -5,8 +5,8 @@
 
 'use client';
 
-import { forwardRef, type ElementType, type ReactNode } from 'react';
 import { cn } from '@/lib/utils/cn';
+import { forwardRef, type ElementType, type ReactNode } from 'react';
 import { PremiumButtonVariants } from './PremiumButton.variants';
 
 export type PremiumButtonVariant = 'default' | 'primary' | 'secondary';

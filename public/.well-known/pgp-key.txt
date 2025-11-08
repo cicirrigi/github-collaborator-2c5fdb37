@@ -1,0 +1,30 @@
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Comment: Vantage Lane Security Team Public Key
+Comment: Use this key to encrypt sensitive vulnerability reports
+Comment: Key generation in progress - placeholder for production deployment
+Comment: Contact security@vantagelane.com for key verification
+Comment: This placeholder will be replaced with actual PGP public key
+
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+mQINBF... [Key data will be generated using gpg --gen-key]
+[Actual key content will be exported using: gpg --armor --export security@vantagelane.com]
+
+Comment: Key fingerprint = [Will be generated]
+Comment: Key expires: 2026-12-31
+Comment: Key usage: Sign, Encrypt, Authenticate
+
+-----END PGP PUBLIC KEY BLOCK-----
+
+# Instructions for security researchers:
+# 1. Download this key: curl -O https://vantagelane.com/.well-known/pgp-key.txt
+# 2. Import: gpg --import pgp-key.txt
+# 3. Encrypt your report: gpg --encrypt --armor -r security@vantagelane.com report.txt
+# 4. Send encrypted report to: security@vantagelane.com
+
+# Key verification:
+# - Key ID: [To be generated]
+# - Fingerprint: [To be generated]
+# - Algorithm: RSA 4096-bit
+# - Created: 2025-11-05
+# - Expires: 2026-12-31

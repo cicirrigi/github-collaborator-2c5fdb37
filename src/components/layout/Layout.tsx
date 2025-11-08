@@ -4,8 +4,11 @@ import type React from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
-import Footer from './Footer';
-import Navbar from './Navbar';
+import Footer from './footer/Footer';
+// import Navbar from './navbar/Navbar'; // 🛡️ Stable version
+import { NewsletterSection } from '@/components/sections/NewsletterSection';
+import { NavbarLuxury as Navbar } from './navbar'; // ✨ Testing luxury version
+import { NavbarPortal } from './NavbarPortal';
 
 /**
  * 🏗️ Main Layout component for Vantage Lane 2.0
@@ -37,6 +40,8 @@ export interface LayoutProps {
   readonly hideNavbar?: boolean;
   /** Hide footer */
   readonly hideFooter?: boolean;
+  /** Hide newsletter section */
+  readonly hideNewsletter?: boolean;
   /** Custom main content styling */
   readonly className?: string;
   /** Main content container styling */
@@ -55,47 +60,57 @@ export default function Layout({
   children,
   hideNavbar = false,
   hideFooter = false,
+  hideNewsletter = false,
   className,
   containerClassName,
   fullHeight = false,
   pageTitle,
 }: LayoutProps): React.JSX.Element {
   return (
-    <div
-      className={cn(
-        'flex flex-col',
-        fullHeight && 'min-h-screen',
-        'transition-colors duration-300 ease-in-out'
-      )}
-    >
+    <>
       {/* SEO Title */}
       {pageTitle && <title>{pageTitle} | Vantage Lane</title>}
 
-      {/* Navigation */}
-      {!hideNavbar && <Navbar />}
+      {/* 🛡️ Portal-based Navbar (always fixed to viewport) */}
+      {!hideNavbar && (
+        <NavbarPortal>
+          <Navbar />
+        </NavbarPortal>
+      )}
 
-      {/* Main Content Area */}
-      <main
+      <div
         className={cn(
-          'flex-1',
-          fullHeight && !hideNavbar && !hideFooter && 'flex flex-col',
-          containerClassName
+          'flex flex-col',
+          fullHeight && 'min-h-screen',
+          'transition-colors duration-300 ease-in-out'
         )}
-        role='main'
-        aria-label='Main content'
       >
-        <div
+        {/* Main Content Area */}
+        <main
           className={cn(
-            fullHeight && !hideNavbar && !hideFooter && 'flex flex-1 flex-col',
-            className
+            'flex-1',
+            fullHeight && !hideNavbar && !hideFooter && 'flex flex-col',
+            containerClassName
           )}
+          role='main'
+          aria-label='Main content'
         >
-          {children}
-        </div>
-      </main>
+          <div
+            className={cn(
+              fullHeight && !hideNavbar && !hideFooter && 'flex flex-1 flex-col',
+              className
+            )}
+          >
+            {children}
+          </div>
+        </main>
 
-      {/* Footer */}
-      {!hideFooter && <Footer />}
-    </div>
+        {/* Newsletter Section - Luxury VIP area above footer */}
+        {!hideFooter && !hideNewsletter && <NewsletterSection />}
+
+        {/* Footer */}
+        {!hideFooter && <Footer />}
+      </div>
+    </>
   );
 }

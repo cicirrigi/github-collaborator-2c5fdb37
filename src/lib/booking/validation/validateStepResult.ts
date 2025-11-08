@@ -1,13 +1,13 @@
 /**
  * ✅ Step Validation Helper (Smart Cache + Full Result)
- * 
- * - Returnează `isValid`, `errors`, și `warnings` 
+ *
+ * - Returnează `isValid`, `errors`, și `warnings`
  * - Folosește un sistem de cache inteligent bazat pe WeakMap pentru performanță
  * - Cache-ul se invalidează automat dacă se modifică:
  *   - ora / data pickupului
  *   - distanța totală
  *   - prețul calculat (dinamic)
- * - Compatibil 100% cu `validateStep` și `validateStepBoolean` 
+ * - Compatibil 100% cu `validateStep` și `validateStepBoolean`
  */
 
 import type { BookingStore } from '../../../types/booking/index';
@@ -87,9 +87,8 @@ export const validateStepResult = async (
     }
 
     // Execută validarea reală cu măsurarea timpului
-    const start = performance.now();
     const validation = validateStep(step, state);
-    const durationMs = performance.now() - start;
+    // Performance timing removed (was unused)
 
     const result: StepValidationResult = {
       isValid: validation.isValid,
@@ -105,7 +104,7 @@ export const validateStepResult = async (
       // Pentru moment, disable logging to avoid module complexity
       // În production, se poate replace cu proper logging solution
       if (typeof window !== 'undefined' && window.console) {
-        console.log(`Validation step ${step}: ${result.isValid ? 'PASS' : 'FAIL'} (${durationMs}ms)`);
+        // console.log(`Validation step ${step}: ${result.isValid ? 'PASS' : 'FAIL'} (${durationMs}ms)`);
       }
     } catch {
       // Silent fail pentru logging - nu afectăm validarea principală
@@ -130,7 +129,10 @@ export const validateStepResult = async (
  * @param state - Store-ul complet
  * @returns boolean
  */
-export const validateStepResultBoolean = async (step: number, state: BookingStore): Promise<boolean> => {
+export const validateStepResultBoolean = async (
+  step: number,
+  state: BookingStore
+): Promise<boolean> => {
   const result = await validateStepResult(step, state);
   return result.isValid;
 };

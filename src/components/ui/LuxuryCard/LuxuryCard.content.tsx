@@ -22,6 +22,7 @@ interface ContentRenderProps {
   title?: string | undefined;
   description?: string | undefined;
   footer?: ReactNode;
+  bottomBadge?: ReactNode;
   glowColor?: string | undefined;
   shimmerColor?: string | undefined;
   iconSize?: LuxuryCardIconSize;
@@ -43,6 +44,7 @@ export function renderContent({
   title,
   description,
   footer,
+  bottomBadge,
   glowColor,
   shimmerColor,
   iconSize,
@@ -58,42 +60,52 @@ export function renderContent({
 
   // Simple API: render from props
   return (
-    <>
-      {renderIcon({
-        icon,
-        glowColor,
-        shimmerColor,
-        iconSize: iconSize || 'md',
-        iconEnhancement: iconEnhancement || 'none',
-        hover,
-        disabled,
-      })}
-      {title && (
-        <h3
-          className='duration-[var(--luxury-glow-duration)] relative z-10 mb-3 text-xl font-medium text-white transition-colors'
-          style={
-            {
-              '--hover-color': glowColor || luxuryCardTokens.colors.goldGlow,
-            } as React.CSSProperties & { '--hover-color': string }
-          }
-          onMouseEnter={e => {
-            const customStyle = e.currentTarget.style as CSSStyleDeclaration & {
-              '--hover-color': string;
-            };
-            e.currentTarget.style.color = customStyle['--hover-color'];
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.color = 'white';
-          }}
-        >
-          {title}
-        </h3>
-      )}
-      {description && <p className='text-sm leading-relaxed text-neutral-300'>{description}</p>}
-      {footer && (
-        <div className='mt-4 border-t border-neutral-200 pt-4 dark:border-white/10'>{footer}</div>
-      )}
-    </>
+    <div className='grid grid-rows-[1fr_auto] h-full gap-4'>
+      {/* Content area - ocupă spațiul disponibil */}
+      <div className='flex flex-col justify-center text-center'>
+        {renderIcon({
+          icon,
+          glowColor,
+          shimmerColor,
+          iconSize: iconSize || 'md',
+          iconEnhancement: iconEnhancement || 'none',
+          hover,
+          disabled,
+        })}
+        {title && (
+          <h3
+            className='duration-[var(--luxury-glow-duration)] relative z-10 mb-3 text-xl font-medium text-white transition-colors line-clamp-2 min-h-[3.5rem]'
+            style={
+              {
+                '--hover-color': glowColor || luxuryCardTokens.colors.goldGlow,
+              } as React.CSSProperties & { '--hover-color': string }
+            }
+            onMouseEnter={e => {
+              const customStyle = e.currentTarget.style as CSSStyleDeclaration & {
+                '--hover-color': string;
+              };
+              e.currentTarget.style.color = customStyle['--hover-color'];
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.color = 'white';
+            }}
+          >
+            {title}
+          </h3>
+        )}
+        {description && (
+          <p className='text-sm leading-relaxed text-neutral-300 line-clamp-3 min-h-[4.5rem]'>
+            {description}
+          </p>
+        )}
+        {footer && (
+          <div className='mt-4 border-t border-neutral-200 pt-4 dark:border-white/10'>{footer}</div>
+        )}
+      </div>
+
+      {/* Badge area - grid row 2, mereu aliniat */}
+      {bottomBadge && <div className='flex justify-center'>{bottomBadge}</div>}
+    </div>
   );
 }
 

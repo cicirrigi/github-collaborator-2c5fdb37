@@ -36,17 +36,25 @@ export function UserMenu({ className }: UserMenuProps): React.JSX.Element {
         Sign In
       </button>
 
-      {/* Register Button */}
+      {/* Register Button - Orchestrated Hover + Shimmer */}
       <button
         className={cn(
           'text-sm font-medium transition-all duration-300',
           'bg-brand-primary text-black hover:bg-brand-primary/90',
           'rounded-lg px-4 py-2',
           'focus:outline-none focus:ring-2 focus:ring-brand-primary/50',
-          'shadow-lg shadow-brand-primary/25 hover:shadow-brand-primary/40'
+          'hover:scale-105 active:scale-95',
+          'hover:shadow-lg hover:shadow-brand-primary/30',
+          'hover:brightness-110',
+          'relative overflow-hidden',
+          'before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-1000 before:ease-out'
         )}
+        style={{
+          backgroundColor: 'var(--brand-primary)',
+          color: 'black',
+        }}
       >
-        Get Started
+        Sign Up
       </button>
     </div>
   );

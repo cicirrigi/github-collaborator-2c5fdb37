@@ -4,7 +4,9 @@
 
 import type { BookingStore } from '../../../types/booking/index';
 
-type ZustandSet = (partial: any) => void;
+type ZustandSet = (
+  partial: Partial<BookingStore> | ((state: BookingStore) => Partial<BookingStore>)
+) => void;
 type ZustandGet = () => BookingStore;
 
 export interface NavigationActions {

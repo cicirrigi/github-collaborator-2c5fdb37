@@ -9,10 +9,9 @@ import {
   THEME_CLASSES,
   VALIDATION,
   SPACING_CONFIG,
-  BACKGROUND_CONFIG,
 } from './constants';
-import { designTokens } from '@/design-system/tokens/colors';
 import { SuggestionsDropdown } from './SuggestionsDropdown';
+import { locationPickerTokens } from './LocationPicker.tokens';
 
 // Re-export types pentru convenience
 export type { LocationPickerProps, GooglePlace, LocationVariant } from './types';
@@ -28,7 +27,7 @@ export const LocationPicker = ({
   placeholder,
   icon,
   error,
-  onValidate,
+  onValidate: _onValidate,
 }: LocationPickerProps) => {
   const [inputValue, setInputValue] = useState(value?.address || '');
   const [isOpen, setIsOpen] = useState(false);
@@ -169,9 +168,9 @@ export const LocationPicker = ({
         <div
           className={cn(
             'absolute top-1/2 -translate-y-1/2 transition-colors z-10',
-            'text-gray-600 dark:text-gray-400',
-            'group-hover:text-yellow-600 dark:group-hover:text-yellow-400',
-            !disabled && isOpen && 'text-gray-800 dark:text-gray-200'
+            locationPickerTokens.icon.default,
+            locationPickerTokens.icon.hover,
+            !disabled && isOpen && locationPickerTokens.icon.focus
           )}
           style={{
             left: SPACING_CONFIG.iconLeft[size],
@@ -205,20 +204,23 @@ export const LocationPicker = ({
             THEME_CLASSES.input.base,
             SIZE_CLASSES.container[size],
             SPACING_CONFIG.inputPaddingLeft[size],
-            'bg-white/20 dark:bg-black/20',
-            'text-gray-600 dark:text-gray-400',
-            'hover:bg-yellow-50/30 dark:hover:bg-yellow-900/20',
-            'hover:border-yellow-300/50',
-            'focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500',
-            displayError && 'bg-red-50/20 dark:bg-red-900/20',
-            disabled && 'bg-gray-100/20 text-gray-400 cursor-not-allowed dark:bg-gray-800/20'
+            locationPickerTokens.input.background.default,
+            locationPickerTokens.input.text.default,
+            locationPickerTokens.input.background.hover,
+            locationPickerTokens.input.border.hover,
+            `${locationPickerTokens.input.focus.ring} ${locationPickerTokens.input.focus.border}`,
+            displayError && locationPickerTokens.input.background.error,
+            disabled &&
+              `${locationPickerTokens.input.background.disabled} ${locationPickerTokens.input.text.disabled} cursor-not-allowed`
           )}
         />
 
         {/* Loading indicator */}
         {isLoading && (
           <div className='absolute right-3 top-1/2 -translate-y-1/2'>
-            <div className='w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin' />
+            <div
+              className={`${locationPickerTokens.loading.size} ${locationPickerTokens.loading.border} rounded-full ${locationPickerTokens.loading.animation}`}
+            />
           </div>
         )}
       </div>
@@ -233,7 +235,11 @@ export const LocationPicker = ({
 
       {/* Error message */}
       {displayError && (
-        <p className='mt-1 text-sm text-red-600 dark:text-red-400'>{displayError}</p>
+        <p
+          className={`${locationPickerTokens.error.margin} ${locationPickerTokens.error.size} ${locationPickerTokens.error.text}`}
+        >
+          {displayError}
+        </p>
       )}
     </div>
   );
