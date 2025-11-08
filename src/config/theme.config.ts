@@ -54,7 +54,7 @@ export const designTokens = {
       // 3D Floating Effects
       shadowElevated: '0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.08)',
       shadowFloat: '0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)',
-      goldBorder: '2px solid var(--brand-primary)',
+      goldBorder: '1px solid var(--brand-primary)',
       goldGlow: '0 0 20px rgba(203, 178, 106, 0.3), 0 0 40px rgba(203, 178, 106, 0.1)',
       transition: {
         duration: 0.3, // 300ms transitions

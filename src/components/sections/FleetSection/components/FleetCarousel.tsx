@@ -10,7 +10,6 @@
 import type React from 'react';
 import { forwardRef } from 'react';
 
-import { designTokens } from '@/config/theme.config';
 import { cn } from '@/lib/utils/cn';
 
 import { FleetCard3D } from '../FleetCard3D';
@@ -50,9 +49,6 @@ export const FleetCarousel = forwardRef<HTMLDivElement, FleetCarouselProps>(func
         showCTASpacing && 'mb-16',
         className
       )}
-      style={{
-        gap: designTokens.fleet.spacing.cardGap,
-      }}
     >
       {vehicles.map((vehicle: Vehicle, index: number) => (
         <div

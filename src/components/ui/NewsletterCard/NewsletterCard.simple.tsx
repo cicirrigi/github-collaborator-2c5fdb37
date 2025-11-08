@@ -63,8 +63,7 @@ export function NewsletterCard({ onSubmit, className }: SimpleNewsletterCardProp
       suppressHydrationWarning
       style={{
         backgroundColor: tokens.card.backgroundColor,
-        borderColor: 'var(--brand-primary)',
-        borderWidth: '1px',
+        border: '1px solid rgba(203, 178, 106, 0.2)',
       }}
     >
       <div className='mb-6'>

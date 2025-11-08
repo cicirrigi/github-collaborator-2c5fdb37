@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import type React from 'react';
 
@@ -10,6 +10,12 @@ import { cn } from '@/lib/utils/cn';
 
 import { heroConfig } from './HeroSection.config';
 import type { HeroProps } from './HeroSection.types';
+
+// Import AnimatedBackground only on client to prevent hydration errors
+const AnimatedBackground = dynamic(
+  () => import('@/components/ui/AnimatedBackground').then(mod => mod.AnimatedBackground),
+  { ssr: false }
+);
 
 /**
  * 🎯 HeroSection - Homepage hero with luxury animations
@@ -70,21 +76,24 @@ export function HeroSection({
         } as React.CSSProperties
       }
     >
-      {/* Background Image */}
-      {config.background.image && (
-        <Image
-          src={config.background.image}
-          alt='Vantage Lane Hero Background'
-          fill
-          className={cn(
-            'object-cover',
-            // Theme-aware brightness (more readable)
-            'brightness-[0.7] dark:brightness-[0.5]'
-          )}
-          priority
-          sizes='100vw'
-        />
-      )}
+      {/* Theme-aware base background for orb contrast */}
+      <div className='absolute inset-0 bg-gradient-to-br from-neutral-100 via-neutral-50 to-white dark:from-neutral-950 dark:via-neutral-900 dark:to-black' />
+
+      {/* Animated Background with Floating Orbs */}
+      <AnimatedBackground
+        variant='luxury'
+        speed='normal'
+        intensity='medium'
+        colorScheme='gold'
+        enableParallax={true}
+        zIndex={0}
+      />
+
+      {/* Theme-aware overlay for better text contrast */}
+      <div
+        className='absolute inset-0 bg-gradient-to-b from-white/20 via-white/10 to-white/30 dark:from-black/30 dark:via-black/20 dark:to-black/40'
+        style={{ zIndex: 1 }}
+      />
 
       {/* Content Container */}
       <div
@@ -112,7 +121,7 @@ export function HeroSection({
           {/* Title */}
           <motion.h1
             variants={itemVariants}
-            className='text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl'
+            className='text-4xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-6xl lg:text-7xl'
             style={{
               fontFamily: 'var(--font-display)',
               lineHeight: '1.1',
@@ -133,7 +142,7 @@ export function HeroSection({
           {config.description && (
             <motion.p
               variants={itemVariants}
-              className='mx-auto max-w-2xl text-lg leading-relaxed text-neutral-200 md:text-xl'
+              className='mx-auto max-w-2xl text-lg leading-relaxed text-neutral-700 dark:text-neutral-200 md:text-xl'
             >
               {config.description}
             </motion.p>

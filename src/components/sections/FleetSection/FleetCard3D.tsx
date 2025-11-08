@@ -40,7 +40,6 @@ const FleetCardBack = memo(function FleetCardBack({
           backgroundColor: 'var(--background-elevated)',
           backgroundImage: `linear-gradient(135deg, var(--background) 0%, var(--background-muted, var(--background-elevated)) 100%)`,
           backdropFilter: 'blur(10px)',
-          border: '1px solid var(--border-subtle)',
         }}
       />
 
@@ -212,8 +211,8 @@ export const FleetCard3D = memo(function FleetCard3D({
               showPrice={showPrice}
             />
 
-            {/* Tap Indicator - doar pe mobil */}
-            <TapIndicator />
+            {/* Tap Indicator - doar ripple, fără mână - dreapta sus */}
+            <TapIndicator className='absolute top-3 right-3' />
           </motion.div>
         </div>
 
@@ -224,7 +223,7 @@ export const FleetCard3D = memo(function FleetCard3D({
             transform: 'rotateY(180deg)',
             backgroundColor: 'var(--background-elevated)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid var(--brand-primary-20)',
+            border: designTokens.fleet.effects.goldBorder,
             boxShadow: '0 0 40px var(--brand-primary-10)',
           }}
         >

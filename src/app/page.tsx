@@ -1,4 +1,4 @@
-import { CTASection, HeroSection, ServicesSection, TestimonialsNew } from '@/components/sections';
+import { HeroSection, ServicesSection, TestimonialsNew } from '@/components/sections';
 import { FleetSection3D } from '@/components/sections/FleetSection/FleetSection3D';
 import { getPageMetadata } from '@/lib/seo';
 
@@ -29,9 +29,6 @@ export default function HomePage() {
 
       {/* Client Testimonials - New Carousel Layout */}
       <TestimonialsNew variant='carousel' />
-
-      {/* CTA Section - Config driven */}
-      <CTASection />
     </>
   );
 }

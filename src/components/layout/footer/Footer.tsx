@@ -76,9 +76,9 @@ const Footer = memo(function Footer({
           className='grid grid-cols-1 lg:grid-cols-12'
           style={{ gap: designTokens.footer.spacing.mainGrid }}
         >
-          {/* Brand Section with Social Icons */}
+          {/* Brand Section with Social Icons - Order 2 on mobile (appears last) */}
           {!hideBrand && (
-            <div className='lg:col-span-4'>
+            <div className='order-2 lg:order-1 lg:col-span-4'>
               <FooterBrand
                 brand={config.brand}
                 {...(!hideSocials && { socials: config.socials })}
@@ -86,8 +86,10 @@ const Footer = memo(function Footer({
             </div>
           )}
 
-          {/* Links Section */}
-          <div className={cn(!hideBrand ? 'lg:col-span-8' : 'lg:col-span-12')}>
+          {/* Links Section - Order 1 on mobile (appears first) */}
+          <div
+            className={cn('order-1 lg:order-2', !hideBrand ? 'lg:col-span-8' : 'lg:col-span-12')}
+          >
             <FooterLinks links={config.links} />
           </div>
         </motion.div>

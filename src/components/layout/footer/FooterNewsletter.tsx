@@ -61,10 +61,13 @@ const FooterNewsletter = memo(function FooterNewsletter({
       viewport={{ once: true }}
       className={cn(
         'relative mx-auto w-full max-w-[420px] p-8 rounded-3xl',
-        'backdrop-blur-xl bg-black/40 border border-white/5 shadow-[0_0_40px_-10px_rgba(203,178,106,0.25)]',
+        'backdrop-blur-xl bg-black/40 shadow-[0_0_40px_-10px_rgba(203,178,106,0.25)]',
         'overflow-hidden',
         className
       )}
+      style={{
+        border: '1px solid rgba(203, 178, 106, 0.2)',
+      }}
     >
       {/* Glow subtle aurie */}
       <div className='absolute inset-0 rounded-3xl bg-[radial-gradient(circle_at_top,var(--brand-primary)/8,transparent_70%)]' />

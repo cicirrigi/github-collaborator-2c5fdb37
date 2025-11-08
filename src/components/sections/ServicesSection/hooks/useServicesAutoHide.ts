@@ -25,46 +25,19 @@ export function useServicesAutoHide(): UseServicesAutoHideReturn {
     const carousel = carouselRef.current;
     if (!carousel) return;
 
-    // Smart timer system
-    let autoHideTimer: NodeJS.Timeout;
-    let reappearTimer: NodeJS.Timeout;
-
-    // Auto-hide după 6 secunde
-    const startAutoHide = () => {
-      autoHideTimer = setTimeout(() => {
-        setIsVisible(false);
-
-        // Dacă nu a făcut scroll, reapare după încă 6 secunde
-        if (!hasScrolled) {
-          reappearTimer = setTimeout(() => {
-            setIsVisible(true);
-            // Și se ascunde din nou după 6 secunde
-            startAutoHide();
-          }, 6000);
-        }
-      }, 6000);
-    };
-
-    startAutoHide();
-
-    // Simple scroll listener - marchează că user-ul a făcut scroll
+    // Detectează poziția scroll - arată când e la început (primul card)
     const handleScroll = () => {
-      // Marchează că user-ul a făcut scroll
       setHasScrolled(true);
 
-      // Clear toate timer-ele - nu mai reapare
-      clearTimeout(autoHideTimer);
-      clearTimeout(reappearTimer);
+      // Verifică dacă e la începutul carousel-ului (primul card)
+      const isAtStart = carousel.scrollLeft <= 10; // Toleranță de 10px
 
-      // Ascunde indicatorul permanent
-      setIsVisible(false);
+      setIsVisible(isAtStart);
     };
 
-    carousel.addEventListener('scroll', handleScroll, { passive: true, once: true });
+    carousel.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      clearTimeout(autoHideTimer);
-      clearTimeout(reappearTimer);
       carousel.removeEventListener('scroll', handleScroll);
     };
   }, [hasScrolled]);

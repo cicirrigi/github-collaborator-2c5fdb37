@@ -34,7 +34,7 @@ export function FleetHeader({
   showInstructions = true,
 }: FleetHeaderProps): React.JSX.Element {
   return (
-    <div className='text-center mb-16'>
+    <div className='text-center mb-6'>
       {/* Main Title */}
       <h2
         className='mb-4 tracking-wide text-4xl md:text-5xl font-light text-center'
@@ -70,23 +70,22 @@ export function FleetHeader({
         {subtitle}
       </Text>
 
-      {/* Flip instruction */}
+      {/* Flip instruction - glass effect - positioned above first card */}
       {showInstructions && (
-        <div className='mt-6'>
-          <span className='text-sm italic block'>
-            <span
-              className='inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium'
-              style={{
-                backgroundColor: 'var(--brand-primary-05)',
-                color: 'var(--brand-primary)',
-                border: '1px solid var(--brand-primary-20)',
-              }}
-            >
-              <span className='hidden md:inline'>
-                Hover over cards to see detailed information.
-              </span>
-              <span className='md:hidden'>Tap on cards to see detailed information.</span>
-            </span>
+        <div className='mt-6 flex justify-start md:justify-center'>
+          <span
+            className='inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium ml-2 md:ml-0'
+            style={{
+              backgroundColor: 'rgba(203, 178, 106, 0.05)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              border: '0.5px solid rgba(203, 178, 106, 0.15)',
+              boxShadow: '0 2px 8px rgba(203, 178, 106, 0.08)',
+              color: 'var(--brand-primary)',
+            }}
+          >
+            <span className='hidden md:inline'>Hover over cards to see detailed information.</span>
+            <span className='md:hidden'>Tap on cards to see detailed information.</span>
           </span>
         </div>
       )}

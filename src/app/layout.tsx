@@ -76,12 +76,12 @@ export const metadata: Metadata = {
   other: {
     'mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-capable': 'yes',
-    'apple-mobile-web-app-status-bar-style': 'default',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
     'apple-mobile-web-app-title': 'Vantage Lane',
     'application-name': 'Vantage Lane',
-    'msapplication-TileColor': '#CBB26A',
+    'msapplication-TileColor': '#000000',
     'msapplication-config': '/browserconfig.xml',
-    'theme-color': '#CBB26A',
+    'theme-color': '#000000',
     'color-scheme': 'dark light',
   },
 };
@@ -100,9 +100,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel='manifest' href='/manifest.json' />
 
         {/* Theme Colors */}
-        <meta name='theme-color' content='#CBB26A' />
-        <meta name='theme-color' media='(prefers-color-scheme: light)' content='#CBB26A' />
-        <meta name='theme-color' media='(prefers-color-scheme: dark)' content='#CBB26A' />
+        <meta name='theme-color' content='#000000' />
+        <meta name='theme-color' media='(prefers-color-scheme: light)' content='#000000' />
+        <meta name='theme-color' media='(prefers-color-scheme: dark)' content='#000000' />
 
         {/* Apple PWA */}
         <meta name='apple-mobile-web-app-capable' content='yes' />
@@ -111,7 +111,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Microsoft */}
         <meta name='application-name' content='Vantage Lane' />
-        <meta name='msapplication-TileColor' content='#CBB26A' />
+        <meta name='msapplication-TileColor' content='#000000' />
         <meta name='msapplication-config' content='/browserconfig.xml' />
 
         {/* Additional PWA Meta */}
