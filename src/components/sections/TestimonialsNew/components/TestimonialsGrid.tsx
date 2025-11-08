@@ -2,7 +2,8 @@
 
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
-import React, { useEffect, useRef } from 'react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import gridStyles from '../styles/grid.module.css';
 import { gridTokens, GridVariant, motionTokens } from '../tokens';
@@ -24,8 +25,7 @@ interface TestimonialsGridProps {
   maxItems?: number;
   /** CSS class suplimentară */
   className?: string;
-  /** Callback pentru click pe testimonial */
-  onTestimonialClick?: (testimonial: Testimonial) => void;
+  /** onClick handler removed - cards no longer clickable */
 }
 
 export function TestimonialsGrid({
@@ -33,7 +33,6 @@ export function TestimonialsGrid({
   variant = 'default',
   maxItems,
   className,
-  onTestimonialClick,
 }: TestimonialsGridProps): React.JSX.Element | null {
   // Ref pentru carousel scroll inițial (hooks trebuie să fie la început)
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -41,19 +40,112 @@ export function TestimonialsGrid({
   // Pentru carousel, nu mai folosim .gridCarousel - aplicăm stilurile direct
   const isCarousel = variant === 'carousel';
 
-  // Scroll inițial în carousel pentru preview pe ambele părți
+  // Early computation pentru displayTestimonials
+  const baseTestimonials = testimonials
+    ? maxItems
+      ? testimonials.slice(0, maxItems)
+      : testimonials
+    : [];
+
+  // Pentru carousel, clonează primele carduri la sfârșit pentru seamless loop
+  const displayTestimonials =
+    isCarousel && baseTestimonials.length > 1
+      ? [
+          ...baseTestimonials,
+          ...baseTestimonials.slice(0, 2).map((item, idx) => ({
+            ...item,
+            id: `${item.id}-clone-${idx}`, // Key unic pentru clonele
+          })),
+        ]
+      : baseTestimonials;
+
+  // States pentru auto-scroll control
+  const [isPaused, setIsPaused] = useState(false);
+  const autoScrollRef = useRef<NodeJS.Timeout | null>(null);
+  const currentIndexRef = useRef(0);
+
+  // Auto-scroll pentru carousel cu seamless loop
   useEffect(() => {
-    if (isCarousel && carouselRef.current && testimonials?.length > 1) {
-      // Scroll la al doilea card după mount
-      setTimeout(() => {
-        const cardWidth = 320 + 32; // card width + gap
-        carouselRef.current?.scrollTo({
-          left: cardWidth * 0.7, // Scroll parțial pentru preview
-          behavior: 'smooth',
-        });
-      }, 100);
+    if (!isCarousel || displayTestimonials.length <= 1) return;
+
+    const cardWidth = 320 + 32; // card width + gap
+    const originalCards = baseTestimonials.length;
+
+    const autoScroll = () => {
+      if (isPaused || !carouselRef.current) return;
+
+      currentIndexRef.current++;
+
+      // Scroll la următorul card (inclusiv clonele)
+      carouselRef.current.scrollTo({
+        left: cardWidth * currentIndexRef.current,
+        behavior: 'smooth',
+      });
+
+      // Când ajungem la prima clonă, continuăm smooth
+      // Reset se face doar după ce am trecut prin prima clonă
+      if (currentIndexRef.current > originalCards) {
+        // > nu >=
+        setTimeout(() => {
+          if (carouselRef.current && !isPaused) {
+            carouselRef.current.scrollTo({
+              left: 0,
+              behavior: 'auto', // Reset instant după clonă
+            });
+            currentIndexRef.current = 0;
+          }
+        }, 800); // Delay după smooth scroll prin clonă
+      }
+    };
+
+    // Observer pentru manual scroll - detect când user ajunge la clonele
+    const handleManualScroll = () => {
+      if (!carouselRef.current || isPaused) return;
+
+      const scrollLeft = carouselRef.current.scrollLeft;
+      const maxScroll = cardWidth * originalCards;
+
+      // Dacă user-ul a scroll-at manual până la clonele, reset automat
+      if (scrollLeft >= maxScroll - 50) {
+        // 50px tolerance
+        setTimeout(() => {
+          if (carouselRef.current) {
+            carouselRef.current.scrollTo({
+              left: 0,
+              behavior: 'auto',
+            });
+            currentIndexRef.current = 0;
+          }
+        }, 300); // Delay mai scurt pentru manual scroll
+      }
+    };
+
+    // Pornește auto-scroll cu timing mai lent
+    const startInterval = () => {
+      if (autoScrollRef.current) clearInterval(autoScrollRef.current);
+      autoScrollRef.current = setInterval(autoScroll, 4000); // 4 secunde - mai lent
+    };
+
+    // Add scroll listener pentru manual scroll
+    const container = carouselRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleManualScroll, { passive: true });
     }
-  }, [isCarousel, testimonials?.length]);
+
+    // Start după o mică întârziere
+    const initialTimeout = setTimeout(startInterval, 1000);
+
+    return () => {
+      clearTimeout(initialTimeout);
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current);
+        autoScrollRef.current = null;
+      }
+      if (container) {
+        container.removeEventListener('scroll', handleManualScroll);
+      }
+    };
+  }, [isCarousel, isPaused, baseTestimonials.length, displayTestimonials.length]);
 
   // Funcții pentru butoanele de scroll
   const scrollLeft = () => {
@@ -79,9 +171,6 @@ export function TestimonialsGrid({
   // SSR Safety Guard
   if (!testimonials?.length) return null;
 
-  // Limitează numărul de testimoniale dacă este specificat
-  const displayTestimonials = maxItems ? testimonials.slice(0, maxItems) : testimonials;
-
   // Obține configurația pentru varianta selectată
   const variantConfig = gridTokens.variants[variant];
 
@@ -103,9 +192,14 @@ export function TestimonialsGrid({
                 overflowX: 'auto',
                 overflowY: 'visible',
                 gap: 'clamp(1.25rem, 2.5vw, 2rem)',
-                padding: '2rem 2rem 2rem 1rem' /* Padding normal la dreapta */,
+                padding: '2rem 2rem 2rem 1rem',
                 scrollSnapType: 'x mandatory',
                 scrollbarWidth: 'none',
+                // 🎨 Gradient masks pentru fade-out elegant la capete
+                maskImage:
+                  'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
+                WebkitMaskImage:
+                  'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
               }
             : variantConfig),
         }}
@@ -113,6 +207,8 @@ export function TestimonialsGrid({
         initial='initial'
         animate='animate'
         viewport={motionTokens.scroll.viewport}
+        onMouseEnter={() => isCarousel && setIsPaused(true)}
+        onMouseLeave={() => isCarousel && setIsPaused(false)}
       >
         {displayTestimonials.map((testimonial, index) => (
           <motion.div
@@ -122,7 +218,7 @@ export function TestimonialsGrid({
             style={{
               // Pentru carousel variant, adaugă scroll-snap
               ...(variant === 'carousel' && {
-                scrollSnapAlign: index === displayTestimonials.length - 1 ? 'end' : 'center',
+                scrollSnapAlign: 'center', // Toate cardurile center-aligned pentru seamless
                 flexShrink: 0,
               }),
             }}
@@ -130,7 +226,7 @@ export function TestimonialsGrid({
             <TestimonialCardNew
               testimonial={testimonial}
               variant={getCardVariant(variant)}
-              onClick={() => onTestimonialClick?.(testimonial)}
+              // Eliminăm onClick complet - cardurile nu mai sunt clickabile
             />
           </motion.div>
         ))}
@@ -142,7 +238,7 @@ export function TestimonialsGrid({
           {/* Buton Stânga */}
           <button
             onClick={scrollLeft}
-            className='absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 shadow-lg hover:shadow-xl'
+            className='absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 active:bg-[#cbb26a]/40 active:border-[#cbb26a]/60 transition-all duration-200 shadow-lg hover:shadow-xl'
             aria-label='Scroll left'
           >
             <svg
@@ -162,7 +258,7 @@ export function TestimonialsGrid({
           {/* Buton Dreapta */}
           <button
             onClick={scrollRight}
-            className='absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 shadow-lg hover:shadow-xl'
+            className='absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 active:bg-[#cbb26a]/40 active:border-[#cbb26a]/60 transition-all duration-200 shadow-lg hover:shadow-xl'
             aria-label='Scroll right'
           >
             <svg

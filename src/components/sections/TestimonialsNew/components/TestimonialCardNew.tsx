@@ -40,15 +40,14 @@ interface TestimonialCardNewProps {
   variant?: CardVariant;
   /** CSS class suplimentară */
   className?: string;
-  /** Callback pentru click pe card */
-  onClick?: () => void;
+  /** Click functionality removed - cards are display only */
 }
 
 export function TestimonialCardNew({
   testimonial,
   variant = 'default',
   className,
-  onClick,
+  // onClick removed - cards no longer clickable
 }: TestimonialCardNewProps): React.JSX.Element {
   const variantStyles = cardTokens.variants[variant];
 
@@ -71,17 +70,12 @@ export function TestimonialCardNew({
       initial='initial'
       animate='animate'
       whileHover='hover'
-      whileTap='tap'
+      // whileTap removed - no more click interaction
       viewport={motionTokens.scroll.viewport}
-      onClick={onClick}
+      // onClick removed - cards are not clickable anymore
       role='article'
-      tabIndex={onClick ? 0 : -1}
-      onKeyDown={e => {
-        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
-          e.preventDefault();
-          onClick();
-        }
-      }}
+      tabIndex={-1} // Not focusable - no click functionality
+      // onKeyDown removed - no keyboard interaction
     >
       {/* 🎯 HEADER SECTION - flex: 0 0 auto */}
       <motion.div
