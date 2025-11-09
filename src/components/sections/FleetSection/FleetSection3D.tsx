@@ -53,7 +53,7 @@ const FleetSection3D = memo(function FleetSection3D({
   };
 
   return (
-    <SectionOrchestrator background='neutral' spacing='lg' {...(className && { className })}>
+    <SectionOrchestrator spacing='lg' {...(className && { className })}>
       <Container size='xl'>
         {/* Header */}
         {!hideTitle && (

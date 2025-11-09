@@ -35,13 +35,12 @@ export function NewsletterSection({
     <section
       className={cn(
         'relative isolate overflow-hidden',
-        newsletterTokens.container.backgroundColor,
         newsletterTokens.container.paddingY,
         className
       )}
       suppressHydrationWarning
     >
-      {/* Radial gold backdrop glow */}
+      {/* Radial gold backdrop glow - overlayed on global background */}
       <div className={cn('absolute inset-0', newsletterTokens.container.bg)} />
 
       <div className='mx-auto max-w-7xl px-6 lg:px-8 relative z-10 text-center'>
