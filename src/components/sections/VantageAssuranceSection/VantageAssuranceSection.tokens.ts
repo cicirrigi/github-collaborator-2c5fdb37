@@ -70,7 +70,7 @@ export const assuranceTokens = {
    * Grid layout
    */
   grid: {
-    container: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+    container: 'grid grid-cols-2 lg:grid-cols-3',
     item: 'flex flex-col items-center text-center',
   },
 
