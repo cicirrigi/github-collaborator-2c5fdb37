@@ -39,14 +39,14 @@ export const pricingTokens = {
    * Grid Layout
    */
   grid: {
-    container: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4',
+    container: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch',
   },
 
   /**
    * Card - Traditional Vertical Layout
    */
   card: {
-    icon: 'text-[var(--brand-primary)] mb-4',
+    icon: 'inline-flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-[var(--brand-primary)]/10 to-[var(--brand-primary)]/5 border border-[var(--brand-primary)]/20 text-[var(--brand-primary)] mb-4',
     name: 'text-2xl font-light text-white mb-1.5',
     tagline: 'text-sm text-neutral-400 mb-4',
     price: {
@@ -56,13 +56,13 @@ export const pricingTokens = {
     },
     divider: 'h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-4',
     features: {
-      container: 'space-y-2.5 flex-1 mb-4',
-      item: 'flex items-start gap-2',
-      icon: 'w-4 h-4 text-[var(--brand-primary)] flex-shrink-0 mt-0.5',
-      text: 'text-sm text-neutral-300 leading-relaxed',
+      container: 'space-y-3 flex-1',
+      item: 'flex items-start gap-3',
+      icon: 'w-4 h-4 text-[var(--brand-primary)] flex-shrink-0',
+      text: 'text-sm text-neutral-300 leading-snug flex-1',
     },
     button:
-      'w-full text-center py-2.5 px-5 text-sm rounded-lg bg-gradient-to-r from-[var(--brand-primary)]/20 to-[var(--brand-primary)]/10 border border-[var(--brand-primary)]/30 text-[var(--brand-primary)] font-light hover:from-[var(--brand-primary)]/30 hover:to-[var(--brand-primary)]/20 hover:border-[var(--brand-primary)]/50 transition-all duration-300',
+      'w-full text-center py-2.5 px-5 text-sm rounded-lg bg-gradient-to-br from-white/95 via-neutral-50/90 to-white/95 dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900 border-2 border-t-neutral-700/40 border-l-neutral-700/40 border-b-neutral-800 border-r-neutral-800 dark:border-t-white/5 dark:border-l-white/5 dark:border-b-black dark:border-r-black shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),0_2px_4px_-1px_rgba(0,0,0,0.2)] text-[var(--brand-primary)] font-light hover:scale-[1.02] transition-all duration-200',
   },
 
   /**
