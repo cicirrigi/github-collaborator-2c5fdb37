@@ -119,7 +119,7 @@ export const TestimonialGridLayout = forwardRef<HTMLDivElement, TestimonialGridL
                   flexDirection: 'row',
                   overflowX: 'auto',
                   overflowY: 'visible',
-                  gap: 'clamp(1.25rem, 2.5vw, 2rem)',
+                  gap: '1rem',
                   padding: '2rem 2rem 2rem 1rem',
                   scrollSnapType: 'x mandatory',
                   scrollbarWidth: 'none',

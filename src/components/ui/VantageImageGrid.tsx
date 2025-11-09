@@ -28,8 +28,8 @@ export default function VantageImageGrid({
   perspective = 600,
   rotateX = -1,
   rotateY = -15,
-  glowStartColor = 'rgba(203,178,106,0.5)',
-  glowEndColor = 'rgba(203,178,106,1)',
+  glowStartColor: _glowStartColor = 'rgba(203,178,106,0.5)',
+  glowEndColor: _glowEndColor = 'rgba(203,178,106,1)',
   gridCols = 4,
   gridRows = 4,
 }: VantageImageGridProps) {

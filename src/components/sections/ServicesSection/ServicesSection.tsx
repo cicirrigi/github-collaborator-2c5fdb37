@@ -104,68 +104,64 @@ export function ServicesSection({
             {config.subtitle}
           </p>
         </motion.div>
-
-        {/* Services Grid */}
-        <motion.div
-          ref={autoHide.carouselRef}
-          className={cn(
-            // Mobile: horizontal scroll carousel
-            'flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory scrollbar-hide',
-            // Desktop: normal grid
-            'md:grid md:overflow-visible md:pb-0 md:snap-none md:grid-cols-2 lg:grid-cols-5 mx-auto',
-            {
-              'md:max-w-5xl': config.layout.maxWidth === '5xl',
-              'md:max-w-6xl': config.layout.maxWidth === '6xl',
-              'md:max-w-7xl': config.layout.maxWidth === '7xl',
-            }
-          )}
-          style={{
-            // Mobile carousel styling
-            paddingLeft: '1rem',
-            paddingRight: '1rem',
-          }}
-          variants={containerVariants}
-          initial={config.animation.enabled ? 'hidden' : 'visible'}
-          whileInView='visible'
-          viewport={{ once: true }}
-        >
-          {config.services.map(service => {
-            const IconComponent = service.icon;
-
-            return (
-              <motion.div
-                key={service.id}
-                variants={itemVariants}
-                className='flex-shrink-0 w-[280px] snap-center md:w-auto'
-              >
-                <LuxuryCard
-                  as={Link}
-                  variant='shimmer'
-                  size='md'
-                  hover='shimmer'
-                  iconSize='vantage'
-                  href={service.href}
-                  icon={
-                    <IconComponent
-                      className='h-full w-full transition-colors duration-200'
-                      strokeWidth={1.2}
-                      style={{ color: 'var(--brand-primary)' }}
-                    />
-                  }
-                  title={service.title}
-                  description={service.description}
-                  bottomBadge={
-                    <ExploreBadge size='sm' variant='translucent' hover='gold' showArrow={true}>
-                      Explore
-                    </ExploreBadge>
-                  }
-                  className='h-full transition-transform duration-300 hover:scale-[1.02]'
-                />
-              </motion.div>
-            );
-          })}
-        </motion.div>
       </Container>
+
+      {/* Services Grid - OUTSIDE Container for proper centering */}
+      <motion.div
+        ref={autoHide.carouselRef}
+        className={cn(
+          // Mobile: horizontal scroll carousel
+          'flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory scrollbar-hide',
+          // Desktop: normal grid - simplified with direct grid-template-columns
+          'md:grid md:overflow-visible md:pb-0 md:snap-none mx-auto md:max-w-7xl md:px-8',
+          'lg:[grid-template-columns:repeat(5,minmax(220px,1fr))] md:[grid-template-columns:repeat(2,minmax(220px,1fr))]'
+        )}
+        style={{
+          // Mobile carousel styling
+          paddingLeft: '1rem',
+          paddingRight: '1rem',
+        }}
+        variants={containerVariants}
+        initial={config.animation.enabled ? 'hidden' : 'visible'}
+        whileInView='visible'
+        viewport={{ once: true }}
+      >
+        {config.services.map(service => {
+          const IconComponent = service.icon;
+
+          return (
+            <motion.div
+              key={service.id}
+              variants={itemVariants}
+              className='flex-shrink-0 w-[270px] snap-center md:w-auto'
+            >
+              <LuxuryCard
+                as={Link}
+                variant='shimmer'
+                size='md'
+                hover='shimmer'
+                iconSize='vantage'
+                href={service.href}
+                icon={
+                  <IconComponent
+                    className='h-full w-full transition-colors duration-200'
+                    strokeWidth={1.2}
+                    style={{ color: 'var(--brand-primary)' }}
+                  />
+                }
+                title={service.title}
+                description={service.description}
+                bottomBadge={
+                  <ExploreBadge size='sm' variant='translucent' hover='gold' showArrow={true}>
+                    Explore
+                  </ExploreBadge>
+                }
+                className='h-full transition-transform duration-300 hover:scale-[1.02]'
+              />
+            </motion.div>
+          );
+        })}
+      </motion.div>
 
       {/* Mobile Swipe Indicator - doar pe mobil, simple auto-hide cu offset pentru primul card */}
       <ServicesSwipeIndicator autoHide={autoHide} />
