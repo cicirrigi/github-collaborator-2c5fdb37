@@ -88,9 +88,9 @@ export const assuranceConfig = {
    * Logo band configuration (optional feature)
    */
   logos: {
-    enabled: false, // Can be enabled later
-    text: "Preferred by guests of London's most prestigious hotels.",
-    items: ['Hilton', 'The Ritz London', 'Heathrow VIP', 'Emirates', 'Corinthia'],
+    enabled: true,
+    text: "Preferred by guests of London's most prestigious hotels",
+    items: ['Hilton', 'Emirates', 'The Ritz London', 'Heathrow VIP', 'Corinthia'],
   },
 
   /**

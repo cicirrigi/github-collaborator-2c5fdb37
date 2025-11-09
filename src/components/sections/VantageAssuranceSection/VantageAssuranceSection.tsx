@@ -20,7 +20,7 @@ import React from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
-import { AssuranceGrid } from './components';
+import { AssuranceGrid, LogoBand } from './components';
 import { assuranceConfig } from './VantageAssuranceSection.config';
 import { assuranceTokens } from './VantageAssuranceSection.tokens';
 import type { VantageAssuranceSectionProps } from './VantageAssuranceSection.types';
@@ -134,6 +134,9 @@ export function VantageAssuranceSection({
 
         {/* Assurance Items Grid */}
         <AssuranceGrid items={config.items} />
+
+        {/* Logo Band - Prestige Indicator */}
+        {config.logos.enabled && <LogoBand text={config.logos.text} logos={config.logos.items} />}
 
         {/* Footer CTA */}
         <motion.p

@@ -98,6 +98,29 @@ export const assuranceTokens = {
     duration: 0.6,
     ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
   },
+
+  /**
+   * LogoBand styling - Cinematic prestige band
+   */
+  logoBand: {
+    container: 'relative mt-16 py-12 overflow-hidden rounded-2xl',
+    haloBlur:
+      'absolute inset-0 bg-gradient-to-b from-[#CBB26A]/10 via-[#CBB26A]/5 to-transparent blur-3xl opacity-50',
+    vignette: 'absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-80',
+    content: 'relative z-10 text-center',
+    text: {
+      base: 'uppercase tracking-[0.3em] text-sm md:text-base mb-6 font-light',
+      color: 'text-[#CBB26A]/80',
+    },
+    logos: {
+      container: 'flex justify-center flex-wrap gap-10 md:gap-14 items-center',
+      item: 'text-[#CBB26A]/80 text-lg md:text-xl tracking-wide font-light hover:text-[#CBB26A] transition-colors duration-300',
+    },
+    divider: {
+      container: 'flex justify-center mb-6',
+      line: 'w-20 h-[1px] bg-[#CBB26A]/30',
+    },
+  },
 } as const;
 
 export type AssuranceTokens = typeof assuranceTokens;
