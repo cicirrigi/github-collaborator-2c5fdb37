@@ -31,8 +31,10 @@ export function NarrativeImage({ visual }: NarrativeImageProps): React.JSX.Eleme
       transition={{ duration: 0.8, delay: 0.2 }}
       viewport={{ once: true }}
     >
-      <div className='flex items-center justify-center pt-12'>
-        <VantageImageGrid imageUrl={encodedImageUrl} gridCols={4} gridRows={4} />
+      <div className='flex items-center justify-center'>
+        <div className='w-full max-w-lg mt-48'>
+          <VantageImageGrid imageUrl={encodedImageUrl} gridCols={4} gridRows={4} />
+        </div>
       </div>
     </motion.div>
   );

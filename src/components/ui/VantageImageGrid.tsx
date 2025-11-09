@@ -75,9 +75,10 @@ export default function VantageImageGrid({
   return (
     <div className={cn('relative block w-full', className)}>
       <div
-        className='relative grid w-full gap-0 grid-cols-4'
+        className={cn('relative grid w-full gap-0 grid-cols-4 rounded-2xl overflow-hidden')}
         style={{
           transform: `perspective(${perspective}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+          boxShadow: '0 0 40px rgba(203,178,106,0.15)',
         }}
       >
         {Array.from({ length: totalCards }).map((_, index) => {
