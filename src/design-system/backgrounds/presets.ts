@@ -4,8 +4,8 @@
  * Theme-aware, responsive, performance-optimized
  */
 
-import type { BackgroundConfig } from './types';
 import { createGlow, getGradient } from './tokens';
+import type { BackgroundConfig } from './types';
 
 /**
  * Get preset configuration based on theme
@@ -17,11 +17,8 @@ export function getPresetConfig(
   const configs: Record<string, BackgroundConfig> = {
     luxury: {
       gradient: getGradient(theme, 'dramatic'),
-      glows: [
-        createGlow('top-right', theme, 'gold', '1000px'),
-        createGlow('bottom-left', theme, 'goldSubtle', '800px'),
-      ],
-      noise: { opacity: 0.03, scale: 1 },
+      glows: [], // No glows - clean satin look
+      noise: { opacity: 0.06, scale: 1.1 }, // Increased for glossy satin texture
     },
     minimal: {
       gradient: getGradient(theme, 'subtle'),

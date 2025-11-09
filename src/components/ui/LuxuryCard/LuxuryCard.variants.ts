@@ -32,13 +32,19 @@ const variantClasses = {
     'dark:from-neutral-900',
     'dark:via-neutral-950',
     'dark:to-neutral-900',
-    // Border
-    'border',
-    'border-neutral-200',
-    'dark:border-neutral-800',
-    'hover:border-[var(--luxury-glow-color)]/60',
-    'dark:hover:border-[var(--luxury-glow-color)]/20',
-    // Shadow (folosesc design tokens)
+    // Border with subtle 3D effect - top/left lighter, bottom/right present
+    'border-2',
+    'border-t-neutral-700/40',
+    'border-l-neutral-700/40',
+    'border-b-neutral-800',
+    'border-r-neutral-800',
+    'dark:border-t-white/5',
+    'dark:border-l-white/5',
+    'dark:border-b-black',
+    'dark:border-r-black',
+    'hover:border-t-[var(--luxury-glow-color)]/30',
+    'hover:border-l-[var(--luxury-glow-color)]/30',
+    // Shadow with hover glow
     'shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),0_2px_4px_-1px_rgba(0,0,0,0.2)]',
     'hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.4),0_10px_10px_-5px_rgba(0,0,0,0.2),0_0_30px_rgba(203,178,106,0.15)]',
     // Hover scale

@@ -111,7 +111,6 @@
     0 12px 48px var(--testimonial-shadow-hover),
     0 0 20px var(--testimonial-accent-glow),
     0 1px 0 rgba(255, 255, 255, 0.1) inset;
-  border-color: var(--testimonial-border-hover);
   will-change: backdrop-filter, box-shadow;
 }
 

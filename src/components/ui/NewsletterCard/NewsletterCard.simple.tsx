@@ -9,7 +9,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils/cn';
 import { PremiumButton } from '@/components/ui/PremiumButton';
-import { newsletterCardTokens } from './NewsletterCard.tokens';
 import type { NewsletterFormData } from './NewsletterCard.types';
 
 interface SimpleNewsletterCardProps {
@@ -18,7 +17,7 @@ interface SimpleNewsletterCardProps {
 }
 
 export function NewsletterCard({ onSubmit, className }: SimpleNewsletterCardProps) {
-  const tokens = newsletterCardTokens;
+  // Tokens no longer needed - using Tailwind classes directly
 
   // SSR-safe state initialization
   const [formData, setFormData] = useState<NewsletterFormData>(() => ({
@@ -59,12 +58,21 @@ export function NewsletterCard({ onSubmit, className }: SimpleNewsletterCardProp
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       viewport={{ once: true }}
-      className={cn('relative border backdrop-blur-sm rounded-2xl p-6 md:p-8', className)}
+      className={cn(
+        'relative rounded-2xl p-6 md:p-8',
+        // 3D effect like other cards
+        'bg-gradient-to-br from-white/95 via-neutral-50/90 to-white/95',
+        'dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900',
+        'border-2',
+        'border-t-neutral-700/40 border-l-neutral-700/40',
+        'border-b-neutral-800 border-r-neutral-800',
+        'dark:border-t-white/5 dark:border-l-white/5',
+        'dark:border-b-black dark:border-r-black',
+        'backdrop-blur-xl',
+        'shadow-[0_8px_32px_rgba(0,0,0,0.1),0_1px_0_rgba(255,255,255,0.05)_inset]',
+        className
+      )}
       suppressHydrationWarning
-      style={{
-        backgroundColor: tokens.card.backgroundColor,
-        border: '1px solid rgba(203, 178, 106, 0.2)',
-      }}
     >
       <div className='mb-6'>
         <p className='text-sm text-neutral-400'>

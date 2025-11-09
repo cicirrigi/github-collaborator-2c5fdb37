@@ -33,12 +33,14 @@ const FleetCardBack = memo(function FleetCardBack({
 }): React.JSX.Element {
   return (
     <div className='absolute inset-0 p-6 flex flex-col justify-between rounded-xl overflow-hidden'>
-      {/* Theme-adaptive background */}
+      {/* Diagonal gradient background - matches front */}
       <div
-        className='absolute inset-0'
+        className={cn(
+          'absolute inset-0',
+          'bg-gradient-to-br from-white/95 via-neutral-50/90 to-white/95',
+          'dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900'
+        )}
         style={{
-          backgroundColor: 'var(--background-elevated)',
-          backgroundImage: `linear-gradient(135deg, var(--background) 0%, var(--background-muted, var(--background-elevated)) 100%)`,
           backdropFilter: 'blur(10px)',
         }}
       />
@@ -185,17 +187,23 @@ export const FleetCard3D = memo(function FleetCard3D({
             initial={false}
             className={cn(
               'relative h-full w-full cursor-pointer flex flex-col',
-              'transition-all duration-300'
+              'transition-all duration-300',
+              // 3D effect like Services cards
+              'bg-gradient-to-br from-white/95 via-neutral-50/90 to-white/95',
+              'dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900',
+              'border-2',
+              'border-t-neutral-700/40 border-l-neutral-700/40',
+              'border-b-neutral-800 border-r-neutral-800',
+              'dark:border-t-white/5 dark:border-l-white/5',
+              'dark:border-b-black dark:border-r-black',
+              'backdrop-blur-xl'
             )}
             style={{
-              backgroundColor: 'var(--background-elevated)',
-              border: designTokens.fleet.effects.goldBorder,
               borderRadius: designTokens.fleet.effects.borderRadius,
               boxShadow: designTokens.fleet.effects.shadowElevated,
             }}
             whileHover={{
               boxShadow: `${designTokens.fleet.effects.shadowFloat}, ${designTokens.fleet.effects.goldGlow}`,
-              transform: 'translateY(-8px)',
             }}
           >
             {/* Header with Badges */}
@@ -218,12 +226,20 @@ export const FleetCard3D = memo(function FleetCard3D({
 
         {/* Back Face */}
         <div
-          className='absolute inset-0 [backface-visibility:hidden] rounded-xl overflow-hidden'
+          className={cn(
+            'absolute inset-0 [backface-visibility:hidden] rounded-xl overflow-hidden',
+            // 3D effect like Services cards
+            'bg-gradient-to-br from-white/95 via-neutral-50/90 to-white/95',
+            'dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900',
+            'border-2',
+            'border-t-neutral-700/40 border-l-neutral-700/40',
+            'border-b-neutral-800 border-r-neutral-800',
+            'dark:border-t-white/5 dark:border-l-white/5',
+            'dark:border-b-black dark:border-r-black',
+            'backdrop-blur-xl'
+          )}
           style={{
             transform: 'rotateY(180deg)',
-            backgroundColor: 'var(--background-elevated)',
-            backdropFilter: 'blur(10px)',
-            border: designTokens.fleet.effects.goldBorder,
             boxShadow: '0 0 40px var(--brand-primary-10)',
           }}
         >

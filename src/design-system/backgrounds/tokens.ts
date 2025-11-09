@@ -10,14 +10,14 @@ export const gradients = {
   dark: {
     subtle: {
       from: '#000000',
-      via: '#050505',
-      to: '#0a0a0a',
+      via: '#0a0a0a',
+      to: '#000000',
       angle: 135,
     },
     dramatic: {
       from: '#000000',
-      via: '#080808',
-      to: '#0f0f0f',
+      via: '#121212',
+      to: '#000000',
       angle: 180,
     },
   },
@@ -37,12 +37,12 @@ export const gradients = {
   },
 } as const;
 
-// Radial glow configurations
+// Radial glow configurations - increased for satin/depth effect
 export const glowColors = {
   dark: {
-    gold: 'rgba(203, 178, 106, 0.08)',
-    goldSubtle: 'rgba(203, 178, 106, 0.04)',
-    goldDramatic: 'rgba(203, 178, 106, 0.12)',
+    gold: 'rgba(203, 178, 106, 0.12)',
+    goldSubtle: 'rgba(203, 178, 106, 0.06)',
+    goldDramatic: 'rgba(203, 178, 106, 0.18)',
   },
   light: {
     gold: 'rgba(203, 178, 106, 0.12)',
