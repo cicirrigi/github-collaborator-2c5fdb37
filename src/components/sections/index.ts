@@ -29,6 +29,10 @@ export type { NewsletterSectionProps } from './NewsletterSection';
 export { TestimonialsNew } from './TestimonialsNew';
 export type { TestimonialsNewProps } from './TestimonialsNew';
 
+// Vantage Assurance Section - Trust & Prestige
+export { VantageAssuranceSection } from './VantageAssuranceSection';
+export type { VantageAssuranceSectionProps } from './VantageAssuranceSection';
+
 // Config exports for reuse
 export { heroConfig, heroConfigAbout, heroConfigServices } from './HeroSection';
 export { servicesConfig } from './ServicesSection';

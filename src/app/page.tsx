@@ -2,6 +2,7 @@ import { HeroSection } from '@/components/sections/HeroSection';
 import { ServicesSection } from '@/components/sections/ServicesSection';
 import { TestimonialsNew } from '@/components/sections/TestimonialsNew';
 import { FleetSection3D as FleetSection } from '@/components/sections/FleetSection';
+import { VantageAssuranceSection } from '@/components/sections/VantageAssuranceSection';
 import { NewsletterSection } from '@/components/sections/NewsletterSection';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { getPageMetadata } from '@/lib/seo';
@@ -36,6 +37,12 @@ export default function HomePage() {
 
       {/* Premium Fleet Showcase - 3D Flip Cards */}
       <FleetSection maxVehicles={6} />
+
+      {/* Elegant Separator */}
+      <SectionDivider />
+
+      {/* Vantage Assurance - Trust & Prestige */}
+      <VantageAssuranceSection />
 
       {/* Elegant Separator */}
       <SectionDivider />
