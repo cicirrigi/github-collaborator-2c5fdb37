@@ -3,6 +3,7 @@ import { ServicesSection } from '@/components/sections/ServicesSection';
 import { TestimonialsNew } from '@/components/sections/TestimonialsNew';
 import { FleetSection3D as FleetSection } from '@/components/sections/FleetSection';
 import { VantageAssuranceSection } from '@/components/sections/VantageAssuranceSection';
+import { NarrativeSection } from '@/components/sections/NarrativeSection';
 import { NewsletterSection } from '@/components/sections/NewsletterSection';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { getPageMetadata } from '@/lib/seo';
@@ -31,6 +32,12 @@ export default function HomePage() {
 
       {/* Services/Benefits Section - Config driven */}
       <ServicesSection />
+
+      {/* Elegant Separator */}
+      <SectionDivider />
+
+      {/* Brand Narrative - Philosophy & Experience */}
+      <NarrativeSection />
 
       {/* Elegant Separator */}
       <SectionDivider />

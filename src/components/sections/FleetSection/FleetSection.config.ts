@@ -9,7 +9,7 @@ import type { FleetSectionConfig } from './FleetSection.types';
 
 export const fleetConfig: FleetSectionConfig = {
   title: {
-    primary: 'The Vantage Lane',
+    primary: 'Vantage Lane',
     accent: 'Fleet',
   },
   subtitle:

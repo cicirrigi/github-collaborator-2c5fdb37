@@ -33,6 +33,10 @@ export type { TestimonialsNewProps } from './TestimonialsNew';
 export { VantageAssuranceSection } from './VantageAssuranceSection';
 export type { VantageAssuranceSectionProps } from './VantageAssuranceSection';
 
+// Narrative Section - Brand Philosophy & Experience
+export { NarrativeSection } from './NarrativeSection';
+export type { NarrativeSectionProps } from './NarrativeSection';
+
 // Config exports for reuse
 export { heroConfig, heroConfigAbout, heroConfigServices } from './HeroSection';
 export { servicesConfig } from './ServicesSection';

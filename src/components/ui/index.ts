@@ -82,3 +82,6 @@ export { ThemeToggle } from './theme-toggle';
 // Theme Controls
 export * from './PremiumButton';
 export * from './TestButton';
+
+// Interactive Grid
+export { default as VantageImageGrid } from './VantageImageGrid';
