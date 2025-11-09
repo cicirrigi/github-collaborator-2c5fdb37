@@ -9,7 +9,15 @@ import type { AssuranceItem, HeadlinePart } from './VantageAssuranceSection.type
 
 export const assuranceConfig = {
   /**
-   * Main headline (3-part elegant composition)
+   * Main section title
+   */
+  title: {
+    primary: 'Vantage',
+    accent: 'Assurance',
+  },
+
+  /**
+   * Subtitle (3-part elegant composition)
    */
   headline: {
     parts: [

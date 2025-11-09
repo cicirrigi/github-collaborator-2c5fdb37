@@ -37,12 +37,44 @@ export function VantageAssuranceSection({
   return (
     <section className={cn(tokens.spacing.section, className)}>
       <div className={tokens.spacing.container}>
-        {/* Headline - 3-part with bicolor effect */}
+        {/* Main Title - Bicolor */}
         <motion.h2
-          className={cn(tokens.typography.headline.base, tokens.spacing.headlineBottom)}
+          className={cn(tokens.typography.title.base, tokens.spacing.titleBottom)}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <span className={tokens.typography.title.primary}>{config.title.primary}</span>{' '}
+          <span
+            className={tokens.typography.title.accent}
+            style={{
+              textShadow: '0 0 25px rgba(203, 178, 106, 0.7), 0 0 35px rgba(203, 178, 106, 0.4)',
+              filter: 'brightness(1.2)',
+            }}
+          >
+            {config.title.accent}
+          </span>
+        </motion.h2>
+
+        {/* Gold separator line */}
+        <motion.div
+          initial={{ opacity: 0, width: 0 }}
+          whileInView={{ opacity: 1, width: '6rem' }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          viewport={{ once: true }}
+          className={cn(
+            'h-1 bg-gradient-to-r from-[var(--brand-primary)] to-[#E5D485] mx-auto',
+            tokens.spacing.separatorBottom
+          )}
+        />
+
+        {/* Headline/Subtitle - 3-part with bicolor effect (no glow) */}
+        <motion.h3
+          className={cn(tokens.typography.headline.base, tokens.spacing.headlineBottom)}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
         >
           {config.headline.parts.map((part, index) => (
@@ -51,21 +83,12 @@ export function VantageAssuranceSection({
               className={
                 part.accent ? tokens.typography.headline.accent : tokens.typography.headline.primary
               }
-              style={
-                part.accent
-                  ? {
-                      textShadow:
-                        '0 0 25px rgba(203, 178, 106, 0.7), 0 0 35px rgba(203, 178, 106, 0.4)',
-                      filter: 'brightness(1.2)',
-                    }
-                  : undefined
-              }
             >
               {part.text}
               {index < config.headline.parts.length - 1 && ' '}
             </span>
           ))}
-        </motion.h2>
+        </motion.h3>
 
         {/* Subtext */}
         <motion.p
@@ -76,7 +99,7 @@ export function VantageAssuranceSection({
           )}
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
           viewport={{ once: true }}
         >
           {config.subtext}
@@ -91,7 +114,7 @@ export function VantageAssuranceSection({
           )}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
           viewport={{ once: true }}
         >
           {config.facts.map((fact, index) => (

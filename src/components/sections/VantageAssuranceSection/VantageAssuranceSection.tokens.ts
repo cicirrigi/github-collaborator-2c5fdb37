@@ -12,7 +12,9 @@ export const assuranceTokens = {
     container: 'max-w-7xl mx-auto px-6 lg:px-8',
     grid: 'gap-8 md:gap-10 lg:gap-12',
     item: 'space-y-2',
-    headlineBottom: 'mb-4',
+    titleBottom: 'mb-4',
+    separatorBottom: 'mb-6',
+    headlineBottom: 'mb-3',
     subtextBottom: 'mb-6',
     factsBottom: 'mb-12',
     footerTop: 'mt-12',
@@ -22,13 +24,18 @@ export const assuranceTokens = {
    * Typography
    */
   typography: {
+    title: {
+      base: 'text-4xl md:text-5xl font-light tracking-wide text-center',
+      primary: 'text-[var(--text-primary)]',
+      accent: 'text-[var(--brand-primary)]',
+    },
     headline: {
-      base: 'text-3xl md:text-4xl lg:text-5xl font-light tracking-wide text-center',
+      base: 'text-2xl md:text-3xl font-light tracking-wide text-center',
       primary: 'text-[var(--text-primary)]',
       accent: 'text-[var(--brand-primary)]',
     },
     subtext: {
-      base: 'text-base md:text-lg text-center max-w-3xl mx-auto',
+      base: 'text-sm md:text-base text-center max-w-3xl mx-auto',
       color: 'text-neutral-400 dark:text-neutral-500',
     },
     facts: {
