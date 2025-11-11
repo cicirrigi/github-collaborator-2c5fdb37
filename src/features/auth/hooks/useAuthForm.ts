@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -28,6 +28,22 @@ interface UseAuthFormOptions {
   onError?: ((error: Error) => void) | undefined;
 }
 
+// Helper function for default values
+function getDefaultValues(mode: AuthMode) {
+  return mode === 'signin'
+    ? { email: '', password: '', rememberMe: false }
+    : {
+        email: '',
+        password: '',
+        confirmPassword: '',
+        firstName: '',
+        lastName: '',
+        phone: '',
+        acceptTerms: false,
+        marketingConsent: false,
+      };
+}
+
 export function useAuthForm({
   mode,
   redirectTo = '/dashboard',
@@ -41,28 +57,13 @@ export function useAuthForm({
 
   // Select schema based on mode
   const schema = mode === 'signin' ? signInSchema : signUpSchema;
+  const defaultValues = getDefaultValues(mode);
 
-  // Initialize react-hook-form with Zod validation
-  const form = useForm<SignInSchemaType | SignUpSchemaType>({
-    resolver: zodResolver(schema),
+  // Use conditional typing based on mode
+  const form = useForm<typeof mode extends 'signin' ? SignInSchemaType : SignUpSchemaType>({
+    resolver: zodResolver(schema) as any, // Temporary any for complex conditional resolver
     mode: 'onBlur',
-    defaultValues:
-      mode === 'signin'
-        ? {
-            email: '',
-            password: '',
-            rememberMe: false,
-          }
-        : {
-            email: '',
-            password: '',
-            confirmPassword: '',
-            firstName: '',
-            lastName: '',
-            phone: '',
-            acceptTerms: false,
-            marketingConsent: false,
-          },
+    defaultValues: defaultValues as any, // Temporary any for complex conditional defaults
   });
 
   /**
@@ -76,6 +77,7 @@ export function useAuthForm({
     try {
       let result;
 
+      // Type-safe branching based on mode
       if (mode === 'signin') {
         result = await signInWithEmail(data as SignInFormData);
       } else {
@@ -92,10 +94,6 @@ export function useAuthForm({
       // Success
       if (mode === 'signin') {
         setSuccess('Sign in successful! Redirecting...');
-        setTimeout(() => {
-          router.push(redirectTo);
-          onSuccess?.();
-        }, 1000);
       } else {
         setSuccess('Account created! Please check your email to verify your account.');
         onSuccess?.();
@@ -119,6 +117,18 @@ export function useAuthForm({
    */
   const clearSuccess = () => setSuccess(null);
 
+  // Handle redirect with cleanup
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (success?.includes('Redirecting')) {
+      timeout = setTimeout(() => {
+        router.push(redirectTo);
+        onSuccess?.();
+      }, 1000);
+    }
+    return () => clearTimeout(timeout);
+  }, [success, redirectTo, onSuccess, router]);
+
   return {
     form,
     isLoading,
@@ -131,31 +141,47 @@ export function useAuthForm({
 }
 
 /**
- * Convert Supabase error to user-friendly message
+ * Convert Supabase errors to user-friendly messages
  */
 function getErrorMessage(error: Error): string {
   const message = error.message.toLowerCase();
 
-  if (message.includes('invalid login credentials')) {
+  // Authentication errors
+  if (/invalid.*credential/i.test(message)) {
     return 'Invalid email or password. Please try again.';
   }
 
-  if (message.includes('email already registered') || message.includes('user already registered')) {
-    return 'An account with this email already exists.';
+  if (/already.*registered/i.test(message)) {
+    return 'This email is already registered. Please sign in instead.';
   }
 
-  if (message.includes('invalid email')) {
+  if (/invalid.*email/i.test(message)) {
     return 'Please enter a valid email address.';
   }
 
-  if (message.includes('password')) {
+  if (/password.*weak/i.test(message)) {
+    return 'Password is too weak. Please use at least 8 characters with letters and numbers.';
+  }
+
+  if (/password/i.test(message)) {
     return 'Password must be at least 8 characters long.';
   }
 
-  if (message.includes('network')) {
+  // Network errors
+  if (/network|fetch|connection/i.test(message)) {
     return 'Network error. Please check your connection and try again.';
   }
 
-  // Default fallback
+  // Rate limiting
+  if (/rate.*limit|too.*many/i.test(message)) {
+    return 'Too many attempts. Please wait a few minutes before trying again.';
+  }
+
+  // Email verification
+  if (/email.*confirm|verify/i.test(message)) {
+    return 'Please check your email and click the verification link.';
+  }
+
+  // Generic fallback
   return error.message || 'An error occurred. Please try again.';
 }

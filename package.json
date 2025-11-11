@@ -9,10 +9,10 @@
     "pnpm": ">=9.0.0"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3002",
     "build": "NEXT_FONT_IGNORE_ERRORS=true next build",
     "build:clean": "next build",
-    "start": "next start",
+    "start": "next start -p 3002",
     "typecheck": "tsc --noEmit",
     "//  ": "─────────────── AI Guardian & Quality Gates ───────────────",
     "// ": "─────────────── Tests ───────────────",

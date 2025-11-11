@@ -33,7 +33,15 @@ export async function signInWithEmail(data: SignInFormData): Promise<AuthRespons
     });
 
     if (error) {
+      console.error('[signInWithEmail] Auth error:', error);
       return { user: null, error };
+    }
+
+    // Additional validation - ensure user data exists
+    if (!authData?.user) {
+      const noUserError = new Error('No user data returned from authentication');
+      console.error('[signInWithEmail] No user data:', authData);
+      return { user: null, error: noUserError };
     }
 
     // Optional: Set remember me cookie
@@ -43,9 +51,10 @@ export async function signInWithEmail(data: SignInFormData): Promise<AuthRespons
 
     return { user: authData.user, error: null };
   } catch (error) {
+    console.error('[signInWithEmail] Unexpected error:', error);
     return {
       user: null,
-      error: error instanceof Error ? error : new Error('Sign in failed'),
+      error: error instanceof Error ? error : new Error('Failed to sign in'),
     };
   }
 }
@@ -56,6 +65,10 @@ export async function signInWithEmail(data: SignInFormData): Promise<AuthRespons
 export async function signUpWithEmail(data: SignUpFormData): Promise<AuthResponse> {
   try {
     const supabase = getSupabaseClient();
+    const redirectOrigin =
+      typeof window !== 'undefined'
+        ? window.location.origin
+        : process.env.NEXT_PUBLIC_APP_URL || 'https://vantage-lane.com';
 
     const { data: authData, error } = await supabase.auth.signUp({
       email: data.email,
@@ -67,19 +80,21 @@ export async function signUpWithEmail(data: SignUpFormData): Promise<AuthRespons
           phone: data.phone || null,
           marketing_consent: data.marketingConsent || false,
         },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${redirectOrigin}/auth/callback`,
       },
     });
 
     if (error) {
+      console.error('[signUpWithEmail] Error:', error);
       return { user: null, error };
     }
 
     return { user: authData.user, error: null };
   } catch (error) {
+    console.error('[signUpWithEmail] Unexpected error:', error);
     return {
       user: null,
-      error: error instanceof Error ? error : new Error('Sign up failed'),
+      error: error instanceof Error ? error : new Error('Failed to sign up'),
     };
   }
 }
@@ -90,11 +105,15 @@ export async function signUpWithEmail(data: SignUpFormData): Promise<AuthRespons
 export async function signInWithProvider(provider: SocialProvider): Promise<AuthResponse> {
   try {
     const supabase = getSupabaseClient();
+    const redirectOrigin =
+      typeof window !== 'undefined'
+        ? window.location.origin
+        : process.env.NEXT_PUBLIC_APP_URL || 'https://vantage-lane.com';
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: provider === 'linkedin' ? 'linkedin_oidc' : provider,
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${redirectOrigin}/auth/callback`,
         ...(provider === 'google' ? { scopes: 'email profile' } : {}),
       },
     });
@@ -187,9 +206,13 @@ export async function getCurrentUser() {
 export async function sendPasswordResetEmail(email: string): Promise<{ error: Error | null }> {
   try {
     const supabase = getSupabaseClient();
+    const redirectOrigin =
+      typeof window !== 'undefined'
+        ? window.location.origin
+        : process.env.NEXT_PUBLIC_APP_URL || 'https://vantage-lane.com';
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/reset-password`,
+      redirectTo: `${redirectOrigin}/auth/reset-password`,
     });
 
     if (error) {

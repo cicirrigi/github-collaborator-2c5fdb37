@@ -7,8 +7,8 @@
 
 'use client';
 
-import type { UseFormRegister, FieldErrors, FieldValues } from 'react-hook-form';
 import { cn } from '@/lib/utils/cn';
+import type { FieldValues, UseFormRegister, FieldErrors, Path } from 'react-hook-form';
 
 import { authTokens as tokens } from '../tokens/authTokens';
 
@@ -35,7 +35,8 @@ export function AuthField<T extends FieldValues = FieldValues>({
   errors,
   disabled = false,
 }: AuthFieldProps<T>) {
-  const error = errors[name]?.message as string | undefined;
+  const fieldError = errors?.[name as keyof T];
+  const error = typeof fieldError?.message === 'string' ? fieldError.message : undefined;
   const hasError = !!error;
 
   return (
@@ -53,20 +54,23 @@ export function AuthField<T extends FieldValues = FieldValues>({
         placeholder={placeholder}
         autoComplete={autoComplete}
         disabled={disabled}
-        className={cn(
-          tokens.input.base,
-          tokens.input.background,
-          tokens.input.border,
-          tokens.input.focus,
-          tokens.input.placeholder,
-          hasError && tokens.input.error,
-          disabled && tokens.input.disabled
-        )}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        {...register(name as any)}
+        style={{
+          WebkitAppearance: 'none',
+          MozAppearance: 'none',
+          appearance: 'none',
+          outline: 'none',
+        }}
+        className='w-full text-left py-2.5 px-5 text-sm rounded-lg bg-gradient-to-br from-white/95 via-neutral-50/90 to-white/95 dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900 border-2 border-t-neutral-700/40 border-l-neutral-700/40 border-b-neutral-800 border-r-neutral-800 dark:border-t-white/5 dark:border-l-white/5 dark:border-b-black dark:border-r-black shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),0_2px_4px_-1px_rgba(0,0,0,0.2)] text-neutral-900 dark:text-white transition-all duration-200 hover:scale-[1.02]'
+        aria-invalid={hasError}
+        aria-describedby={hasError ? `${name}-error` : undefined}
+        {...register(name as Path<T>)}
       />
 
-      {hasError && <p className={tokens.typography.error.base}>{error}</p>}
+      {hasError && (
+        <p id={`${name}-error`} className={tokens.typography.error.base}>
+          {error}
+        </p>
+      )}
     </div>
   );
 }

@@ -9,7 +9,6 @@
 
 import { FcGoogle } from 'react-icons/fc';
 import { FaApple, FaLinkedin } from 'react-icons/fa';
-import { cn } from '@/lib/utils/cn';
 
 import type { SocialAuthButtonsProps, SocialProvider } from '../types/auth.types';
 import { authTokens as tokens } from '../tokens/authTokens';
@@ -34,7 +33,7 @@ export function SocialAuthButtons({
   isLoading = false,
   disabled = false,
 }: SocialAuthButtonsProps) {
-  const providers: SocialProvider[] = ['google', 'apple'];
+  const providers = Object.keys(providerConfig).filter(p => p !== 'linkedin') as SocialProvider[];
 
   return (
     <>
@@ -57,12 +56,8 @@ export function SocialAuthButtons({
               type='button'
               onClick={() => onProviderClick(provider)}
               disabled={disabled || isLoading}
-              className={cn(
-                tokens.button.social.base,
-                tokens.button.social.background,
-                tokens.button.social.border,
-                tokens.button.social.text
-              )}
+              aria-busy={isLoading}
+              className={tokens.button.social.base}
             >
               <Icon className='w-5 h-5' />
               {config.label}

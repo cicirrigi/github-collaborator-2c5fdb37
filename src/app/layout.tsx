@@ -7,6 +7,7 @@ import { ConditionalLayout } from '@/components/layout/ConditionalLayout';
 import { siteMetadata } from '@/config/site.config';
 import { cn } from '@/lib/utils/cn';
 import { ThemeProvider } from '@/providers/theme-provider';
+import { AuthProvider } from '@/features/auth/context/AuthProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -127,7 +128,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         suppressHydrationWarning
       >
         <ThemeProvider attribute='class' defaultTheme='dark' disableTransitionOnChange={true}>
-          <ConditionalLayout>{children}</ConditionalLayout>
+          <AuthProvider>
+            <ConditionalLayout>{children}</ConditionalLayout>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

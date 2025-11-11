@@ -14,6 +14,8 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 import { BackgroundOrchestrator } from '@/design-system/backgrounds/BackgroundOrchestrator';
+import { CompactThemeToggle } from '@/components/ui/theme-toggle';
+import { useTheme } from '@/providers/theme-provider';
 
 import type { AuthMode } from '../types/auth.types';
 import { AuthTabs } from './AuthTabs';
@@ -26,6 +28,13 @@ interface AuthContainerProps {
 
 export function AuthContainer({ defaultMode = 'signin' }: AuthContainerProps) {
   const [activeMode, setActiveMode] = useState<AuthMode>(defaultMode);
+  const { currentTheme } = useTheme();
+
+  // Dynamic scrollbar color based on theme
+  const scrollbarColor =
+    currentTheme === 'dark'
+      ? 'rgba(0, 0, 0, 0.8) transparent'
+      : 'rgba(115, 115, 115, 0.8) transparent';
 
   return (
     <>
@@ -35,10 +44,22 @@ export function AuthContainer({ defaultMode = 'signin' }: AuthContainerProps) {
       {/* Content */}
       <div className='flex flex-col lg:flex-row min-h-screen'>
         {/* LEFT: Form Container - 50% */}
-        <div className='w-full lg:w-1/2 min-h-screen flex flex-col justify-center items-center px-6 py-12 lg:px-12 relative'>
-          {/* Logo + Vantage Lane - Top Left */}
-          <div className='absolute top-8 left-8 flex items-center gap-2'>
-            <div className='relative w-10 h-10 scale-[1.6]'>
+        <div
+          className='w-full lg:w-1/2 min-h-screen max-h-screen overflow-y-scroll scroll-smooth flex flex-col justify-start items-center px-6 pt-20 pb-8 lg:px-12 lg:pt-24 lg:pb-12 relative transition-none'
+          style={{
+            scrollbarGutter: 'stable',
+            scrollbarWidth: 'thin',
+            scrollbarColor: scrollbarColor,
+          }}
+        >
+          {/* Theme Toggle - Top Right */}
+          <div className='absolute top-6 right-6 z-10'>
+            <CompactThemeToggle />
+          </div>
+
+          {/* Logo + Vantage Lane - Centered Above Form */}
+          <div className='flex items-center justify-center gap-2 mb-8 -mt-6'>
+            <div className='relative w-12 h-12 scale-[1.4]'>
               <Image
                 src='/LOGO/logo transparent.png'
                 alt='Vantage Lane Logo'
@@ -47,25 +68,27 @@ export function AuthContainer({ defaultMode = 'signin' }: AuthContainerProps) {
                 priority
               />
             </div>
-            <div className='text-xl font-light tracking-wide uppercase select-none'>
+            <div className='text-2xl font-light tracking-wide uppercase select-none'>
               <span className='bg-gradient-to-r from-[#d4b870] to-[#bfa156] bg-clip-text text-transparent'>
                 Vantage
               </span>
-              <span className='ml-1 text-white'>Lane</span>
+              <span className='ml-1 text-neutral-900 dark:text-white'>Lane</span>
             </div>
           </div>
 
-          <div className='w-full max-w-md'>
+          <div className='w-full max-w-xl relative -mt-4'>
             {/* Auth Tabs - Sign In / Sign Up */}
             <AuthTabs activeMode={activeMode} onChange={setActiveMode} />
 
             {/* Auth Form */}
-            <AuthForm mode={activeMode} />
+            <div className='relative'>
+              <AuthForm mode={activeMode} />
+            </div>
           </div>
         </div>
 
-        {/* RIGHT: Image Container - 50% - LAYERED IMAGES */}
-        <div className='w-full lg:w-1/2 min-h-[40vh] lg:min-h-screen relative overflow-visible'>
+        {/* RIGHT: Image Container - 50% - FIXED LAYOUT */}
+        <div className='w-full lg:w-1/2 min-h-[40vh] lg:min-h-screen relative overflow-hidden transition-none will-change-auto'>
           {/* Background Image - New BG 2 */}
           <Image
             src='/images/vehicles-webp/NEW BG 2.webp'
@@ -96,7 +119,7 @@ export function AuthContainer({ defaultMode = 'signin' }: AuthContainerProps) {
               </h1>
 
               {/* Subtitle - Slogan */}
-              <p className='text-sm md:text-base text-gray-300 tracking-[0.2em]'>
+              <p className='text-sm md:text-base text-neutral-600 dark:text-gray-300 tracking-[0.2em]'>
                 The Art of Refined Motion
               </p>
 
