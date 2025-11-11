@@ -12,6 +12,7 @@ import { Check } from 'lucide-react';
 import Link from 'next/link';
 import type React from 'react';
 
+import { animations } from '@/config/animations.config';
 import { LuxuryCard } from '@/components/ui/LuxuryCard';
 import { cn } from '@/lib/utils/cn';
 
@@ -24,10 +25,10 @@ export function PricingCard({ plan, className }: PricingCardProps): React.JSX.El
   return (
     <motion.div
       className={cn('relative h-full', className)}
-      initial={false}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      viewport={{ once: true, margin: '-50px' }}
+      variants={animations.slideInUp}
+      initial='hidden'
+      whileInView='visible'
+      viewport={animations.viewport}
     >
       {/* Popular Badge */}
       {plan.popular && (

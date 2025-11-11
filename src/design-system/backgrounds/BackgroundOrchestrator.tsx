@@ -32,7 +32,13 @@ export function BackgroundOrchestrator({
     : getPresetConfig(preset, themeMode);
 
   return (
-    <div className={`fixed inset-0 -z-10 ${className}`}>
+    <div
+      className={`fixed inset-0 -z-10 ${className}`}
+      style={{
+        willChange: 'transform',
+        transform: 'translateZ(0)',
+      }}
+    >
       {/* Base Gradient Layer */}
       <GradientBase config={config.gradient} />
 
@@ -41,8 +47,10 @@ export function BackgroundOrchestrator({
         <RadialGlow key={`glow-${index}`} config={glow} />
       ))}
 
-      {/* Noise Texture Layer */}
-      <NoiseTexture config={config.noise} />
+      {/* Noise Texture Layer - Hidden pe mobil (SVG filter e scump) */}
+      <div className='hidden md:block'>
+        <NoiseTexture config={config.noise} />
+      </div>
     </div>
   );
 }

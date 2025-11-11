@@ -11,6 +11,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import type React from 'react';
 
+import { animations } from '@/config/animations.config';
 import { cn } from '@/lib/utils/cn';
 
 import { PricingCard } from './PricingCard';
@@ -51,10 +52,10 @@ export function PricingSection({
           <div className='text-center mb-16'>
             <motion.div
               className={tokens.typography.title.container}
-              initial={false}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true, margin: '-100px' }}
+              variants={animations.fadeInUp}
+              initial='hidden'
+              whileInView='visible'
+              viewport={animations.viewport}
             >
               <h2 className={tokens.typography.title.primary}>
                 {finalConfig.title.primary}{' '}
@@ -64,20 +65,20 @@ export function PricingSection({
 
             <motion.div
               className={tokens.typography.subtitle.container}
-              initial={false}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              viewport={{ once: true, margin: '-100px' }}
+              variants={animations.fadeIn}
+              initial='hidden'
+              whileInView='visible'
+              viewport={animations.viewport}
             >
               <p className={tokens.typography.subtitle.base}>{finalConfig.subtitle}</p>
             </motion.div>
 
             <motion.div
               className={tokens.typography.commitment.container}
-              initial={false}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true, margin: '-100px' }}
+              variants={animations.fadeIn}
+              initial='hidden'
+              whileInView='visible'
+              viewport={animations.viewport}
             >
               {finalConfig.commitment.map((item, index) => (
                 <div key={index} className={tokens.typography.commitment.item}>

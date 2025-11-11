@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { animations } from '@/config/animations.config';
 import type React from 'react';
 import { memo } from 'react';
 
@@ -69,10 +70,10 @@ const Footer = memo(function Footer({
       {/* Main Content with Motion */}
       <Container size='xl' className='relative py-16 ml-0'>
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-          viewport={{ once: true, margin: '-50px' }}
+          variants={animations.fadeInUp}
+          initial='hidden'
+          whileInView='visible'
+          viewport={animations.viewport}
           className='grid grid-cols-1 lg:grid-cols-12'
           style={{ gap: designTokens.footer.spacing.mainGrid }}
         >

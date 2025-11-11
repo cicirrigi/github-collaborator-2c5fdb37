@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { animations } from '@/config/animations.config';
 import { Facebook, Instagram, Youtube } from 'lucide-react';
 import type React from 'react';
 import { memo } from 'react';
@@ -79,10 +80,10 @@ const FooterBrand = memo(function FooterBrand({
   return (
     <motion.div
       className={cn('space-y-6', className)}
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.6, ease: tokens.motion.easing.ease }}
-      viewport={{ once: true }}
+      variants={animations.fadeInUp}
+      initial='hidden'
+      whileInView='visible'
+      viewport={animations.viewport}
     >
       {/* Logo & Brand Name - Identical to Header but smaller */}
       <div className='space-y-4'>

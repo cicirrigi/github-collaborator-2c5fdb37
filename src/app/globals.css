@@ -215,3 +215,52 @@ input::placeholder {
     backdrop-filter: blur(16px);
   }
 }
+
+/* 🌟 Luxury Navbar - performant și smooth */
+.navbar-container {
+  background-color: var(--background-elevated);
+  border-bottom-color: var(--border-subtle);
+}
+
+/* Variantă luxury (scroll-reactive) */
+.navbar-luxury {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  isolation: isolate;
+
+  /* Blur + subtle overlay */
+  backdrop-filter: blur(12px);
+  background-color: color-mix(in srgb, var(--background-elevated) 88%, rgba(0, 0, 0, 0.28) 12%);
+}
+
+/* Pe mobil DISABLE blur complet - e prea scump pentru GPU */
+@media (max-width: 768px) {
+  .navbar-luxury {
+    backdrop-filter: none;
+    background-color: var(--background-elevated);
+  }
+}
+
+/* 🌍 Motion Elements GPU Optimization */
+.motion-optimized {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@layer utilities {
+  .text-glow-gold {
+    text-shadow:
+      0 0 10px rgba(203, 178, 106, 0.25),
+      0 0 20px rgba(203, 178, 106, 0.15),
+      0 0 30px rgba(203, 178, 106, 0.08);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Force GPU layer pentru Safari */
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+}
