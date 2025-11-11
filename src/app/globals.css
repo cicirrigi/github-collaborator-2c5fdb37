@@ -89,6 +89,16 @@ input[type="checkbox"]:focus {
     --brand-primary-20: rgba(203, 178, 106, 0.2);
     --brand-primary-30: rgba(203, 178, 106, 0.3);
 
+    /* 🎨 Job Badge Gold Nuances - Orchestrate */
+    --gold-classic: #cbb26a; /* Executive Transfer */
+    --gold-champagne: #d4af37; /* Private Hire */
+    --gold-light: #e5d485; /* Regular Client */
+    --gold-dark: #b8860b; /* Corporate Service */
+    --gold-standard: #daa520; /* Business Account */
+    --gold-bright: #f4d03f; /* Chauffeur Service */
+    --gold-peru: #cd853f; /* Corporate Transfer */
+    --gold-pure: #ffd700; /* Event Transport */
+
     /* States */
     --success: #10b981;
     --success-subtle: rgba(16, 185, 129, 0.1);
@@ -129,6 +139,16 @@ input[type="checkbox"]:focus {
     /* Brand variants - same gold but with light transparency */
     --brand-primary-20: rgba(203, 178, 106, 0.2);
     --brand-primary-30: rgba(203, 178, 106, 0.3);
+
+    /* 🎨 Job Badge Gold Nuances - Light Mode */
+    --gold-classic: #b8a157; /* Darker for light mode */
+    --gold-champagne: #c19b26; /* Darker champagne */
+    --gold-light: #d2c174; /* Light gold */
+    --gold-dark: #a0750a; /* Dark goldenrod */
+    --gold-standard: #c7941d; /* Standard gold */
+    --gold-bright: #e1bd36; /* Bright gold */
+    --gold-peru: #ba7b39; /* Peru gold */
+    --gold-pure: #e6c200; /* Pure gold */
 
     /* States */
     --success: #059669;

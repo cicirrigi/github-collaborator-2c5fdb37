@@ -44,7 +44,7 @@ export const AuthButton = memo(function AuthButton({
     >
       {isLoading ? (
         <div className={tokens.button.primary.loading}>
-          <Loader2 className='w-4 h-4 animate-spin' />
+          <Loader2 className={`${tokens.sizes.iconSmall} animate-spin`} />
           <span>Processing...</span>
         </div>
       ) : (

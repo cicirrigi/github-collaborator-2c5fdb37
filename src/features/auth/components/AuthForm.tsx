@@ -2,7 +2,7 @@
  * 📝 AuthForm Component - Vantage Lane 2.0
  *
  * Universal form component pentru Sign In / Sign Up
- * Schimbă fields în funcție de mode
+ * Compact și modular
  */
 
 'use client';
@@ -16,6 +16,8 @@ import type { AuthMode, SocialProvider } from '../types/auth.types';
 import { AuthButton } from './AuthButton';
 import { AuthField } from './AuthField';
 import { SocialAuthButtons } from './SocialAuthButtons';
+import { SignUpFields } from './SignUpFields';
+import { TermsAndConditions } from './TermsAndConditions';
 
 interface AuthFormProps {
   mode: AuthMode;
@@ -55,10 +57,7 @@ export function AuthForm({ mode, redirectTo, onSuccess }: AuthFormProps) {
     <div className='w-full flex flex-col'>
       <form
         onSubmit={onSubmit}
-        className={cn(
-          tokens.layout.spacing,
-          'flex-1 transition-all duration-500 ease-in-out flex flex-col justify-start'
-        )}
+        className={cn(tokens.layout.spacing, 'flex-1 flex flex-col justify-start')}
         aria-label={mode === 'signin' ? 'Sign in form' : 'Sign up form'}
         id='auth-panel'
         role='tabpanel'
@@ -78,58 +77,7 @@ export function AuthForm({ mode, redirectTo, onSuccess }: AuthFormProps) {
         )}
 
         {/* Sign Up Only Fields */}
-        <div
-          className={cn(
-            'transition-all duration-500 ease-in-out transform-gpu',
-            mode === 'signup'
-              ? 'max-h-[400px] opacity-100 mb-6 overflow-visible'
-              : 'max-h-0 opacity-0 mb-0 overflow-hidden'
-          )}
-        >
-          <div
-            className={cn(
-              'space-y-6 transition-opacity duration-200',
-              mode === 'signup' ? 'delay-100 opacity-100' : 'delay-0 opacity-0'
-            )}
-          >
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              <AuthField
-                name='firstName'
-                label='First Name'
-                type='text'
-                placeholder='John'
-                required
-                autoComplete='given-name'
-                register={register}
-                errors={errors}
-                disabled={isLoading}
-              />
-
-              <AuthField
-                name='lastName'
-                label='Last Name'
-                type='text'
-                placeholder='Doe'
-                required
-                autoComplete='family-name'
-                register={register}
-                errors={errors}
-                disabled={isLoading}
-              />
-            </div>
-
-            <AuthField
-              name='phone'
-              label='Phone Number'
-              type='tel'
-              placeholder='+44 123 456 7890'
-              autoComplete='tel'
-              register={register}
-              errors={errors}
-              disabled={isLoading}
-            />
-          </div>
-        </div>
+        <SignUpFields mode={mode} register={register} errors={errors} isLoading={isLoading} />
 
         {/* Email (both modes) */}
         <AuthField
@@ -160,8 +108,10 @@ export function AuthForm({ mode, redirectTo, onSuccess }: AuthFormProps) {
         {/* Confirm Password (signup only) */}
         <div
           className={cn(
-            'transition-all duration-500 ease-in-out overflow-hidden transform-gpu',
-            mode === 'signup' ? 'max-h-[120px] opacity-100 mb-6' : 'max-h-0 opacity-0 mb-0'
+            `transition-all ${tokens.accordion.durations.confirm} ${tokens.accordion.easing.container} overflow-hidden`,
+            mode === 'signup'
+              ? `${tokens.accordion.maxHeights.confirm} opacity-100 mb-6`
+              : 'max-h-0 opacity-0 mb-0'
           )}
         >
           <AuthField
@@ -181,23 +131,9 @@ export function AuthForm({ mode, redirectTo, onSuccess }: AuthFormProps) {
         {mode === 'signin' && (
           <div className={tokens.actions.container}>
             <label className={tokens.checkbox.container}>
-              <input
-                type='checkbox'
-                style={{
-                  WebkitAppearance: 'none',
-                  MozAppearance: 'none',
-                  appearance: 'none',
-                  outline: 'none',
-                  border: '0',
-                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.1)',
-                }}
-                className={tokens.checkbox.input}
-                {...register('rememberMe')}
-                disabled={isLoading}
-              />
+              <input type='checkbox' className={tokens.checkbox.input} disabled={isLoading} />
               <span className={tokens.checkbox.label}>Remember me</span>
             </label>
-
             <Link href='/auth/forgot-password' className={tokens.actions.forgotPassword}>
               Forgot password?
             </Link>
@@ -205,65 +141,7 @@ export function AuthForm({ mode, redirectTo, onSuccess }: AuthFormProps) {
         )}
 
         {/* Terms & Conditions (signup only) */}
-        <div
-          className={cn(
-            'transition-all duration-500 ease-in-out overflow-hidden transform-gpu',
-            mode === 'signup' ? 'max-h-[220px] opacity-100 mb-6' : 'max-h-0 opacity-0 mb-0'
-          )}
-        >
-          <div className='space-y-4'>
-            <label className={tokens.checkbox.container}>
-              <input
-                type='checkbox'
-                style={{
-                  WebkitAppearance: 'none',
-                  MozAppearance: 'none',
-                  appearance: 'none',
-                  outline: 'none',
-                  border: '0',
-                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.1)',
-                }}
-                className={tokens.checkbox.input}
-                {...register('acceptTerms')}
-                disabled={isLoading}
-              />
-              <span className={tokens.checkbox.label}>
-                I accept the{' '}
-                <Link href='/legal/terms' className={tokens.typography.link.base}>
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link href='/legal/privacy' className={tokens.typography.link.base}>
-                  Privacy Policy
-                </Link>
-              </span>
-            </label>
-            {'acceptTerms' in errors && errors.acceptTerms && (
-              <p className={cn(tokens.typography.error.base, '-mt-4')}>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {(errors as any).acceptTerms.message as string}
-              </p>
-            )}
-
-            <label className={tokens.checkbox.container}>
-              <input
-                type='checkbox'
-                style={{
-                  WebkitAppearance: 'none',
-                  MozAppearance: 'none',
-                  appearance: 'none',
-                  outline: 'none',
-                  border: '0',
-                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.1)',
-                }}
-                className={tokens.checkbox.input}
-                {...register('marketingConsent')}
-                disabled={isLoading}
-              />
-              <span className={tokens.checkbox.label}>Send me exclusive offers and updates</span>
-            </label>
-          </div>
-        </div>
+        <TermsAndConditions mode={mode} register={register} errors={errors} isLoading={isLoading} />
 
         {/* Submit Button */}
         <AuthButton type='submit' isLoading={isLoading}>

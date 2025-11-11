@@ -39,10 +39,10 @@ export const demoTokens = {
 
     // Fallback gradients (for legacy support)
     fallback: {
-      primary: 'linear-gradient(to right, #CBB26A, #D4AF37)',
-      gold: 'linear-gradient(to right, #FFD479, #E2B64C)',
-      warm: 'linear-gradient(to right, #EAB308, #CBB26A)',
-      rich: 'linear-gradient(to right, #D4AF37, #A07F3E)',
+      primary: 'linear-gradient(to right, var(--brand-primary), var(--brand-accent))',
+      gold: 'linear-gradient(to right, var(--brand-accent), var(--brand-secondary))',
+      warm: 'linear-gradient(to right, var(--brand-secondary), var(--brand-primary))',
+      rich: 'linear-gradient(to right, var(--brand-accent), var(--brand-primary))',
     },
   },
 

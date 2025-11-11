@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     'application-name': 'Vantage Lane',
     'msapplication-TileColor': '#000000',
     'msapplication-config': '/browserconfig.xml',
-    'theme-color': '#000000',
+    'theme-color': 'var(--background-dark)',
     'color-scheme': 'dark light',
   },
 };

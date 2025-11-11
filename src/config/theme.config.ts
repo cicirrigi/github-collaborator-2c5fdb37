@@ -62,11 +62,11 @@ export const designTokens = {
       },
     },
     categoryColors: {
-      Executive: '#CBB26A', // gold brand color (unified)
-      Luxury: '#CBB26A', // gold brand color
-      SUV: '#CBB26A', // gold brand color (unified)
-      MPV: '#CBB26A', // gold brand color (unified)
-      Sports: '#CBB26A', // gold brand color (unified)
+      Executive: 'var(--brand-primary)', // gold brand color (unified)
+      Luxury: 'var(--brand-primary)', // gold brand color
+      SUV: 'var(--brand-primary)', // gold brand color (unified)
+      MPV: 'var(--brand-primary)', // gold brand color (unified)
+      Sports: 'var(--brand-primary)', // gold brand color (unified)
     },
     statusColors: {
       available: {

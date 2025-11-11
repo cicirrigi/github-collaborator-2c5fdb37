@@ -1,11 +1,11 @@
 /**
- * 🔐 AuthContainer - REBUILD DE LA ZERO
+ * 🔐 AuthContainer - Layout Simplu Centrat
  *
  * Pagină de autentificare simplă, modulară
  * - Fără header/footer
  * - Background ca în site
- * - Split layout clar (40/60)
- * - Form minimal funcțional
+ * - Formular centrat pe toată pagina
+ * - Design minimal și curat
  */
 
 'use client';
@@ -13,13 +13,13 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-import { BackgroundOrchestrator } from '@/design-system/backgrounds/BackgroundOrchestrator';
 import { CompactThemeToggle } from '@/components/ui/theme-toggle';
-import { useTheme } from '@/providers/theme-provider';
+import { BackgroundOrchestrator } from '@/design-system/backgrounds/BackgroundOrchestrator';
+import { authTokens as tokens } from '../tokens/authTokens';
 
 import type { AuthMode } from '../types/auth.types';
-import { AuthTabs } from './AuthTabs';
 import { AuthForm } from './AuthForm';
+import { AuthTabs } from './AuthTabs';
 
 interface AuthContainerProps {
   defaultMode?: AuthMode;
@@ -28,38 +28,28 @@ interface AuthContainerProps {
 
 export function AuthContainer({ defaultMode = 'signin' }: AuthContainerProps) {
   const [activeMode, setActiveMode] = useState<AuthMode>(defaultMode);
-  const { currentTheme } = useTheme();
-
-  // Dynamic scrollbar color based on theme
-  const scrollbarColor =
-    currentTheme === 'dark'
-      ? 'rgba(0, 0, 0, 0.8) transparent'
-      : 'rgba(115, 115, 115, 0.8) transparent';
 
   return (
     <>
       {/* Background fixed */}
       <BackgroundOrchestrator preset='luxury' />
 
-      {/* Content */}
-      <div className='flex flex-col lg:flex-row min-h-screen'>
-        {/* LEFT: Form Container - 50% */}
-        <div
-          className='w-full lg:w-1/2 min-h-screen max-h-screen overflow-y-scroll scroll-smooth flex flex-col justify-start items-center px-6 pt-20 pb-8 lg:px-12 lg:pt-24 lg:pb-12 relative transition-none'
-          style={{
-            scrollbarGutter: 'stable',
-            scrollbarWidth: 'thin',
-            scrollbarColor: scrollbarColor,
-          }}
-        >
+      {/* Content - Centrat pe toată pagina */}
+      <div
+        className={`min-h-screen flex items-start justify-center ${tokens.spacing.containerPadding}`}
+        style={{ scrollbarGutter: 'stable' }}
+      >
+        <div className={`${tokens.layout.container} relative ${tokens.layout.card}`}>
           {/* Theme Toggle - Top Right */}
-          <div className='absolute top-6 right-6 z-10'>
+          <div className={`absolute ${tokens.spacing.themeTogglePosition} z-10`}>
             <CompactThemeToggle />
           </div>
 
           {/* Logo + Vantage Lane - Centered Above Form */}
-          <div className='flex items-center justify-center gap-2 mb-8 -mt-6'>
-            <div className='relative w-12 h-12 scale-[1.4]'>
+          <div
+            className={`flex items-center justify-center ${tokens.spacing.gridGap} ${tokens.spacing.logoMargin}`}
+          >
+            <div className={`relative ${tokens.sizes.logo}`}>
               <Image
                 src='/LOGO/logo transparent.png'
                 alt='Vantage Lane Logo'
@@ -69,63 +59,19 @@ export function AuthContainer({ defaultMode = 'signin' }: AuthContainerProps) {
               />
             </div>
             <div className='text-2xl font-light tracking-wide uppercase select-none'>
-              <span className='bg-gradient-to-r from-[#d4b870] to-[#bfa156] bg-clip-text text-transparent'>
+              <span className='bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] bg-clip-text text-transparent'>
                 Vantage
               </span>
               <span className='ml-1 text-neutral-900 dark:text-white'>Lane</span>
             </div>
           </div>
 
-          <div className='w-full max-w-xl relative -mt-4'>
-            {/* Auth Tabs - Sign In / Sign Up */}
-            <AuthTabs activeMode={activeMode} onChange={setActiveMode} />
+          {/* Auth Tabs - Sign In / Sign Up */}
+          <AuthTabs activeMode={activeMode} onChange={setActiveMode} />
 
-            {/* Auth Form */}
-            <div className='relative'>
-              <AuthForm mode={activeMode} />
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT: Image Container - 50% - FIXED LAYOUT */}
-        <div className='w-full lg:w-1/2 min-h-[40vh] lg:min-h-screen relative overflow-hidden transition-none will-change-auto'>
-          {/* Background Image - New BG 2 */}
-          <Image
-            src='/images/vehicles-webp/NEW BG 2.webp'
-            alt='Vantage Lane Background'
-            fill
-            priority
-            className='object-cover'
-            style={{ objectPosition: 'center 70%' }}
-            quality={100}
-          />
-
-          {/* Welcome Text - Elegant cu decorație */}
-          <div className='absolute top-12 left-1/2 -translate-x-1/2 z-20'>
-            <div className='text-center'>
-              {/* Decorative line top */}
-              <div className='w-20 h-[1.5px] bg-gradient-to-r from-transparent via-amber-400/60 to-transparent mx-auto mb-6'></div>
-
-              {/* Welcome Text */}
-              <h1
-                className='text-5xl md:text-6xl lg:text-7xl tracking-wider text-center bg-gradient-to-br from-white via-amber-100 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.3)] mb-3'
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  lineHeight: '1.1',
-                  WebkitTextStroke: '1px rgba(255,255,255,0.1)',
-                }}
-              >
-                Welcome
-              </h1>
-
-              {/* Subtitle - Slogan */}
-              <p className='text-sm md:text-base text-neutral-600 dark:text-gray-300 tracking-[0.2em]'>
-                The Art of Refined Motion
-              </p>
-
-              {/* Decorative line bottom */}
-              <div className='w-20 h-[1.5px] bg-gradient-to-r from-transparent via-amber-400/60 to-transparent mx-auto mt-6'></div>
-            </div>
+          {/* Auth Form */}
+          <div className='relative mt-6'>
+            <AuthForm mode={activeMode} />
           </div>
         </div>
       </div>

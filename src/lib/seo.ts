@@ -96,7 +96,7 @@ export function generatePageMetadata(pathname: string): Metadata {
 
     // Additional metadata
     other: {
-      'theme-color': '#CBB26A',
+      'theme-color': 'var(--brand-primary)',
       'color-scheme': 'dark light',
     },
   };

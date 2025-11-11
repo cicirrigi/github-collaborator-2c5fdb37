@@ -4,21 +4,21 @@
  */
 export const TRAVEL_PLANNER_PRO_THEME = {
   colors: {
-    gold: '#CBB26A',
-    lightGold: '#D4AF37',
-    darkGold: '#8B6914',
-    neutral: '#404040',
-    light: '#F5F5F5',
-    dark: '#1A1A1A',
+    gold: 'var(--brand-primary)',
+    lightGold: 'var(--brand-accent)',
+    darkGold: 'var(--brand-secondary)',
+    neutral: 'var(--text-secondary)',
+    light: 'var(--background-light)',
+    dark: 'var(--background-dark)',
   },
   container: `
     relative rounded-3xl p-8 backdrop-blur-2xl overflow-hidden
-    border border-white/20 shadow-[0_0_60px_-10px_rgba(203,178,106,0.3)]
+    border border-white/20 shadow-[0_0_60px_-10px_var(--brand-primary)/30]
     before:absolute before:inset-0 before:z-0 before:pointer-events-none
-    before:bg-[radial-gradient(circle_at_20%_20%,rgba(203,178,106,0.4)_0%,transparent_50%),radial-gradient(circle_at_80%_80%,rgba(139,69,19,0.3)_0%,transparent_50%),radial-gradient(circle_at_60%_40%,rgba(212,175,55,0.2)_0%,transparent_60%),linear-gradient(135deg,#1a1a2e_0%,#16213e_25%,#0f0f23_50%,#1a1a2e_100%)]
+    before:bg-[radial-gradient(circle_at_20%_20%,var(--brand-primary)/40_0%,transparent_50%),radial-gradient(circle_at_80%_80%,var(--brand-secondary)/30_0%,transparent_50%),radial-gradient(circle_at_60%_40%,var(--brand-accent)/20_0%,transparent_60%),linear-gradient(135deg,var(--background-dark)_0%,var(--background-elevated)_25%,var(--background-subtle)_50%,var(--background-dark)_100%)]
     before:rounded-3xl before:animate-pulse before:[animation-duration:5s]
     after:absolute after:inset-0 after:z-0 after:pointer-events-none 
-    after:bg-[radial-gradient(ellipse_400px_300px_at_30%_70%,rgba(203,178,106,0.15),transparent),radial-gradient(ellipse_300px_400px_at_70%_30%,rgba(75,85,99,0.2),transparent)]
+    after:bg-[radial-gradient(ellipse_400px_300px_at_30%_70%,var(--brand-primary)/15,transparent),radial-gradient(ellipse_300px_400px_at_70%_30%,var(--text-muted)/20,transparent)]
     after:rounded-3xl after:opacity-60 after:animate-pulse after:[animation-duration:8s] after:[animation-delay:3s]
     [&>*]:relative [&>*]:z-10
   `,
@@ -43,10 +43,10 @@ export const TRAVEL_PLANNER_PRO_THEME = {
       text-sm font-medium rounded-lg transition-all cursor-pointer
       hover:bg-white/[0.05] text-neutral-300
     `,
-    dayToday: `border border-[#CBB26A]/40 text-[#CBB26A]`,
+    dayToday: `border border-[var(--brand-primary)]/40 text-[var(--brand-primary)]`,
     daySelected: `
-      bg-gradient-to-br from-[#CBB26A] to-[#D4AF37]
-      text-black shadow-[0_0_10px_rgba(203,178,106,0.4)]
+      bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-accent)]
+      text-black shadow-[0_0_10px_var(--brand-primary)/40]
     `,
     dayInRange: `bg-white/[0.06] text-neutral-200`,
     dayDisabled: `opacity-40 cursor-not-allowed text-neutral-600`,
@@ -64,13 +64,13 @@ export const TRAVEL_PLANNER_PRO_THEME = {
       hover:bg-white/[0.05]
     `,
     slotSelected: `
-      bg-gradient-to-r from-[#CBB26A] to-[#D4AF37]
+      bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]
       text-black shadow-md font-medium
     `,
   },
 
   accent: {
-    gold: 'from-[#CBB26A] to-[#D4AF37]',
+    gold: 'from-[var(--brand-primary)] to-[var(--brand-accent)]',
     gray: 'from-gray-800 to-gray-900',
   },
 

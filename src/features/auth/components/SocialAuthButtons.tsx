@@ -59,7 +59,7 @@ export function SocialAuthButtons({
               aria-busy={isLoading}
               className={tokens.button.social.base}
             >
-              <Icon className='w-5 h-5' />
+              <Icon className={tokens.sizes.icon} />
               {config.label}
             </button>
           );

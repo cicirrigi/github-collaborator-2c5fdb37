@@ -85,8 +85,7 @@ const FleetSection = memo(function FleetSection({
             <div
               className='w-24 h-1 mx-auto mb-6'
               style={{
-                background:
-                  'linear-gradient(to right, var(--brand-primary), var(--brand-secondary, #E5D485))',
+                background: 'linear-gradient(to right, var(--brand-primary), var(--brand-accent))',
               }}
             />
 
@@ -134,7 +133,7 @@ const FleetSection = memo(function FleetSection({
                 color: 'var(--background-dark)',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.backgroundColor = 'var(--brand-secondary, #E5D485)';
+                e.currentTarget.style.backgroundColor = 'var(--brand-accent)';
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.backgroundColor = 'var(--brand-primary)';
@@ -158,7 +157,7 @@ const FleetSection = memo(function FleetSection({
             className='absolute left-1/2 top-0 -translate-x-1/2 w-96 h-px blur-sm'
             style={{
               background:
-                'linear-gradient(to right, transparent, var(--brand-secondary, #E5D485), transparent)',
+                'linear-gradient(to right, transparent, var(--brand-accent), transparent)',
               opacity: 0.6,
             }}
           />
