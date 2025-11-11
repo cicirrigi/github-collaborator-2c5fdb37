@@ -3,7 +3,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import Layout from '@/components/layout/Layout';
+import { ConditionalLayout } from '@/components/layout/ConditionalLayout';
 import { siteMetadata } from '@/config/site.config';
 import { cn } from '@/lib/utils/cn';
 import { ThemeProvider } from '@/providers/theme-provider';
@@ -127,7 +127,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         suppressHydrationWarning
       >
         <ThemeProvider attribute='class' defaultTheme='dark' disableTransitionOnChange={true}>
-          <Layout>{children}</Layout>
+          <ConditionalLayout>{children}</ConditionalLayout>
         </ThemeProvider>
       </body>
     </html>

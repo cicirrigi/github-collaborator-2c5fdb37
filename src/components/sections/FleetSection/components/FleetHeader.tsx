@@ -9,10 +9,8 @@
 
 import { motion } from 'framer-motion';
 import type React from 'react';
-import { memo } from 'react';
 
 import { typography } from '@/design-system/tokens/typography';
-import { cn } from '@/lib/utils/cn';
 
 import { Text } from '@/components/ui';
 
