@@ -11,9 +11,10 @@ import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
 import { forwardRef } from 'react';
 
+import { animations } from '@/config/animations.config';
 import { SlideIndicator } from '@/components/ui/SlideIndicator/SlideIndicator';
 import gridStyles from '../styles/grid.module.css';
-import { motionTokens, type CardVariant, type GridVariant } from '../tokens';
+import { type CardVariant, type GridVariant } from '../tokens';
 import { TestimonialCardNew, type Testimonial } from './TestimonialCardNew';
 
 export interface TestimonialGridLayoutProps {
@@ -131,18 +132,17 @@ export const TestimonialGridLayout = forwardRef<HTMLDivElement, TestimonialGridL
                 }
               : {}),
           }}
-          variants={motionTokens.grid.container}
-          initial='initial'
-          animate='animate'
-          viewport={motionTokens.scroll.viewport}
+          variants={animations.staggerContainer}
+          initial='hidden'
+          whileInView='visible'
+          viewport={animations.viewport}
           onMouseEnter={isCarousel ? onPause : undefined}
           onMouseLeave={isCarousel ? onResume : undefined}
         >
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map(testimonial => (
             <motion.div
               key={testimonial.id}
-              variants={motionTokens.grid.item}
-              custom={index}
+              variants={animations.fadeInUp}
               style={{
                 // Pentru carousel variant, adaugă scroll-snap
                 ...(variant === 'carousel' && {

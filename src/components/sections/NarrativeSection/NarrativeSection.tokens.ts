@@ -1,7 +1,9 @@
 /**
- * 📖 NarrativeSection Design Tokens
- * Spacing, typography, colors, and layout tokens
+ * 📜 NarrativeSection Design Tokens
+ * Styling constants for narrative content section
  */
+
+import { typography } from '@/design-system/tokens/typography';
 
 export const narrativeTokens = {
   /**
@@ -26,7 +28,7 @@ export const narrativeTokens = {
    */
   typography: {
     title: {
-      base: 'text-4xl md:text-5xl font-light tracking-wide text-center lg:text-left',
+      base: `${typography.classes.sectionTitle} text-center lg:text-left`,
       primary: 'text-[var(--text-primary)]',
       accent: 'text-[var(--brand-primary)]',
     },

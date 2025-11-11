@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import type React from 'react';
 
+import { typography } from '@/design-system/tokens/typography';
 import { Container } from '@/components/layout/Container';
 import { ExploreBadge } from '@/components/ui/ExploreBadge';
 import { LuxuryCard } from '@/components/ui/LuxuryCard';
@@ -83,15 +84,15 @@ export function ServicesSection({
           viewport={{ once: true }}
         >
           <h2
-            className='mb-4 tracking-wide text-4xl md:text-5xl font-light text-center'
+            className={`${typography.classes.sectionTitle} text-center mb-4`}
             style={{ color: 'var(--text-primary)' }}
           >
             <span style={{ color: 'var(--text-primary)' }}>{config.title.primary}</span>{' '}
             <span
               style={{
                 color: 'var(--brand-primary)',
-                textShadow: '0 0 25px rgba(203, 178, 106, 0.7), 0 0 35px rgba(203, 178, 106, 0.4)',
-                filter: 'brightness(1.2)',
+                textShadow: typography.effects.goldGlow.textShadow,
+                filter: typography.effects.goldGlow.filter,
               }}
             >
               {config.title.accent}

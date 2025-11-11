@@ -9,8 +9,9 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import type React from 'react';
+import React from 'react';
 
+import { typography } from '@/design-system/tokens/typography';
 import { animations } from '@/config/animations.config';
 import { cn } from '@/lib/utils/cn';
 
@@ -47,64 +48,87 @@ export function PricingSection({
   return (
     <section className={cn(tokens.container.base, className)}>
       <div className={tokens.container.maxWidth}>
-        {/* Title & Subtitle */}
+        {/* Title & Subtitle - ORCHESTRATED */}
         {!hideTitle && (
-          <div className='text-center mb-16'>
+          <motion.div
+            className='text-center mb-16'
+            variants={animations.staggerContainer}
+            initial='hidden'
+            whileInView='visible'
+            viewport={animations.viewport}
+          >
             <motion.div
               className={tokens.typography.title.container}
               variants={animations.fadeInUp}
-              initial='hidden'
-              whileInView='visible'
-              viewport={animations.viewport}
             >
               <h2 className={tokens.typography.title.primary}>
                 {finalConfig.title.primary}{' '}
-                <span className={tokens.typography.title.accent}>{finalConfig.title.accent}</span>
+                <span
+                  className={tokens.typography.title.accent}
+                  style={{
+                    textShadow: typography.effects.goldGlow.textShadow,
+                    filter: typography.effects.goldGlow.filter,
+                  }}
+                >
+                  {finalConfig.title.accent}
+                </span>
               </h2>
             </motion.div>
 
             <motion.div
               className={tokens.typography.subtitle.container}
               variants={animations.fadeIn}
-              initial='hidden'
-              whileInView='visible'
-              viewport={animations.viewport}
             >
               <p className={tokens.typography.subtitle.base}>{finalConfig.subtitle}</p>
             </motion.div>
-
-            <motion.div
-              className={tokens.typography.commitment.container}
-              variants={animations.fadeIn}
-              initial='hidden'
-              whileInView='visible'
-              viewport={animations.viewport}
-            >
-              {finalConfig.commitment.map((item, index) => (
-                <div key={index} className={tokens.typography.commitment.item}>
-                  <span className={tokens.typography.commitment.icon}>✓</span>
-                  {item}
-                </div>
-              ))}
-            </motion.div>
-          </div>
+          </motion.div>
         )}
 
-        {/* Pricing Cards Grid */}
-        <div className={tokens.grid.container}>
+        {/* Pricing Cards Grid - ORCHESTRATED (stânga → dreapta) */}
+        <motion.div
+          className={tokens.grid.container}
+          variants={animations.staggerContainer}
+          initial='hidden'
+          whileInView='visible'
+          viewport={animations.viewport}
+        >
           {displayPackages.map(pkg => (
             <PricingCard key={pkg.id} plan={pkg} />
           ))}
-        </div>
+        </motion.div>
 
-        {/* Bottom CTA */}
+        {/* Commitment Facts - Jos sub grid */}
+        <motion.div
+          className='flex flex-wrap items-center justify-center gap-3 mt-16 mb-16 text-sm md:text-base text-neutral-500 dark:text-neutral-600'
+          initial='hidden'
+          whileInView='visible'
+          viewport={animations.viewport}
+          variants={animations.fadeIn}
+        >
+          {finalConfig.commitment.map((item, index) => (
+            <React.Fragment key={index}>
+              <span className='flex items-center gap-2'>
+                <item.icon
+                  className='w-4 h-4 stroke-[2] text-[var(--brand-primary)]'
+                  aria-hidden='true'
+                />
+                {item.text}
+              </span>
+              {index < finalConfig.commitment.length - 1 && (
+                <span className='text-[var(--brand-primary)]/30'>|</span>
+              )}
+            </React.Fragment>
+          ))}
+        </motion.div>
+
+        {/* Bottom CTA - ORCHESTRATED */}
         {finalConfig.cta && (
           <motion.div
             className={tokens.bottomCta.container}
-            initial={false}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true, margin: '-100px' }}
+            variants={animations.fadeIn}
+            initial='hidden'
+            whileInView='visible'
+            viewport={animations.viewport}
           >
             {finalConfig.cta.description && (
               <p className={tokens.bottomCta.description}>{finalConfig.cta.description}</p>

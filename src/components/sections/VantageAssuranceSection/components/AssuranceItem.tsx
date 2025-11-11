@@ -1,6 +1,7 @@
 /**
  * 🛡️ AssuranceItem Component
  * Single trust indicator with icon, label, and subtext
+ * ORCHESTRATED by parent container - no individual delays
  */
 
 'use client';
@@ -8,6 +9,7 @@
 import { motion } from 'framer-motion';
 import type React from 'react';
 
+import { animations } from '@/config/animations.config';
 import { cn } from '@/lib/utils/cn';
 
 import type { AssuranceItem as AssuranceItemType } from '../VantageAssuranceSection.types';
@@ -15,28 +17,17 @@ import { assuranceTokens } from '../VantageAssuranceSection.tokens';
 
 const tokens = assuranceTokens;
 
-interface AssuranceItemProps extends AssuranceItemType {
-  /** Animation delay for stagger effect */
-  delay?: number;
-}
+type AssuranceItemProps = AssuranceItemType;
 
 export function AssuranceItem({
   icon: Icon,
   label,
   subtext,
-  delay = 0,
 }: AssuranceItemProps): React.JSX.Element {
   return (
     <motion.div
       className={cn('group', tokens.grid.item, tokens.spacing.item)}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: tokens.animations.duration,
-        delay,
-        ease: tokens.animations.ease,
-      }}
-      viewport={{ once: true }}
+      variants={animations.fadeInUp}
       whileHover={{ scale: 1.05 }}
     >
       {/* Icon */}

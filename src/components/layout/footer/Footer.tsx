@@ -67,10 +67,10 @@ const Footer = memo(function Footer({
         }}
       />
 
-      {/* Main Content with Motion */}
+      {/* Main Content with Motion - ORCHESTRATED */}
       <Container size='xl' className='relative py-16 ml-0'>
         <motion.div
-          variants={animations.fadeInUp}
+          variants={animations.staggerContainer}
           initial='hidden'
           whileInView='visible'
           viewport={animations.viewport}
@@ -79,20 +79,21 @@ const Footer = memo(function Footer({
         >
           {/* Brand Section with Social Icons - Order 2 on mobile (appears last) */}
           {!hideBrand && (
-            <div className='order-2 lg:order-1 lg:col-span-4'>
+            <motion.div className='order-2 lg:order-1 lg:col-span-4' variants={animations.fadeInUp}>
               <FooterBrand
                 brand={config.brand}
                 {...(!hideSocials && { socials: config.socials })}
               />
-            </div>
+            </motion.div>
           )}
 
           {/* Links Section - Order 1 on mobile (appears first) */}
-          <div
+          <motion.div
             className={cn('order-1 lg:order-2', !hideBrand ? 'lg:col-span-8' : 'lg:col-span-12')}
+            variants={animations.fadeInUp}
           >
             <FooterLinks links={config.links} />
-          </div>
+          </motion.div>
         </motion.div>
       </Container>
 

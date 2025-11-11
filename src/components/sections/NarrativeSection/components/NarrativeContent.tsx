@@ -10,6 +10,8 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import React from 'react';
 
+import { typography } from '@/design-system/tokens/typography';
+import { animations } from '@/config/animations.config';
 import { cn } from '@/lib/utils/cn';
 
 import type { NarrativeBlock, NarrativeCTA } from '../NarrativeSection.types';
@@ -39,95 +41,89 @@ export function NarrativeContent({
 }: NarrativeContentProps): React.JSX.Element {
   return (
     <div className={tokens.layout.textColumn}>
-      {/* Title - bicolor with glow (EXACT like VantageAssurance) */}
-      <motion.h2
-        className={cn(tokens.typography.title.base, tokens.spacing.titleBottom)}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-      >
-        <span className={tokens.typography.title.primary}>{title.primary} </span>
-        <span
-          className={tokens.typography.title.accent}
-          style={{
-            textShadow: '0 0 25px rgba(203, 178, 106, 0.7), 0 0 35px rgba(203, 178, 106, 0.4)',
-            filter: 'brightness(1.2)',
-          }}
-        >
-          {title.accent}
-        </span>
-      </motion.h2>
-
-      {/* Gold separator line (EXACT like VantageAssurance) */}
+      {/* Header - ORCHESTRATED */}
       <motion.div
-        initial={{ opacity: 0, width: 0 }}
-        whileInView={{ opacity: 1, width: '6rem' }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        viewport={{ once: true }}
-        className={cn(tokens.separator.main, tokens.spacing.separatorBottom)}
-      />
-
-      {/* Subheadline */}
-      <motion.p
-        className={cn(tokens.typography.subheadline.base, tokens.typography.subheadline.color)}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        viewport={{ once: true }}
+        variants={animations.staggerContainer}
+        initial='hidden'
+        whileInView='visible'
+        viewport={animations.viewport}
       >
-        {subheadline}
-      </motion.p>
+        {/* Title - bicolor with glow */}
+        <motion.h2
+          className={cn(tokens.typography.title.base, tokens.spacing.titleBottom)}
+          variants={animations.fadeInUp}
+        >
+          <span className={tokens.typography.title.primary}>{title.primary} </span>
+          <span
+            className={tokens.typography.title.accent}
+            style={{
+              textShadow: typography.effects.goldGlow.textShadow,
+              filter: typography.effects.goldGlow.filter,
+            }}
+          >
+            {title.accent}
+          </span>
+        </motion.h2>
 
-      {/* Content blocks with divider */}
-      <div className={tokens.spacing.blockGap}>
+        {/* Gold separator line */}
+        <motion.div
+          variants={animations.lineExpand}
+          className={cn(tokens.separator.main, tokens.spacing.separatorBottom)}
+          style={{ width: '6rem' }}
+        />
+
+        {/* Subheadline */}
+        <motion.p
+          className={cn(tokens.typography.subheadline.base, tokens.typography.subheadline.color)}
+          variants={animations.fadeIn}
+        >
+          {subheadline}
+        </motion.p>
+      </motion.div>
+
+      {/* Content blocks - ORCHESTRATED */}
+      <motion.div
+        className={tokens.spacing.blockGap}
+        variants={animations.staggerContainer}
+        initial='hidden'
+        whileInView='visible'
+        viewport={animations.viewport}
+      >
         {blocks.map((block, blockIndex) => (
           <React.Fragment key={blockIndex}>
             {/* Block paragraphs */}
-            <div className={tokens.spacing.innerGap}>
+            <motion.div className={tokens.spacing.innerGap} variants={animations.fadeInUp}>
               {block.paragraphs.map((paragraph, pIndex) => (
-                <motion.p
+                <p
                   key={pIndex}
                   className={cn(
                     tokens.typography.paragraph.base,
                     tokens.typography.paragraph.color
                   )}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: 0.5 + blockIndex * 0.2 + pIndex * 0.1,
-                  }}
-                  viewport={{ once: true }}
                 >
                   {paragraph.text}
                   <span className={tokens.typography.emphasis.color}>{paragraph.emphasis}</span>
                   {paragraph.rest}
-                </motion.p>
+                </p>
               ))}
-            </div>
+            </motion.div>
 
-            {/* Divider between blocks - straight line */}
+            {/* Divider between blocks */}
             {blockIndex < blocks.length - 1 && (
-              <motion.div
-                initial={{ opacity: 0, scaleX: 0 }}
-                whileInView={{ opacity: 1, scaleX: 1 }}
-                transition={{ duration: 0.8, delay: 0.7 + blockIndex * 0.2 }}
-                viewport={{ once: true }}
-              >
+              <motion.div variants={animations.fadeIn}>
                 <div className={tokens.separator.divider} />
               </motion.div>
             )}
           </React.Fragment>
         ))}
-      </div>
+      </motion.div>
 
-      {/* CTA - subtle and refined */}
+      {/* CTA */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 1.2 }}
-        viewport={{ once: true }}
+        variants={animations.fadeInUp}
+        initial='hidden'
+        whileInView='visible'
+        viewport={animations.viewport}
         className='mt-12'
       >
         <Link

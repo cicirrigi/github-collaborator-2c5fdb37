@@ -115,12 +115,17 @@ const config: Config = {
           '0%, 95%, 100%': { opacity: '0', transform: 'translateX(-100%)' },
           '45%, 55%': { opacity: '0.25', transform: 'translateX(100%)' },
         },
+        'bounce-right': {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(6px)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'luxury-float': 'luxury-float 5s ease-in-out infinite',
         'shimmer-sweep': 'shimmer-sweep 6s infinite',
+        'bounce-right': 'bounce-right 4s ease-in-out infinite',
       },
     },
   },

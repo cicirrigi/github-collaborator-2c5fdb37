@@ -1,12 +1,15 @@
 /**
  * 🛡️ AssuranceGrid Component
  * Grid layout for assurance items (2×3)
+ * ORCHESTRATED with staggerContainer for sequential animations
  */
 
 'use client';
 
+import { motion } from 'framer-motion';
 import type React from 'react';
 
+import { animations } from '@/config/animations.config';
 import { cn } from '@/lib/utils/cn';
 
 import type { AssuranceItem as AssuranceItemType } from '../VantageAssuranceSection.types';
@@ -22,10 +25,16 @@ interface AssuranceGridProps {
 
 export function AssuranceGrid({ items }: AssuranceGridProps): React.JSX.Element {
   return (
-    <div className={cn(tokens.grid.container, tokens.spacing.grid)}>
-      {items.map((item, index) => (
-        <AssuranceItem key={item.id} {...item} delay={index * tokens.animations.stagger} />
+    <motion.div
+      className={cn(tokens.grid.container, tokens.spacing.grid)}
+      variants={animations.staggerContainer}
+      initial='hidden'
+      whileInView='visible'
+      viewport={animations.viewport}
+    >
+      {items.map(item => (
+        <AssuranceItem key={item.id} {...item} />
       ))}
-    </div>
+    </motion.div>
   );
 }

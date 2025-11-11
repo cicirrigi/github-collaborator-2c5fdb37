@@ -27,6 +27,22 @@ export const typography = {
     semibold: '600',
     bold: '700',
   },
+  /**
+   * Standard classes pentru consistență across sections
+   */
+  classes: {
+    sectionTitle: 'text-4xl md:text-5xl font-light tracking-wide',
+    sectionSubtitle: 'text-2xl md:text-3xl font-light tracking-wide',
+  },
+  /**
+   * Effects - glow subtil pentru text auriu
+   */
+  effects: {
+    goldGlow: {
+      textShadow: '0 0 15px rgba(203, 178, 106, 0.25), 0 0 30px rgba(203, 178, 106, 0.12)',
+      filter: 'brightness(1.08)',
+    },
+  },
 } as const;
 
 export type TypographyTokens = typeof typography;

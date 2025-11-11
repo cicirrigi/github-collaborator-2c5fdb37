@@ -5,7 +5,7 @@
  * Config-driven approach eliminates hardcoding and enables easy updates.
  */
 
-import { Plane, Clock, Briefcase, Sparkles } from 'lucide-react';
+import { Plane, Clock, Briefcase, Sparkles, Shield, CreditCard, CheckCircle } from 'lucide-react';
 
 import type { PricingSectionConfig } from './PricingSection.types';
 
@@ -17,7 +17,11 @@ export const pricingConfig: PricingSectionConfig = {
   subtitle:
     'Every trip with Vantage Lane is priced with precision — based on distance, duration, and vehicle category.',
 
-  commitment: ['No hidden fees', 'No surge pricing', 'What you see is what you pay'],
+  commitment: [
+    { icon: Shield, text: 'No hidden fees' },
+    { icon: CreditCard, text: 'No surge pricing' },
+    { icon: CheckCircle, text: 'What you see is what you pay' },
+  ],
 
   packages: [
     {

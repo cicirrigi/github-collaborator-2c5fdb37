@@ -9,6 +9,10 @@
 
 import { motion } from 'framer-motion';
 import type React from 'react';
+import { memo } from 'react';
+
+import { typography } from '@/design-system/tokens/typography';
+import { cn } from '@/lib/utils/cn';
 
 import { Text } from '@/components/ui';
 
@@ -44,8 +48,8 @@ export function FleetHeader({
         <span
           style={{
             color: 'var(--brand-primary)',
-            textShadow: '0 0 25px rgba(203, 178, 106, 0.7), 0 0 35px rgba(203, 178, 106, 0.4)',
-            filter: 'brightness(1.2)',
+            textShadow: typography.effects.goldGlow.textShadow,
+            filter: typography.effects.goldGlow.filter,
           }}
         >
           {accentTitle}

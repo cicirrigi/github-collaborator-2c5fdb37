@@ -89,8 +89,8 @@ export const assuranceConfig = {
    */
   logos: {
     enabled: true,
-    text: "Preferred by guests of London's most prestigious hotels",
-    items: ['Hilton', 'Emirates', 'The Ritz London', 'Heathrow VIP', 'Corinthia'],
+    text: "Chosen by guests of the world's most distinguished establishments",
+    items: ['Hilton', 'Corinthia', 'Emirates', 'The Ritz London', 'Heathrow VIP'],
   },
 
   /**

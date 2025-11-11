@@ -12,8 +12,8 @@ import { Check } from 'lucide-react';
 import Link from 'next/link';
 import type React from 'react';
 
-import { animations } from '@/config/animations.config';
 import { LuxuryCard } from '@/components/ui/LuxuryCard';
+import { animations } from '@/config/animations.config';
 import { cn } from '@/lib/utils/cn';
 
 import { pricingTokens as tokens } from './PricingSection.tokens';
@@ -23,21 +23,27 @@ export function PricingCard({ plan, className }: PricingCardProps): React.JSX.El
   const IconComponent = plan.icon;
 
   return (
-    <motion.div
-      className={cn('relative h-full', className)}
-      variants={animations.slideInUp}
-      initial='hidden'
-      whileInView='visible'
-      viewport={animations.viewport}
-    >
-      {/* Popular Badge */}
-      {plan.popular && (
-        <div className={tokens.badge.container}>
-          <span className={tokens.badge.base}>Most Popular</span>
-        </div>
-      )}
+    <motion.div className={cn('relative h-full', className)} variants={animations.slideInUp}>
+      <LuxuryCard variant='shimmer' hover='shimmer' className='h-full p-6 relative'>
+        {/* Popular Badge - Consistent cu Fleet */}
+        {plan.popular && (
+          <div className='absolute top-1 right-0 z-20'>
+            <span
+              className='px-3 py-1 text-xs font-medium rounded-full backdrop-blur-sm'
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(203, 178, 106, 0.9), rgba(203, 178, 106, 0.7))',
+                color: 'var(--background-dark)',
+                border: '1px solid rgba(203, 178, 106, 0.3)',
+                boxShadow:
+                  '0 2px 8px rgba(203, 178, 106, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+              }}
+            >
+              ★ Popular
+            </span>
+          </div>
+        )}
 
-      <LuxuryCard variant='shimmer' hover='shimmer' className='h-full p-6'>
         <div className='h-full flex flex-col'>
           {/* Icon */}
           <div className={tokens.card.icon}>
@@ -53,7 +59,7 @@ export function PricingCard({ plan, className }: PricingCardProps): React.JSX.El
           {/* Price */}
           <div className={tokens.card.price.container}>
             <div className={tokens.card.price.amount}>{plan.priceFrom}</div>
-            {plan.priceNote && <div className={tokens.card.price.note}>{plan.priceNote}</div>}
+            <div className={tokens.card.price.note}>{plan.priceNote || '\u00A0'}</div>
           </div>
 
           {/* Divider */}

@@ -5,6 +5,8 @@
  * Consistent with design system and theme.
  */
 
+import { typography } from '@/design-system/tokens/typography';
+
 export const pricingTokens = {
   /**
    * Container & Layout
@@ -20,7 +22,7 @@ export const pricingTokens = {
    */
   typography: {
     title: {
-      primary: 'text-4xl md:text-5xl lg:text-6xl font-light tracking-wide text-white',
+      primary: `${typography.classes.sectionTitle} text-white`,
       accent: 'text-[var(--brand-primary)] font-light',
       container: 'mb-4',
     },
@@ -48,10 +50,10 @@ export const pricingTokens = {
   card: {
     icon: 'inline-flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-[var(--brand-primary)]/10 to-[var(--brand-primary)]/5 border border-[var(--brand-primary)]/20 text-[var(--brand-primary)] mb-4',
     name: 'text-2xl font-light text-white mb-1.5',
-    tagline: 'text-sm text-neutral-400 mb-4',
+    tagline: 'text-sm text-neutral-400 mb-4 min-h-[40px]',
     price: {
       container: 'mb-4',
-      amount: 'text-2xl font-light text-[var(--brand-primary)]',
+      amount: 'text-lg font-light text-[var(--brand-primary)]',
       note: 'text-xs text-neutral-500 mt-1',
     },
     divider: 'h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-4',

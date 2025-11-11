@@ -6,6 +6,8 @@ import type React from 'react';
 import { useEffect, useState } from 'react';
 
 // Import din design-system global
+import { typography } from '@/design-system/tokens/typography';
+import { animations } from '@/config/animations.config';
 import { SectionOrchestrator } from '@/components/layout/SectionOrchestrator';
 
 // Import componente locale
@@ -13,10 +15,9 @@ import { TestimonialsGrid } from './components/TestimonialsGrid';
 import { testimonialsNewConfig } from './TestimonialsNew.config';
 import type { TestimonialsNewProps } from './TestimonialsNew.types';
 
-// Import styles și tokens
+// Import styles
 import gridStyles from './styles/grid.module.css';
 import themeStyles from './styles/theme.module.css';
-import { motionTokens } from './tokens';
 
 /**
  * 🎭 TestimonialsNew - Main Orchestrator Section
@@ -96,25 +97,17 @@ export function TestimonialsNew({
       >
         <motion.div
           className={gridStyles.sectionWrapper}
-          variants={motionTokens.scroll.reveal}
-          initial='initial'
-          whileInView='whileInView'
-          viewport={motionTokens.scroll.viewport}
+          variants={animations.staggerContainer}
+          initial='hidden'
+          whileInView='visible'
+          viewport={animations.viewport}
         >
           {/* 🌟 Section Header */}
-          <motion.div
-            className={gridStyles.header}
-            variants={motionTokens.header.title}
-            initial='initial'
-            whileInView='animate'
-            viewport={motionTokens.scroll.viewport}
-          >
+          <motion.div className={gridStyles.header} variants={animations.fadeInUp}>
             <motion.h2
-              className='text-4xl md:text-5xl font-light tracking-wide mb-4'
+              className={`${typography.classes.sectionTitle} mb-4`}
               style={{
                 color: 'var(--testimonial-text-primary)',
-                textShadow: '0 0 18px rgba(220, 220, 255, 0.3), 0 0 30px rgba(180, 180, 255, 0.2)',
-                filter: 'brightness(1.1)',
               }}
             >
               {titleText}{' '}
@@ -123,9 +116,8 @@ export function TestimonialsNew({
                   className={themeStyles.accentText}
                   style={{
                     fontWeight: '400',
-                    textShadow:
-                      '0 0 25px rgba(203, 178, 106, 0.6), 0 0 35px rgba(203, 178, 106, 0.3)',
-                    filter: 'brightness(1.15)',
+                    textShadow: typography.effects.goldGlow.textShadow,
+                    filter: typography.effects.goldGlow.filter,
                   }}
                 >
                   {accentText}
@@ -134,13 +126,7 @@ export function TestimonialsNew({
             </motion.h2>
 
             {/* 🎨 Decorative Line - ca pe homepage */}
-            <motion.div
-              className='flex justify-center mb-6'
-              initial={{ opacity: 0, scaleX: 0 }}
-              whileInView={{ opacity: 1, scaleX: 1 }}
-              viewport={motionTokens.scroll.viewport}
-              transition={{ delay: 0.3, duration: 0.6, ease: 'easeOut' }}
-            >
+            <motion.div className='flex justify-center mb-6' variants={animations.lineExpand}>
               <div
                 className='h-1 w-24 rounded-full bg-gradient-to-r'
                 style={{
@@ -156,23 +142,14 @@ export function TestimonialsNew({
               style={{
                 color: 'var(--testimonial-text-secondary)',
               }}
-              variants={motionTokens.header.subtitle}
-              initial='initial'
-              whileInView='animate'
-              viewport={motionTokens.scroll.viewport}
+              variants={animations.fadeIn}
             >
               {sectionSubtitle}
             </motion.p>
           </motion.div>
 
           {/* 🏗️ Testimonials Grid - componenta principală */}
-          <motion.div
-            className={gridStyles.gridSection}
-            variants={motionTokens.grid.container}
-            initial='initial'
-            whileInView='animate'
-            viewport={motionTokens.scroll.viewport}
-          >
+          <motion.div className={gridStyles.gridSection} variants={animations.fadeInUp}>
             <TestimonialsGrid
               testimonials={displayTestimonials}
               variant={variant}

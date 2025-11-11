@@ -31,13 +31,18 @@ export interface PricingPackage {
   };
 }
 
+export interface CommitmentItem {
+  readonly icon: LucideIcon;
+  readonly text: string;
+}
+
 export interface PricingSectionConfig {
   readonly title: {
     readonly primary: string;
     readonly accent: string;
   };
   readonly subtitle: string;
-  readonly commitment: readonly string[];
+  readonly commitment: readonly CommitmentItem[];
   readonly packages: readonly PricingPackage[];
   readonly cta?: {
     readonly text: string;

@@ -18,6 +18,8 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import React from 'react';
 
+import { typography } from '@/design-system/tokens/typography';
+import { animations } from '@/config/animations.config';
 import { cn } from '@/lib/utils/cn';
 
 import { AssuranceGrid, LogoBand } from './components';
@@ -37,85 +39,83 @@ export function VantageAssuranceSection({
   return (
     <section className={cn(tokens.spacing.section, className)}>
       <div className={tokens.spacing.container}>
-        {/* Main Title - Bicolor */}
-        <motion.h2
-          className={cn(tokens.typography.title.base, tokens.spacing.titleBottom)}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+        {/* Header Content - ORCHESTRATED */}
+        <motion.div
+          variants={animations.staggerContainer}
+          initial='hidden'
+          whileInView='visible'
+          viewport={animations.viewport}
         >
-          <span className={tokens.typography.title.primary}>{config.title.primary}</span>{' '}
-          <span
-            className={tokens.typography.title.accent}
-            style={{
-              textShadow: '0 0 25px rgba(203, 178, 106, 0.7), 0 0 35px rgba(203, 178, 106, 0.4)',
-              filter: 'brightness(1.2)',
-            }}
+          {/* Main Title - Bicolor */}
+          <motion.h2
+            className={cn(tokens.typography.title.base, tokens.spacing.titleBottom)}
+            variants={animations.fadeInUp}
           >
-            {config.title.accent}
-          </span>
-        </motion.h2>
-
-        {/* Gold separator line */}
-        <motion.div
-          initial={{ opacity: 0, width: 0 }}
-          whileInView={{ opacity: 1, width: '6rem' }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          viewport={{ once: true }}
-          className={cn(
-            'h-1 bg-gradient-to-r from-[var(--brand-primary)] to-[#E5D485] mx-auto',
-            tokens.spacing.separatorBottom
-          )}
-        />
-
-        {/* Headline/Subtitle - 3-part with bicolor effect (no glow) */}
-        <motion.h3
-          className={cn(tokens.typography.headline.base, tokens.spacing.headlineBottom)}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          {config.headline.parts.map((part, index) => (
+            <span className={tokens.typography.title.primary}>{config.title.primary}</span>{' '}
             <span
-              key={index}
-              className={
-                part.accent ? tokens.typography.headline.accent : tokens.typography.headline.primary
-              }
+              className={tokens.typography.title.accent}
+              style={{
+                textShadow: typography.effects.goldGlow.textShadow,
+                filter: typography.effects.goldGlow.filter,
+              }}
             >
-              {part.text}
-              {index < config.headline.parts.length - 1 && ' '}
+              {config.title.accent}
             </span>
-          ))}
-        </motion.h3>
+          </motion.h2>
 
-        {/* Subtext */}
-        <motion.p
-          className={cn(
-            tokens.typography.subtext.base,
-            tokens.typography.subtext.color,
-            tokens.spacing.subtextBottom
-          )}
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          viewport={{ once: true }}
-        >
-          {config.subtext}
-        </motion.p>
+          {/* Gold separator line */}
+          <motion.div
+            variants={animations.lineExpand}
+            className={cn(
+              'h-1 bg-gradient-to-r from-[var(--brand-primary)] to-[#E5D485] mx-auto',
+              tokens.spacing.separatorBottom
+            )}
+            style={{ width: '6rem' }}
+          />
 
-        {/* Facts Bar */}
+          {/* Headline/Subtitle - 3-part with bicolor effect (no glow) */}
+          <motion.h3
+            className={cn(tokens.typography.headline.base, tokens.spacing.headlineBottom)}
+            variants={animations.fadeIn}
+          >
+            {config.headline.parts.map((part, index) => (
+              <span
+                key={index}
+                className={
+                  part.accent
+                    ? tokens.typography.headline.accent
+                    : tokens.typography.headline.primary
+                }
+              >
+                {part.text}
+                {index < config.headline.parts.length - 1 && ' '}
+              </span>
+            ))}
+          </motion.h3>
+
+          {/* Subtext */}
+          <motion.p
+            className={cn(
+              tokens.typography.subtext.base,
+              tokens.typography.subtext.color,
+              tokens.spacing.subtextBottom
+            )}
+            variants={animations.fadeIn}
+          >
+            {config.subtext}
+          </motion.p>
+        </motion.div>
+
+        {/* Assurance Items Grid */}
+        <AssuranceGrid items={config.items} />
+
+        {/* Facts Bar - Sub icoane */}
         <motion.div
-          className={cn(
-            tokens.typography.facts.base,
-            tokens.typography.facts.color,
-            tokens.spacing.factsBottom
-          )}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          viewport={{ once: true }}
+          className={cn(tokens.typography.facts.base, tokens.typography.facts.color, 'mt-16 mb-16')}
+          initial='hidden'
+          whileInView='visible'
+          viewport={animations.viewport}
+          variants={animations.fadeIn}
         >
           {config.facts.map((fact, index) => (
             <React.Fragment key={index}>
@@ -132,11 +132,14 @@ export function VantageAssuranceSection({
           ))}
         </motion.div>
 
-        {/* Assurance Items Grid */}
-        <AssuranceGrid items={config.items} />
-
-        {/* Logo Band - Prestige Indicator */}
-        {config.logos.enabled && <LogoBand text={config.logos.text} logos={config.logos.items} />}
+        {/* Logo Band - Prestige Indicator (luxury edition) */}
+        {config.logos.enabled && (
+          <LogoBand
+            text={config.logos.text}
+            logos={config.logos.items}
+            centralBrandIndex={2} // Emirates - optical centering (mijloc)
+          />
+        )}
 
         {/* Footer CTA */}
         <motion.p

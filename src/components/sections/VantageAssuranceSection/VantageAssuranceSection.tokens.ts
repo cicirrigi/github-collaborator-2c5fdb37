@@ -3,6 +3,8 @@
  * Styling constants for trust & prestige section
  */
 
+import { typography } from '@/design-system/tokens/typography';
+
 export const assuranceTokens = {
   /**
    * Spacing & Layout
@@ -14,8 +16,8 @@ export const assuranceTokens = {
     item: 'space-y-2',
     titleBottom: 'mb-4',
     separatorBottom: 'mb-6',
-    headlineBottom: 'mb-3',
-    subtextBottom: 'mb-6',
+    headlineBottom: 'mb-6',
+    subtextBottom: 'mb-16',
     factsBottom: 'mb-12',
     footerTop: 'mt-12',
   },
@@ -25,12 +27,12 @@ export const assuranceTokens = {
    */
   typography: {
     title: {
-      base: 'text-4xl md:text-5xl font-light tracking-wide text-center',
+      base: `${typography.classes.sectionTitle} text-center`,
       primary: 'text-[var(--text-primary)]',
       accent: 'text-[var(--brand-primary)]',
     },
     headline: {
-      base: 'text-2xl md:text-3xl font-light tracking-wide text-center',
+      base: `${typography.classes.sectionSubtitle} text-center`,
       primary: 'text-[var(--text-primary)]',
       accent: 'text-[var(--brand-primary)]',
     },
@@ -100,25 +102,39 @@ export const assuranceTokens = {
   },
 
   /**
-   * LogoBand styling - Cinematic prestige band
+   * LogoBand styling - Luxury prestige band (Rolls-Royce inspired)
    */
   logoBand: {
     container: 'relative mt-16 py-12 overflow-hidden rounded-2xl',
     haloBlur:
       'absolute inset-0 bg-gradient-to-b from-[#CBB26A]/10 via-[#CBB26A]/5 to-transparent blur-3xl opacity-50',
     vignette: 'absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-80',
-    content: 'relative z-10 text-center',
-    text: {
-      base: 'uppercase tracking-[0.3em] text-sm md:text-base mb-6 font-light',
-      color: 'text-[#CBB26A]/80',
+    content: 'relative z-10',
+    // Layout cu linii laterale + text + branduri
+    layout: {
+      wrapper: 'flex flex-col items-center gap-8',
+      horizontalBar: 'flex items-center justify-center gap-6 md:gap-8 w-full max-w-5xl mx-auto',
     },
-    logos: {
-      container: 'flex justify-center flex-wrap gap-10 md:gap-14 items-center',
-      item: 'text-[#CBB26A]/80 text-lg md:text-xl tracking-wide font-light hover:text-[#CBB26A] transition-colors duration-300',
+    text: {
+      base: 'uppercase tracking-[0.35em] text-xs font-light whitespace-nowrap',
+      color: 'text-neutral-400',
     },
     divider: {
-      container: 'flex justify-center mb-6',
-      line: 'w-20 h-[1px] bg-[#CBB26A]/30',
+      // Linii mai scurte, 20-25% din lățime
+      line: 'h-[1px] bg-[#CBB26A]/30 w-32 md:w-40',
+    },
+    logos: {
+      container: 'flex items-center justify-center flex-wrap gap-x-6 md:gap-x-8',
+      item: 'text-[#CBB26A]/90 text-base md:text-lg tracking-wide font-light hover:text-[#CBB26A] transition-all duration-300',
+      // Item central (Emirates) - doar mai luminous
+      itemCentral: 'text-[#CBB26A] text-base md:text-lg tracking-wide font-light',
+      separator: 'text-[#CBB26A]/30 text-sm',
+      // Optical spacing - mai mult în centru
+      spacingNormal: 'gap-6',
+      spacingWide: 'gap-10 md:gap-12',
+    },
+    effects: {
+      textShadow: '0 0 10px rgba(203,178,106,0.2)',
     },
   },
 } as const;
