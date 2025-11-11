@@ -7,13 +7,16 @@
 
 import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';
+import type { UseFormRegister, FieldErrors } from 'react-hook-form';
 import type { AuthMode } from '../types/auth.types';
 import { authTokens as tokens } from '../tokens/authTokens';
 
 interface TermsAndConditionsProps {
   mode: AuthMode;
-  register: any;
-  errors: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  register: UseFormRegister<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  errors: FieldErrors<any>;
   isLoading: boolean;
 }
 
