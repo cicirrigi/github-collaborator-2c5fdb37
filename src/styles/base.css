@@ -219,3 +219,13 @@ input::placeholder {
   color: var(--text-muted) !important;
   opacity: 0.7;
 }
+
+/* --- 🎨 RGB VALUES FOR STYLE ATTRIBUTES --- */
+:root {
+  /* Brand RGB values for rgba() usage in style attributes */
+  --brand-primary-rgb: 203, 178, 106;
+  --brand-accent-rgb: 212, 175, 55;
+  --brand-secondary-rgb: 229, 212, 133;
+
+  /* Usage: rgba(var(--brand-primary-rgb), 0.3) */
+}

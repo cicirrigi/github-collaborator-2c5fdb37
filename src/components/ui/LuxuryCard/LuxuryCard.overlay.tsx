@@ -42,7 +42,7 @@ export function renderShimmerOverlay({
         style={{
           background: glowColor
             ? `linear-gradient(135deg, ${glowColor}1A, transparent)`
-            : 'linear-gradient(135deg, rgba(203, 178, 106, 0.1), transparent)',
+            : 'linear-gradient(135deg, rgba(var(--brand-primary-rgb), 0.1), transparent)',
         }}
       />
 
@@ -56,7 +56,7 @@ export function renderShimmerOverlay({
             transitionDuration: '1000ms',
             backgroundImage: shimmerColor
               ? `linear-gradient(90deg, transparent, ${shimmerColor}4D, transparent)`
-              : 'linear-gradient(90deg, transparent, rgba(203, 178, 106, 0.3), transparent)',
+              : 'linear-gradient(90deg, transparent, rgba(var(--brand-primary-rgb), 0.3), transparent)',
           }}
         />
       </div>

@@ -13,13 +13,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import type { AuthMode, SignInFormData, SignUpFormData } from '../types/auth.types';
-import {
-  signInSchema,
-  signUpSchema,
-  // type SignInSchemaType,
-  // type SignUpSchemaType,
-} from '../validation/authSchema';
+import { signInSchema, signUpSchema } from '../validation/authSchema';
 import { signInWithEmail, signUpWithEmail } from '../services/supabaseAuth';
+
+// Union types for conditional form handling
+type AuthFormData = SignInFormData | SignUpFormData;
+type AuthDefaultValues = SignInFormData | SignUpFormData;
 
 interface UseAuthFormOptions {
   mode: AuthMode;
@@ -59,17 +58,17 @@ export function useAuthForm({
   const schema = mode === 'signin' ? signInSchema : signUpSchema;
   const defaultValues = getDefaultValues(mode);
 
-  // Use conditional typing based on mode
-  const form = useForm({
-    resolver: zodResolver(schema) as any, // Complex conditional typing - safe to use any here
+  // Use proper union types for conditional form handling
+  const form = useForm<AuthFormData>({
+    resolver: zodResolver(schema),
     mode: 'onBlur' as const,
-    defaultValues: defaultValues as any, // Complex conditional typing - safe to use any here
+    defaultValues: defaultValues as AuthDefaultValues,
   });
 
   /**
    * Handle form submission
    */
-  const onSubmit = async (data: SignInFormData | SignUpFormData) => {
+  const onSubmit = async (data: AuthFormData) => {
     setIsLoading(true);
     setError(null);
     setSuccess(null);

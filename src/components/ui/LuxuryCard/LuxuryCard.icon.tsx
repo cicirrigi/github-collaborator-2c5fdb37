@@ -113,7 +113,7 @@ export function renderIcon({
                 transitionDuration: '1200ms',
                 backgroundImage: shimmerColor
                   ? `linear-gradient(90deg, transparent, ${shimmerColor}66, transparent)`
-                  : 'linear-gradient(90deg, transparent, rgba(229, 212, 133, 0.4), transparent)',
+                  : 'linear-gradient(90deg, transparent, rgba(var(--brand-secondary-rgb), 0.4), transparent)',
               }}
             />
           </div>
