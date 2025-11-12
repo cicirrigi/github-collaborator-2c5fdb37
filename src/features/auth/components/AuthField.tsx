@@ -60,7 +60,13 @@ export function AuthField<T extends FieldValues = FieldValues>({
           appearance: 'none',
           outline: 'none',
         }}
-        className='w-full text-left py-2.5 px-5 text-sm rounded-lg bg-gradient-to-br from-white/95 via-neutral-50/90 to-white/95 dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900 border-2 border-t-neutral-700/40 border-l-neutral-700/40 border-b-neutral-800 border-r-neutral-800 dark:border-t-white/5 dark:border-l-white/5 dark:border-b-black dark:border-r-black shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),0_2px_4px_-1px_rgba(0,0,0,0.2)] text-neutral-900 dark:text-white transition-all duration-200 hover:scale-[1.02]'
+        className={cn(
+          tokens.input.default,
+          tokens.input.focus,
+          hasError && tokens.input.error,
+          disabled && tokens.input.disabled,
+          'focus:outline-none'
+        )}
         aria-invalid={hasError}
         aria-describedby={hasError ? `${name}-error` : undefined}
         {...register(name as Path<T>)}

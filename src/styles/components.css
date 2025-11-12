@@ -1,0 +1,28 @@
+/**
+ * 🧩 COMPONENTS STYLES - Vantage Lane 2.0  
+ * Button fixes, auth components, global overrides
+ */
+
+/* Clean focus styles - no override conflicts */
+/* Auth components use orchestrated tokens instead of global overrides */
+
+/* --- ✅ Auth Button Hover Fix --- */
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease !important;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, box-shadow, background-color;
+}
+
+button:hover:not(:disabled) {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

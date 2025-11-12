@@ -14,10 +14,13 @@ export const authTokens = {
   layout: {
     page: 'min-h-screen flex items-center justify-center px-4 py-12',
     container: 'w-full max-w-md',
-    card: `p-8 rounded-2xl border border-[var(--brand-primary)]/30 
+    card: `min-h-[580px] p-8 rounded-2xl 
            bg-gradient-to-br from-white/5 via-transparent to-white/5 
            dark:from-black/10 dark:via-transparent dark:to-black/10 
-           backdrop-blur-sm shadow-2xl shadow-[var(--brand-primary)]/15`,
+           backdrop-blur-sm 
+           border border-white/10 dark:border-white/5
+           shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_8px_32px_rgba(0,0,0,0.2)]
+           dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_rgba(0,0,0,0.4)]`,
     spacing: 'space-y-6',
   },
 
@@ -66,15 +69,20 @@ export const authTokens = {
   },
 
   /**
-   * Tabs (Sign in / Sign up)
+   * Tabs (Sign in / Sign up) - Modern Design with Orchestrated Animations
    */
   tabs: {
-    container: 'flex border-b border-neutral-300 dark:border-neutral-800 mb-8',
+    container:
+      'relative flex bg-neutral-100/50 dark:bg-neutral-900/50 backdrop-blur-sm rounded-xl p-1 mb-8 shadow-inner',
     tab: {
-      base: 'flex-1 py-3 text-center text-sm font-medium transition-colors duration-300 ease-in-out cursor-pointer',
-      active: 'border-b-2 border-[var(--brand-primary)] text-[var(--brand-primary)]',
+      base: 'relative flex-1 py-3 px-6 text-center text-sm font-medium transition-all duration-300 ease-out cursor-pointer rounded-lg z-10',
+      active:
+        'text-[var(--background-dark)] dark:text-[var(--background-dark)] shadow-lg shadow-[var(--brand-primary)]/25',
       inactive:
-        'text-neutral-600 dark:text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300',
+        'text-neutral-600 dark:text-neutral-400 hover:text-[var(--brand-primary)] hover:bg-white/50 dark:hover:bg-white/5',
+      // Background indicator (will be positioned with CSS)
+      indicator:
+        'absolute inset-0 bg-[var(--brand-primary)] rounded-lg transition-transform duration-300 ease-out shadow-md',
     },
   },
 
@@ -84,9 +92,8 @@ export const authTokens = {
   input: {
     // Simplified - inline styles handle the critical parts
     default:
-      'w-full px-4 py-3 rounded-lg text-neutral-900 dark:text-white text-sm transition-all duration-300 bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-950 placeholder:text-neutral-500 dark:placeholder:text-neutral-600',
-    focus:
-      'focus:shadow-[inset_0_1px_0_rgba(203,178,106,0.2),0_0_0_2px_rgba(203,178,106,0.4)] focus:bg-gradient-to-br focus:from-white focus:via-neutral-50 focus:to-neutral-100 dark:focus:from-neutral-700 dark:focus:via-neutral-800 dark:focus:to-neutral-900',
+      'w-full px-4 py-3 rounded-lg text-neutral-900 dark:text-white text-sm transition-all duration-300 bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-950 placeholder:text-neutral-500 dark:placeholder:text-neutral-600 border-2 border-transparent',
+    focus: 'focus:border-[var(--brand-primary)] focus:border-2',
     error: 'shadow-[0_0_0_2px_rgba(239,68,68,0.4)]',
     disabled: 'disabled:opacity-50 disabled:cursor-not-allowed',
   },
@@ -96,9 +103,15 @@ export const authTokens = {
    */
   checkbox: {
     container: 'flex items-start gap-3',
-    input:
-      'mt-0.5 w-4 h-4 rounded appearance-none focus:ring-0 focus:outline-none bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-950 text-[var(--brand-primary)] focus:shadow-[inset_0_1px_0_var(--brand-primary)/20,0_0_0_2px_var(--brand-primary)/30]',
-    label: 'text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed',
+    input: `mt-0.5 w-4 h-4 rounded appearance-none focus:ring-0 focus:outline-none 
+       bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200 
+       dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-950 
+       border border-neutral-300 dark:border-neutral-700 
+       checked:bg-[var(--brand-primary)] checked:border-[var(--brand-primary)] 
+       checked:bg-[url('data:image/svg+xml,%3csvg%20viewBox%3d%270%200%2016%2016%27%20fill%3d%27white%27%20xmlns%3d%27http%3a//www.w3.org/2000/svg%27%3e%3cpath%20d%3d%27m13.854%203.646-8%208-.5.5-.5-.5-4-4%201.414-1.414L5.5%209.793l7.146-7.147z%27/%3e%3c/svg%3e')] 
+       focus:shadow-[inset_0_1px_0_var(--brand-primary)/20,0_0_0_2px_var(--brand-primary)/30] 
+       cursor-pointer transition-all duration-200`,
+    label: 'text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed cursor-pointer',
   },
 
   /**
@@ -106,7 +119,7 @@ export const authTokens = {
    */
   button: {
     primary: {
-      base: 'w-full py-3 px-6 rounded-lg font-medium text-sm transition-all duration-250 hover:shadow-lg hover:shadow-[var(--brand-primary)]/25 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]/40 focus:ring-offset-2 focus:ring-offset-transparent',
+      base: 'w-full py-3 px-6 rounded-lg font-medium text-sm transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-[var(--brand-primary)]/30 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]/40 focus:ring-offset-2 focus:ring-offset-transparent',
       background: 'bg-[var(--brand-primary)]',
       text: 'text-[var(--background-dark)]',
       disabled: 'disabled:opacity-50 disabled:cursor-not-allowed',
@@ -159,23 +172,23 @@ export const authTokens = {
    * Smooth Accordion Animations
    */
   accordion: {
-    // Optimized durations pentru smooth acordeon
+    // Optimized durations pentru smooth acordeon - REDUCED pentru smooth
     durations: {
-      signUp: 'duration-500', // Pentru Sign Up fields
-      confirm: 'duration-400', // Pentru Confirm Password
-      terms: 'duration-600', // Pentru Terms & Conditions
-      content: 'duration-300', // Pentru inner content
+      signUp: 'duration-300', // Reduced pentru smooth
+      confirm: 'duration-200', // Reduced pentru smooth
+      terms: 'duration-250', // Reduced pentru smooth
+      content: 'duration-150', // Reduced pentru smooth
     },
     // Coordinated easing pentru no-jump effects
     easing: {
-      container: 'ease-out', // Container acordeon
+      container: 'ease-in-out', // Changed pentru smooth
       content: 'ease-in-out', // Content interior
     },
-    // Safe max-heights care nu cauzează clipping
+    // FIXED max-heights - consistent cu min-height din card
     maxHeights: {
-      signUp: 'max-h-[450px]', // Sign Up fields safe height
-      confirm: 'max-h-[120px]', // Confirm password safe height
-      terms: 'max-h-[250px]', // Terms & conditions safe height
+      signUp: 'max-h-[300px]', // Reduced pentru smooth transition
+      confirm: 'max-h-[100px]', // Reduced pentru smooth transition
+      terms: 'max-h-[180px]', // Reduced pentru smooth transition
     },
   },
 

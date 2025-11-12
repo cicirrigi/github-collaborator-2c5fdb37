@@ -1,8 +1,7 @@
 /**
- * 🔐 Auth Page - Vantage Lane 2.0
+ * 🔐 Sign Up Page - Vantage Lane 2.0
  *
- * Universal auth page cu mode din URL query
- * /auth?mode=signin sau /auth?mode=signup
+ * Dedicated sign up page at /auth/signup
  */
 
 import { Suspense } from 'react';
@@ -10,25 +9,23 @@ import { AuthContainer } from '@/features/auth';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Sign In | Vantage Lane',
-  description: 'Sign in to your Vantage Lane luxury chauffeur account',
+  title: 'Sign Up | Vantage Lane',
+  description: 'Create your Vantage Lane luxury chauffeur account',
 };
 
-interface AuthPageProps {
+interface SignUpPageProps {
   searchParams: Promise<{
-    mode?: 'signin' | 'signup';
     redirect?: string;
   }>;
 }
 
-export default async function AuthPage({ searchParams }: AuthPageProps) {
+export default async function SignUpPage({ searchParams }: SignUpPageProps) {
   const params = await searchParams;
-  const mode = params.mode || 'signin';
   const redirectTo = params.redirect || '/dashboard';
 
   return (
     <Suspense fallback={<AuthLoadingFallback />}>
-      <AuthContainer defaultMode={mode} redirectTo={redirectTo} />
+      <AuthContainer defaultMode='signup' redirectTo={redirectTo} />
     </Suspense>
   );
 }

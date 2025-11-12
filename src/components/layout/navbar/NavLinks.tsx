@@ -47,7 +47,7 @@ export function NavLinks({
               'rounded-sm px-1 py-1 focus:outline-none focus:ring-2 focus:ring-brand-primary/50',
               isActive
                 ? 'text-brand-primary'
-                : 'text-neutral-700 hover:text-brand-primary dark:text-neutral-300 dark:hover:text-brand-primary'
+                : 'text-[var(--text-secondary)] hover:text-[var(--brand-primary)]'
             )}
             aria-current={isActive ? 'page' : undefined}
           >

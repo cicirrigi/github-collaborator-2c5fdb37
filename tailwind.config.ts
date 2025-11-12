@@ -1,4 +1,4 @@
-import tailwindcssForms from '@tailwindcss/forms';
+// import tailwindcssForms from '@tailwindcss/forms'; // Removed - causes focus ring conflicts
 import tailwindcssTypography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
 import tailwindcssAnimate from 'tailwindcss-animate';
@@ -130,7 +130,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [tailwindcssAnimate, tailwindcssForms, tailwindcssTypography],
+  plugins: [tailwindcssAnimate, tailwindcssTypography], // Removed tailwindcssForms - conflicts with custom focus
 };
 
 export default config;

@@ -58,11 +58,8 @@ export function AuthContainer({ defaultMode = 'signin' }: AuthContainerProps) {
                 priority
               />
             </div>
-            <div className='text-2xl font-light tracking-wide uppercase select-none'>
-              <span className='bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] bg-clip-text text-transparent'>
-                Vantage
-              </span>
-              <span className='ml-1 text-neutral-900 dark:text-white'>Lane</span>
+            <div className='text-2xl font-light tracking-wide uppercase select-none text-neutral-900 dark:text-white'>
+              Vantage Lane
             </div>
           </div>
 
@@ -71,7 +68,7 @@ export function AuthContainer({ defaultMode = 'signin' }: AuthContainerProps) {
 
           {/* Auth Form */}
           <div className='relative mt-6'>
-            <AuthForm mode={activeMode} />
+            <AuthForm key={activeMode} mode={activeMode} />
           </div>
         </div>
       </div>

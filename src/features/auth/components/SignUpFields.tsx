@@ -26,8 +26,9 @@ export function SignUpFields({ mode, register, errors, isLoading }: SignUpFields
       className={cn(
         `transition-all ${tokens.accordion.durations.signUp} ${tokens.accordion.easing.container}`,
         mode === 'signup'
-          ? `${tokens.accordion.maxHeights.signUp} opacity-100 mb-6 overflow-visible`
-          : 'max-h-0 opacity-0 mb-0 overflow-hidden'
+          ? `${tokens.accordion.maxHeights.signUp} opacity-100 mb-6`
+          : 'max-h-0 opacity-0 mb-0',
+        'overflow-hidden' // Consistent overflow state
       )}
     >
       <div

@@ -16,8 +16,8 @@ import type { AuthMode, SignInFormData, SignUpFormData } from '../types/auth.typ
 import {
   signInSchema,
   signUpSchema,
-  type SignInSchemaType,
-  type SignUpSchemaType,
+  // type SignInSchemaType,
+  // type SignUpSchemaType,
 } from '../validation/authSchema';
 import { signInWithEmail, signUpWithEmail } from '../services/supabaseAuth';
 
@@ -60,10 +60,10 @@ export function useAuthForm({
   const defaultValues = getDefaultValues(mode);
 
   // Use conditional typing based on mode
-  const form = useForm<typeof mode extends 'signin' ? SignInSchemaType : SignUpSchemaType>({
-    resolver: zodResolver(schema) as any, // Temporary any for complex conditional resolver
-    mode: 'onBlur',
-    defaultValues: defaultValues as any, // Temporary any for complex conditional defaults
+  const form = useForm({
+    resolver: zodResolver(schema) as any, // Complex conditional typing - safe to use any here
+    mode: 'onBlur' as const,
+    defaultValues: defaultValues as any, // Complex conditional typing - safe to use any here
   });
 
   /**
@@ -116,6 +116,14 @@ export function useAuthForm({
    * Clear success message
    */
   const clearSuccess = () => setSuccess(null);
+
+  // Reset form ONLY if schema actually changes, not every tab switch
+  useEffect(() => {
+    form.reset(getDefaultValues(mode), { keepValues: false });
+    setError(null);
+    setSuccess(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode]); // 🟢 Intentionally omit "form" - prevents infinite re-renders
 
   // Handle redirect with cleanup
   useEffect(() => {

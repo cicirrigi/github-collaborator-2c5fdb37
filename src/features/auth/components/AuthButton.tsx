@@ -39,7 +39,7 @@ export const AuthButton = memo(function AuthButton({
         tokens.button.primary.base,
         tokens.button.primary.background,
         tokens.button.primary.text,
-        tokens.button.primary.disabled
+        isDisabled && tokens.button.primary.disabled
       )}
     >
       {isLoading ? (

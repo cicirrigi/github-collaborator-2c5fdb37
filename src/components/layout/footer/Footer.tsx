@@ -48,7 +48,7 @@ const Footer = memo(function Footer({
       role='contentinfo'
       className={cn('relative mt-auto backdrop-blur-lg transition-colors', className)}
       style={{
-        backgroundColor: designTokens.colors.background?.dark || 'var(--background-dark)',
+        backgroundColor: 'var(--background-dark)',
         marginLeft: 'auto',
         marginRight: 'auto',
         width: '100%',

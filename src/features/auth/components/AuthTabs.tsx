@@ -15,6 +15,15 @@ import { authTokens as tokens } from '../tokens/authTokens';
 export function AuthTabs({ activeMode, onChange }: AuthTabsProps) {
   return (
     <div className={tokens.tabs.container} role='tablist' aria-label='Authentication mode'>
+      {/* Background Indicator - slides between tabs */}
+      <div
+        className={tokens.tabs.tab.indicator}
+        style={{
+          transform: activeMode === 'signin' ? 'translateX(0%)' : 'translateX(100%)',
+          width: '50%',
+        }}
+      />
+
       <button
         type='button'
         role='tab'
