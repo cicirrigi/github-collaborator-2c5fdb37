@@ -12,10 +12,11 @@ import { z } from 'zod';
  */
 const emailSchema = z
   .string()
+  .trim()
   .min(1, 'Email is required')
   .email('Please enter a valid email address')
-  .toLowerCase()
-  .trim();
+  .max(100, 'Email is too long')
+  .toLowerCase();
 
 /**
  * Password validation schema
@@ -33,9 +34,11 @@ const passwordSchema = z
  * -------------------------------------------------- */
 const phoneSchema = z
   .string()
-  .regex(/^(\+?[1-9]\d{1,14}|0\d{9})$/, 'Please enter a valid phone number')
   .optional()
-  .or(z.literal(''));
+  .refine(val => !val || val === '' || /^(\+?[1-9]\d{7,14}|0\d{9,10})$/.test(val), {
+    message: 'Please enter a valid phone number',
+  })
+  .refine(val => !val || val.length <= 15, { message: 'Phone number is too long' });
 
 /* --------------------------------------------------
  * 🔑  Sign In Schema

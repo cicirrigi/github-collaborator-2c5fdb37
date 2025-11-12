@@ -66,9 +66,8 @@ export async function signUpWithEmail(data: SignUpFormData): Promise<AuthRespons
   try {
     const supabase = getSupabaseClient();
     const redirectOrigin =
-      typeof window !== 'undefined'
-        ? window.location.origin
-        : process.env.NEXT_PUBLIC_APP_URL || 'https://vantage-lane.com';
+      process.env.NEXT_PUBLIC_APP_URL ||
+      (typeof window !== 'undefined' ? window.location.origin : 'https://vantage-lane.com');
 
     const { data: authData, error } = await supabase.auth.signUp({
       email: data.email,

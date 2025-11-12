@@ -107,7 +107,7 @@ describe('signUpSchema', () => {
 
     invalidPhones.forEach(phone => {
       const data = { ...validSignUpData, phone };
-      expect(() => signUpSchema.parse(data)).toThrow(/valid phone/);
+      expect(() => signUpSchema.parse(data)).toThrow(/valid phone|too long/);
     });
   });
 
