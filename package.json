@@ -19,6 +19,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:smoke": "RUN_LIVE_TESTS=true vitest run tests/auth.smoke.test.ts",
+    "test:all": "pnpm test && pnpm test:smoke",
     "audit:lint": "next lint",
     "audit:types": "tsc --noEmit",
     "audit:test": "vitest run --reporter=verbose --run || echo 'No tests yet, continuing...'",
