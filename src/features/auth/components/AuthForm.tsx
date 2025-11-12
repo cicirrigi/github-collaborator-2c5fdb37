@@ -127,7 +127,7 @@ export function AuthForm({ mode, redirectTo, onSuccess }: AuthFormProps) {
             label='Confirm Password'
             type='password'
             placeholder='••••••••'
-            required
+            required={mode === 'signup'}
             autoComplete='new-password'
             register={register}
             errors={errors}

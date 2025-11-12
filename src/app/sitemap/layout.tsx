@@ -6,5 +6,5 @@
 import Layout from '@/components/layout/Layout';
 
 export default function SitemapLayout({ children }: { children: React.ReactNode }) {
-  return <Layout hideNewsletter={true}>{children}</Layout>;
+  return <Layout>{children}</Layout>;
 }

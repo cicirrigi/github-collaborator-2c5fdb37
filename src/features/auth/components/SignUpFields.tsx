@@ -40,10 +40,10 @@ export function SignUpFields({ mode, register, errors, isLoading }: SignUpFields
         <div className={`grid grid-cols-1 md:grid-cols-2 ${tokens.spacing.gridGap}`}>
           <AuthField
             name='firstName'
-            label='First Name'
+            label='Name'
             type='text'
-            placeholder='John'
-            required
+            placeholder='Enter your name'
+            required={mode === 'signup'}
             autoComplete='given-name'
             register={register}
             errors={errors}
@@ -52,10 +52,10 @@ export function SignUpFields({ mode, register, errors, isLoading }: SignUpFields
 
           <AuthField
             name='lastName'
-            label='Last Name'
+            label='Surname'
             type='text'
-            placeholder='Doe'
-            required
+            placeholder='Enter your surname'
+            required={mode === 'signup'}
             autoComplete='family-name'
             register={register}
             errors={errors}
