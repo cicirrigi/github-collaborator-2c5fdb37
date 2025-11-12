@@ -20,14 +20,39 @@ import { authTokens as tokens } from '../tokens/authTokens';
 import type { AuthMode } from '../types/auth.types';
 import { AuthForm } from './AuthForm';
 import { AuthTabs } from './AuthTabs';
+import { ForgotPasswordForm } from './ForgotPasswordForm';
+import { ResetPasswordForm } from './ResetPasswordForm';
 
 interface AuthContainerProps {
   defaultMode?: AuthMode;
   redirectTo?: string;
 }
 
-export function AuthContainer({ defaultMode = 'signin' }: AuthContainerProps) {
+export function AuthContainer({ defaultMode = 'signin', redirectTo }: AuthContainerProps) {
   const [activeMode, setActiveMode] = useState<AuthMode>(defaultMode);
+
+  /**
+   * Component mapping pentru fiecare auth mode
+   * Modular și ușor de extins cu noi moduri
+   */
+  const getFormComponent = () => {
+    switch (activeMode) {
+      case 'signin':
+      case 'signup':
+        return <AuthForm key={activeMode} mode={activeMode} {...(redirectTo && { redirectTo })} />;
+      case 'forgot-password':
+        return <ForgotPasswordForm />;
+      case 'reset-password':
+        return <ResetPasswordForm {...(redirectTo && { redirectTo })} />;
+      default:
+        return <AuthForm key={activeMode} mode='signin' {...(redirectTo && { redirectTo })} />;
+    }
+  };
+
+  /**
+   * Determină dacă să afișeze tabs-urile (doar pentru signin/signup)
+   */
+  const showTabs = activeMode === 'signin' || activeMode === 'signup';
 
   return (
     <>
@@ -40,8 +65,8 @@ export function AuthContainer({ defaultMode = 'signin' }: AuthContainerProps) {
         style={{ scrollbarGutter: 'stable' }}
       >
         <div className={`${tokens.layout.container} relative ${tokens.layout.card}`}>
-          {/* Theme Toggle - Top Right */}
-          <div className={`absolute ${tokens.spacing.themeTogglePosition} z-10`}>
+          {/* Theme Toggle - Top Right of Card */}
+          <div className='absolute top-4 right-4 z-10'>
             <CompactThemeToggle />
           </div>
 
@@ -63,13 +88,11 @@ export function AuthContainer({ defaultMode = 'signin' }: AuthContainerProps) {
             </div>
           </div>
 
-          {/* Auth Tabs - Sign In / Sign Up */}
-          <AuthTabs activeMode={activeMode} onChange={setActiveMode} />
+          {/* Auth Tabs - doar pentru Sign In / Sign Up */}
+          {showTabs && <AuthTabs activeMode={activeMode} onChange={setActiveMode} />}
 
-          {/* Auth Form */}
-          <div className='relative mt-6'>
-            <AuthForm key={activeMode} mode={activeMode} />
-          </div>
+          {/* Dynamic Form Component */}
+          <div className={`relative ${showTabs ? 'mt-6' : 'mt-8'}`}>{getFormComponent()}</div>
         </div>
       </div>
     </>

@@ -149,7 +149,7 @@ describe('Supabase Auth Services', () => {
             phone: '+441234567890',
             marketing_consent: false,
           },
-          emailRedirectTo: 'http://localhost:3000/auth/callback',
+          emailRedirectTo: 'https://vantage-lane.com/auth/callback',
         },
       });
 
@@ -227,7 +227,7 @@ describe('Supabase Auth Services', () => {
       expect(mockSupabaseClient.auth.signInWithOAuth).toHaveBeenCalledWith({
         provider: 'google',
         options: {
-          redirectTo: 'http://localhost:3000/auth/callback',
+          redirectTo: 'https://vantage-lane.com/auth/callback',
           scopes: 'email profile',
         },
       });
@@ -249,7 +249,7 @@ describe('Supabase Auth Services', () => {
       expect(mockSupabaseClient.auth.signInWithOAuth).toHaveBeenCalledWith({
         provider: 'linkedin_oidc',
         options: {
-          redirectTo: 'http://localhost:3000/auth/callback',
+          redirectTo: 'https://vantage-lane.com/auth/callback',
         },
       });
     });
@@ -282,7 +282,7 @@ describe('Supabase Auth Services', () => {
       expect(mockSupabaseClient.auth.resetPasswordForEmail).toHaveBeenCalledWith(
         'test@example.com',
         {
-          redirectTo: 'http://localhost:3000/auth/reset-password',
+          redirectTo: 'https://vantage-lane.com/auth/reset-password',
         }
       );
 

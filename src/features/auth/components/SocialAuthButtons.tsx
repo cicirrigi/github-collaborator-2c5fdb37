@@ -33,7 +33,8 @@ export function SocialAuthButtons({
   isLoading = false,
   disabled = false,
 }: SocialAuthButtonsProps) {
-  const providers = Object.keys(providerConfig).filter(p => p !== 'linkedin') as SocialProvider[];
+  // Explicit provider list for better control and consistency
+  const providers: SocialProvider[] = ['google', 'apple'];
 
   return (
     <>
@@ -54,9 +55,10 @@ export function SocialAuthButtons({
             <button
               key={provider}
               type='button'
-              onClick={() => onProviderClick(provider)}
+              onClick={() => !isLoading && onProviderClick(provider)}
               disabled={disabled || isLoading}
               aria-busy={isLoading}
+              aria-label={`Sign in with ${provider}`}
               className={tokens.button.social.base}
             >
               <Icon className={tokens.sizes.icon} />

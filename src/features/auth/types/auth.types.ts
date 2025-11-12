@@ -10,7 +10,7 @@ import type { User as SupabaseUser } from '@supabase/supabase-js';
 /**
  * Auth modes - determină ce formular se afișează
  */
-export type AuthMode = 'signin' | 'signup';
+export type AuthMode = 'signin' | 'signup' | 'forgot-password' | 'reset-password';
 
 /**
  * Social auth providers disponibili
@@ -38,6 +38,22 @@ export interface SignUpFormData {
   readonly phone?: string | undefined;
   readonly acceptTerms: boolean;
   readonly marketingConsent?: boolean | undefined;
+}
+
+/**
+ * Forgot password form data (doar email)
+ */
+export interface ForgotPasswordFormData {
+  readonly email: string;
+}
+
+/**
+ * Reset password form data (token + passwords)
+ */
+export interface ResetPasswordFormData {
+  readonly token: string;
+  readonly password: string;
+  readonly confirmPassword: string;
 }
 
 /**

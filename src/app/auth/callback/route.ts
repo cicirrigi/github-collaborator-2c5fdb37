@@ -1,69 +1,47 @@
 /**
- * 🔄 Auth Callback Route - Vantage Lane 2.0
- *
- * Handles OAuth callback and email verification
- * Supabase redirect endpoint
+ * 🔄 Auth Callback – Vantage Lane 2.1 (FIXED)
  */
 
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
-  const error = searchParams.get('error');
-  const error_description = searchParams.get('error_description');
 
-  // Handle OAuth/Email verification errors
-  if (error) {
-    console.error('[auth/callback] Error:', error, error_description);
-
-    const errorUrl = new URL('/auth', origin);
-    errorUrl.searchParams.set('error', error_description || error);
-
-    return NextResponse.redirect(errorUrl);
+  if (!code) {
+    return NextResponse.redirect(`${origin}/auth/signin?error=missing_code`);
   }
 
-  if (code) {
-    try {
-      const supabase = await createSupabaseServerClient();
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-      // Exchange code for session
-      const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-
-      if (exchangeError) {
-        console.error('[auth/callback] Code exchange error:', exchangeError);
-
-        const errorUrl = new URL('/auth', origin);
-        errorUrl.searchParams.set('error', 'Authentication failed. Please try again.');
-
-        return NextResponse.redirect(errorUrl);
+    if (error) {
+      // Log error for debugging (production should use proper logger)
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.error('[auth/callback] exchange error:', error);
       }
-
-      if (data?.user) {
-        console.log('[auth/callback] Authentication successful for user:', data.user.id);
-
-        // Successful authentication - redirect to dashboard
-        const dashboardUrl = new URL('/dashboard', origin);
-        dashboardUrl.searchParams.set('success', 'Authentication successful!');
-
-        return NextResponse.redirect(dashboardUrl);
-      }
-    } catch (err) {
-      console.error('[auth/callback] Unexpected error:', err);
-
-      const errorUrl = new URL('/auth', origin);
-      errorUrl.searchParams.set('error', 'An unexpected error occurred. Please try again.');
-
-      return NextResponse.redirect(errorUrl);
+      return NextResponse.redirect(`${origin}/auth/signin?error=exchange_failed`);
     }
+
+    if (data?.user) {
+      // Log success for debugging (production should use proper logger)
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.log('[auth/callback] success for user:', data.user.email);
+      }
+      return NextResponse.redirect(`${origin}/dashboard`);
+    }
+
+    return NextResponse.redirect(`${origin}/auth/signin?error=no_user`);
+  } catch (err) {
+    // Log error for debugging (production should use proper logger)
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.error('[auth/callback] unexpected error:', err);
+    }
+    return NextResponse.redirect(`${origin}/auth/signin?error=unexpected`);
   }
-
-  // No code provided - redirect to auth page
-  console.warn('[auth/callback] No code provided');
-
-  const authUrl = new URL('/auth', origin);
-  authUrl.searchParams.set('error', 'Authentication incomplete. Please try again.');
-
-  return NextResponse.redirect(authUrl);
 }

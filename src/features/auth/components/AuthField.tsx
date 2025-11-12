@@ -53,21 +53,18 @@ export function AuthField<T extends FieldValues = FieldValues>({
         type={type}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        required={required}
         disabled={disabled}
-        style={{
-          WebkitAppearance: 'none',
-          MozAppearance: 'none',
-          appearance: 'none',
-          outline: 'none',
-        }}
         className={cn(
+          tokens.input.base,
           tokens.input.default,
           tokens.input.focus,
           hasError && tokens.input.error,
           disabled && tokens.input.disabled,
-          'focus:outline-none'
+          'focus:outline-none appearance-none'
         )}
         aria-invalid={hasError}
+        aria-required={required}
         aria-describedby={hasError ? `${name}-error` : undefined}
         {...register(name as Path<T>)}
       />

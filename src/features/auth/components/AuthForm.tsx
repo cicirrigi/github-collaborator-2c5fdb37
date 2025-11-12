@@ -57,7 +57,7 @@ export function AuthForm({ mode, redirectTo, onSuccess }: AuthFormProps) {
     <div className='w-full flex flex-col'>
       <form
         onSubmit={onSubmit}
-        className={cn(tokens.layout.spacing, 'flex-1 flex flex-col justify-start')}
+        className='flex-1 flex flex-col justify-start'
         aria-label={mode === 'signin' ? 'Sign in form' : 'Sign up form'}
         id='auth-panel'
         role='tabpanel'
@@ -77,41 +77,49 @@ export function AuthForm({ mode, redirectTo, onSuccess }: AuthFormProps) {
         )}
 
         {/* Sign Up Only Fields */}
-        <SignUpFields mode={mode} register={register} errors={errors} isLoading={isLoading} />
+        <div className='mt-6'>
+          <SignUpFields mode={mode} register={register} errors={errors} isLoading={isLoading} />
+        </div>
 
         {/* Email (both modes) */}
-        <AuthField
-          name='email'
-          label='Email Address'
-          type='email'
-          placeholder='you@example.com'
-          required
-          autoComplete='email'
-          register={register}
-          errors={errors}
-          disabled={isLoading}
-        />
+        <div className='mt-6'>
+          <AuthField
+            name='email'
+            label='Email Address'
+            type='email'
+            placeholder='you@example.com'
+            required
+            autoComplete='email'
+            register={register}
+            errors={errors}
+            disabled={isLoading}
+          />
+        </div>
 
         {/* Password (both modes) */}
-        <AuthField
-          name='password'
-          label='Password'
-          type='password'
-          placeholder='••••••••'
-          required
-          autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
-          register={register}
-          errors={errors}
-          disabled={isLoading}
-        />
+        <div className='mt-6'>
+          <AuthField
+            name='password'
+            label='Password'
+            type='password'
+            placeholder='••••••••'
+            required
+            autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+            register={register}
+            errors={errors}
+            disabled={isLoading}
+          />
+        </div>
 
         {/* Confirm Password (signup only) */}
         <div
           className={cn(
-            `transition-all ${tokens.accordion.durations.confirm} ${tokens.accordion.easing.container} overflow-hidden`,
+            'mt-6 transition-all overflow-hidden',
+            tokens.accordion.durations.confirm,
+            tokens.accordion.easing.container,
             mode === 'signup'
-              ? `${tokens.accordion.maxHeights.confirm} opacity-100 mb-6`
-              : 'max-h-0 opacity-0 mb-0'
+              ? `${tokens.accordion.maxHeights.confirm} opacity-100`
+              : 'max-h-0 opacity-0'
           )}
         >
           <AuthField
@@ -129,7 +137,7 @@ export function AuthForm({ mode, redirectTo, onSuccess }: AuthFormProps) {
 
         {/* Remember Me / Forgot Password (signin only) */}
         {mode === 'signin' && (
-          <div className={tokens.actions.container}>
+          <div className={cn(tokens.actions.container, 'mt-6')}>
             <label className={tokens.checkbox.container}>
               <input type='checkbox' className={tokens.checkbox.input} disabled={isLoading} />
               <span className={tokens.checkbox.label}>Remember me</span>
@@ -141,19 +149,30 @@ export function AuthForm({ mode, redirectTo, onSuccess }: AuthFormProps) {
         )}
 
         {/* Terms & Conditions (signup only) */}
-        <TermsAndConditions mode={mode} register={register} errors={errors} isLoading={isLoading} />
+        <div className='mt-6'>
+          <TermsAndConditions
+            mode={mode}
+            register={register}
+            errors={errors}
+            isLoading={isLoading}
+          />
+        </div>
 
         {/* Submit Button */}
-        <AuthButton type='submit' isLoading={isLoading}>
-          {mode === 'signin' ? 'Sign In' : 'Create Account'}
-        </AuthButton>
+        <div className='mt-8'>
+          <AuthButton type='submit' isLoading={isLoading}>
+            {mode === 'signin' ? 'Sign In' : 'Create Account'}
+          </AuthButton>
+        </div>
 
         {/* Social Auth Buttons */}
-        <SocialAuthButtons
-          onProviderClick={handleSocialAuth}
-          isLoading={isLoading}
-          disabled={isLoading}
-        />
+        <div className='mt-8'>
+          <SocialAuthButtons
+            onProviderClick={handleSocialAuth}
+            isLoading={isLoading}
+            disabled={isLoading}
+          />
+        </div>
       </form>
     </div>
   );

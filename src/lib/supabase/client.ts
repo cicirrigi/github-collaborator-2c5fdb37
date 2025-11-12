@@ -1,20 +1,32 @@
 /**
- * 🔐 Supabase Client - Vantage Lane 2.0
+ * 🔐 Supabase Browser Client – Vantage Lane 2.1 (FIXED)
  *
- * Browser-side Supabase client
- * Singleton pattern pentru performance
+ * Singleton pattern + session persistence
+ * Sincronizare completă între browser și SSR
  */
 
 import { createBrowserClient } from '@supabase/ssr';
 
+let browserClient: ReturnType<typeof createBrowserClient> | null = null;
+
 export function createClient() {
-  // SSR check - only create client in browser
   if (typeof window === 'undefined') {
-    throw new Error('createClient can only be called in the browser');
+    throw new Error('createClient can only be used in the browser');
   }
 
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  if (!browserClient) {
+    browserClient = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        isSingleton: true,
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+        },
+      }
+    );
+  }
+
+  return browserClient;
 }

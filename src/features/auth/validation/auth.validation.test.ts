@@ -3,7 +3,12 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { signInSchema, signUpSchema, resetPasswordSchema } from './authSchema';
+import {
+  signInSchema,
+  signUpSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+} from './authSchema';
 
 describe('signInSchema', () => {
   it('accepts valid credentials', () => {
@@ -131,25 +136,63 @@ describe('signUpSchema', () => {
   });
 });
 
-describe('resetPasswordSchema', () => {
+describe('forgotPasswordSchema', () => {
   it('accepts valid email', () => {
     const data = { email: 'reset@test.com' };
-    expect(() => resetPasswordSchema.parse(data)).not.toThrow();
+    expect(() => forgotPasswordSchema.parse(data)).not.toThrow();
   });
 
   it('rejects invalid email', () => {
     const data = { email: 'invalid-email' };
-    expect(() => resetPasswordSchema.parse(data)).toThrow(/valid email/);
+    expect(() => forgotPasswordSchema.parse(data)).toThrow(/valid email/);
   });
 
   it('rejects empty email', () => {
     const data = { email: '' };
-    expect(() => resetPasswordSchema.parse(data)).toThrow(/required/);
+    expect(() => forgotPasswordSchema.parse(data)).toThrow(/required/);
   });
 
   it('trims and lowercases email', () => {
     const data = { email: '  RESET@TEST.COM  ' };
-    const result = resetPasswordSchema.parse(data);
+    const result = forgotPasswordSchema.parse(data);
     expect(result.email).toBe('reset@test.com');
+  });
+});
+
+describe('resetPasswordSchema', () => {
+  it('accepts valid reset data', () => {
+    const data = {
+      token: 'valid-token-123',
+      password: 'NewPass123',
+      confirmPassword: 'NewPass123',
+    };
+    expect(() => resetPasswordSchema.parse(data)).not.toThrow();
+  });
+
+  it('rejects mismatched passwords', () => {
+    const data = {
+      token: 'valid-token-123',
+      password: 'NewPass123',
+      confirmPassword: 'DifferentPass123',
+    };
+    expect(() => resetPasswordSchema.parse(data)).toThrow(/don't match/);
+  });
+
+  it('rejects empty token', () => {
+    const data = {
+      token: '',
+      password: 'NewPass123',
+      confirmPassword: 'NewPass123',
+    };
+    expect(() => resetPasswordSchema.parse(data)).toThrow(/token is required/);
+  });
+
+  it('rejects weak password', () => {
+    const data = {
+      token: 'valid-token-123',
+      password: 'weak',
+      confirmPassword: 'weak',
+    };
+    expect(() => resetPasswordSchema.parse(data)).toThrow(/at least 8 characters/);
   });
 });

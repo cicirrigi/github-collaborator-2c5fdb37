@@ -72,15 +72,30 @@ export const signUpSchema = z
   });
 
 /* --------------------------------------------------
- * 🔁  Reset Password Schema
+ * 🔁  Forgot Password Schema (doar email)
  * -------------------------------------------------- */
-export const resetPasswordSchema = z.object({
+export const forgotPasswordSchema = z.object({
   email: emailSchema,
 });
+
+/* --------------------------------------------------
+ * 🔐  Reset Password Schema (token + passwords)
+ * -------------------------------------------------- */
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().min(1, 'Reset token is required'),
+    password: passwordSchema,
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
 
 /* --------------------------------------------------
  * 🧩  Type Inference
  * -------------------------------------------------- */
 export type SignInSchemaType = z.infer<typeof signInSchema>;
 export type SignUpSchemaType = z.infer<typeof signUpSchema>;
+export type ForgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordSchemaType = z.infer<typeof resetPasswordSchema>;
