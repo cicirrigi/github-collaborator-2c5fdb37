@@ -1,5 +1,6 @@
 import { HeroSection } from '@/components/sections/HeroSection';
 import { ServicesSection } from '@/components/sections/ServicesSection';
+import { BookingSection } from '@/components/booking/BookingSection';
 import { TestimonialsNew } from '@/components/sections/TestimonialsNew';
 import { FleetSection3D as FleetSection } from '@/components/sections/FleetSection';
 import { VantageAssuranceSection } from '@/components/sections/VantageAssuranceSection';
@@ -33,6 +34,12 @@ export default function HomePage() {
 
       {/* Services/Benefits Section - Config driven */}
       <ServicesSection />
+
+      {/* Elegant Separator */}
+      <SectionDivider />
+
+      {/* Premium Booking Form */}
+      <BookingSection />
 
       {/* Elegant Separator */}
       <SectionDivider />

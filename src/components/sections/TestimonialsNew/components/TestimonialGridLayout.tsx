@@ -14,6 +14,7 @@ import { forwardRef } from 'react';
 import { animations } from '@/config/animations.config';
 import { SlideIndicator } from '@/components/ui/SlideIndicator/SlideIndicator';
 import gridStyles from '../styles/grid.module.css';
+import themeStyles from '../styles/theme.module.css';
 import { type CardVariant, type GridVariant } from '../tokens';
 import { TestimonialCardNew, type Testimonial } from './TestimonialCardNew';
 
@@ -162,7 +163,10 @@ export const TestimonialGridLayout = forwardRef<HTMLDivElement, TestimonialGridL
             {/* Buton Stânga - ascuns pe mobil */}
             <button
               onClick={scrollLeft}
-              className='hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white hover:bg-white/20 hover:scale-110 active:bg-[#cbb26a]/40 active:border-[#cbb26a]/60 transition-all duration-200 shadow-lg hover:shadow-xl'
+              className={cn(
+                'hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white hover:bg-white/20 active:bg-[#cbb26a]/40 active:border-[#cbb26a]/60 transition-all duration-200 shadow-lg hover:shadow-xl',
+                themeStyles.navigationButton
+              )}
               aria-label='Scroll left'
             >
               <svg
@@ -182,7 +186,10 @@ export const TestimonialGridLayout = forwardRef<HTMLDivElement, TestimonialGridL
             {/* Buton Dreapta - ascuns pe mobil */}
             <button
               onClick={scrollRight}
-              className='hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white hover:bg-white/20 hover:scale-110 active:bg-[#cbb26a]/40 active:border-[#cbb26a]/60 transition-all duration-200 shadow-lg hover:shadow-xl'
+              className={cn(
+                'hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white hover:bg-white/20 active:bg-[#cbb26a]/40 active:border-[#cbb26a]/60 transition-all duration-200 shadow-lg hover:shadow-xl',
+                themeStyles.navigationButton
+              )}
               aria-label='Scroll right'
             >
               <svg
