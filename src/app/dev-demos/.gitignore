@@ -1,0 +1,9 @@
+# 🚨 Acest folder conține doar demo-uri pentru development
+# Nu include aceste fișiere în producție
+
+# Exclude tot conținutul (opțional pentru producție)
+# *
+
+# Sau păstrează doar README-ul
+# *
+# !README.md

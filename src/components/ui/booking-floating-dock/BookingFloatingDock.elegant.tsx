@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/lib/utils';
 import { Menu } from 'lucide-react';
 import {
   AnimatePresence,
@@ -24,8 +24,8 @@ export const BookingFloatingDock = ({
 }: FloatingDockProps) => {
   return (
     <>
-      <FloatingDockDesktop items={items} className={desktopClassName} />
-      <FloatingDockMobile items={items} className={mobileClassName} />
+      <FloatingDockDesktop items={items} className={desktopClassName || undefined} />
+      <FloatingDockMobile items={items} className={mobileClassName || undefined} />
     </>
   );
 };
@@ -92,7 +92,7 @@ const FloatingDockDesktop = ({
   items: BookingDockItem[];
   className?: string;
 }) => {
-  let mouseX = useMotionValue(Infinity);
+  const mouseX = useMotionValue(0);
 
   return (
     <motion.div
@@ -121,36 +121,36 @@ function IconContainer({
   icon: React.ReactNode;
   onClick: () => void;
 }) {
-  let ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
-  let distance = useTransform(mouseX, val => {
-    let bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
+  const distance = useTransform(mouseX, val => {
+    const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
     return val - bounds.x - bounds.width / 2;
   });
 
-  let widthTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
-  let heightTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
+  const widthTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
+  const heightTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
 
-  let widthTransformIcon = useTransform(distance, [-150, 0, 150], [20, 40, 20]);
-  let heightTransformIcon = useTransform(distance, [-150, 0, 150], [20, 40, 20]);
+  const widthTransformIcon = useTransform(distance, [-150, 0, 150], [20, 40, 20]);
+  const heightTransformIcon = useTransform(distance, [-150, 0, 150], [20, 40, 20]);
 
-  let width = useSpring(widthTransform, {
+  const width = useSpring(widthTransform, {
     mass: 0.2,
     stiffness: 100,
     damping: 20,
   });
-  let height = useSpring(heightTransform, {
+  const height = useSpring(heightTransform, {
     mass: 0.2,
     stiffness: 100,
     damping: 20,
   });
 
-  let widthIcon = useSpring(widthTransformIcon, {
+  const widthIcon = useSpring(widthTransformIcon, {
     mass: 0.2,
     stiffness: 100,
     damping: 20,
   });
-  let heightIcon = useSpring(heightTransformIcon, {
+  const heightIcon = useSpring(heightTransformIcon, {
     mass: 0.2,
     stiffness: 100,
     damping: 20,

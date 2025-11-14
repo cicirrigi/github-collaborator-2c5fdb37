@@ -92,7 +92,7 @@ export const StopsCounter = ({
           </div>
           <div className='h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-700'>
             <div
-              className='h-1.5 rounded-full bg-gradient-to-r from-[#CBB26A] to-[#D4AF37] transition-all duration-300'
+              className='h-1.5 rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)] transition-all duration-300'
               style={{ width: `${Math.min((value / max) * 100, 100)}%` }}
             />
           </div>

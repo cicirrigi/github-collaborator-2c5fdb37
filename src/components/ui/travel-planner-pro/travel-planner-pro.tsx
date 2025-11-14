@@ -1,15 +1,15 @@
 'use client';
 
+import { useBookingState } from '@/hooks/useBookingState';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
-import type { GooglePlace } from '../location-picker/types';
+import { LocationPicker } from '../location-picker';
 import { ValidationFeedbackContainer } from '../validation-feedback';
-import { TRAVEL_PLANNER_PRO_THEME } from './constants';
 import { CalendarPro } from './calendar/calendar-pro';
 import { TimeSlotsPro } from './calendar/time-slots-pro';
-import { StopsCounterPro } from './components/StopsCounterPro';
 import { RoutePreviewPro } from './components/RoutePreviewPro';
-import { LocationPicker } from '../location-picker';
+import { StopsCounterPro } from './components/StopsCounterPro';
+import { TRAVEL_PLANNER_PRO_THEME } from './constants';
 
 interface TravelPlannerProProps {
   className?: string;
@@ -20,17 +20,20 @@ export const TravelPlannerPro = ({
   className,
   onPlanChange: _onPlanChange,
 }: TravelPlannerProProps) => {
-  // State management
+  // UI-local state
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [pickupDate, setPickupDate] = useState<Date | null>(null);
-  const [returnDate, setReturnDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string>('');
-  const [pickupLocation, setPickupLocation] = useState<GooglePlace | null>(null);
-  const [destinationLocation, setDestinationLocation] = useState<GooglePlace | null>(null);
-  const [stopsCount, setStopsCount] = useState(0);
-  const [additionalStops, setAdditionalStops] = useState<GooglePlace[]>([]);
   const [showValidationErrors, setShowValidationErrors] = useState(false);
   const [validation] = useState({ errors: [] });
+
+  // Global booking state (single source of truth)
+  const {
+    tripConfiguration,
+    setPickup,
+    setDropoff,
+    setAdditionalStops,
+    setPickupDateTime,
+    setReturnDateTime,
+  } = useBookingState();
 
   // Handlers
   const handleNavigate = (direction: 'prev' | 'next') => {
@@ -44,19 +47,24 @@ export const TravelPlannerPro = ({
   };
 
   const handleDateSelect = (date: Date) => {
+    const { pickupDate, returnDate, pickupTime, returnTime } = tripConfiguration;
+
     if (!pickupDate || (pickupDate && returnDate)) {
-      setPickupDate(date);
-      setReturnDate(null);
+      // Start a new range: set pickup date, clear return
+      setPickupDateTime(date, pickupTime);
+      setReturnDateTime(null, returnTime ?? '');
     } else if (date >= pickupDate) {
-      setReturnDate(date);
+      // Select return date after pickup
+      setReturnDateTime(date, returnTime ?? '');
     } else {
-      setPickupDate(date);
-      setReturnDate(null);
+      // New pickup before previous one, reset range
+      setPickupDateTime(date, pickupTime);
+      setReturnDateTime(null, returnTime ?? '');
     }
   };
 
   const handleTimeSelect = (time: string) => {
-    setSelectedTime(time);
+    setPickupDateTime(tripConfiguration.pickupDate, time);
   };
 
   return (
@@ -88,14 +96,14 @@ export const TravelPlannerPro = ({
               <LocationPicker
                 variant='pickup'
                 placeholder='Pickup location'
-                value={pickupLocation}
-                onChange={setPickupLocation}
+                value={tripConfiguration.pickup}
+                onChange={setPickup}
               />
               <LocationPicker
                 variant='destination'
                 placeholder='Drop-off location'
-                value={destinationLocation}
-                onChange={setDestinationLocation}
+                value={tripConfiguration.dropoff}
+                onChange={setDropoff}
               />
             </div>
           </div>
@@ -105,10 +113,10 @@ export const TravelPlannerPro = ({
             <StopsCounterPro
               max={5}
               min={0}
-              value={stopsCount}
-              onChange={setStopsCount}
-              stops={additionalStops}
-              onStopsChange={setAdditionalStops}
+              value={tripConfiguration.additionalStops.length}
+              onChange={() => {}}
+              stops={tripConfiguration.additionalStops}
+              onStopsChange={stops => setAdditionalStops(stops)}
             />
           </div>
         </div>
@@ -121,13 +129,13 @@ export const TravelPlannerPro = ({
             <div className={TRAVEL_PLANNER_PRO_THEME.calendar.container}>
               <CalendarPro
                 currentMonth={currentMonth}
-                pickupDate={pickupDate}
-                returnDate={returnDate}
+                pickupDate={tripConfiguration.pickupDate}
+                returnDate={tripConfiguration.returnDate ?? null}
                 onSelect={handleDateSelect}
                 onNavigate={handleNavigate}
-                showReturn={!!pickupDate && !returnDate}
+                showReturn={!!tripConfiguration.pickupDate && !tripConfiguration.returnDate}
               />
-              <TimeSlotsPro selected={selectedTime} onSelect={handleTimeSelect} />
+              <TimeSlotsPro selected={tripConfiguration.pickupTime} onSelect={handleTimeSelect} />
             </div>
           </div>
 

@@ -20,7 +20,7 @@ export const RoutePreviewPro = ({ className }: RoutePreviewProProps) => (
         </div>
 
         {/* Subtle overlay gradient */}
-        <div className='absolute inset-0 bg-gradient-to-br from-[#CBB26A]/5 to-transparent pointer-events-none' />
+        <div className='absolute inset-0 bg-gradient-to-br from-[rgba(var(--brand-primary-rgb),0.08)] to-transparent pointer-events-none' />
       </div>
 
       {/* Route Status */}

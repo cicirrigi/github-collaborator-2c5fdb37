@@ -1,10 +1,10 @@
 'use client';
 
-import { MapPin, Minus, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { TRAVEL_PLANNER_PRO_THEME } from '../constants';
+import { MapPin, Minus, Plus } from 'lucide-react';
 import { LocationPicker } from '../../location-picker';
 import type { GooglePlace } from '../../location-picker/types';
+import { TRAVEL_PLANNER_PRO_THEME } from '../constants';
 
 interface StopsCounterProProps {
   value: number;
@@ -67,7 +67,7 @@ export const StopsCounterPro = ({
     <div className={cn('space-y-3', className)}>
       {/* Header */}
       <div className='flex items-center gap-2'>
-        <MapPin className='h-4 w-4 text-[#CBB26A]' />
+        <MapPin className='h-4 w-4 text-[var(--brand-primary)]' />
         <h5 className='font-medium text-neutral-200'>Additional Stops</h5>
         <span className='ml-auto text-xs text-neutral-500'>Max {max}</span>
       </div>
@@ -81,7 +81,7 @@ export const StopsCounterPro = ({
             'w-8 h-8 flex items-center justify-center rounded-full',
             TRAVEL_PLANNER_PRO_THEME.motion.transition,
             canDecrease
-              ? 'bg-white/[0.08] hover:bg-[#CBB26A]/20 text-neutral-200'
+              ? 'bg-white/[0.08] hover:bg-[rgba(var(--brand-primary-rgb),0.16)] text-neutral-200'
               : 'opacity-30 cursor-not-allowed',
             TRAVEL_PLANNER_PRO_THEME.motion.tap
           )}
@@ -90,7 +90,7 @@ export const StopsCounterPro = ({
         </button>
 
         <div className='flex flex-col items-center'>
-          <span className='text-lg font-medium text-[#CBB26A]'>{value}</span>
+          <span className='text-lg font-medium text-[var(--brand-primary)]'>{value}</span>
           <span className='text-xs text-neutral-500'>
             {value === 0 ? 'No stops' : `${value} ${value === 1 ? 'stop' : 'stops'}`}
           </span>
@@ -103,7 +103,7 @@ export const StopsCounterPro = ({
             'w-8 h-8 flex items-center justify-center rounded-full',
             TRAVEL_PLANNER_PRO_THEME.motion.transition,
             canIncrease
-              ? 'bg-white/[0.08] hover:bg-[#CBB26A]/20 text-neutral-200'
+              ? 'bg-white/[0.08] hover:bg-[rgba(var(--brand-primary-rgb),0.16)] text-neutral-200'
               : 'opacity-30 cursor-not-allowed',
             TRAVEL_PLANNER_PRO_THEME.motion.tap
           )}
@@ -130,7 +130,7 @@ export const StopsCounterPro = ({
           {Array.from({ length: value }, (_, index) => (
             <div key={index} className='space-y-2'>
               <div className='text-xs text-neutral-400 flex items-center gap-2'>
-                <span className='w-5 h-5 bg-[#CBB26A]/20 rounded-full flex items-center justify-center text-[10px] font-medium text-[#CBB26A]'>
+                <span className='w-5 h-5 bg-[rgba(var(--brand-primary-rgb),0.2)] rounded-full flex items-center justify-center text-[10px] font-medium text-[var(--brand-primary)]'>
                   {index + 1}
                 </span>
                 Stop {index + 1}
