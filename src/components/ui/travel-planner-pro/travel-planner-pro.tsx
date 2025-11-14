@@ -1,15 +1,20 @@
 'use client';
 
 import { useBookingState } from '@/hooks/useBookingState';
+import { getBookingRule } from '@/lib/booking/booking-rules';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
-import { LocationPicker } from '../location-picker';
+import { useEffect, useState } from 'react';
 import { ValidationFeedbackContainer } from '../validation-feedback';
-import { CalendarPro } from './calendar/calendar-pro';
-import { TimeSlotsPro } from './calendar/time-slots-pro';
-import { RoutePreviewPro } from './components/RoutePreviewPro';
-import { StopsCounterPro } from './components/StopsCounterPro';
+import { RoutePreviewPro } from './components';
 import { TRAVEL_PLANNER_PRO_THEME } from './constants';
+import {
+  DateTimeSection,
+  DurationSection,
+  FlightNumbersSection,
+  PassengersLuggageSection,
+  PickupDropoffSection,
+  StopsSection,
+} from './layout';
 
 interface TravelPlannerProProps {
   className?: string;
@@ -26,14 +31,74 @@ export const TravelPlannerPro = ({
   const [validation] = useState({ errors: [] });
 
   // Global booking state (single source of truth)
+  const bookingState = useBookingState();
   const {
+    bookingType,
     tripConfiguration,
     setPickup,
     setDropoff,
     setAdditionalStops,
     setPickupDateTime,
     setReturnDateTime,
-  } = useBookingState();
+    setPassengers,
+    setLuggage,
+    setFlightNumberPickup,
+    setFlightNumberReturn,
+    setHoursRequested,
+  } = bookingState;
+
+  // Get booking rules for current booking type
+  const bookingRule = getBookingRule(bookingType);
+
+  // Auto-clear stops when showStops = false (e.g., hourly booking)
+  useEffect(() => {
+    if (!bookingRule.showStops && tripConfiguration.additionalStops.length > 0) {
+      setAdditionalStops([]);
+    }
+  }, [bookingRule.showStops, tripConfiguration.additionalStops.length, setAdditionalStops]);
+
+  // Auto-clear return date/time when bookingType changes to non-return
+  useEffect(() => {
+    if (!bookingRule.showReturn) {
+      if (tripConfiguration.returnDate || tripConfiguration.returnTime) {
+        setReturnDateTime(null, '');
+      }
+    }
+  }, [
+    bookingRule.showReturn,
+    tripConfiguration.returnDate,
+    tripConfiguration.returnTime,
+    setReturnDateTime,
+  ]);
+
+  // Handler functions using direct store actions
+  const handlePassengersChange = (count: number) => setPassengers(count);
+  const handleLuggageChange = (count: number) => setLuggage(count);
+  const handleFlightNumberPickupChange = (flightNumber: string) =>
+    setFlightNumberPickup(flightNumber);
+  const handleFlightNumberReturnChange = (flightNumber: string) =>
+    setFlightNumberReturn(flightNumber);
+  const handleHoursRequestedChange = (hours: number) => setHoursRequested(hours);
+
+  // Stops handlers
+  const handleStopsCountChange = (value: number) => {
+    const currentStops = tripConfiguration.additionalStops;
+    if (value > currentStops.length) {
+      const newStops = [...currentStops];
+      while (newStops.length < value) {
+        newStops.push({
+          placeId: '',
+          address: '',
+          coordinates: [0, 0],
+          type: 'address',
+          components: {},
+        });
+      }
+      setAdditionalStops(newStops);
+    } else if (value < currentStops.length) {
+      setAdditionalStops(currentStops.slice(0, value));
+    }
+  };
 
   // Handlers
   const handleNavigate = (direction: 'prev' | 'next') => {
@@ -47,25 +112,41 @@ export const TravelPlannerPro = ({
   };
 
   const handleDateSelect = (date: Date) => {
-    const { pickupDate, returnDate, pickupTime, returnTime } = tripConfiguration;
+    const { pickupTime, returnTime } = tripConfiguration;
 
-    if (!pickupDate || (pickupDate && returnDate)) {
-      // Start a new range: set pickup date, clear return
+    if (!bookingRule.showReturn) {
+      // SINGLE DATE MODE: oneway, hourly, fleet
       setPickupDateTime(date, pickupTime);
-      setReturnDateTime(null, returnTime ?? '');
-    } else if (date >= pickupDate) {
-      // Select return date after pickup
-      setReturnDateTime(date, returnTime ?? '');
+      // NEVER set return for single date bookings
     } else {
-      // New pickup before previous one, reset range
-      setPickupDateTime(date, pickupTime);
-      setReturnDateTime(null, returnTime ?? '');
+      // RANGE DATE MODE: return trips only
+      const { pickupDate, returnDate } = tripConfiguration;
+
+      if (!pickupDate || (pickupDate && returnDate)) {
+        // Start new range: set pickup, clear return
+        setPickupDateTime(date, pickupTime);
+        setReturnDateTime(null, returnTime ?? '');
+      } else if (date >= pickupDate) {
+        // Set return date after pickup
+        setReturnDateTime(date, returnTime ?? '');
+      } else {
+        // New pickup before previous, reset range
+        setPickupDateTime(date, pickupTime);
+        setReturnDateTime(null, returnTime ?? '');
+      }
     }
   };
 
-  const handleTimeSelect = (time: string) => {
+  const handlePickupTimeSelect = (time: string) => {
     setPickupDateTime(tripConfiguration.pickupDate, time);
   };
+
+  const handleReturnTimeSelect = (time: string) => {
+    setReturnDateTime(tripConfiguration.returnDate, time);
+  };
+
+  // Step 1 Validation Helper - Ready for integration
+  // const getStep1ValidationStatus = () => validateStep1Complete(bookingType, tripConfiguration);
 
   return (
     <div className={cn(TRAVEL_PLANNER_PRO_THEME.container, className)}>
@@ -85,59 +166,71 @@ export const TravelPlannerPro = ({
         </p>
       </header>
 
-      {/* GRID PRINCIPAL 2x2 */}
-      <div className='grid lg:grid-cols-2 gap-8'>
-        {/* COL STÂNGA */}
-        <div className='flex flex-col gap-8'>
-          {/* Pickup & Drop-off */}
-          <div className={TRAVEL_PLANNER_PRO_THEME.card}>
-            <h3 className={TRAVEL_PLANNER_PRO_THEME.sectionTitle}>Pickup & Drop-off</h3>
-            <div className='space-y-4'>
-              <LocationPicker
-                variant='pickup'
-                placeholder='Pickup location'
-                value={tripConfiguration.pickup}
-                onChange={setPickup}
-              />
-              <LocationPicker
-                variant='destination'
-                placeholder='Drop-off location'
-                value={tripConfiguration.dropoff}
-                onChange={setDropoff}
-              />
+      {/* RETURN TRIP INDICATOR */}
+      {bookingType === 'return' && (
+        <div
+          className={`${TRAVEL_PLANNER_PRO_THEME.card} ${TRAVEL_PLANNER_PRO_THEME.motion.transition} p-4 mb-6`}
+        >
+          <div className='flex items-center gap-3'>
+            <span className='text-2xl'>↔️</span>
+            <div className='flex flex-col'>
+              <span className='text-sm font-medium text-white'>Round Trip — Return included</span>
+              <span className='text-xs text-neutral-400'>Pickup → Dropoff / Return → Pickup</span>
             </div>
-          </div>
-
-          {/* Additional Stops */}
-          <div className={TRAVEL_PLANNER_PRO_THEME.card}>
-            <StopsCounterPro
-              max={5}
-              min={0}
-              value={tripConfiguration.additionalStops.length}
-              onChange={() => {}}
-              stops={tripConfiguration.additionalStops}
-              onStopsChange={stops => setAdditionalStops(stops)}
-            />
           </div>
         </div>
+      )}
 
-        {/* COL DREAPTA */}
+      {/* MAIN CONTENT */}
+      <div className='grid lg:grid-cols-2 gap-8'>
+        {/* LEFT COLUMN: All Step 1 input components */}
         <div className='flex flex-col gap-8'>
-          {/* Calendar + Time */}
-          <div className={TRAVEL_PLANNER_PRO_THEME.card}>
-            <h3 className={TRAVEL_PLANNER_PRO_THEME.sectionTitle}>Date & Time</h3>
-            <div className={TRAVEL_PLANNER_PRO_THEME.calendar.container}>
-              <CalendarPro
-                currentMonth={currentMonth}
-                pickupDate={tripConfiguration.pickupDate}
-                returnDate={tripConfiguration.returnDate ?? null}
-                onSelect={handleDateSelect}
-                onNavigate={handleNavigate}
-                showReturn={!!tripConfiguration.pickupDate && !tripConfiguration.returnDate}
-              />
-              <TimeSlotsPro selected={tripConfiguration.pickupTime} onSelect={handleTimeSelect} />
-            </div>
-          </div>
+          <PickupDropoffSection
+            bookingRule={bookingRule}
+            tripConfiguration={tripConfiguration}
+            onPickupChange={setPickup}
+            onDropoffChange={setDropoff}
+          />
+
+          <StopsSection
+            bookingRule={bookingRule}
+            tripConfiguration={tripConfiguration}
+            onStopsCountChange={handleStopsCountChange}
+            onStopsChange={setAdditionalStops}
+          />
+
+          <PassengersLuggageSection
+            bookingRule={bookingRule}
+            tripConfiguration={tripConfiguration}
+            onPassengersChange={handlePassengersChange}
+            onLuggageChange={handleLuggageChange}
+          />
+
+          <FlightNumbersSection
+            bookingRule={bookingRule}
+            tripConfiguration={tripConfiguration}
+            onFlightNumberPickupChange={handleFlightNumberPickupChange}
+            onFlightNumberReturnChange={handleFlightNumberReturnChange}
+          />
+
+          <DurationSection
+            bookingRule={bookingRule}
+            tripConfiguration={tripConfiguration}
+            onHoursRequestedChange={handleHoursRequestedChange}
+          />
+        </div>
+
+        {/* RIGHT COLUMN: Calendar, Time Slots, RoutePreview */}
+        <div className='flex flex-col gap-8'>
+          <DateTimeSection
+            bookingRule={bookingRule}
+            tripConfiguration={tripConfiguration}
+            currentMonth={currentMonth}
+            onDateSelect={handleDateSelect}
+            onNavigate={handleNavigate}
+            onPickupTimeSelect={handlePickupTimeSelect}
+            onReturnTimeSelect={handleReturnTimeSelect}
+          />
 
           {/* Route Preview */}
           <div className={TRAVEL_PLANNER_PRO_THEME.card}>

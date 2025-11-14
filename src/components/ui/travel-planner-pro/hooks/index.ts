@@ -1,2 +1,2 @@
-export { useReturnJourneyLogic } from './useReturnJourneyLogic';
-export { useProgressiveActivation } from './useProgressiveActivation';
+// No hooks currently used in TravelPlannerPro
+// Future hooks can be exported here

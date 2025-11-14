@@ -17,6 +17,9 @@ export const getInitialTripConfiguration = (): TripConfiguration => ({
   returnAdditionalStops: [],
   fleetSelection: [],
   isFleetByHour: false,
+  hoursRequested: 2, // default pentru hourly
+  flightNumberPickup: '',
+  flightNumberReturn: '',
   passengers: 1,
   baggage: 0,
   pickupDate: null,

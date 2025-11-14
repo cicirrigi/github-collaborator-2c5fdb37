@@ -1,26 +1,27 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useBookingState } from '@/hooks/useBookingState';
 import type { BookingTabType } from '@/components/ui/booking-tabs-pro/types';
-import type { TripType } from '@/types/booking/common.types';
+import { useBookingState } from '@/hooks/useBookingState';
+import type { BookingType } from '@/lib/booking/booking-rules';
+import { useEffect } from 'react';
 
 /**
- * 🔄 Hook pentru sincronizare tab activ cu Zustand store
+ * 🔄 Hook pentru sincronizare tab activ cu Zustand store (UPDATED pentru noul store)
  *
  * Sincronizează tab-ul activ din UI cu booking state-ul global
  */
 export function useBookingTabSync(activeTab: BookingTabType) {
-  const { setTripType } = useBookingState();
+  const { setBookingType } = useBookingState();
 
   useEffect(() => {
-    const tripTypeMap: Record<BookingTabType, TripType> = {
+    // Direct mapping - BookingTabType e identic cu BookingType
+    const bookingTypeMap: Record<BookingTabType, BookingType> = {
       oneway: 'oneway',
       return: 'return',
       hourly: 'hourly',
       fleet: 'fleet',
     };
 
-    setTripType(tripTypeMap[activeTab]);
-  }, [activeTab, setTripType]);
+    setBookingType(bookingTypeMap[activeTab]);
+  }, [activeTab, setBookingType]);
 }

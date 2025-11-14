@@ -1,32 +1,35 @@
-/**
- * 🎨 TRAVEL_PLANNER_PRO_THEME – premium version
- * 100% derivat din TRAVEL_THEME (respectă aurul, transparențele și tonurile neutre)
- */
+// 🎨 TRAVEL_PLANNER_PRO_THEME – Design tokens only (fără rules, fără logic)
+
 export const TRAVEL_PLANNER_PRO_THEME = {
+  // Culori din design system (nu mai hardcodate)
   colors: {
-    gold: 'var(--brand-primary)',
-    lightGold: 'var(--brand-accent)',
-    darkGold: 'var(--brand-secondary)',
+    primary: 'var(--brand-primary)',
+    accent: 'var(--brand-accent)',
+    secondary: 'var(--brand-secondary)',
     neutral: 'var(--text-secondary)',
-    light: 'var(--background-light)',
-    dark: 'var(--background-dark)',
+    background: 'var(--background-elevated)',
+    border: 'var(--border-subtle)',
   },
+  // Layout din design tokens
+  layout: {
+    container: 'relative mx-auto max-w-6xl px-4 py-10 lg:py-14',
+    grid: 'grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]',
+    cardGrid: 'grid gap-8 lg:grid-cols-2',
+  },
+
+  // Container cu styling din design tokens
   container: `
-    relative rounded-3xl p-8 backdrop-blur-2xl overflow-hidden
-    border border-white/20 shadow-[0_0_60px_-10px_var(--brand-primary)/30]
-    before:absolute before:inset-0 before:z-0 before:pointer-events-none
-    before:bg-[radial-gradient(circle_at_20%_20%,var(--brand-primary)/40_0%,transparent_50%),radial-gradient(circle_at_80%_80%,var(--brand-secondary)/30_0%,transparent_50%),radial-gradient(circle_at_60%_40%,var(--brand-accent)/20_0%,transparent_60%),linear-gradient(135deg,var(--background-dark)_0%,var(--background-elevated)_25%,var(--background-subtle)_50%,var(--background-dark)_100%)]
-    before:rounded-3xl before:animate-pulse before:[animation-duration:5s]
-    after:absolute after:inset-0 after:z-0 after:pointer-events-none 
-    after:bg-[radial-gradient(ellipse_400px_300px_at_30%_70%,var(--brand-primary)/15,transparent),radial-gradient(ellipse_300px_400px_at_70%_30%,var(--text-muted)/20,transparent)]
-    after:rounded-3xl after:opacity-60 after:animate-pulse after:[animation-duration:8s] after:[animation-delay:3s]
+    relative overflow-hidden
+    bg-[var(--background-elevated)] backdrop-blur-2xl
+    border border-[var(--border-subtle)]
+    p-8 rounded-3xl
+    transition-all duration-300 ease-out
     [&>*]:relative [&>*]:z-10
   `,
   card: `
-    bg-white/[0.15] border border-white/[0.2]
+    bg-[var(--background-elevated)] border border-[var(--border-subtle)]
     rounded-2xl p-6 backdrop-blur-xl
-    shadow-[0_16px_48px_rgba(0,0,0,0.4),0_4px_12px_rgba(0,0,0,0.3),inset_0_0_20px_rgba(255,255,255,0.12)]
-    hover:shadow-[0_20px_60px_rgba(0,0,0,0.5),0_8px_20px_rgba(0,0,0,0.4),inset_0_0_30px_rgba(255,255,255,0.15)]
+    shadow-[var(--shadow-elevated)] hover:shadow-[var(--shadow-premium)]
     hover:transform hover:-translate-y-1
     transition-all duration-300 ease-out
   `,
@@ -41,7 +44,7 @@ export const TRAVEL_PLANNER_PRO_THEME = {
     dayBase: `
       aspect-square w-full flex items-center justify-center
       text-sm font-medium rounded-lg transition-all cursor-pointer
-      hover:bg-white/[0.05] text-neutral-300
+      hover:bg-[var(--background-hover)] text-neutral-300
     `,
     dayToday: `border border-[var(--brand-primary)]/40 text-[var(--brand-primary)]`,
     daySelected: `
@@ -74,10 +77,18 @@ export const TRAVEL_PLANNER_PRO_THEME = {
     gray: 'from-gray-800 to-gray-900',
   },
 
+  // Motion - folosim CSS classes pentru performanță
   motion: {
-    transition: 'transition-all duration-300 ease-in-out',
-    hover: 'hover:scale-105',
+    // Transition și hover din CSS classes (mai performant decât Framer Motion)
+    transition: 'transition-all duration-300 ease-out',
+    hover: 'hover:scale-[1.02]',
     tap: 'active:scale-95',
+    // Framer Motion variants (din animations.config dacă sunt necesare)
+    fadeInUp: {
+      initial: { opacity: 0, y: 20 },
+      animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+    },
+    staggerChildren: { animate: { transition: { staggerChildren: 0.1 } } },
   },
 } as const;
 

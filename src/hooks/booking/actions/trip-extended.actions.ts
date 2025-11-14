@@ -155,8 +155,12 @@ export interface TripExtendedActions {
   setReturnAdditionalStops: (stops: GooglePlace[]) => void;
   setReturnDetails: (details: PartialTripConfig) => void;
 
+  // Flight numbers
+  setFlightNumberPickup: (flightNumber: string) => void;
+  setFlightNumberReturn: (flightNumber: string) => void;
+
   // Hourly specific
-  setHoursRequested: (hours: number | string) => void;
+  setHoursRequested: (hours: number) => void;
 
   // Passenger/Baggage with validation
   setPassengerCount: (count: number) => void;
@@ -261,6 +265,28 @@ export const createTripExtendedActions = (
   setBaggage: (count: number) => {
     const state = get();
     state.setBaggageCount(count);
+  },
+
+  setFlightNumberPickup: (flightNumber: string) => {
+    set(state => ({
+      tripConfiguration: { ...state.tripConfiguration, flightNumberPickup: flightNumber },
+      isDirty: true,
+    }));
+  },
+
+  setFlightNumberReturn: (flightNumber: string) => {
+    set(state => ({
+      tripConfiguration: { ...state.tripConfiguration, flightNumberReturn: flightNumber },
+      isDirty: true,
+    }));
+  },
+
+  setHoursRequested: (hours: number) => {
+    set(state => ({
+      tripConfiguration: { ...state.tripConfiguration, hoursRequested: hours },
+      isDirty: true,
+    }));
+    safeRecalculatePricing(get);
   },
 
   resetTrip: () => {
