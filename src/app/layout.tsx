@@ -5,9 +5,9 @@ import { Inter } from 'next/font/google';
 
 import { ConditionalLayout } from '@/components/layout/ConditionalLayout';
 import { siteMetadata } from '@/config/site.config';
+import { AuthProvider } from '@/features/auth/context/AuthProvider';
 import { cn } from '@/lib/utils/cn';
 import { ThemeProvider } from '@/providers/theme-provider';
-import { AuthProvider } from '@/features/auth/context/AuthProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -132,6 +132,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ConditionalLayout>{children}</ConditionalLayout>
           </AuthProvider>
         </ThemeProvider>
+
+        {/* Calendar Portal Root */}
+        <div id='calendar-root' />
       </body>
     </html>
   );

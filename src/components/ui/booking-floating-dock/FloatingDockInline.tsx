@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, useMotionValue } from 'framer-motion';
 import { cn } from '@/lib/utils/cn';
+import { motion, useMotionValue } from 'framer-motion';
 import type { BookingDockItem } from './dock.types';
 import { IconContainer } from './IconContainer';
 
@@ -25,11 +25,11 @@ export const FloatingDockInline = ({
        */
       className={cn(
         `
-        relative mx-auto 
+        relative mx-auto
         hidden md:flex
         h-20 items-center
-        space-x-8
-        rounded-3xl 
+        space-x-4
+        rounded-3xl
         bg-white/80 dark:bg-neutral-900/80
         backdrop-blur-2xl
         border border-white/20 dark:border-neutral-700/40
