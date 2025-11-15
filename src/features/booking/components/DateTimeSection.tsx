@@ -1,6 +1,6 @@
 'use client';
 
-import { useBookingStore } from '../store/booking.store';
+import { useBookingState } from '@/hooks/useBookingState';
 
 import { BespokePickerComponent } from '../../../components/calendar/BespokePickerComponent';
 import { DailyPickerComponent } from '../../../components/calendar/DailyPickerComponent';
@@ -10,15 +10,15 @@ import { HourlyPickerComponent } from '../../../components/calendar/HourlyPicker
 import { ReturnPickerComponent } from '../../../components/calendar/ReturnPickerComponent';
 
 export function DateTimeSection() {
-  const { tripType } = useBookingStore();
+  const { bookingType } = useBookingState();
 
   return (
     <div className='space-y-5'>
       {/* ONE WAY */}
-      {tripType === 'oneway' && <DeparturePickerComponent />}
+      {bookingType === 'oneway' && <DeparturePickerComponent />}
 
       {/* RETURN */}
-      {tripType === 'return' && (
+      {bookingType === 'return' && (
         <div className='space-y-5'>
           <DeparturePickerComponent />
           <ReturnPickerComponent />
@@ -26,16 +26,16 @@ export function DateTimeSection() {
       )}
 
       {/* HOURLY */}
-      {tripType === 'hourly' && <HourlyPickerComponent />}
+      {bookingType === 'hourly' && <HourlyPickerComponent />}
 
       {/* DAILY */}
-      {tripType === 'daily' && <DailyPickerComponent />}
+      {bookingType === 'daily' && <DailyPickerComponent />}
 
       {/* FLEET */}
-      {tripType === 'fleet' && <FleetPickerComponent />}
+      {bookingType === 'fleet' && <FleetPickerComponent />}
 
       {/* BESPOKE */}
-      {tripType === 'bespoke' && <BespokePickerComponent />}
+      {bookingType === 'bespoke' && <BespokePickerComponent />}
     </div>
   );
 }

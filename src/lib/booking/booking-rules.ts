@@ -3,9 +3,9 @@
  * Controlează Step 1 complet: UI visibility + validation + field mapping
  */
 
-import type { TripConfiguration } from '@/hooks/useBookingState/types';
+import type { TripConfiguration } from '@/hooks/useBookingState';
 
-export type BookingType = 'oneway' | 'return' | 'hourly' | 'fleet';
+export type BookingType = 'oneway' | 'return' | 'hourly' | 'daily' | 'fleet' | 'bespoke';
 
 /**
  * 🔑 Field IDs derivate STRICT din TripConfiguration (zero mismatch!)
@@ -18,6 +18,7 @@ export type Step1FieldId = keyof Pick<
   | 'returnDate'
   | 'pickupTime'
   | 'returnTime'
+  | 'dailyRange'
   | 'passengers'
   | 'luggage'
   | 'flightNumberPickup'
@@ -83,6 +84,16 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     showFlightNumbers: false,
     requiredFields: ['pickup', 'pickupDate', 'pickupTime', 'hoursRequested', 'passengers'],
   },
+  daily: {
+    showReturn: false,
+    showDualTime: false,
+    showStops: true,
+    showDuration: false,
+    dropoffOptional: false,
+    showPassengers: true,
+    showFlightNumbers: false, // Daily service usually doesn't need flights
+    requiredFields: ['pickup', 'dropoff', 'pickupDate', 'passengers'], // Uses dailyRange instead of specific times
+  },
   fleet: {
     showReturn: false,
     showDualTime: false,
@@ -92,6 +103,16 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     showPassengers: true,
     showFlightNumbers: true, // de obicei doar pickup flight
     requiredFields: ['pickup', 'dropoff', 'pickupDate', 'pickupTime', 'passengers'],
+  },
+  bespoke: {
+    showReturn: false, // Flexible - can be configured per booking
+    showDualTime: false,
+    showStops: true,
+    showDuration: false,
+    dropoffOptional: true, // Bespoke is highly customizable
+    showPassengers: true,
+    showFlightNumbers: true, // Often for VIP/special events
+    requiredFields: ['pickup', 'pickupDate', 'passengers'], // Minimal requirements for custom service
   },
 } as const;
 

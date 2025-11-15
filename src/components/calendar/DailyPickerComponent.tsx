@@ -5,11 +5,12 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import { useBookingState } from '@/hooks/useBookingState';
 import { DatePillButton } from '../../features/booking/components/DatePillButton';
-import { useBookingStore } from '../../features/booking/store/booking.store';
 
 export function DailyPickerComponent() {
-  const { dailyRange, setDailyRange } = useBookingStore();
+  const { tripConfiguration, setDailyRange } = useBookingState();
+  const dailyRange = tripConfiguration.dailyRange; // Bridge pentru compatibility
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   const [start, end] = dailyRange;
@@ -43,7 +44,7 @@ export function DailyPickerComponent() {
               inline
               minDate={new Date()}
               dateFormat='MMMM d, yyyy'
-              portalId='calendar-root'
+              calendarStartDay={1}
             />
 
             <button

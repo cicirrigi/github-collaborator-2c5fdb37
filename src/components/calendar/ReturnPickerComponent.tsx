@@ -5,11 +5,13 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import { useBookingState } from '@/hooks/useBookingState';
 import { DatePillButton } from '../../features/booking/components/DatePillButton';
-import { useBookingStore } from '../../features/booking/store/booking.store';
 
 export function ReturnPickerComponent() {
-  const { departureDateTime, returnDateTime, setReturnDateTime } = useBookingStore();
+  const { tripConfiguration, setReturnDateTime } = useBookingState();
+  const returnDateTime = tripConfiguration.returnDate; // Bridge pentru compatibility
+  const departureDateTime = tripConfiguration.pickupDate; // Pentru minDate validation
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   const showDate = (d: Date | null) =>
@@ -40,14 +42,14 @@ export function ReturnPickerComponent() {
 
             <DatePicker
               selected={returnDateTime}
-              onChange={date => date && setReturnDateTime(date)}
+              onChange={date => date && setReturnDateTime(date, tripConfiguration.returnTime)}
               inline
               minDate={departureDateTime || new Date()}
               showTimeSelect
               timeIntervals={15}
               timeFormat='HH:mm'
               dateFormat='MMMM d, yyyy h:mm aa'
-              portalId='calendar-root'
+              calendarStartDay={1}
               dayClassName={dayDate => {
                 if (!departureDateTime || !returnDateTime) return '';
 

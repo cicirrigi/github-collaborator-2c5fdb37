@@ -19,7 +19,7 @@ interface ConditionalLayoutProps {
 /**
  * Pagini care NU trebuie să aibă Header/Footer
  */
-const PAGES_WITHOUT_LAYOUT = ['/auth', '/login', '/register', '/signup'];
+const PAGES_WITHOUT_LAYOUT = ['/auth', '/login', '/register', '/signup', '/calendar-test'];
 
 export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const pathname = usePathname();

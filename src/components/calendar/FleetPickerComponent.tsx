@@ -5,11 +5,12 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import { useBookingState } from '@/hooks/useBookingState';
 import { DatePillButton } from '../../features/booking/components/DatePillButton';
-import { useBookingStore } from '../../features/booking/store/booking.store';
 
 export function FleetPickerComponent() {
-  const { departureDateTime, setDepartureDateTime } = useBookingStore();
+  const { tripConfiguration, setPickupDateTime } = useBookingState();
+  const departureDateTime = tripConfiguration.pickupDate; // Bridge pentru compatibility
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   const showDate = (d: Date | null) =>
@@ -36,14 +37,14 @@ export function FleetPickerComponent() {
 
             <DatePicker
               selected={departureDateTime}
-              onChange={date => date && setDepartureDateTime(date)}
+              onChange={date => date && setPickupDateTime(date, tripConfiguration.pickupTime)}
               inline
               minDate={new Date()}
               showTimeSelect
               timeIntervals={15}
               timeFormat='HH:mm'
               dateFormat='MMMM d, yyyy h:mm aa'
-              portalId='calendar-root'
+              calendarStartDay={1}
             />
 
             <button

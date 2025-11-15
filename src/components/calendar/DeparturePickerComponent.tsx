@@ -5,11 +5,12 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import { useBookingState } from '@/hooks/useBookingState';
 import { DatePillButton } from '../../features/booking/components/DatePillButton';
-import { useBookingStore } from '../../features/booking/store/booking.store';
 
 export function DeparturePickerComponent() {
-  const { departureDateTime, setDepartureDateTime } = useBookingStore();
+  const { tripConfiguration, setPickupDateTime } = useBookingState();
+  const departureDateTime = tripConfiguration.pickupDate; // Bridge pentru compatibility
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   const showDate = (d: Date | null) =>
@@ -30,26 +31,23 @@ export function DeparturePickerComponent() {
       />
 
       {calendarOpen && (
-        <div className='absolute bottom-full left-0 mb-2 z-[100] bg-white rounded-lg shadow-xl border'>
-          <div className='p-2'>
+        <div className='calendar-wrapper absolute bottom-full left-0 mb-2 z-[100]'>
+          <div>
             <h3 className='text-black text-sm mb-2'>Select Date & Time</h3>
 
             <DatePicker
               selected={departureDateTime}
-              onChange={date => date && setDepartureDateTime(date)}
+              onChange={date => date && setPickupDateTime(date, tripConfiguration.pickupTime)}
               inline
               minDate={new Date()}
               showTimeSelect
               timeIntervals={15}
               timeFormat='HH:mm'
               dateFormat='MMMM d, yyyy h:mm aa'
-              portalId='calendar-root'
+              calendarStartDay={1}
             />
 
-            <button
-              onClick={() => setCalendarOpen(false)}
-              className='mt-2 px-4 py-1 bg-blue-500 text-white rounded text-sm mx-auto block'
-            >
+            <button onClick={() => setCalendarOpen(false)} className='mt-4 mx-auto block'>
               Done
             </button>
           </div>

@@ -1,3 +1,5 @@
+// 🎯 BOOKING TYPES - All type definitions for the unified booking system
+
 export type Coordinates = [number, number];
 
 export interface LocationData {
@@ -8,69 +10,62 @@ export interface LocationData {
   components: Record<string, string>;
 }
 
-export type StopPoint = LocationData;
-
-export type PickupDropoffField = LocationData | null;
+export type BookingType = 'oneway' | 'return' | 'hourly' | 'daily' | 'fleet' | 'bespoke';
 
 export interface TripConfiguration {
-  /** Trip locations */
-  pickup: PickupDropoffField;
-  dropoff: PickupDropoffField;
+  // Locations
+  pickup: LocationData | null;
+  dropoff: LocationData | null;
+  additionalStops: LocationData[];
 
-  /** Additional stops */
-  additionalStops: StopPoint[];
-
-  /** Dates */
+  // Dates & Times
   pickupDate: Date | null;
   returnDate: Date | null;
-
-  /** Times */
   pickupTime: string;
   returnTime: string;
 
-  /** Passengers & Luggage */
+  // Daily range for daily bookings
+  dailyRange: [Date | null, Date | null];
+
+  // Passengers & Logistics
   passengers: number;
   luggage: number;
-
-  /** Flight numbers */
   flightNumberPickup: string;
   flightNumberReturn: string;
 
-  /** Hourly bookings */
+  // Hourly bookings
   hoursRequested: number | null;
 }
 
-export type BookingType = 'oneway' | 'return' | 'hourly' | 'fleet';
-
 export interface BookingState {
-  // BOOKING TYPE (CRITICAL for conditional UI)
+  // BOOKING TYPE
   bookingType: BookingType;
   setBookingType: (type: BookingType) => void;
+
+  // TRIP CONFIGURATION
+  tripConfiguration: TripConfiguration;
 
   // WIZARD STATE
   currentStep: number;
   completedSteps: number[];
   totalSteps: number;
 
-  // TRIP CONFIGURATION
-  tripConfiguration: TripConfiguration;
+  // LOCATION ACTIONS
+  setPickup: (location: LocationData | null) => void;
+  setDropoff: (location: LocationData | null) => void;
+  setAdditionalStops: (stops: LocationData[]) => void;
 
-  // ACȚIUNI
-  setPickup: (location: PickupDropoffField) => void;
-  setDropoff: (location: PickupDropoffField) => void;
-
-  setAdditionalStops: (stops: StopPoint[]) => void;
-
+  // DATE & TIME ACTIONS
   setPickupDateTime: (date: Date | null, time: string) => void;
   setReturnDateTime: (date: Date | null, time: string) => void;
+  setDailyRange: (range: [Date | null, Date | null]) => void;
 
+  // PASSENGER & LOGISTICS ACTIONS
   setPassengers: (value: number) => void;
   setLuggage: (value: number) => void;
-
   setFlightNumberPickup: (value: string) => void;
   setFlightNumberReturn: (value: string) => void;
-
-  setHoursRequested: (value: number) => void;
+  setHoursRequested: (value: number | null) => void;
 
   // WIZARD ACTIONS
   setCurrentStep: (step: number) => void;
@@ -79,6 +74,12 @@ export interface BookingState {
   prevStep: () => void;
   canProceedToStep: (step: number) => boolean;
   validateCurrentStep: () => boolean;
-
   resetTrip: () => void;
+
+  // UTILITY ACTIONS
+  calculateEstimatedDistanceAndTime: () => { distanceKm: number; durationMinutes: number };
 }
+
+// 🔧 UTILITY TYPE EXPORTS
+export type PickupDropoffField = LocationData | null;
+export type StopPoint = LocationData;

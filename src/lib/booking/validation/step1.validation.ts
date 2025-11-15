@@ -1,4 +1,4 @@
-import type { TripConfiguration } from '@/hooks/useBookingState/types';
+import type { TripConfiguration } from '@/hooks/useBookingState';
 import { getBookingRule, type BookingType, type Step1FieldId } from '../booking-rules';
 
 /**
@@ -15,7 +15,8 @@ export type Step1ErrorCode =
   | 'MISSING_LUGGAGE'
   | 'MISSING_FLIGHT_PICKUP'
   | 'MISSING_FLIGHT_RETURN'
-  | 'MISSING_HOURS_REQUESTED';
+  | 'MISSING_HOURS_REQUESTED'
+  | 'MISSING_DAILY_RANGE';
 
 export type Step1ErrorSeverity = 'error' | 'warning';
 
@@ -47,6 +48,7 @@ const FIELD_LABELS: Record<Step1FieldId, string> = {
   flightNumberPickup: 'Pickup flight number',
   flightNumberReturn: 'Return flight number',
   hoursRequested: 'Number of hours',
+  dailyRange: 'Daily date range',
 };
 
 /**
@@ -64,6 +66,7 @@ const FIELD_ERROR_CODE_MAP: Record<Step1FieldId, Step1ErrorCode> = {
   flightNumberPickup: 'MISSING_FLIGHT_PICKUP',
   flightNumberReturn: 'MISSING_FLIGHT_RETURN',
   hoursRequested: 'MISSING_HOURS_REQUESTED',
+  dailyRange: 'MISSING_DAILY_RANGE',
 };
 
 /**
@@ -80,8 +83,9 @@ const buildPresenceMap = (config: TripConfiguration): Record<Step1FieldId, boole
   passengers: config.passengers > 0,
   luggage: config.luggage >= 0,
   flightNumberPickup: Boolean(config.flightNumberPickup?.trim()),
-  flightNumberReturn: Boolean(config.flightNumberReturn?.trim()),
+  flightNumberReturn: Boolean(config.flightNumberReturn),
   hoursRequested: config.hoursRequested !== null && config.hoursRequested > 0,
+  dailyRange: config.dailyRange[0] !== null && config.dailyRange[1] !== null,
 });
 
 /**

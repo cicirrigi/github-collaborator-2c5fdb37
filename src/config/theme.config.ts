@@ -3,14 +3,14 @@
  * Modular orchestrator importing from design-system/tokens
  */
 
-import { colors } from '../design-system/tokens/colors';
 import { animations, motion } from '../design-system/tokens/animations';
-import { typography } from '../design-system/tokens/typography';
-import { spacing } from '../design-system/tokens/spacing';
+import { colors } from '../design-system/tokens/colors';
 import { gradients } from '../design-system/tokens/gradients';
+import { spacing } from '../design-system/tokens/spacing';
+import { typography } from '../design-system/tokens/typography';
 import { buttonVariants } from '../design-system/variants/button.variants';
-import { textVariants } from '../design-system/variants/text.variants';
 import { newsletterVariants } from '../design-system/variants/newsletter.variants';
+import { textVariants } from '../design-system/variants/text.variants';
 
 // Consolidated design tokens (imported from modular files)
 export const designTokens = {
