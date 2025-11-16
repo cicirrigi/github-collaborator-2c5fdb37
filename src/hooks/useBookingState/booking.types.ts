@@ -18,11 +18,9 @@ export interface TripConfiguration {
   dropoff: LocationData | null;
   additionalStops: LocationData[];
 
-  // Dates & Times
-  pickupDate: Date | null;
-  returnDate: Date | null;
-  pickupTime: string;
-  returnTime: string;
+  // Dates & Times (unified)
+  pickupDateTime: Date | null;
+  returnDateTime: Date | null;
 
   // Daily range for daily bookings
   dailyRange: [Date | null, Date | null];
@@ -55,9 +53,9 @@ export interface BookingState {
   setDropoff: (location: LocationData | null) => void;
   setAdditionalStops: (stops: LocationData[]) => void;
 
-  // DATE & TIME ACTIONS
-  setPickupDateTime: (date: Date | null, time: string) => void;
-  setReturnDateTime: (date: Date | null, time: string) => void;
+  // DATE & TIME ACTIONS (simplified)
+  setPickupDateTime: (date: Date | null) => void;
+  setReturnDateTime: (date: Date | null) => void;
   setDailyRange: (range: [Date | null, Date | null]) => void;
 
   // PASSENGER & LOGISTICS ACTIONS

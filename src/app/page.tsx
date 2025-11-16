@@ -1,12 +1,11 @@
-import { HeroSection } from '@/components/sections/HeroSection';
-import { ServicesSection } from '@/components/sections/ServicesSection';
-import { BookingSection } from '@/components/booking/BookingSection';
-import { TestimonialsNew } from '@/components/sections/TestimonialsNew';
 import { FleetSection3D as FleetSection } from '@/components/sections/FleetSection';
-import { VantageAssuranceSection } from '@/components/sections/VantageAssuranceSection';
+import { HeroSection } from '@/components/sections/HeroSection';
 import { NarrativeSection } from '@/components/sections/NarrativeSection';
-import { PricingSection } from '@/components/sections/PricingSection';
 import { NewsletterSection } from '@/components/sections/NewsletterSection';
+import { PricingSection } from '@/components/sections/PricingSection';
+import { ServicesSection } from '@/components/sections/ServicesSection';
+import { TestimonialsNew } from '@/components/sections/TestimonialsNew';
+import { VantageAssuranceSection } from '@/components/sections/VantageAssuranceSection';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { getPageMetadata } from '@/lib/seo';
 
@@ -37,9 +36,6 @@ export default function HomePage() {
 
       {/* Elegant Separator */}
       <SectionDivider />
-
-      {/* Premium Booking Form */}
-      <BookingSection />
 
       {/* Elegant Separator */}
       <SectionDivider />

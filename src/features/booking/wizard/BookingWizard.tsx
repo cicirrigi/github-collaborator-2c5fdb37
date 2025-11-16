@@ -1,7 +1,7 @@
 'use client';
 
+import { ZustandBookingTypeDock } from '@/components/booking/ZustandBookingTypeDock';
 import { Container } from '@/components/layout/Container';
-import { BookingStepper } from '@/components/ui/booking-stepper/BookingStepper';
 import { useBookingState } from '@/hooks/useBookingState';
 
 import { WizardFooter } from './components/WizardFooter';
@@ -10,60 +10,15 @@ import { Step2Services } from './steps/Step2Services';
 import { Step3Summary } from './steps/Step3Summary';
 import { Step4Confirmation } from './steps/Step4Confirmation';
 
-// 🎯 4 PAȘI PENTRU BOOKING WORKFLOW (CU CIFRE)
-const BOOKING_WIZARD_STEPS = [
-  {
-    id: 1,
-    label: 'Trip Details',
-    description: 'Type, locations & dates',
-    clickable: true,
-  },
-  {
-    id: 2,
-    label: 'Services',
-    description: 'Add-ons & pricing',
-    clickable: true,
-  },
-  {
-    id: 3,
-    label: 'Payment',
-    description: 'Review & checkout',
-    clickable: true,
-  },
-  {
-    id: 4,
-    label: 'Confirmation',
-    description: 'Booking complete',
-    clickable: false,
-  },
-];
-
 export function BookingWizard() {
-  const { currentStep, completedSteps, setCurrentStep, nextStep, prevStep, canProceedToStep } =
-    useBookingState();
-
-  const handleStepClick = (stepNumber: number) => {
-    if (canProceedToStep(stepNumber)) {
-      setCurrentStep(stepNumber);
-    }
-  };
+  const { currentStep, nextStep, prevStep } = useBookingState();
 
   return (
     <>
-      {/* 1️⃣ STEP 1 — STEP PROGRESS BAR (FULL WIDTH, CENTRAT) */}
-      <div className='w-full flex justify-center py-10'>
-        <div className='w-full max-w-5xl'>
-          <BookingStepper
-            steps={BOOKING_WIZARD_STEPS}
-            currentStep={currentStep}
-            completedSteps={completedSteps}
-            onStepClick={handleStepClick}
-            size='md'
-            animated={true}
-            pulseOnCurrent={true}
-            showLabels={true}
-            labelPosition='bottom'
-          />
+      {/* 🔹 BOOKING TYPE DOCK AFARĂ */}
+      <div className='w-full flex justify-center py-6'>
+        <div className='w-full max-w-4xl'>
+          <ZustandBookingTypeDock />
         </div>
       </div>
 

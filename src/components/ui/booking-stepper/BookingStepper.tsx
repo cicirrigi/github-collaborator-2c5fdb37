@@ -103,12 +103,7 @@ export const BookingStepper: React.FC<BookingStepperProps> = ({
         }}
       >
         <div className='w-full max-w-[1400px] px-4 sm:px-8 overflow-visible'>
-          {/* Progress Info */}
-          <div className='text-center mb-6'>
-            <div className='text-sm text-neutral-600 dark:text-neutral-400'>
-              {Math.round(progressPercentage)}% complete • Step {currentStep} of {steps.length}
-            </div>
-          </div>
+          {/* Progress Info - HIDDEN */}
 
           {/* Steps Container */}
           <div

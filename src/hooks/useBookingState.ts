@@ -12,10 +12,8 @@ const initialTripConfiguration: TripConfiguration = {
   dropoff: null,
   additionalStops: [],
 
-  pickupDate: null,
-  returnDate: null,
-  pickupTime: '',
-  returnTime: '',
+  pickupDateTime: null,
+  returnDateTime: null,
 
   dailyRange: [null, null],
 
@@ -66,22 +64,20 @@ export const useBookingState = create<BookingState>((set, get) => ({
       },
     })),
 
-  // DATE & TIME ACTIONS
-  setPickupDateTime: (date: Date | null, time: string) =>
+  // DATE & TIME ACTIONS (simplified)
+  setPickupDateTime: (date: Date | null) =>
     set(state => ({
       tripConfiguration: {
         ...state.tripConfiguration,
-        pickupDate: date,
-        pickupTime: time,
+        pickupDateTime: date,
       },
     })),
 
-  setReturnDateTime: (date: Date | null, time: string) =>
+  setReturnDateTime: (date: Date | null) =>
     set(state => ({
       tripConfiguration: {
         ...state.tripConfiguration,
-        returnDate: date,
-        returnTime: time,
+        returnDateTime: date,
       },
     })),
 
