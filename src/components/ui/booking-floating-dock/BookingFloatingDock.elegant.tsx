@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Menu } from 'lucide-react';
 import {
   AnimatePresence,
   MotionValue,
@@ -10,6 +9,7 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion';
+import { Menu } from 'lucide-react';
 import { useRef, useState } from 'react';
 import type { BookingDockItem, FloatingDockProps } from './dock.types';
 
@@ -24,8 +24,8 @@ export const BookingFloatingDock = ({
 }: FloatingDockProps) => {
   return (
     <>
-      <FloatingDockDesktop items={items} className={desktopClassName || undefined} />
-      <FloatingDockMobile items={items} className={mobileClassName || undefined} />
+      <FloatingDockDesktop items={items} className={desktopClassName || ''} />
+      <FloatingDockMobile items={items} className={mobileClassName || ''} />
     </>
   );
 };

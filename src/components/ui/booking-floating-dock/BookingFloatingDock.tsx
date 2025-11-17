@@ -1,8 +1,8 @@
 'use client';
 
-import { motion, useMotionValue } from 'framer-motion';
-import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils/cn';
+import { motion, useMotionValue } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { DockButton } from './DockButton';
 import { dockTokens as t } from './dock.tokens';
 import type { BookingDockItem, FloatingDockProps } from './dock.types';
@@ -77,11 +77,13 @@ export function BookingFloatingDock({
         desktopClassName,
         mobileClassName
       )}
-      style={{
-        ...getContainerStyles(isMobile),
-        // Adaptive alignment
-        alignItems: isMobile ? 'center' : 'end',
-      }}
+      style={
+        {
+          ...getContainerStyles(isMobile),
+          // Adaptive alignment
+          alignItems: isMobile ? 'center' : 'end',
+        } as any
+      }
       role='tablist'
       aria-label='Booking type selection'
       initial={{ opacity: 0, y: 12, scale: 0.97 }}

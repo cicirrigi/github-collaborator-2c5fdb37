@@ -7,6 +7,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* MASTER unified card style */
+  .vl-card {
+    @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl
+    p-6 shadow-[0_12px_40px_rgba(0,0,0,0.45)];
+  }
+
+  /* Fix equal height grid */
+  .vl-equal-grid {
+    @apply grid items-stretch;
+  }
+
+  .vl-equal {
+    @apply flex flex-col h-full;
+  }
+
+  /* MOBILE SIMETRIE PERFECTĂ */
+  @media (max-width: 768px) {
+    .vl-card {
+      min-height: 180px;
+    }
+  }
+}
+
 /* Fix browser defaults DOAR pentru auth inputs, NU pentru buttons */
 input[type='text']:not([class*='focus:ring']),
 input[type='email']:not([class*='focus:ring']),

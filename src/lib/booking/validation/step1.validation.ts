@@ -7,10 +7,8 @@ import { getBookingRule, type BookingType, type Step1FieldId } from '../booking-
 export type Step1ErrorCode =
   | 'MISSING_PICKUP'
   | 'MISSING_DROPOFF'
-  | 'MISSING_PICKUP_DATE'
-  | 'MISSING_RETURN_DATE'
-  | 'MISSING_PICKUP_TIME'
-  | 'MISSING_RETURN_TIME'
+  | 'MISSING_PICKUP_DATETIME'
+  | 'MISSING_RETURN_DATETIME'
   | 'MISSING_PASSENGERS'
   | 'MISSING_LUGGAGE'
   | 'MISSING_FLIGHT_PICKUP'
@@ -39,10 +37,8 @@ export interface Step1ValidationResult {
 const FIELD_LABELS: Record<Step1FieldId, string> = {
   pickup: 'Pickup location',
   dropoff: 'Drop-off location',
-  pickupDate: 'Pickup date',
-  returnDate: 'Return date',
-  pickupTime: 'Pickup time',
-  returnTime: 'Return time',
+  pickupDateTime: 'Pickup date & time',
+  returnDateTime: 'Return date & time',
   passengers: 'Number of passengers',
   luggage: 'Number of luggage',
   flightNumberPickup: 'Pickup flight number',
@@ -57,10 +53,8 @@ const FIELD_LABELS: Record<Step1FieldId, string> = {
 const FIELD_ERROR_CODE_MAP: Record<Step1FieldId, Step1ErrorCode> = {
   pickup: 'MISSING_PICKUP',
   dropoff: 'MISSING_DROPOFF',
-  pickupDate: 'MISSING_PICKUP_DATE',
-  returnDate: 'MISSING_RETURN_DATE',
-  pickupTime: 'MISSING_PICKUP_TIME',
-  returnTime: 'MISSING_RETURN_TIME',
+  pickupDateTime: 'MISSING_PICKUP_DATETIME',
+  returnDateTime: 'MISSING_RETURN_DATETIME',
   passengers: 'MISSING_PASSENGERS',
   luggage: 'MISSING_LUGGAGE',
   flightNumberPickup: 'MISSING_FLIGHT_PICKUP',
@@ -76,10 +70,8 @@ const FIELD_ERROR_CODE_MAP: Record<Step1FieldId, Step1ErrorCode> = {
 const buildPresenceMap = (config: TripConfiguration): Record<Step1FieldId, boolean> => ({
   pickup: Boolean(config.pickup),
   dropoff: Boolean(config.dropoff),
-  pickupDate: Boolean(config.pickupDate),
-  returnDate: Boolean(config.returnDate),
-  pickupTime: Boolean(config.pickupTime),
-  returnTime: Boolean(config.returnTime),
+  pickupDateTime: Boolean(config.pickupDateTime),
+  returnDateTime: Boolean(config.returnDateTime),
   passengers: config.passengers > 0,
   luggage: config.luggage >= 0,
   flightNumberPickup: Boolean(config.flightNumberPickup?.trim()),

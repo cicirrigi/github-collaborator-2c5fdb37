@@ -6,5 +6,94 @@
 /* --- 📦 MODULAR IMPORTS --- */
 @import '../styles/base.css';
 @import '../styles/components.css';
+
 @import '../styles/animations.css';
 @import '../styles/utilities.css';
+
+/* ⭕ STEP CONTAINER */
+.vl-step-container {
+  position: relative;
+  padding: 32px;
+  border-radius: 32px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(40px);
+}
+
+/* 🟩 PREMIUM GRID */
+.vl-grid-premium {
+  display: grid;
+  gap: 26px;
+  grid-template-columns: 1fr;
+  align-items: stretch;
+  auto-rows: 1fr;
+}
+@media (min-width: 768px) {
+  .vl-grid-premium {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 🟥 CARD CONTAINER */
+.vl-card-flex {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 26px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.45);
+  transition: all 0.25s ease;
+}
+.vl-card-flex:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* INTERNAL */
+.vl-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+}
+
+.vl-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: white;
+}
+.vl-input:focus {
+  outline: none;
+  border-color: #f5d469;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* RETURN BOX */
+.vl-return-box {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 128, 255, 0.4);
+  background: rgba(0, 128, 255, 0.15);
+  color: #7dc8ff;
+  text-align: center;
+  font-size: 13px;
+}
+
+/* FOOTER HINT */
+.vl-hint-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  opacity: 0.7;
+}
+.vl-hint-value {
+  color: #f5d469;
+  font-weight: 600;
+}

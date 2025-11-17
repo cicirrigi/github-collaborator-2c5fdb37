@@ -17,7 +17,7 @@ export function BookingWizard() {
     <>
       {/* 🔹 BOOKING TYPE DOCK AFARĂ */}
       <div className='w-full flex justify-center py-6'>
-        <div className='w-full max-w-4xl'>
+        <div className='w-full max-w-5xl'>
           <ZustandBookingTypeDock />
         </div>
       </div>
@@ -26,7 +26,7 @@ export function BookingWizard() {
       <Container size='lg' className='flex justify-center'>
         <div
           className='
-            w-full max-w-[1200px]
+            w-full max-w-5xl
             bg-black/40 backdrop-blur-xl
             border border-white/10
             rounded-3xl shadow-[0_18px_60px_rgba(0,0,0,0.6)]

@@ -65,7 +65,6 @@ export type { GooglePlace, LocationPickerProps, LocationVariant } from './locati
 export { PinContainer, PinPerspective } from './pin-container';
 export type { PinContainerProps } from './pin-container';
 export { PinContainerDemo } from './pin-container-demo';
-export * from './travel-planner-pro';
 
 // Complex UI Components
 export * from './BiColorText';

@@ -1,20 +1,19 @@
 'use client';
 
-import Link from 'next/link';
 import {
-  Car,
+  Award,
   Calendar,
-  MapPin,
-  Settings,
+  Car,
   Grid,
-  Palette,
   Layout,
-  RefreshCw,
   Menu,
   MessageSquare,
-  Award,
+  Palette,
+  RefreshCw,
+  Settings,
   TestTube2,
 } from 'lucide-react';
+import Link from 'next/link';
 
 const demoCategories = [
   {
@@ -32,12 +31,6 @@ const demoCategories = [
         href: '/dev-demos/demo-booking-stepper',
         icon: Calendar,
         description: 'Demo stepper pentru booking',
-      },
-      {
-        name: 'Travel Pro',
-        href: '/dev-demos/demo-travel-pro',
-        icon: MapPin,
-        description: 'Demo travel planner pro',
       },
     ],
   },

@@ -125,28 +125,35 @@ export function DockButton({ item, mouseX, isMobile = false }: DockButtonProps) 
           isActive ? 'shadow-lg ring-2 ring-opacity-50' : 'shadow-md hover:shadow-lg'
         )}
         style={
-          {
-            // 🍏 Apple-style scale (only on desktop)
-            ...(isMobile ? {} : { scale }),
-            // 🧲 Lens effect - lateral movement (only on desktop)
-            ...(isMobile ? {} : { x }),
-
-            // 🎨 PROPER CSS Variables Usage
-            backgroundColor: isActive
-              ? `color-mix(in srgb, ${t.colors.active.bg} ${t.colors.active.bgAlpha * 100}%, transparent)`
-              : t.colors.item.bg,
-
-            borderColor: isActive
-              ? `color-mix(in srgb, ${t.colors.active.border} ${t.colors.active.borderAlpha * 100}%, transparent)`
-              : t.colors.item.border,
-
-            // VisionOS Chrome effects
-            backdropFilter: `blur(${t.effects.backdropBlur / 2}px)`,
-
-            boxShadow: isActive
-              ? `${t.effects.chromeHighlight}, ${t.effects.ambientGlow}, ${t.effects.elevatedShadow}`
-              : `${t.effects.chromeHighlight}, ${t.effects.floatingShadow}`,
-          } as React.CSSProperties
+          isMobile
+            ? {
+                // 🎨 CSS-only styles for mobile
+                backgroundColor: isActive
+                  ? `color-mix(in srgb, ${t.colors.active.bg} ${t.colors.active.bgAlpha * 100}%, transparent)`
+                  : t.colors.item.bg,
+                borderColor: isActive
+                  ? `color-mix(in srgb, ${t.colors.active.border} ${t.colors.active.borderAlpha * 100}%, transparent)`
+                  : t.colors.item.border,
+                backdropFilter: `blur(${t.effects.backdropBlur / 2}px)`,
+                boxShadow: isActive
+                  ? `${t.effects.chromeHighlight}, ${t.effects.ambientGlow}, ${t.effects.elevatedShadow}`
+                  : `${t.effects.chromeHighlight}, ${t.effects.floatingShadow}`,
+              }
+            : {
+                // 🍏 MotionStyle for desktop (includes scale, x)
+                scale,
+                x,
+                backgroundColor: isActive
+                  ? `color-mix(in srgb, ${t.colors.active.bg} ${t.colors.active.bgAlpha * 100}%, transparent)`
+                  : t.colors.item.bg,
+                borderColor: isActive
+                  ? `color-mix(in srgb, ${t.colors.active.border} ${t.colors.active.borderAlpha * 100}%, transparent)`
+                  : t.colors.item.border,
+                backdropFilter: `blur(${t.effects.backdropBlur / 2}px)`,
+                boxShadow: isActive
+                  ? `${t.effects.chromeHighlight}, ${t.effects.ambientGlow}, ${t.effects.elevatedShadow}`
+                  : `${t.effects.chromeHighlight}, ${t.effects.floatingShadow}`,
+              }
         }
       >
         {/* Tooltip */}
@@ -178,7 +185,7 @@ export function DockButton({ item, mouseX, isMobile = false }: DockButtonProps) 
         <motion.div
           style={
             isMobile
-              ? undefined
+              ? {}
               : {
                   scale: iconScale,
                 }

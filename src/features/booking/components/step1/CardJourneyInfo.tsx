@@ -10,21 +10,21 @@ export function CardJourneyInfo() {
   const { distanceKm, durationMinutes } = calculateEstimatedDistanceAndTime();
 
   return (
-    <div className='space-y-4'>
+    <motion.div
+      key={`${distanceKm}-${durationMinutes}`}
+      initial={{ opacity: 0.5 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className='vl-card-flex'
+    >
       <CardHeader icon={Route} title='Journey Summary' subtitle='Estimate based on route' />
-      <motion.div
-        key={`${distanceKm}-${durationMinutes}`}
-        initial={{ opacity: 0.5 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className='p-5 bg-white/5 rounded-2xl border border-white/10'
-      >
+      <div className='vl-card-inner'>
         <p className='text-white'>
           <span className='font-semibold'>{distanceKm} km</span> •{' '}
           <span className='font-semibold'>{durationMinutes} min</span>
         </p>
         <p className='text-white/50 text-sm'>Traffic: Conditional</p>
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
 }

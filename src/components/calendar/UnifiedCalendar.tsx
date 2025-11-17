@@ -49,7 +49,7 @@ export function UnifiedCalendar({
   // 🔳 INLINE CALENDAR
   if (isInline) {
     return (
-      <div className={`w-full rounded-xl border border-white/10 p-2 bg-black/20`}>
+      <div className='transform scale-110 origin-center'>
         {isRange ? (
           <DatePicker
             selectsRange
@@ -59,7 +59,7 @@ export function UnifiedCalendar({
             inline
             minDate={minDate || new Date()}
             dateFormat='MMM d, yyyy'
-            calendarClassName={calendarClassName}
+            calendarClassName={`${calendarClassName} !w-full`}
             calendarStartDay={1}
           />
         ) : (
@@ -71,7 +71,7 @@ export function UnifiedCalendar({
             showTimeSelect={hasTime}
             timeIntervals={15}
             dateFormat='MMM d, yyyy HH:mm'
-            calendarClassName={calendarClassName}
+            calendarClassName={`${calendarClassName} !w-full`}
             calendarStartDay={1}
           />
         )}

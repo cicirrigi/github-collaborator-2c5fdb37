@@ -26,12 +26,9 @@ export function Step1BookingDetails() {
   };
 
   return (
-    <div className='relative w-full max-w-[1000px] mx-auto rounded-2xl border border-white/10 bg-black/30 backdrop-blur-2xl shadow-[0_12px_48px_rgba(0,0,0,0.75)] p-6 overflow-hidden'>
-      {/* SMOKE BLEND */}
-      <div className='absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(0,0,0,0.7),rgba(0,0,0,0.45),transparent_70%)] blur-[40px]' />
-
-      {/* STEPPER ÎNĂUNTRU */}
-      <div className='flex justify-center mb-12 relative z-10'>
+    <div className='vl-step-container'>
+      {/* 🔹 STEPPER */}
+      <div className='flex justify-center mb-12'>
         <div className='w-full max-w-lg'>
           <BookingStepper
             steps={STEP1_STEPS}
@@ -48,20 +45,13 @@ export function Step1BookingDetails() {
         </div>
       </div>
 
-      {/* ULTRA COMPACT 2-COLUMN GRID */}
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 relative z-0'>
-        {/* LEFT COL */}
-        <div className='space-y-6'>
-          <CardPickupDropoff />
-          <CardJourneyInfo />
-          <CardFlightNumber />
-        </div>
-
-        {/* RIGHT COL */}
-        <div className='space-y-6'>
-          <CardDateTime />
-          <CardPassengersLuggage />
-        </div>
+      {/* 🔹 PREMIUM GRID */}
+      <div className='vl-grid-premium'>
+        <CardPickupDropoff />
+        <CardDateTime />
+        <CardJourneyInfo />
+        <CardPassengersLuggage />
+        <CardFlightNumber />
       </div>
     </div>
   );

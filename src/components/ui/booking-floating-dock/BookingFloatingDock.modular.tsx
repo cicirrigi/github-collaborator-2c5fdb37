@@ -1,6 +1,6 @@
 'use client';
 
-import type { BookingDockItem, FloatingDockProps } from './dock.types';
+import type { FloatingDockProps } from './dock.types';
 import { FloatingDockInline } from './FloatingDockInline';
 import { FloatingDockMobile } from './FloatingDockMobile';
 
@@ -15,8 +15,8 @@ export const BookingFloatingDock = ({
 }: FloatingDockProps) => {
   return (
     <>
-      <FloatingDockInline items={items} className={desktopClassName} />
-      <FloatingDockMobile items={items} className={mobileClassName} />
+      <FloatingDockInline items={items} className={desktopClassName || ''} />
+      <FloatingDockMobile items={items} className={mobileClassName || ''} />
     </>
   );
 };

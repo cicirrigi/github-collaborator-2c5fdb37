@@ -14,10 +14,8 @@ export type Step1FieldId = keyof Pick<
   TripConfiguration,
   | 'pickup'
   | 'dropoff'
-  | 'pickupDate'
-  | 'returnDate'
-  | 'pickupTime'
-  | 'returnTime'
+  | 'pickupDateTime'
+  | 'returnDateTime'
   | 'dailyRange'
   | 'passengers'
   | 'luggage'
@@ -54,7 +52,7 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     dropoffOptional: false,
     showPassengers: true,
     showFlightNumbers: true, // doar pickup flight
-    requiredFields: ['pickup', 'dropoff', 'pickupDate', 'pickupTime', 'passengers'],
+    requiredFields: ['pickup', 'dropoff', 'pickupDateTime', 'passengers'],
   },
   return: {
     showReturn: true,
@@ -64,15 +62,7 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     dropoffOptional: false,
     showPassengers: true,
     showFlightNumbers: true, // pickup + return flights
-    requiredFields: [
-      'pickup',
-      'dropoff',
-      'pickupDate',
-      'returnDate',
-      'pickupTime',
-      'returnTime',
-      'passengers',
-    ],
+    requiredFields: ['pickup', 'dropoff', 'pickupDateTime', 'returnDateTime', 'passengers'],
   },
   hourly: {
     showReturn: false,
@@ -82,7 +72,7 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     dropoffOptional: true,
     showPassengers: true,
     showFlightNumbers: false,
-    requiredFields: ['pickup', 'pickupDate', 'pickupTime', 'hoursRequested', 'passengers'],
+    requiredFields: ['pickup', 'pickupDateTime', 'hoursRequested', 'passengers'],
   },
   daily: {
     showReturn: false,
@@ -92,7 +82,7 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     dropoffOptional: false,
     showPassengers: true,
     showFlightNumbers: false, // Daily service usually doesn't need flights
-    requiredFields: ['pickup', 'dropoff', 'pickupDate', 'passengers'], // Uses dailyRange instead of specific times
+    requiredFields: ['pickup', 'dropoff', 'dailyRange', 'passengers'], // Uses dailyRange for date range
   },
   fleet: {
     showReturn: false,
@@ -102,7 +92,7 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     dropoffOptional: false,
     showPassengers: true,
     showFlightNumbers: true, // de obicei doar pickup flight
-    requiredFields: ['pickup', 'dropoff', 'pickupDate', 'pickupTime', 'passengers'],
+    requiredFields: ['pickup', 'dropoff', 'pickupDateTime', 'passengers'],
   },
   bespoke: {
     showReturn: false, // Flexible - can be configured per booking
@@ -112,7 +102,7 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     dropoffOptional: true, // Bespoke is highly customizable
     showPassengers: true,
     showFlightNumbers: true, // Often for VIP/special events
-    requiredFields: ['pickup', 'pickupDate', 'passengers'], // Minimal requirements for custom service
+    requiredFields: ['pickup', 'pickupDateTime', 'passengers'], // Minimal requirements for custom service
   },
 } as const;
 
