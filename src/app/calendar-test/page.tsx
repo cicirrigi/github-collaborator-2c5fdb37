@@ -14,6 +14,7 @@ export default function BookingTestPage() {
         <div className='absolute bottom-20 right-1/4 w-36 h-36 bg-zinc-100/8 rounded-full blur-xl'></div>
         <div className='absolute top-40 left-1/2 w-28 h-28 bg-gray-100/10 rounded-full blur-lg'></div>
       </div>
+
       <BookingWizard />
     </div>
   );
