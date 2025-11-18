@@ -2,11 +2,9 @@
 
 import { BookingStepper } from '@/components/ui/booking-stepper/BookingStepper';
 import { useBookingState } from '@/hooks/useBookingState';
-import { CardDateTime } from '../../components/step1/CardDateTime';
-import { CardFlightNumber } from '../../components/step1/CardFlightNumber';
-import { CardJourneyInfo } from '../../components/step1/CardJourneyInfo';
-import { CardPassengersLuggage } from '../../components/step1/CardPassengersLuggage';
-import { CardPickupDropoff } from '../../components/step1/CardPickupDropoff';
+import { CardAdditionalStops } from '../../components/step1/CardAdditionalStops';
+import { SimpleTestCard } from '../../components/step1/SimpleTestCard';
+import { WeatherWidget } from '../../components/step1/WeatherWidget';
 
 // STEPS PENTRU STEPPER
 const STEP1_STEPS = [
@@ -47,11 +45,9 @@ export function Step1BookingDetails() {
 
       {/* 🔹 PREMIUM GRID */}
       <div className='vl-grid-premium'>
-        <CardPickupDropoff />
-        <CardDateTime />
-        <CardJourneyInfo />
-        <CardPassengersLuggage />
-        <CardFlightNumber />
+        <SimpleTestCard />
+        <CardAdditionalStops />
+        <WeatherWidget />
       </div>
     </div>
   );

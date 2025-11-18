@@ -8,7 +8,7 @@ export function CardFlightNumber() {
   const { tripConfiguration, setFlightNumberPickup } = useBookingState();
 
   return (
-    <div className='vl-card-flex'>
+    <div className='vl-card-flex' style={{ height: 'auto' }}>
       <CardHeader icon={Plane} title='Flight Number' subtitle='Optional for airport pickups' />
       <div className='vl-card-inner'>
         <input

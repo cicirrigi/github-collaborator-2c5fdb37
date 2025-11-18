@@ -5,8 +5,6 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { DatePillButton } from '../../features/booking/components/DatePillButton';
-
 interface UnifiedCalendarProps {
   bookingType: 'oneway' | 'return' | 'hourly' | 'daily' | 'fleet' | 'bespoke';
   date?: Date | null;
@@ -83,12 +81,19 @@ export function UnifiedCalendar({
   if (isModal) {
     return (
       <>
-        <DatePillButton
-          placeholder={placeholder || 'Select Date & Time'}
-          value={date ? date.toLocaleString('en-GB') : ''}
-          icon={<Calendar className='h-5 w-5' />}
-          onClick={() => setCalendarOpen(true)}
-        />
+        <div className='relative'>
+          <div className='absolute left-3 top-1/2 -translate-y-1/2 z-10'>
+            <Calendar className='w-4 h-4 text-white/60' />
+          </div>
+          <input
+            type='text'
+            readOnly
+            value={date ? date.toLocaleString('en-GB') : ''}
+            placeholder={placeholder || 'Select Date & Time'}
+            onClick={() => setCalendarOpen(true)}
+            className='vl-input pl-10 cursor-pointer'
+          />
+        </div>
 
         {calendarOpen && (
           <>

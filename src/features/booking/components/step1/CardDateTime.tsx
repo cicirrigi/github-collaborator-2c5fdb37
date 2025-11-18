@@ -23,23 +23,39 @@ export function CardDateTime() {
         )}
 
         {bookingType === 'return' && (
-          <div className='space-y-6'>
-            <UnifiedCalendar
-              bookingType='return'
-              modal
-              date={tripConfiguration.pickupDateTime}
-              onChangeDate={setPickupDateTime}
-              placeholder='Select Departure'
-            />
+          <div className='space-y-4'>
+            <div className='space-y-3'>
+              <div className='flex items-center gap-2'>
+                <div className='p-1.5 bg-green-500/10 rounded-lg'>
+                  <Calendar className='w-4 h-4 text-green-400' />
+                </div>
+                <span className='text-white font-medium text-sm'>Departure Date & Time</span>
+              </div>
+              <UnifiedCalendar
+                bookingType='return'
+                modal
+                date={tripConfiguration.pickupDateTime}
+                onChangeDate={setPickupDateTime}
+                placeholder='Select departure date & time...'
+              />
+            </div>
 
-            <UnifiedCalendar
-              bookingType='return'
-              modal
-              date={tripConfiguration.returnDateTime}
-              onChangeDate={setReturnDateTime}
-              minDate={tripConfiguration.pickupDateTime ?? new Date()}
-              placeholder='Select Return'
-            />
+            <div className='space-y-3'>
+              <div className='flex items-center gap-2'>
+                <div className='p-1.5 bg-red-500/10 rounded-lg'>
+                  <Calendar className='w-4 h-4 text-red-400' />
+                </div>
+                <span className='text-white font-medium text-sm'>Return Date & Time</span>
+              </div>
+              <UnifiedCalendar
+                bookingType='return'
+                modal
+                date={tripConfiguration.returnDateTime}
+                onChangeDate={setReturnDateTime}
+                minDate={tripConfiguration.pickupDateTime ?? new Date()}
+                placeholder='Select return date & time...'
+              />
+            </div>
           </div>
         )}
 

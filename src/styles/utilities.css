@@ -3,6 +3,30 @@
  * Custom utilities, helper classes, performance optimizations
  */
 
+/* --- 🎴 VANTAGE LANE CARD SYSTEM --- */
+
+/* MASTER unified card style */
+.vl-card {
+  @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl
+  p-6 shadow-[0_12px_40px_rgba(0,0,0,0.45)];
+}
+
+/* Fix equal height grid */
+.vl-equal-grid {
+  @apply grid items-stretch;
+}
+
+.vl-equal {
+  @apply flex flex-col h-full;
+}
+
+/* MOBILE SIMETRIE PERFECTĂ */
+@media (max-width: 768px) {
+  .vl-card {
+    min-height: 180px;
+  }
+}
+
 /* --- 🎨 GRADIENT UTILITIES --- */
 
 .gradient-brand {
