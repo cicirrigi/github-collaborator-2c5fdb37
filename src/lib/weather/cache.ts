@@ -1,33 +1,31 @@
 export class WeatherCache {
   private ttl: number;
-  private prefix = 'vl_cache_';
+  private keyPrefix = 'vl_weather_';
 
   constructor(ttlMs: number) {
     this.ttl = ttlMs;
   }
 
-  private isClient() {
+  private isClient(): boolean {
     return typeof window !== 'undefined';
   }
 
-  private hasConsent() {
+  private hasConsent(): boolean {
     return this.isClient() && localStorage.getItem('vl_location_consent') === 'true';
   }
 
-  private isExpired(exp: number) {
-    return Date.now() > exp;
-  }
-
+  /** GET */
   get<T>(key: string): T | null {
     if (!this.isClient()) return null;
 
     try {
-      const raw = localStorage.getItem(this.prefix + key);
+      const raw = localStorage.getItem(this.keyPrefix + key);
       if (!raw) return null;
 
       const entry = JSON.parse(raw);
-      if (this.isExpired(entry.expires)) {
-        localStorage.removeItem(this.prefix + key);
+
+      if (Date.now() > entry.expires) {
+        localStorage.removeItem(this.keyPrefix + key);
         return null;
       }
 
@@ -37,26 +35,32 @@ export class WeatherCache {
     }
   }
 
+  /** SET */
   set<T>(key: string, value: T) {
     if (!this.isClient()) return;
 
-    // GDPR: Only cache location if user consented
+    // Location data requires user consent (GDPR)
     if (key.includes('location') && !this.hasConsent()) {
+      // eslint-disable-next-line no-console
+      console.warn('⚠ Location caching blocked (no GDPR consent)');
       return;
     }
 
-    const entry = {
-      value: key.includes('location') ? { ...value, timestamp: Date.now() } : value,
-      expires: Date.now() + this.ttl,
-    };
-
     try {
-      localStorage.setItem(this.prefix + key, JSON.stringify(entry));
+      const entry = {
+        value,
+        expires: Date.now() + this.ttl,
+      };
+
+      localStorage.setItem(this.keyPrefix + key, JSON.stringify(entry));
     } catch {}
   }
 
+  /** CLEAR */
   clear(key: string) {
     if (!this.isClient()) return;
-    localStorage.removeItem(this.prefix + key);
+    try {
+      localStorage.removeItem(this.keyPrefix + key);
+    } catch {}
   }
 }

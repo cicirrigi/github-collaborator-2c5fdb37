@@ -9,9 +9,11 @@ interface LocationStore {
   location: LocationData | null;
   loading: boolean;
   error: string | null;
+  canRequestPrecise: boolean;
+
   _cache: WeatherCache;
   _rate: RateLimiter;
-  canRequestPrecise: boolean;
+
   autoDetect: () => Promise<void>;
   requestGPS: () => Promise<void>;
 }
@@ -20,33 +22,31 @@ export const useLocationStore = create<LocationStore>((set, get) => ({
   location: null,
   loading: false,
   error: null,
-
-  _cache: new WeatherCache(5 * 60 * 1000), // 5 min
-  _rate: new RateLimiter(),
-
   canRequestPrecise: true,
 
-  /** AUTO-DETECT (IP) */
+  _cache: new WeatherCache(5 * 60 * 1000), // 5 min → perfect for booking
+  _rate: new RateLimiter(),
+
+  /** IP AUTO-DETECT */
   async autoDetect() {
     const { _cache, _rate } = get();
 
-    // Rate limit
     if (!_rate.canAutoDetect()) return;
 
-    // 1. Try IP cache
-    const cached = _cache.get('location_ip') as LocationData;
+    // Check cache
+    const cached = _cache.get<LocationData>('location_ip');
     if (cached) {
       set({ location: cached });
       return;
     }
 
-    set({ loading: true });
+    set({ loading: true, error: null });
 
     try {
       const res = await fetch('/api/location/detect');
       const loc = await res.json();
 
-      if (loc.source === 'ip') {
+      if (loc?.lat && loc?.lng && loc?.source === 'ip') {
         _cache.set('location_ip', loc);
       }
 
@@ -61,13 +61,14 @@ export const useLocationStore = create<LocationStore>((set, get) => ({
           lng: -0.1278,
           source: 'fallback',
         },
+        error: null,
       });
     } finally {
       set({ loading: false });
     }
   },
 
-  /** PRECISE LOCATION (GPS) */
+  /** GPS */
   async requestGPS() {
     const { _rate } = get();
 
@@ -76,17 +77,23 @@ export const useLocationStore = create<LocationStore>((set, get) => ({
       return;
     }
 
-    set({ loading: true });
+    set({ loading: true, error: null });
 
     const pos = await new Promise<GeolocationPosition | null>(resolve => {
-      navigator.geolocation?.getCurrentPosition(resolve, () => resolve(null), {
-        enableHighAccuracy: true,
-        timeout: 10000,
-      });
+      navigator.geolocation?.getCurrentPosition(
+        p => resolve(p),
+        () => resolve(null),
+        { enableHighAccuracy: true, timeout: 15000 }
+      );
     });
 
     if (!pos) {
-      set({ loading: false, error: 'GPS denied' });
+      const insecure = location.protocol === 'http:' && !location.hostname.includes('localhost');
+
+      set({
+        error: insecure ? 'GPS requires HTTPS or localhost' : 'GPS unavailable',
+        loading: false,
+      });
       return;
     }
 
@@ -104,7 +111,7 @@ export const useLocationStore = create<LocationStore>((set, get) => ({
         source: 'gps',
       };
 
-      set({ location: loc });
+      set({ location: loc, error: null });
     } catch {
       set({
         location: {

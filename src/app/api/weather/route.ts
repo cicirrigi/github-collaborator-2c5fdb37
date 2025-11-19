@@ -3,6 +3,39 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+// Google API response interfaces (minimal typing for external APIs)
+interface GoogleForecastDay {
+  displayDate: { year: number; month: number; day: number };
+  minTemperature: { degrees: number };
+  maxTemperature: { degrees: number };
+  daytimeForecast: {
+    weatherCondition: { description: { text: string }; iconBaseUri: string };
+    relativeHumidity: number;
+    precipitation?: { probability?: { percent: number } };
+    wind?: { speed?: { value: number } };
+  };
+  nighttimeForecast: {
+    weatherCondition: { description: { text: string }; iconBaseUri: string };
+    relativeHumidity: number;
+    precipitation?: { probability?: { percent: number } };
+    wind?: { speed?: { value: number } };
+  };
+}
+
+interface GoogleAlert {
+  alertId: string;
+  alertTitle?: { text: string };
+  description?: string;
+  eventType: string;
+  severity: string;
+  certainty: string;
+  urgency: string;
+  areaName: string;
+  startTime: string;
+  expirationTime?: string;
+  dataSource: { name: string; authorityUri: string };
+}
+
 export async function GET(req: NextRequest) {
   try {
     const lat = req.nextUrl.searchParams.get('lat');
@@ -12,33 +45,29 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Missing ?lat= & ?lng=' }, { status: 400 });
     }
 
+    const KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
     const latNum = Number(lat);
     const lngNum = Number(lng);
 
-    if (isNaN(latNum) || isNaN(lngNum)) {
-      return NextResponse.json({ error: 'Invalid coordinates' }, { status: 400 });
-    }
-
-    // ---- CALL GOOGLE WEATHER API DIRECTLY ----
-    const KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
-
     // ---------- CURRENT ----------
-    const currentUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${KEY}&location.latitude=${latNum}&location.longitude=${lngNum}`;
-    const currentRes = await fetch(currentUrl);
+    const currentURL =
+      `https://weather.googleapis.com/v1/currentConditions:lookup` +
+      `?key=${KEY}&location.latitude=${latNum}&location.longitude=${lngNum}`;
 
-    if (!currentRes.ok) {
-      throw new Error(`Google Weather API failed: ${currentRes.status}`);
-    }
-
+    const currentRes = await fetch(currentURL);
+    if (!currentRes.ok) throw new Error(`Current failed: ${currentRes.status}`);
     const current = await currentRes.json();
 
     // ---------- FORECAST ----------
-    const forecastUrl = `https://weather.googleapis.com/v1/forecast/days:lookup?key=${KEY}&location.latitude=${latNum}&location.longitude=${lngNum}&days=5`;
-    const forecastRes = await fetch(forecastUrl);
+    const forecastURL =
+      `https://weather.googleapis.com/v1/forecast/days:lookup` +
+      `?key=${KEY}&location.latitude=${latNum}&location.longitude=${lngNum}&days=5`;
+
+    const forecastRes = await fetch(forecastURL);
     const forecastJson = await forecastRes.json();
 
     const forecast: ForecastDay[] =
-      forecastJson.forecastDays?.map((d: any) => ({
+      forecastJson?.forecastDays?.map((d: GoogleForecastDay) => ({
         date: `${d.displayDate.year}-${d.displayDate.month}-${d.displayDate.day}`,
         minTemp: d.minTemperature.degrees,
         maxTemp: d.maxTemperature.degrees,
@@ -59,12 +88,15 @@ export async function GET(req: NextRequest) {
       })) ?? [];
 
     // ---------- ALERTS ----------
-    const alertsUrl = `https://weather.googleapis.com/v1/publicAlerts:lookup?key=${KEY}&location.latitude=${latNum}&location.longitude=${lngNum}`;
-    const alertsRes = await fetch(alertsUrl);
+    const alertsURL =
+      `https://weather.googleapis.com/v1/publicAlerts:lookup` +
+      `?key=${KEY}&location.latitude=${latNum}&location.longitude=${lngNum}`;
+
+    const alertsRes = await fetch(alertsURL);
     const alertsJson = await alertsRes.json();
 
     const alerts: WeatherAlert[] =
-      alertsJson.weatherAlerts?.map((a: any) => ({
+      alertsJson.weatherAlerts?.map((a: GoogleAlert) => ({
         id: a.alertId,
         title: a.alertTitle?.text,
         description: a.description,
@@ -78,7 +110,8 @@ export async function GET(req: NextRequest) {
         dataSource: a.dataSource,
       })) ?? [];
 
-    const data: WeatherBundle = {
+    // ---------- BUNDLE ----------
+    const bundle: WeatherBundle = {
       location: { lat: latNum, lng: lngNum },
       current: {
         currentTime: current.currentTime,
@@ -104,11 +137,13 @@ export async function GET(req: NextRequest) {
       alerts,
     };
 
-    return NextResponse.json(data, { status: 200 });
+    return NextResponse.json(bundle);
   } catch (err: unknown) {
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Weather API failed', details: errorMessage },
+      {
+        error: 'Weather API failed',
+        details: err instanceof Error ? err.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }

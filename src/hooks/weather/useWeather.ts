@@ -20,18 +20,22 @@ export function useWeather(): UseWeatherReturn {
   const loading = locLoading || wxLoading;
   const error = locError || wxError;
 
-  // First load → auto-detect
+  // Auto detect IP on first mount
   useEffect(() => {
-    if (!location) autoDetect();
-  }, [autoDetect, location]);
+    if (!location && !locLoading) {
+      autoDetect();
+    }
+  }, [location, locLoading, autoDetect]);
 
-  // Load weather when location updates
+  // Load weather whenever location is updated
   useEffect(() => {
     if (location) load(location);
   }, [location, load]);
 
-  const refreshWeather = useCallback(async () => {
-    if (location) await refresh(location);
+  // Refresh wrapper
+  const doRefresh = useCallback(async () => {
+    if (!location) return;
+    await refresh(location);
   }, [location, refresh]);
 
   return {
@@ -42,6 +46,6 @@ export function useWeather(): UseWeatherReturn {
     autoDetect,
     requestPreciseLocation: requestGPS,
     canRequestPrecise,
-    refresh: refreshWeather,
+    refresh: doRefresh,
   };
 }

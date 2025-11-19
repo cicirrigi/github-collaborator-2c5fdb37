@@ -3,71 +3,54 @@ import { NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  // Try multiple IP services for better reliability
-  const ipServices = [
-    'https://ipapi.co/json/',
-    'https://ipinfo.io/json',
-    // Note: ipify.org only returns IP, not location data
-  ];
+  const services = ['https://ipapi.co/json/', 'https://ipinfo.io/json'];
 
-  for (const serviceUrl of ipServices) {
+  for (const url of services) {
     try {
-      const res = await fetch(serviceUrl, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; LocationBot/1.0)',
-        },
+      const res = await fetch(url, {
+        headers: { 'User-Agent': 'VantageLaneBot/1.0' },
       });
 
-      if (!res.ok) {
-        continue;
-      }
+      if (!res.ok) continue;
 
       const data = await res.json();
 
-      // Parse different API responses
-      let city = 'Unknown';
-      let country = 'Unknown';
+      let city = '';
+      let country = '';
       let lat = 0;
       let lng = 0;
 
-      if (serviceUrl.includes('ipapi.co')) {
-        city = data.city || 'Unknown';
-        country = data.country_name || 'Unknown';
-        lat = data.latitude || 0;
-        lng = data.longitude || 0;
-      } else if (serviceUrl.includes('ipinfo.io')) {
-        const [latStr, lngStr] = (data.loc || '0,0').split(',');
-        city = data.city || 'Unknown';
-        country = data.country || 'Unknown';
-        lat = parseFloat(latStr) || 0;
-        lng = parseFloat(lngStr) || 0;
+      if (url.includes('ipapi')) {
+        city = data.city;
+        country = data.country_name;
+        lat = data.latitude;
+        lng = data.longitude;
+      } else if (url.includes('ipinfo')) {
+        city = data.city;
+        country = data.country;
+        const [la, lo] = data.loc.split(',');
+        lat = parseFloat(la);
+        lng = parseFloat(lo);
       }
 
-      // Validate we got real data
-      if (lat !== 0 && lng !== 0 && city !== 'Unknown') {
-        const location = {
+      if (lat && lng) {
+        return NextResponse.json({
           city,
           country,
           lat,
           lng,
-          source: 'ip' as const,
-        };
-
-        return NextResponse.json(location);
+          source: 'ip',
+        });
       }
-    } catch {
-      continue;
-    }
+    } catch {}
   }
 
-  // All services failed, return fallback
-  const fallback = {
+  // Fallback
+  return NextResponse.json({
     city: 'London',
     country: 'UK',
     lat: 51.5074,
     lng: -0.1278,
-    source: 'fallback' as const,
-  };
-
-  return NextResponse.json(fallback);
+    source: 'fallback',
+  });
 }

@@ -10,14 +10,7 @@
 @import '../styles/animations.css';
 @import '../styles/utilities.css';
 
-/* ⭕ STEP CONTAINER */
-.vl-step-container {
-  position: relative;
-  padding: 32px;
-  border-radius: 32px;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(40px);
-}
+/* ⭕ STEP CONTAINER - REMOVED FOR MOBILE OPTIMIZATION */
 
 /* 🟩 PREMIUM GRID */
 .vl-grid-premium {
@@ -26,6 +19,7 @@
   grid-template-columns: 1fr;
   align-items: start;
   grid-auto-rows: auto;
+  width: 100%;
 }
 @media (min-width: 768px) {
   .vl-grid-premium {
@@ -39,13 +33,19 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 26px;
+  width: 100%;
+  padding: 16px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(16px);
   box-shadow: 0 12px 38px rgba(0, 0, 0, 0.45);
   transition: all 0.25s ease;
+}
+@media (min-width: 768px) {
+  .vl-card-flex {
+    padding: 26px;
+  }
 }
 .vl-card-flex:hover {
   transform: translateY(-3px);

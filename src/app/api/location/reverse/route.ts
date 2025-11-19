@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     const lng = req.nextUrl.searchParams.get('lng');
 
     if (!lat || !lng) {
-      return NextResponse.json({ error: 'Missing lat/lng' }, { status: 400 });
+      return NextResponse.json({ error: 'Missing coordinates' }, { status: 400 });
     }
 
     const KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
@@ -17,35 +17,23 @@ export async function GET(req: NextRequest) {
     const res = await fetch(url);
     const json = await res.json();
 
-    const components = json.results?.[0]?.address_components ?? [];
+    if (!json.results?.length) {
+      throw new Error('No results');
+    }
 
     let city = 'Unknown';
     let country = 'Unknown';
 
-    for (const comp of components) {
+    for (const comp of json.results[0].address_components) {
       if (comp.types.includes('locality')) city = comp.long_name;
       if (comp.types.includes('country')) country = comp.long_name;
     }
 
-    return NextResponse.json({
-      city,
-      country,
-      lat: Number(lat),
-      lng: Number(lng),
-      source: 'gps',
-    });
-  } catch (err) {
-    console.error('Reverse geocoding failed:', err);
-
+    return NextResponse.json({ city, country });
+  } catch (err: unknown) {
     return NextResponse.json(
-      {
-        city: 'Unknown',
-        country: 'Unknown',
-        lat: Number(req.nextUrl.searchParams.get('lat')),
-        lng: Number(req.nextUrl.searchParams.get('lng')),
-        source: 'gps',
-      },
-      { status: 200 }
+      { error: 'Reverse failed', details: err instanceof Error ? err.message : 'Unknown error' },
+      { status: 500 }
     );
   }
 }

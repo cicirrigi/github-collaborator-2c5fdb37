@@ -16,21 +16,21 @@ export function BookingWizard() {
   return (
     <>
       {/* 🔹 BOOKING TYPE DOCK AFARĂ */}
-      <div className='w-full flex justify-center py-6'>
+      <div className='w-full flex justify-center py-3 sm:py-6 px-2 sm:px-4'>
         <div className='w-full max-w-5xl'>
           <ZustandBookingTypeDock />
         </div>
       </div>
 
       {/* 2️⃣ STEP 2 — LUXURY BOX */}
-      <Container size='lg' className='flex justify-center'>
+      <Container size='lg' className='flex justify-center !px-2 sm:!px-6'>
         <div
           className='
-            w-full max-w-5xl
+            w-full sm:max-w-5xl
             bg-black/40 backdrop-blur-xl
             border border-white/10
-            rounded-3xl shadow-[0_18px_60px_rgba(0,0,0,0.6)]
-            p-8 space-y-10
+            rounded-2xl sm:rounded-3xl shadow-[0_18px_60px_rgba(0,0,0,0.6)]
+            p-2 sm:p-8 space-y-4 sm:space-y-10
           '
         >
           {currentStep === 1 && <Step1BookingDetails />}

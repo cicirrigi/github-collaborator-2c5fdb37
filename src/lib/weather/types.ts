@@ -1,3 +1,4 @@
+// ---------- LOCATION ----------
 export interface LocationData {
   city: string;
   country: string;
@@ -56,13 +57,15 @@ export interface WeatherAlert {
   dataSource: { name: string; authorityUri: string };
 }
 
-// ---------- BUNDLE ----------
+// ---------- COMPLETE BUNDLE ----------
 export interface WeatherBundle {
   location: { lat: number; lng: number };
   current: CurrentWeather;
   forecast: ForecastDay[];
   alerts: WeatherAlert[];
 }
+
+// ---------- HOOK RETURN ----------
 
 export interface UseWeatherReturn {
   location: LocationData | null;

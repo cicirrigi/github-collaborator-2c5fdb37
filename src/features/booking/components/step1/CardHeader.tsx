@@ -1,26 +1,25 @@
-import type { LucideIcon } from 'lucide-react';
+'use client';
+
+import { LucideIcon } from 'lucide-react';
 
 export function CardHeader({
   icon: Icon,
   title,
   subtitle,
 }: {
-  icon: LucideIcon | string; // Acceptă emoji sau icon component
+  icon: LucideIcon;
   title: string;
-  subtitle: string;
+  subtitle?: string;
 }) {
   return (
-    <div className='flex items-center space-x-3 mb-2'>
-      <div className='w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center'>
-        {typeof Icon === 'string' ? (
-          <span className='text-xl'>{Icon}</span>
-        ) : (
-          <Icon className='w-6 h-6 text-white' />
-        )}
+    <div className='flex items-center gap-3 mb-4'>
+      <div className='w-8 h-8 rounded-xl bg-white/5 border border-amber-200/20 flex items-center justify-center'>
+        <Icon className='w-4 h-4 text-amber-200/80' />
       </div>
+
       <div>
-        <h3 className='text-xl font-semibold text-white'>{title}</h3>
-        <p className='text-sm text-white/60'>{subtitle}</p>
+        <div className='text-amber-50 text-sm font-medium tracking-wide'>{title}</div>
+        {subtitle && <div className='text-amber-200/50 text-xs font-light'>{subtitle}</div>}
       </div>
     </div>
   );

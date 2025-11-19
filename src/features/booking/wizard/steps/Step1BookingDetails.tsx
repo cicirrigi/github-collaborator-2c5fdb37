@@ -24,7 +24,7 @@ export function Step1BookingDetails() {
   };
 
   return (
-    <div className='vl-step-container'>
+    <>
       {/* 🔹 STEPPER */}
       <div className='flex justify-center mb-12'>
         <div className='w-full max-w-lg'>
@@ -49,6 +49,6 @@ export function Step1BookingDetails() {
         <CardAdditionalStops />
         <WeatherWidget />
       </div>
-    </div>
+    </>
   );
 }

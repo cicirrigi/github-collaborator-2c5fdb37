@@ -9,7 +9,9 @@ interface WeatherStore {
   weather: WeatherBundle | null;
   loading: boolean;
   error: string | null;
+
   _cache: WeatherCache;
+
   load: (loc: LocationData) => Promise<void>;
   refresh: (loc: LocationData) => Promise<void>;
 }
@@ -19,25 +21,25 @@ export const useWeatherStore = create<WeatherStore>((set, get) => ({
   loading: false,
   error: null,
 
-  _cache: new WeatherCache(30 * 60 * 1000), // 30 min
+  _cache: new WeatherCache(30 * 60 * 1000), // 30 min cache
 
+  /** LOAD WEATHER */
   async load(loc: LocationData) {
     const { _cache } = get();
     const key = `weather_${loc.lat}_${loc.lng}`;
 
     set({ loading: true });
 
-    // Cache hit?
-    const cached = _cache.get(key) as WeatherBundle;
+    const cached = _cache.get<WeatherBundle>(key);
     if (cached) {
-      set({ weather: cached, loading: false });
+      set({ weather: cached, loading: false, error: null });
       return;
     }
 
     try {
       const data = await fetchFullWeather(loc.lat, loc.lng);
       _cache.set(key, data);
-      set({ weather: data });
+      set({ weather: data, error: null });
     } catch (err: unknown) {
       set({ error: err instanceof Error ? err.message : 'Weather fetch failed' });
     }
@@ -45,6 +47,7 @@ export const useWeatherStore = create<WeatherStore>((set, get) => ({
     set({ loading: false });
   },
 
+  /** REFRESH WEATHER */
   async refresh(loc: LocationData) {
     const key = `weather_${loc.lat}_${loc.lng}`;
     get()._cache.clear(key);
