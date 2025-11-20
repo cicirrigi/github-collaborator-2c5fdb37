@@ -12,6 +12,15 @@ const initialTripConfiguration: TripConfiguration = {
   dropoff: null,
   additionalStops: [],
 
+  returnPickup: null,
+  returnDropoff: null,
+  isDifferentReturnLocation: false,
+
+  pickupDate: null,
+  returnDate: null,
+  pickupTime: '',
+  returnTime: '',
+
   pickupDateTime: null,
   returnDateTime: null,
 
@@ -61,6 +70,31 @@ export const useBookingState = create<BookingState>((set, get) => ({
       tripConfiguration: {
         ...state.tripConfiguration,
         additionalStops: stops,
+      },
+    })),
+
+  // Return Trip Actions
+  setReturnPickup: (location: LocationData | null) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        returnPickup: location,
+      },
+    })),
+
+  setReturnDropoff: (location: LocationData | null) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        returnDropoff: location,
+      },
+    })),
+
+  setIsDifferentReturnLocation: (value: boolean) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        isDifferentReturnLocation: value,
       },
     })),
 

@@ -18,6 +18,17 @@ export interface TripConfiguration {
   dropoff: LocationData | null;
   additionalStops: LocationData[];
 
+  // Return Trip Locations
+  returnPickup: LocationData | null;
+  returnDropoff: LocationData | null;
+  isDifferentReturnLocation: boolean;
+
+  // Dates & Times (legacy format - keeping compatibility)
+  pickupDate: Date | null;
+  returnDate: Date | null;
+  pickupTime: string;
+  returnTime: string;
+
   // Dates & Times (unified)
   pickupDateTime: Date | null;
   returnDateTime: Date | null;
@@ -52,6 +63,11 @@ export interface BookingState {
   setPickup: (location: LocationData | null) => void;
   setDropoff: (location: LocationData | null) => void;
   setAdditionalStops: (stops: LocationData[]) => void;
+
+  // RETURN TRIP ACTIONS
+  setReturnPickup: (location: LocationData | null) => void;
+  setReturnDropoff: (location: LocationData | null) => void;
+  setIsDifferentReturnLocation: (value: boolean) => void;
 
   // DATE & TIME ACTIONS (simplified)
   setPickupDateTime: (date: Date | null) => void;

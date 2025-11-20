@@ -1,5 +1,10 @@
 import { create } from 'zustand';
-import type { BookingState, PickupDropoffField, StopPoint, TripConfiguration } from './types';
+import type {
+  BookingState,
+  PickupDropoffField,
+  StopPoint,
+  TripConfiguration,
+} from './booking.types';
 
 const initialConfig: TripConfiguration = {
   pickup: null,
@@ -7,11 +12,20 @@ const initialConfig: TripConfiguration = {
 
   additionalStops: [],
 
+  returnPickup: null,
+  returnDropoff: null,
+  isDifferentReturnLocation: false,
+
   pickupDate: null,
   returnDate: null,
 
   pickupTime: '',
   returnTime: '',
+
+  pickupDateTime: null,
+  returnDateTime: null,
+
+  dailyRange: [null, null],
 
   passengers: 1,
   luggage: 0,
@@ -58,6 +72,31 @@ export const createBookingStore = create<BookingState>((set, get) => ({
       tripConfiguration: {
         ...state.tripConfiguration,
         additionalStops: stops,
+      },
+    })),
+
+  // Return Trip Actions
+  setReturnPickup: (location: PickupDropoffField) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        returnPickup: location,
+      },
+    })),
+
+  setReturnDropoff: (location: PickupDropoffField) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        returnDropoff: location,
+      },
+    })),
+
+  setIsDifferentReturnLocation: (value: boolean) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        isDifferentReturnLocation: value,
       },
     })),
 

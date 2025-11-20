@@ -2,16 +2,21 @@
 
 import { useBookingState } from '@/hooks/useBookingState';
 import { Luggage, MapPin, Route, Users } from 'lucide-react';
-import { useState } from 'react';
 import { CalendarSection } from './CalendarSection';
 import { CardHeader } from './CardHeader';
 import { DropoffSection } from './sections/DropoffSection';
 import { PickupSection } from './sections/PickupSection';
 
 export function SimpleTestCard() {
-  const { tripConfiguration, bookingType, setPassengers, setLuggage } = useBookingState();
+  const {
+    tripConfiguration,
+    bookingType,
+    setPassengers,
+    setLuggage,
+    setIsDifferentReturnLocation,
+  } = useBookingState();
 
-  const [isDifferentReturnLocation, setIsDifferentReturnLocation] = useState(false);
+  const isDifferentReturnLocation = tripConfiguration.isDifferentReturnLocation;
 
   return (
     <div className='vl-card-flex col-span-1 lg:col-span-2'>
@@ -47,7 +52,7 @@ export function SimpleTestCard() {
                     </div>
                     <div className='flex-1 -mt-1'>
                       <div className='text-amber-200/70 text-xs font-light tracking-wider mb-2'>
-                        PICKUP LOCATION
+                        PICK-UP LOCATION
                       </div>
                       <PickupSection />
                     </div>
@@ -68,18 +73,48 @@ export function SimpleTestCard() {
                     </div>
                   </div>
 
+                  {/* Return Trip Info Display */}
+                  {bookingType === 'return' &&
+                    tripConfiguration.pickup &&
+                    tripConfiguration.dropoff && (
+                      <div className='flex items-start gap-4 mt-6'>
+                        <div className='flex flex-col items-center mt-7'>
+                          <div
+                            className='w-6 h-6 bg-gradient-to-br from-amber-300/20 to-amber-400/30 rounded-full border border-amber-300/40 flex items-center justify-center animate-pulse'
+                            style={{ animationDuration: '2s' }}
+                          >
+                            <Route className='w-3 h-3 text-amber-300 transform scale-x-[-1]' />
+                          </div>
+                        </div>
+                        <div className='flex-1 -mt-1'>
+                          <div className='text-amber-100 text-xs font-light tracking-wider mb-2'>
+                            RETURN TRIP
+                          </div>
+                          <div className='inline-block px-2 py-1 rounded-md bg-amber-100/10 border border-amber-300/30 text-amber-200/90 text-sm font-medium tracking-wide'>
+                            <span className='text-amber-100 font-semibold'>
+                              {tripConfiguration.dropoff.address}
+                            </span>{' '}
+                            <span className='text-amber-300 mx-1'>→</span>{' '}
+                            <span className='text-amber-100 font-semibold'>
+                              {tripConfiguration.pickup.address}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                   {/* Return Trip Options for bookingType='return' */}
                   {bookingType === 'return' && (
                     <div className='mt-6 pt-4 border-t border-amber-200/10'>
-                      <label className='flex items-center gap-2 cursor-pointer mb-4'>
+                      <label className='flex items-center gap-2 cursor-pointer mb-4 ml-1'>
                         <input
                           type='checkbox'
                           checked={isDifferentReturnLocation}
                           onChange={e => setIsDifferentReturnLocation(e.target.checked)}
-                          className='w-3 h-3 rounded border border-amber-200/40 bg-transparent checked:bg-amber-400 checked:border-amber-400 text-amber-400 focus:ring-1 focus:ring-amber-400/50'
+                          className='w-4 h-4 rounded border border-amber-200/40 bg-transparent checked:bg-amber-400 checked:border-amber-400 text-amber-400 focus:ring-1 focus:ring-amber-400/50'
                         />
                         <span className='text-xs text-amber-200/70 font-light'>
-                          Return from different location
+                          Return from different location?
                         </span>
                       </label>
 
@@ -95,7 +130,7 @@ export function SimpleTestCard() {
                             </div>
                             <div className='flex-1 -mt-1'>
                               <div className='text-amber-200/70 text-xs font-light tracking-wider mb-2'>
-                                RETURN PICKUP
+                                RETURN PICK-UP LOCATION
                               </div>
                               <div className='relative'>
                                 <div className='absolute left-3 top-1/2 -translate-y-1/2 z-10'>
@@ -119,7 +154,7 @@ export function SimpleTestCard() {
                             </div>
                             <div className='flex-1 -mt-1'>
                               <div className='text-amber-200/70 text-xs font-light tracking-wider mb-2'>
-                                RETURN DROPOFF
+                                RETURN DROP-OFF LOCATION
                               </div>
                               <div className='relative'>
                                 <div className='absolute left-3 top-1/2 -translate-y-1/2 z-10'>

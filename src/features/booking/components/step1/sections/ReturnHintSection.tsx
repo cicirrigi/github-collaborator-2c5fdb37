@@ -2,14 +2,17 @@
 
 import { useBookingState } from '@/hooks/useBookingState';
 import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowRightLeft } from 'lucide-react';
 import { usePickupDropoffLogic } from '../hooks/usePickupDropoffLogic';
 
 const Divider = () => <div className='border-t border-white/10'></div>;
 
 export function ReturnHintSection() {
   const { bookingType } = usePickupDropoffLogic();
-  const { calculateEstimatedDistanceAndTime } = useBookingState();
+  const { calculateEstimatedDistanceAndTime, tripConfiguration } = useBookingState();
   const { distanceKm, durationMinutes } = calculateEstimatedDistanceAndTime();
+
+  const { pickup, dropoff } = tripConfiguration;
 
   return (
     <>
@@ -23,7 +26,18 @@ export function ReturnHintSection() {
             transition={{ duration: 0.25 }}
           >
             <Divider />
-            <div className='vl-return-box'>Return trip auto-configured</div>
+            <div className='vl-return-box'>
+              {pickup && dropoff ? (
+                <div className='flex items-center gap-2 text-xs'>
+                  <ArrowRightLeft className='w-3 h-3' />
+                  <span>
+                    Return: {dropoff.address} → {pickup.address}
+                  </span>
+                </div>
+              ) : (
+                <span className='text-xs'>Return trip auto-configured</span>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
