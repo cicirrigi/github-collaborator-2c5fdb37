@@ -33,9 +33,7 @@ export function SimpleTestCard() {
             <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10'>
               <div className='flex items-center gap-2 mb-4'>
                 <Route className='w-4 h-4 text-amber-200/60' />
-                <span className='text-amber-100/80 text-sm font-light tracking-wider'>
-                  Trip Locations
-                </span>
+                <span className='text-white font-medium text-sm'>Travel Route</span>
               </div>
 
               <div className='space-y-6'>
@@ -51,7 +49,7 @@ export function SimpleTestCard() {
                       </div>
                     </div>
                     <div className='flex-1 -mt-1'>
-                      <div className='text-amber-200/70 text-xs font-light tracking-wider mb-2'>
+                      <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
                         PICK-UP LOCATION
                       </div>
                       <PickupSection />
@@ -66,7 +64,7 @@ export function SimpleTestCard() {
                       </div>
                     </div>
                     <div className='flex-1 -mt-1'>
-                      <div className='text-amber-200/70 text-xs font-light tracking-wider mb-2'>
+                      <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
                         DROP-OFF LOCATION
                       </div>
                       <DropoffSection />
@@ -98,6 +96,20 @@ export function SimpleTestCard() {
                             <span className='text-amber-100 font-semibold'>
                               {tripConfiguration.pickup.address}
                             </span>
+                            {tripConfiguration.returnDateTime && (
+                              <span className='text-amber-200/70 ml-2'>
+                                •{' '}
+                                {tripConfiguration.returnDateTime.toLocaleDateString('en-GB', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                })}{' '}
+                                at{' '}
+                                {tripConfiguration.returnDateTime.toLocaleTimeString('en-GB', {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                })}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -113,8 +125,8 @@ export function SimpleTestCard() {
                           onChange={e => setIsDifferentReturnLocation(e.target.checked)}
                           className='w-4 h-4 rounded border border-amber-200/40 bg-transparent checked:bg-amber-400 checked:border-amber-400 text-amber-400 focus:ring-1 focus:ring-amber-400/50'
                         />
-                        <span className='text-xs text-amber-200/70 font-light'>
-                          Return from different location?
+                        <span className='text-xs text-white font-light'>
+                          Different Return Pick-Up Location?
                         </span>
                       </label>
 
@@ -129,7 +141,7 @@ export function SimpleTestCard() {
                               </div>
                             </div>
                             <div className='flex-1 -mt-1'>
-                              <div className='text-amber-200/70 text-xs font-light tracking-wider mb-2'>
+                              <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
                                 RETURN PICK-UP LOCATION
                               </div>
                               <div className='relative'>
@@ -153,7 +165,7 @@ export function SimpleTestCard() {
                               </div>
                             </div>
                             <div className='flex-1 -mt-1'>
-                              <div className='text-amber-200/70 text-xs font-light tracking-wider mb-2'>
+                              <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
                                 RETURN DROP-OFF LOCATION
                               </div>
                               <div className='relative'>

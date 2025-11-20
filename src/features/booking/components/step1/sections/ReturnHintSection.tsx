@@ -12,7 +12,7 @@ export function ReturnHintSection() {
   const { calculateEstimatedDistanceAndTime, tripConfiguration } = useBookingState();
   const { distanceKm, durationMinutes } = calculateEstimatedDistanceAndTime();
 
-  const { pickup, dropoff } = tripConfiguration;
+  const { pickup, dropoff, returnDateTime } = tripConfiguration;
 
   return (
     <>
@@ -32,6 +32,20 @@ export function ReturnHintSection() {
                   <ArrowRightLeft className='w-3 h-3' />
                   <span>
                     Return: {dropoff.address} → {pickup.address}
+                    {returnDateTime && (
+                      <span className='text-amber-200/70 ml-2'>
+                        •{' '}
+                        {returnDateTime.toLocaleDateString('en-GB', {
+                          month: 'short',
+                          day: 'numeric',
+                        })}{' '}
+                        at{' '}
+                        {returnDateTime.toLocaleTimeString('en-GB', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    )}
                   </span>
                 </div>
               ) : (

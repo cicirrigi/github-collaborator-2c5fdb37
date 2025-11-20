@@ -8,7 +8,7 @@ import { ReturnHintSection } from './sections/ReturnHintSection';
 
 export function CardPickupDropoff() {
   return (
-    <BookingCard title='Trip Locations' subtitle='Configure pickup and destination' icon={MapPin}>
+    <BookingCard title='Travel Route' subtitle='Configure pickup and destination' icon={MapPin}>
       <PickupSection />
       <DropoffSection />
       <ReturnHintSection />

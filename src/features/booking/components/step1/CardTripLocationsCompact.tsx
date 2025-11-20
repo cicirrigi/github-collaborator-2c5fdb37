@@ -11,7 +11,7 @@ export function CardTripLocationsCompact() {
     <div className='vl-card-flex' style={{ height: 'auto' }}>
       <CardHeader
         icon={MapPin}
-        title='Trip Locations COMPACT'
+        title='Travel Route COMPACT'
         subtitle='Pickup & destination (compact)'
       />
       <div className='vl-card-inner'>

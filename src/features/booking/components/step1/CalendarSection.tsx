@@ -21,9 +21,7 @@ export function CalendarSection() {
       <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10'>
         <div className='flex items-center gap-2 mb-4'>
           <Calendar className='w-4 h-4 text-amber-200/60' />
-          <span className='text-amber-100/80 text-sm font-light tracking-wider'>
-            Select Date & Time
-          </span>
+          <span className='text-white font-medium text-sm'>Select Date & Time</span>
         </div>
         {bookingType === 'oneway' && (
           <UnifiedCalendar
@@ -36,10 +34,9 @@ export function CalendarSection() {
         {bookingType === 'return' && (
           <div className='space-y-4'>
             <div className='space-y-3'>
-              <div className='flex items-center gap-2'>
-                <Calendar className='w-4 h-4 text-amber-200/60' />
-                <span className='text-amber-100/80 text-sm font-light tracking-wider'>
-                  Departure
+              <div className='flex items-center'>
+                <span className='text-amber-200/80 text-xs font-medium tracking-wider'>
+                  DEPARTURE
                 </span>
               </div>
               <UnifiedCalendar
@@ -52,9 +49,8 @@ export function CalendarSection() {
               />
             </div>
             <div className='space-y-3'>
-              <div className='flex items-center gap-2'>
-                <Calendar className='w-4 h-4 text-amber-200/60' />
-                <span className='text-amber-100/80 text-sm font-light tracking-wider'>Return</span>
+              <div className='flex items-center'>
+                <span className='text-amber-200/80 text-xs font-medium tracking-wider'>RETURN</span>
               </div>
               <UnifiedCalendar
                 bookingType='return'
@@ -70,14 +66,12 @@ export function CalendarSection() {
             <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10'>
               <div className='flex items-center gap-2 mb-3'>
                 <Plane className='w-4 h-4 text-amber-200/60' />
-                <span className='text-amber-100/80 text-sm font-light tracking-wider'>
-                  Flight Numbers
-                </span>
+                <span className='text-white font-medium text-sm'>Flight Numbers</span>
               </div>
               <div className='space-y-3'>
                 {/* Departure Flight */}
                 <div>
-                  <label className='text-amber-200/70 text-xs font-light tracking-wider mb-1 block'>
+                  <label className='text-amber-200/80 text-xs font-medium tracking-wider mb-1 block'>
                     DEPARTURE FLIGHT
                   </label>
                   <input
@@ -90,7 +84,7 @@ export function CalendarSection() {
                 </div>
                 {/* Return Flight */}
                 <div>
-                  <label className='text-amber-200/70 text-xs font-light tracking-wider mb-1 block'>
+                  <label className='text-amber-200/80 text-xs font-medium tracking-wider mb-1 block'>
                     RETURN FLIGHT
                   </label>
                   <input
@@ -127,9 +121,7 @@ export function CalendarSection() {
         <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10 mt-4'>
           <div className='flex items-center gap-2 mb-3'>
             <Plane className='w-4 h-4 text-amber-200/60' />
-            <span className='text-amber-100/80 text-sm font-light tracking-wider'>
-              Flight Number
-            </span>
+            <span className='text-white font-medium text-sm'>Flight Number</span>
           </div>
           <input
             type='text'

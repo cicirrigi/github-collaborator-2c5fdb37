@@ -101,21 +101,27 @@ export const createBookingStore = create<BookingState>((set, get) => ({
     })),
 
   // Dates & times
-  setPickupDateTime: (date, time) =>
+  setPickupDateTime: (date: Date | null) =>
     set(state => ({
       tripConfiguration: {
         ...state.tripConfiguration,
         pickupDate: date,
-        pickupTime: time,
+        pickupTime: date
+          ? date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+          : '',
+        pickupDateTime: date, // Sync unified format
       },
     })),
 
-  setReturnDateTime: (date, time) =>
+  setReturnDateTime: (date: Date | null) =>
     set(state => ({
       tripConfiguration: {
         ...state.tripConfiguration,
         returnDate: date,
-        returnTime: time,
+        returnTime: date
+          ? date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+          : '',
+        returnDateTime: date, // Sync unified format
       },
     })),
 
