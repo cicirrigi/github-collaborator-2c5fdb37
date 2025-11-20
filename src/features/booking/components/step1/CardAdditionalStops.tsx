@@ -2,7 +2,7 @@
 
 import { useBookingState } from '@/hooks/useBookingState';
 import { LocationData } from '@/hooks/useBookingState/booking.types';
-import { Route } from 'lucide-react';
+import { Plus, Route, X } from 'lucide-react';
 import { CardHeader } from './CardHeader';
 
 export function CardAdditionalStops() {
@@ -56,9 +56,9 @@ export function CardAdditionalStops() {
               <span className='text-amber-100/80 text-xs font-light'>Stop {index + 1}</span>
               <button
                 onClick={() => handleRemoveStop(index)}
-                className='ml-auto w-4 h-4 rounded-full border border-amber-200/20 text-amber-200/70 hover:text-amber-200 transition-colors text-xs'
+                className='ml-auto w-4 h-4 rounded-full border border-amber-200/20 text-amber-200/70 hover:text-amber-200 transition-colors flex items-center justify-center'
               >
-                ×
+                <X className='w-2.5 h-2.5' />
               </button>
             </div>
             <input
@@ -66,7 +66,7 @@ export function CardAdditionalStops() {
               placeholder='Location...'
               value={stop.address}
               onChange={e => handleStopChange(index, e.target.value)}
-              className='w-full bg-transparent border border-amber-200/20 rounded px-2 py-1 text-amber-50 text-xs font-light placeholder:text-amber-200/40 focus:border-amber-300/40 focus:outline-none transition-colors'
+              className='w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-2 text-amber-50 text-sm font-light placeholder:text-amber-200/40 focus:border-amber-300/40 focus:outline-none transition-colors'
             />
           </div>
         ))}
@@ -77,8 +77,8 @@ export function CardAdditionalStops() {
             onClick={handleAddStop}
             className='w-full bg-white/3 border border-amber-200/20 hover:border-amber-200/40 rounded p-2 flex items-center justify-center gap-1.5 transition-all duration-200 hover:bg-white/5'
           >
-            <div className='w-4 h-4 rounded-full border border-amber-200/30 flex items-center justify-center text-amber-200/70 text-xs'>
-              +
+            <div className='w-4 h-4 rounded-full border border-amber-200/30 flex items-center justify-center text-amber-200/70'>
+              <Plus className='w-2.5 h-2.5' />
             </div>
             <span className='text-amber-100/80 text-xs font-light'>Add Stop</span>
           </button>

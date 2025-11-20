@@ -1,23 +1,17 @@
 'use client';
 
-import { UnifiedCalendar } from '@/components/calendar/UnifiedCalendar';
 import { useBookingState } from '@/hooks/useBookingState';
-import { Calendar, Luggage, Plane, Route, Users } from 'lucide-react';
+import { Luggage, MapPin, Route, Users } from 'lucide-react';
+import { useState } from 'react';
+import { CalendarSection } from './CalendarSection';
 import { CardHeader } from './CardHeader';
 import { DropoffSection } from './sections/DropoffSection';
 import { PickupSection } from './sections/PickupSection';
 
 export function SimpleTestCard() {
-  const {
-    tripConfiguration,
-    bookingType,
-    setPassengers,
-    setLuggage,
-    setPickupDateTime,
-    setReturnDateTime,
-    setDailyRange,
-    setFlightNumberPickup,
-  } = useBookingState();
+  const { tripConfiguration, bookingType, setPassengers, setLuggage } = useBookingState();
+
+  const [isDifferentReturnLocation, setIsDifferentReturnLocation] = useState(false);
 
   return (
     <div className='vl-card-flex col-span-1 lg:col-span-2'>
@@ -42,11 +36,11 @@ export function SimpleTestCard() {
               <div className='space-y-6'>
                 <div className='relative'>
                   {/* Vertical connection line */}
-                  <div className='absolute left-3 top-8 bottom-0 w-px bg-gradient-to-b from-amber-300/40 via-amber-400/20 to-transparent'></div>
+                  <div className='absolute left-3 top-4 bottom-[-12px] w-px bg-gradient-to-b from-amber-300/40 via-amber-400/20 to-transparent'></div>
 
                   {/* Pickup Location */}
                   <div className='flex items-start gap-4'>
-                    <div className='flex flex-col items-center mt-1'>
+                    <div className='flex flex-col items-center mt-7'>
                       <div className='w-6 h-6 bg-gradient-to-br from-amber-300/20 to-amber-400/30 rounded-full border border-amber-300/40 flex items-center justify-center'>
                         <div className='w-2 h-2 bg-amber-300 rounded-full'></div>
                       </div>
@@ -61,7 +55,7 @@ export function SimpleTestCard() {
 
                   {/* Dropoff Location */}
                   <div className='flex items-start gap-4 mt-6'>
-                    <div className='flex flex-col items-center mt-1'>
+                    <div className='flex flex-col items-center mt-7'>
                       <div className='w-6 h-6 bg-gradient-to-br from-amber-400/20 to-amber-500/30 rounded-full border border-amber-400/40 flex items-center justify-center'>
                         <div className='w-2 h-2 bg-amber-400 rounded-full'></div>
                       </div>
@@ -73,6 +67,76 @@ export function SimpleTestCard() {
                       <DropoffSection />
                     </div>
                   </div>
+
+                  {/* Return Trip Options for bookingType='return' */}
+                  {bookingType === 'return' && (
+                    <div className='mt-6 pt-4 border-t border-amber-200/10'>
+                      <label className='flex items-center gap-2 cursor-pointer mb-4'>
+                        <input
+                          type='checkbox'
+                          checked={isDifferentReturnLocation}
+                          onChange={e => setIsDifferentReturnLocation(e.target.checked)}
+                          className='w-3 h-3 rounded border border-amber-200/40 bg-transparent checked:bg-amber-400 checked:border-amber-400 text-amber-400 focus:ring-1 focus:ring-amber-400/50'
+                        />
+                        <span className='text-xs text-amber-200/70 font-light'>
+                          Return from different location
+                        </span>
+                      </label>
+
+                      {/* Different Return Location Fields - EXACT same pattern */}
+                      {isDifferentReturnLocation && (
+                        <>
+                          {/* Return Pickup Location - EXACT same as pickup above */}
+                          <div className='flex items-start gap-4 mt-6'>
+                            <div className='flex flex-col items-center mt-7'>
+                              <div className='w-6 h-6 bg-gradient-to-br from-amber-300/20 to-amber-400/30 rounded-full border border-amber-300/40 flex items-center justify-center'>
+                                <div className='w-2 h-2 bg-amber-300 rounded-full'></div>
+                              </div>
+                            </div>
+                            <div className='flex-1 -mt-1'>
+                              <div className='text-amber-200/70 text-xs font-light tracking-wider mb-2'>
+                                RETURN PICKUP
+                              </div>
+                              <div className='relative'>
+                                <div className='absolute left-3 top-1/2 -translate-y-1/2 z-10'>
+                                  <MapPin className='w-4 h-4 text-amber-200/60' />
+                                </div>
+                                <input
+                                  type='text'
+                                  placeholder='Enter return pickup location'
+                                  className='w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-2 pl-10 text-amber-50 text-sm font-light placeholder:text-amber-200/40 focus:border-amber-200/40 focus:outline-none transition-colors'
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Return Dropoff Location - EXACT same as dropoff above */}
+                          <div className='flex items-start gap-4 mt-6'>
+                            <div className='flex flex-col items-center mt-7'>
+                              <div className='w-6 h-6 bg-gradient-to-br from-amber-400/20 to-amber-500/30 rounded-full border border-amber-400/40 flex items-center justify-center'>
+                                <div className='w-2 h-2 bg-amber-400 rounded-full'></div>
+                              </div>
+                            </div>
+                            <div className='flex-1 -mt-1'>
+                              <div className='text-amber-200/70 text-xs font-light tracking-wider mb-2'>
+                                RETURN DROPOFF
+                              </div>
+                              <div className='relative'>
+                                <div className='absolute left-3 top-1/2 -translate-y-1/2 z-10'>
+                                  <MapPin className='w-4 h-4 text-amber-200/60' />
+                                </div>
+                                <input
+                                  type='text'
+                                  placeholder='Enter return dropoff location'
+                                  className='w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-2 pl-10 text-amber-50 text-sm font-light placeholder:text-amber-200/40 focus:border-amber-200/40 focus:outline-none transition-colors'
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -154,90 +218,7 @@ export function SimpleTestCard() {
           <div className='hidden lg:block absolute left-1/2 top-8 bottom-8 w-px bg-gradient-to-b from-transparent via-amber-200/15 to-transparent transform -translate-x-1/2'></div>
 
           {/* Right Side - Real Calendar */}
-          <div className='flex flex-col'>
-            {/* Real UnifiedCalendar */}
-            <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10'>
-              <div className='flex items-center gap-2 mb-4'>
-                <Calendar className='w-4 h-4 text-amber-200/60' />
-                <span className='text-amber-100/80 text-sm font-light tracking-wider'>
-                  Select Date & Time
-                </span>
-              </div>
-              {bookingType === 'oneway' && (
-                <UnifiedCalendar
-                  bookingType='oneway'
-                  date={tripConfiguration.pickupDateTime}
-                  onChangeDate={setPickupDateTime}
-                />
-              )}
-              {bookingType === 'return' && (
-                <div className='space-y-4'>
-                  <div className='space-y-3'>
-                    <div className='flex items-center gap-2'>
-                      <Calendar className='w-4 h-4 text-amber-200/60' />
-                      <span className='text-amber-100/80 text-sm font-light tracking-wider'>
-                        Departure
-                      </span>
-                    </div>
-                    <UnifiedCalendar
-                      bookingType='return'
-                      modal
-                      date={tripConfiguration.pickupDateTime}
-                      onChangeDate={setPickupDateTime}
-                      placeholder='Select departure date & time...'
-                    />
-                  </div>
-                  <div className='space-y-3'>
-                    <div className='flex items-center gap-2'>
-                      <Calendar className='w-4 h-4 text-amber-200/60' />
-                      <span className='text-amber-100/80 text-sm font-light tracking-wider'>
-                        Return
-                      </span>
-                    </div>
-                    <UnifiedCalendar
-                      bookingType='return'
-                      modal
-                      date={tripConfiguration.returnDateTime}
-                      onChangeDate={setReturnDateTime}
-                      minDate={tripConfiguration.pickupDateTime ?? new Date()}
-                      placeholder='Select return date & time...'
-                    />
-                  </div>
-                </div>
-              )}
-              {bookingType === 'daily' && (
-                <UnifiedCalendar
-                  bookingType='daily'
-                  range={tripConfiguration.dailyRange}
-                  onChangeRange={setDailyRange}
-                />
-              )}
-              {['hourly', 'fleet', 'bespoke'].includes(bookingType) && (
-                <UnifiedCalendar
-                  bookingType={bookingType}
-                  date={tripConfiguration.pickupDateTime}
-                  onChangeDate={setPickupDateTime}
-                />
-              )}
-            </div>
-
-            {/* Flight Number - Swiss Elegance */}
-            <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10 mt-4'>
-              <div className='flex items-center gap-2 mb-3'>
-                <Plane className='w-4 h-4 text-amber-200/60' />
-                <span className='text-amber-100/80 text-sm font-light tracking-wider'>
-                  Flight Number
-                </span>
-              </div>
-              <input
-                type='text'
-                value={tripConfiguration.flightNumberPickup}
-                onChange={e => setFlightNumberPickup(e.target.value)}
-                placeholder='Optional flight number'
-                className='w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-2 text-amber-50 text-sm font-light placeholder:text-amber-200/40 focus:border-amber-200/40 focus:outline-none transition-colors'
-              />
-            </div>
-          </div>
+          <CalendarSection />
         </div>
       </div>
     </div>
