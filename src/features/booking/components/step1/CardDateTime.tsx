@@ -6,7 +6,7 @@ import { Calendar } from 'lucide-react';
 import { CardHeader } from './CardHeader';
 
 export function CardDateTime() {
-  const { tripConfiguration, bookingType, setPickupDateTime, setReturnDateTime, setDailyRange } =
+  const { tripConfiguration, bookingType, setPickupDateTime, setReturnDateTime } =
     useBookingState();
 
   return (
@@ -59,15 +59,7 @@ export function CardDateTime() {
           </div>
         )}
 
-        {bookingType === 'daily' && (
-          <UnifiedCalendar
-            bookingType='daily'
-            range={tripConfiguration.dailyRange}
-            onChangeRange={setDailyRange}
-          />
-        )}
-
-        {['hourly', 'fleet', 'bespoke'].includes(bookingType) && (
+        {['hourly', 'daily', 'fleet', 'bespoke'].includes(bookingType) && (
           <UnifiedCalendar
             bookingType={bookingType}
             date={tripConfiguration.pickupDateTime}

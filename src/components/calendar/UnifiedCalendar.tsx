@@ -34,8 +34,8 @@ export function UnifiedCalendar({
     [bookingType, modal]
   );
   const isModal = useMemo(() => bookingType === 'return' || modal, [bookingType, modal]);
-  const isRange = useMemo(() => bookingType === 'daily', [bookingType]);
-  const hasTime = useMemo(() => !isRange, [isRange]);
+  const isRange = false;
+  const hasTime = true;
 
   // Prevent flash by waiting for stable props
   useEffect(() => {
@@ -73,16 +73,16 @@ export function UnifiedCalendar({
     // Show loading state until props are stable
     if (!isReady) {
       return (
-        <div className='relative transform scale-110 origin-center flex items-center justify-center h-64'>
+        <div className='relative flex items-center justify-center h-64'>
           <div className='text-amber-200/60 text-sm'>Loading calendar...</div>
         </div>
       );
     }
 
     return (
-      <div className='relative transform scale-110 origin-center'>
+      <div className='relative transform scale-[1.07] origin-center'>
         {/* Custom Navigation Overlay - poziționat în header-ul calendar-ului */}
-        <div className='absolute top-0.5 left-4 right-36 h-8 flex items-center justify-between z-20 pointer-events-none'>
+        <div className='absolute top-0.5 left-4 right-36 h-8 flex items-center justify-between z-20'>
           <button
             onClick={() => {
               // Trigger previous month - find the calendar's prev button and click it
@@ -180,7 +180,7 @@ export function UnifiedCalendar({
 
               <div className='relative'>
                 {/* Custom Navigation Overlay pentru modal */}
-                <div className='absolute top-0.5 left-4 right-36 h-8 flex items-center justify-between z-20 pointer-events-none'>
+                <div className='absolute top-0.5 left-4 right-36 h-8 flex items-center justify-between z-20'>
                   <button
                     onClick={() => {
                       const prevButton = document.querySelector(

@@ -4,9 +4,7 @@ import { MapPin } from 'lucide-react';
 import { usePickupDropoffLogic } from '../hooks/usePickupDropoffLogic';
 
 export function DropoffSection() {
-  const { bookingType, dropoff, handleDropoffChange } = usePickupDropoffLogic();
-
-  if (bookingType === 'hourly') return null;
+  const { dropoff, handleDropoffChange } = usePickupDropoffLogic();
 
   return (
     <div className='space-y-3'>

@@ -21,6 +21,7 @@ export interface TripConfiguration {
   // Return Trip Locations
   returnPickup: LocationData | null;
   returnDropoff: LocationData | null;
+  returnAdditionalStops: LocationData[];
   isDifferentReturnLocation: boolean;
 
   // Dates & Times (legacy format - keeping compatibility)
@@ -44,6 +45,9 @@ export interface TripConfiguration {
 
   // Hourly bookings
   hoursRequested: number | null;
+
+  // Daily bookings
+  daysRequested: number | null;
 }
 
 export interface BookingState {
@@ -67,6 +71,7 @@ export interface BookingState {
   // RETURN TRIP ACTIONS
   setReturnPickup: (location: LocationData | null) => void;
   setReturnDropoff: (location: LocationData | null) => void;
+  setReturnAdditionalStops: (stops: LocationData[]) => void;
   setIsDifferentReturnLocation: (value: boolean) => void;
 
   // DATE & TIME ACTIONS (simplified)
@@ -80,6 +85,7 @@ export interface BookingState {
   setFlightNumberPickup: (value: string) => void;
   setFlightNumberReturn: (value: string) => void;
   setHoursRequested: (value: number | null) => void;
+  setDaysRequested: (value: number | null) => void;
 
   // WIZARD ACTIONS
   setCurrentStep: (step: number) => void;

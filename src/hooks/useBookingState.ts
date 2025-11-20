@@ -14,6 +14,7 @@ const initialTripConfiguration: TripConfiguration = {
 
   returnPickup: null,
   returnDropoff: null,
+  returnAdditionalStops: [],
   isDifferentReturnLocation: false,
 
   pickupDate: null,
@@ -32,6 +33,7 @@ const initialTripConfiguration: TripConfiguration = {
   flightNumberReturn: '',
 
   hoursRequested: null,
+  daysRequested: null,
 };
 
 // 🚀 UNIFIED BOOKING STORE
@@ -87,6 +89,14 @@ export const useBookingState = create<BookingState>((set, get) => ({
       tripConfiguration: {
         ...state.tripConfiguration,
         returnDropoff: location,
+      },
+    })),
+
+  setReturnAdditionalStops: (stops: LocationData[]) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        returnAdditionalStops: stops,
       },
     })),
 
@@ -161,6 +171,14 @@ export const useBookingState = create<BookingState>((set, get) => ({
       tripConfiguration: {
         ...state.tripConfiguration,
         hoursRequested: value,
+      },
+    })),
+
+  setDaysRequested: (value: number | null) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        daysRequested: value,
       },
     })),
 

@@ -226,10 +226,7 @@
   background: rgba(255, 255, 255, 0.3) !important;
 }
 
-/* Daily (range) */
-.daily-calendar .react-datepicker__time-container {
-  display: none !important;
-}
+/* Daily - now uses single date + time picker like hourly */
 
 /* Return modal calendar - folosește tema default dark ca oneway */
 .return-calendar .react-datepicker {

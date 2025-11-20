@@ -10,7 +10,6 @@ export function CalendarSection() {
     bookingType,
     setPickupDateTime,
     setReturnDateTime,
-    setDailyRange,
     setFlightNumberPickup,
     setFlightNumberReturn,
   } = useBookingState();
@@ -99,14 +98,7 @@ export function CalendarSection() {
             </div>
           </div>
         )}
-        {bookingType === 'daily' && (
-          <UnifiedCalendar
-            bookingType='daily'
-            range={tripConfiguration.dailyRange}
-            onChangeRange={setDailyRange}
-          />
-        )}
-        {['hourly', 'fleet', 'bespoke'].includes(bookingType) && (
+        {['hourly', 'daily', 'fleet', 'bespoke'].includes(bookingType) && (
           <UnifiedCalendar
             bookingType={bookingType}
             date={tripConfiguration.pickupDateTime}

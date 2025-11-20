@@ -14,6 +14,7 @@ const initialConfig: TripConfiguration = {
 
   returnPickup: null,
   returnDropoff: null,
+  returnAdditionalStops: [],
   isDifferentReturnLocation: false,
 
   pickupDate: null,
@@ -34,6 +35,7 @@ const initialConfig: TripConfiguration = {
   flightNumberReturn: '',
 
   hoursRequested: null,
+  daysRequested: null,
 };
 
 export const createBookingStore = create<BookingState>((set, get) => ({
@@ -89,6 +91,14 @@ export const createBookingStore = create<BookingState>((set, get) => ({
       tripConfiguration: {
         ...state.tripConfiguration,
         returnDropoff: location,
+      },
+    })),
+
+  setReturnAdditionalStops: (stops: StopPoint[]) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        returnAdditionalStops: stops,
       },
     })),
 
@@ -168,6 +178,15 @@ export const createBookingStore = create<BookingState>((set, get) => ({
       },
     })),
 
+  // Daily
+  setDaysRequested: (value: number | null) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        daysRequested: value,
+      },
+    })),
+
   // WIZARD ACTIONS
   setCurrentStep: (step: number) => set({ currentStep: step }),
 
@@ -195,6 +214,21 @@ export const createBookingStore = create<BookingState>((set, get) => ({
   validateCurrentStep: () => {
     // Basic validation - can be extended later
     return true;
+  },
+
+  // Daily range for daily bookings
+  setDailyRange: (range: [Date | null, Date | null]) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        dailyRange: range,
+      },
+    })),
+
+  // UTILITY ACTIONS
+  calculateEstimatedDistanceAndTime: () => {
+    // Mock calculation - can be implemented with Google Maps API later
+    return { distanceKm: 25, durationMinutes: 35 };
   },
 
   // 🔥 RESET

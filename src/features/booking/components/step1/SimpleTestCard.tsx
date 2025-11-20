@@ -1,6 +1,7 @@
 'use client';
 
 import { useBookingState } from '@/hooks/useBookingState';
+import { getBookingRule } from '@/lib/booking/booking-rules';
 import { Luggage, MapPin, Route, Users } from 'lucide-react';
 import { CalendarSection } from './CalendarSection';
 import { CardHeader } from './CardHeader';
@@ -17,6 +18,10 @@ export function SimpleTestCard() {
   } = useBookingState();
 
   const isDifferentReturnLocation = tripConfiguration.isDifferentReturnLocation;
+  const bookingRule = getBookingRule(bookingType);
+  const dropoffTitle = bookingRule.dropoffOptional
+    ? 'DROP-OFF LOCATION (Optional)'
+    : 'DROP-OFF LOCATION';
 
   return (
     <div className='vl-card-flex col-span-1 lg:col-span-2'>
@@ -48,7 +53,7 @@ export function SimpleTestCard() {
                         <div className='w-2 h-2 bg-amber-300 rounded-full'></div>
                       </div>
                     </div>
-                    <div className='flex-1 -mt-1'>
+                    <div className='flex-1'>
                       <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
                         PICK-UP LOCATION
                       </div>
@@ -63,9 +68,9 @@ export function SimpleTestCard() {
                         <div className='w-2 h-2 bg-amber-400 rounded-full'></div>
                       </div>
                     </div>
-                    <div className='flex-1 -mt-1'>
+                    <div className='flex-1'>
                       <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
-                        DROP-OFF LOCATION
+                        {dropoffTitle}
                       </div>
                       <DropoffSection />
                     </div>
@@ -84,7 +89,7 @@ export function SimpleTestCard() {
                             <Route className='w-3 h-3 text-amber-300 transform scale-x-[-1]' />
                           </div>
                         </div>
-                        <div className='flex-1 -mt-1'>
+                        <div className='flex-1'>
                           <div className='text-amber-100 text-xs font-light tracking-wider mb-2'>
                             RETURN TRIP
                           </div>
@@ -140,7 +145,7 @@ export function SimpleTestCard() {
                                 <div className='w-2 h-2 bg-amber-300 rounded-full'></div>
                               </div>
                             </div>
-                            <div className='flex-1 -mt-1'>
+                            <div className='flex-1'>
                               <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
                                 RETURN PICK-UP LOCATION
                               </div>
@@ -164,7 +169,7 @@ export function SimpleTestCard() {
                                 <div className='w-2 h-2 bg-amber-400 rounded-full'></div>
                               </div>
                             </div>
-                            <div className='flex-1 -mt-1'>
+                            <div className='flex-1'>
                               <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
                                 RETURN DROP-OFF LOCATION
                               </div>

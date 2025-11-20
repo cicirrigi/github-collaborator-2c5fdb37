@@ -2,7 +2,11 @@
 
 import { BookingStepper } from '@/components/ui/booking-stepper/BookingStepper';
 import { useBookingState } from '@/hooks/useBookingState';
+import { getBookingRule } from '@/lib/booking/booking-rules';
 import { CardAdditionalStops } from '../../components/step1/CardAdditionalStops';
+import { CardReturnAdditionalStops } from '../../components/step1/CardReturnAdditionalStops';
+import { DaysDurationSelector } from '../../components/step1/DaysDurationSelector';
+import { HoursDurationSelector } from '../../components/step1/HoursDurationSelector';
 import { SimpleTestCard } from '../../components/step1/SimpleTestCard';
 import { WeatherWidget } from '../../components/step1/WeatherWidget';
 
@@ -15,7 +19,9 @@ const STEP1_STEPS = [
 ];
 
 export function Step1BookingDetails() {
-  const { currentStep, completedSteps, setCurrentStep, canProceedToStep } = useBookingState();
+  const { currentStep, completedSteps, setCurrentStep, canProceedToStep, bookingType } =
+    useBookingState();
+  const bookingRule = getBookingRule(bookingType);
 
   const handleStepClick = (stepNumber: number) => {
     if (canProceedToStep(stepNumber)) {
@@ -45,9 +51,18 @@ export function Step1BookingDetails() {
 
       {/* 🔹 PREMIUM GRID */}
       <div className='vl-grid-premium'>
+        {/* LEFT COLUMN */}
         <SimpleTestCard />
-        <CardAdditionalStops />
-        <WeatherWidget />
+        {bookingRule.showDuration && bookingType === 'hourly' && <HoursDurationSelector />}
+        {bookingType === 'daily' && <DaysDurationSelector />}
+        {(bookingType === 'hourly' || bookingType === 'daily') && <WeatherWidget />}
+
+        {/* RIGHT COLUMN */}
+        <div className='space-y-3'>
+          <CardAdditionalStops />
+          {bookingType === 'oneway' && <WeatherWidget />}
+        </div>
+        {bookingType === 'return' && <CardReturnAdditionalStops />}
       </div>
     </>
   );
