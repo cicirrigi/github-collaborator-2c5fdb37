@@ -7,8 +7,9 @@
 
 /* MASTER unified card style */
 .vl-card {
-  @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl
+  @apply rounded-2xl border border-white/10 backdrop-blur-xl
   p-6 shadow-[0_12px_40px_rgba(0,0,0,0.45)];
+  background: rgba(10, 10, 10, 0.8);
 }
 
 /* Fix equal height grid */
