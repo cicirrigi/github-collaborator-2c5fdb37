@@ -34,6 +34,7 @@ const initialTripConfiguration: TripConfiguration = {
 
   hoursRequested: null,
   daysRequested: null,
+  customRequirements: '',
 };
 
 // 🚀 UNIFIED BOOKING STORE
@@ -179,6 +180,14 @@ export const useBookingState = create<BookingState>((set, get) => ({
       tripConfiguration: {
         ...state.tripConfiguration,
         daysRequested: value,
+      },
+    })),
+
+  setCustomRequirements: (value: string) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        customRequirements: value,
       },
     })),
 

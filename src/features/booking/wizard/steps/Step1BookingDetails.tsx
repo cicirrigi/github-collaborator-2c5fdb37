@@ -3,6 +3,7 @@
 import { BookingStepper } from '@/components/ui/booking-stepper/BookingStepper';
 import { useBookingState } from '@/hooks/useBookingState';
 import { getBookingRule } from '@/lib/booking/booking-rules';
+import { BespokeRequirements } from '../../components/step1/BespokeRequirements';
 import { CardAdditionalStops } from '../../components/step1/CardAdditionalStops';
 import { CardReturnAdditionalStops } from '../../components/step1/CardReturnAdditionalStops';
 import { DaysDurationSelector } from '../../components/step1/DaysDurationSelector';
@@ -59,11 +60,14 @@ export function Step1BookingDetails() {
 
         {/* RIGHT COLUMN */}
         <div className='space-y-3'>
-          <CardAdditionalStops />
+          {bookingType !== 'bespoke' && <CardAdditionalStops />}
           {bookingType === 'oneway' && <WeatherWidget />}
         </div>
         {bookingType === 'return' && <CardReturnAdditionalStops />}
       </div>
+
+      {/* FULL WIDTH BESPOKE CARD */}
+      {bookingType === 'bespoke' && <BespokeRequirements />}
     </>
   );
 }

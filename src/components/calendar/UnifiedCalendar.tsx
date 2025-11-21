@@ -1,12 +1,14 @@
 'use client';
 
+import { type BookingType } from '@/lib/booking/booking-rules';
+import { getAvailableFromMessage, isTimeSlotAvailable } from '@/lib/booking/booking-time-helpers';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 interface UnifiedCalendarProps {
-  bookingType: 'oneway' | 'return' | 'hourly' | 'daily' | 'fleet' | 'bespoke';
+  bookingType: BookingType;
   date?: Date | null;
   onChangeDate?: (d: Date | null) => void;
   range?: [Date | null, Date | null];
@@ -45,6 +47,18 @@ export function UnifiedCalendar({
 
     return () => clearTimeout(timer);
   }, [bookingType, hasTime]);
+
+  // Time slot filtering function
+  const filterPassedTime = (time: Date) => {
+    if (!hasTime) return true; // No filtering if no time selection
+    return isTimeSlotAvailable(bookingType, time);
+  };
+
+  // Calculate available from message
+  const availableFromMessage = useMemo(() => {
+    if (!hasTime || !date) return null;
+    return getAvailableFromMessage(bookingType, date);
+  }, [bookingType, date, hasTime]);
 
   // Debugging specific pentru problema de refresh
   useEffect(() => {
@@ -131,9 +145,19 @@ export function UnifiedCalendar({
             showTimeSelect={hasTime}
             timeIntervals={15}
             dateFormat='MMM d, yyyy HH:mm'
+            timeFormat='HH:mm'
+            timeCaption='Time'
             calendarClassName={`${calendarClassName} !w-full`}
             calendarStartDay={1}
+            filterTime={filterPassedTime}
           />
+        )}
+
+        {/* Available From Message */}
+        {availableFromMessage && (
+          <div className='mt-3 text-center'>
+            <p className='text-amber-200/70 text-xs font-light'>{availableFromMessage}</p>
+          </div>
         )}
       </div>
     );
@@ -155,6 +179,7 @@ export function UnifiedCalendar({
                     day: 'numeric',
                     hour: '2-digit',
                     minute: '2-digit',
+                    hour12: false,
                   })
                 : ''
             }
@@ -214,9 +239,19 @@ export function UnifiedCalendar({
                   showTimeSelect
                   timeIntervals={15}
                   dateFormat='MMM d, yyyy HH:mm'
+                  timeFormat='HH:mm'
+                  timeCaption='Time'
                   calendarClassName='return-calendar'
                   calendarStartDay={1}
+                  filterTime={filterPassedTime}
                 />
+
+                {/* Available From Message pentru modal */}
+                {availableFromMessage && (
+                  <div className='mt-3 text-center'>
+                    <p className='text-amber-200/70 text-xs font-light'>{availableFromMessage}</p>
+                  </div>
+                )}
               </div>
 
               <button

@@ -14,7 +14,8 @@ export type Step1ErrorCode =
   | 'MISSING_FLIGHT_PICKUP'
   | 'MISSING_FLIGHT_RETURN'
   | 'MISSING_HOURS_REQUESTED'
-  | 'MISSING_DAILY_RANGE';
+  | 'MISSING_DAILY_RANGE'
+  | 'MISSING_CUSTOM_REQUIREMENTS';
 
 export type Step1ErrorSeverity = 'error' | 'warning';
 
@@ -45,6 +46,7 @@ const FIELD_LABELS: Record<Step1FieldId, string> = {
   flightNumberReturn: 'Return flight number',
   hoursRequested: 'Number of hours',
   dailyRange: 'Daily date range',
+  customRequirements: 'Custom requirements',
 };
 
 /**
@@ -61,6 +63,7 @@ const FIELD_ERROR_CODE_MAP: Record<Step1FieldId, Step1ErrorCode> = {
   flightNumberReturn: 'MISSING_FLIGHT_RETURN',
   hoursRequested: 'MISSING_HOURS_REQUESTED',
   dailyRange: 'MISSING_DAILY_RANGE',
+  customRequirements: 'MISSING_CUSTOM_REQUIREMENTS',
 };
 
 /**
@@ -78,6 +81,7 @@ const buildPresenceMap = (config: TripConfiguration): Record<Step1FieldId, boole
   flightNumberReturn: Boolean(config.flightNumberReturn),
   hoursRequested: config.hoursRequested !== null && config.hoursRequested > 0,
   dailyRange: config.dailyRange[0] !== null && config.dailyRange[1] !== null,
+  customRequirements: Boolean(config.customRequirements?.trim()),
 });
 
 /**

@@ -36,6 +36,7 @@ const initialConfig: TripConfiguration = {
 
   hoursRequested: null,
   daysRequested: null,
+  customRequirements: '',
 };
 
 export const createBookingStore = create<BookingState>((set, get) => ({
@@ -184,6 +185,15 @@ export const createBookingStore = create<BookingState>((set, get) => ({
       tripConfiguration: {
         ...state.tripConfiguration,
         daysRequested: value,
+      },
+    })),
+
+  // Bespoke
+  setCustomRequirements: (value: string) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        customRequirements: value,
       },
     })),
 

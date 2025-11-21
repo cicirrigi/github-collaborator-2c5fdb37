@@ -48,6 +48,9 @@ export interface TripConfiguration {
 
   // Daily bookings
   daysRequested: number | null;
+
+  // Bespoke bookings
+  customRequirements: string;
 }
 
 export interface BookingState {
@@ -86,6 +89,7 @@ export interface BookingState {
   setFlightNumberReturn: (value: string) => void;
   setHoursRequested: (value: number | null) => void;
   setDaysRequested: (value: number | null) => void;
+  setCustomRequirements: (value: string) => void;
 
   // WIZARD ACTIONS
   setCurrentStep: (step: number) => void;

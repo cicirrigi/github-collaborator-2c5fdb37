@@ -22,6 +22,7 @@ export type Step1FieldId = keyof Pick<
   | 'flightNumberPickup'
   | 'flightNumberReturn'
   | 'hoursRequested'
+  | 'customRequirements'
 >;
 
 export interface BookingRule {
@@ -71,7 +72,7 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     showDuration: true,
     dropoffOptional: true,
     showPassengers: true,
-    showFlightNumbers: false,
+    showFlightNumbers: true,
     requiredFields: ['pickup', 'pickupDateTime', 'hoursRequested', 'passengers'],
   },
   daily: {
@@ -79,10 +80,10 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     showDualTime: false,
     showStops: true,
     showDuration: false,
-    dropoffOptional: false,
+    dropoffOptional: true,
     showPassengers: true,
-    showFlightNumbers: false, // Daily service usually doesn't need flights
-    requiredFields: ['pickup', 'dropoff', 'dailyRange', 'passengers'], // Uses dailyRange for date range
+    showFlightNumbers: true, // Optional for airport pickups during daily service
+    requiredFields: ['pickup', 'dailyRange', 'passengers'], // Dropoff removed - now optional
   },
   fleet: {
     showReturn: false,
@@ -102,7 +103,7 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     dropoffOptional: true, // Bespoke is highly customizable
     showPassengers: true,
     showFlightNumbers: true, // Often for VIP/special events
-    requiredFields: ['pickup', 'pickupDateTime', 'passengers'], // Minimal requirements for custom service
+    requiredFields: ['pickup', 'pickupDateTime', 'passengers', 'customRequirements'], // Custom requirements mandatory for quote
   },
 } as const;
 
