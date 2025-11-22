@@ -7,6 +7,7 @@
 
 import { FleetSection } from '@/components/sections/FleetSection';
 import { FleetSection3D } from '@/components/sections/FleetSection/FleetSection3D';
+import BookingServiceTester from './BookingServiceTester';
 
 export default function TestPage() {
   return (
@@ -17,6 +18,11 @@ export default function TestPage() {
           <p className='text-[var(--text-secondary)]'>
             Testare Fleet Section cu design nou refactorizat
           </p>
+        </div>
+
+        {/* Booking Service Test */}
+        <div className='mb-16 max-w-4xl mx-auto'>
+          <BookingServiceTester />
         </div>
 
         {/* Fleet Section 3D Test - Full with Flip Cards */}
