@@ -1,5 +1,9 @@
 // 🎯 BOOKING TYPES - All type definitions for the unified booking system
 
+// Import and re-export vehicle types for easy access
+import type { VehicleCategory, VehicleModel, VehicleSelection } from './vehicle.types';
+export type { VehicleCategory, VehicleModel, VehicleSelection };
+
 export type Coordinates = [number, number];
 
 export interface LocationData {
@@ -51,6 +55,9 @@ export interface TripConfiguration {
 
   // Bespoke bookings
   customRequirements: string;
+
+  // 🚗 Step 2: Vehicle Selection
+  selectedVehicle: VehicleSelection;
 }
 
 export interface BookingState {
@@ -91,6 +98,12 @@ export interface BookingState {
   setDaysRequested: (value: number | null) => void;
   setCustomRequirements: (value: string) => void;
 
+  // 🚗 VEHICLE SELECTION ACTIONS
+  selectVehicleCategory: (category: VehicleCategory) => void;
+  selectVehicleModel: (model: VehicleModel) => void;
+  clearVehicleSelection: () => void;
+  getAvailableVehicleCategories: () => VehicleCategory[];
+
   // WIZARD ACTIONS
   setCurrentStep: (step: number) => void;
   setCompletedSteps: (steps: number[]) => void;
@@ -98,10 +111,28 @@ export interface BookingState {
   prevStep: () => void;
   canProceedToStep: (step: number) => boolean;
   validateCurrentStep: () => boolean;
+  validateStep1Complete: () => boolean;
   resetTrip: () => void;
 
   // UTILITY ACTIONS
   calculateEstimatedDistanceAndTime: () => { distanceKm: number; durationMinutes: number };
+
+  // 🚗 RETURN TRIP ENTERPRISE LOGIC
+  prepareReturnTripBookings: () => { outbound: SingleBooking; inbound: SingleBooking } | null;
+}
+
+// 🎯 SINGLE BOOKING TYPE (pentru backend API)
+export interface SingleBooking {
+  type: 'oneway';
+  pickup: LocationData;
+  dropoff: LocationData;
+  pickupDateTime: Date;
+  passengers: number;
+  luggage: number;
+  vehicle: VehicleSelection;
+  flightNumber?: string;
+  specialRequirements?: string;
+  estimatedPrice?: number;
 }
 
 // 🔧 UTILITY TYPE EXPORTS

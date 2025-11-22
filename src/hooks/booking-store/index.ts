@@ -1,0 +1,56 @@
+// 🎛️ MODULAR BOOKING STORE - Enterprise Split Architecture
+import { create } from 'zustand';
+import type { BookingState } from '../useBookingState/booking.types';
+import { createInitialTripConfiguration, initialWizardState } from './initialState';
+
+// Import individual action creators
+import { createBookingActions } from './booking.actions';
+import { createDateTimeActions } from './datetime.actions';
+import { createLocationActions } from './location.actions';
+import { createPassengerActions } from './passenger.actions';
+import { createValidationActions } from './validation';
+import { createVehicleActions } from './vehicle.actions';
+
+/**
+ * 🚀 MODULAR BOOKING STORE - Enterprise Architecture
+ *
+ * Combines all action modules into a single store while maintaining
+ * clean separation of concerns and manageable file sizes.
+ */
+export const useBookingState = create<BookingState>((set, get) => ({
+  // 🏗️ INITIAL STATE
+  bookingType: 'oneway',
+  tripConfiguration: createInitialTripConfiguration(),
+  ...initialWizardState,
+
+  // 🎯 BOOKING & STEPPER ACTIONS
+  ...createBookingActions(set, get),
+
+  // 📍 LOCATION ACTIONS
+  ...createLocationActions(set, get),
+
+  // 🕐 DATE & TIME ACTIONS
+  ...createDateTimeActions(set, get),
+
+  // 👥 PASSENGER & LOGISTICS ACTIONS
+  ...createPassengerActions(set, get),
+
+  // 🚗 VEHICLE SELECTION ACTIONS
+  ...createVehicleActions(set, get),
+
+  // ✅ VALIDATION & UTILITY ACTIONS
+  ...createValidationActions(set, get),
+}));
+
+// 🔧 RE-EXPORT ALL TYPES for easy access
+export type {
+  BookingType,
+  LocationData,
+  PickupDropoffField,
+  SingleBooking,
+  StopPoint,
+  TripConfiguration,
+  VehicleCategory,
+  VehicleModel,
+  VehicleSelection,
+} from '../useBookingState/booking.types';
