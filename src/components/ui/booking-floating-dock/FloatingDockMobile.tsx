@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Menu } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Menu } from 'lucide-react';
+import { useState } from 'react';
 
 import { cn } from '@/lib/utils/cn';
 import type { BookingDockItem } from './dock.types';
@@ -35,17 +35,19 @@ export const FloatingDockMobile = ({ items, className }: FloatingDockMobileProps
                 }}
                 transition={{ delay: (items.length - 1 - idx) * 0.05 }}
               >
-                <button
-                  onClick={item.onClick}
-                  className='
-                    flex h-10 w-10 items-center justify-center rounded-full
-                    bg-white/90 border border-gray-200
-                    backdrop-blur-sm shadow-lg
-                    dark:bg-neutral-900/90 dark:border-neutral-700
-                  '
-                >
-                  <div className='h-5 w-5 text-neutral-600 dark:text-neutral-300'>{item.icon}</div>
-                </button>
+                <div className='flex items-center space-x-3 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-gray-200 dark:border-neutral-700 rounded-full shadow-lg px-4 py-2'>
+                  <button
+                    onClick={item.onClick}
+                    className='flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors'
+                  >
+                    <div className='h-5 w-5 text-neutral-600 dark:text-neutral-300'>
+                      {item.icon}
+                    </div>
+                  </button>
+                  <span className='text-sm font-medium text-neutral-700 dark:text-neutral-200'>
+                    {item.title}
+                  </span>
+                </div>
               </motion.div>
             ))}
           </motion.div>

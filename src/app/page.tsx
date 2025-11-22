@@ -31,12 +31,6 @@ export default function HomePage() {
       {/* Elegant Separator */}
       <SectionDivider />
 
-      {/* Services/Benefits Section - Config driven */}
-      <ServicesSection />
-
-      {/* Elegant Separator */}
-      <SectionDivider />
-
       {/* Booking Wizard - Step 1 Integration */}
       <section className='relative py-16'>
         <div className='container mx-auto px-4'>
@@ -52,6 +46,12 @@ export default function HomePage() {
           <BookingWizard />
         </div>
       </section>
+
+      {/* Elegant Separator */}
+      <SectionDivider />
+
+      {/* Services/Benefits Section - Config driven */}
+      <ServicesSection />
 
       {/* Elegant Separator */}
       <SectionDivider />

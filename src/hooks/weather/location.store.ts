@@ -80,9 +80,14 @@ export const useLocationStore = create<LocationStore>((set, get) => ({
     set({ loading: true, error: null });
 
     const pos = await new Promise<GeolocationPosition | null>(resolve => {
-      navigator.geolocation?.getCurrentPosition(
+      if (!navigator.geolocation) {
+        resolve(null);
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
         p => resolve(p),
-        () => resolve(null),
+        _err => resolve(null),
         { enableHighAccuracy: true, timeout: 15000 }
       );
     });
@@ -111,6 +116,9 @@ export const useLocationStore = create<LocationStore>((set, get) => ({
         source: 'gps',
       };
 
+      // Clear IP cache when GPS succeeds to avoid conflicts
+      const { _cache: cache } = get();
+      cache.clear('location_ip');
       set({ location: loc, error: null });
     } catch {
       set({

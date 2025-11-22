@@ -30,10 +30,10 @@ export const FloatingDockInline = ({
         h-20 items-center
         space-x-4
         rounded-3xl
-        bg-white/80 dark:bg-neutral-900/80
-        backdrop-blur-2xl
-        border border-white/20 dark:border-neutral-700/40
-        shadow-xl shadow-black/10
+        bg-transparent
+        backdrop-blur-none
+        border-none
+        shadow-none
         px-8
         w-fit
         will-change-transform
@@ -43,7 +43,13 @@ export const FloatingDockInline = ({
       style={{ transform: 'translateZ(0)' }}
     >
       {items.map(item => (
-        <IconContainer key={item.title} mouseX={mouseX} {...item} />
+        <IconContainer
+          key={item.title}
+          mouseX={mouseX}
+          title={item.title}
+          icon={item.icon}
+          onClick={item.onClick}
+        />
       ))}
     </motion.div>
   );

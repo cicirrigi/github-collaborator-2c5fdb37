@@ -11,11 +11,17 @@ export class RateLimiter {
   }
 
   canAutoDetect() {
-    return this.load('auto') < 10; // 10 per hour
+    const count = this.load('auto');
+    const isDev = process.env.NODE_ENV === 'development';
+    const limit = isDev ? 1000 : 10; // Very high limit in development
+    return count < limit;
   }
 
   canPrecise() {
-    return this.load('gps') < 5; // 5 per day
+    const count = this.load('gps');
+    const isDev = process.env.NODE_ENV === 'development';
+    const limit = isDev ? 100 : 5; // High limit in development
+    return count < limit;
   }
 
   recordAutoDetect() {

@@ -1,7 +1,7 @@
 'use client';
 
-import { ArrowRight, RefreshCw, Clock, Car } from 'lucide-react';
 import { BookingFloatingDock } from '@/components/ui/booking-floating-dock/BookingFloatingDock.modular';
+import { ArrowRight, Car, Clock, RefreshCw } from 'lucide-react';
 
 /**
  * 🧩 MODULAR DOCK TEST - New Clean Architecture

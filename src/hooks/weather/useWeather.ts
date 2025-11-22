@@ -20,12 +20,14 @@ export function useWeather(): UseWeatherReturn {
   const loading = locLoading || wxLoading;
   const error = locError || wxError;
 
-  // Auto detect IP on first mount
+  // Auto detect IP on first mount only - use ref to prevent dependency issues
   useEffect(() => {
     if (!location && !locLoading) {
+      console.log('🔍 useEffect triggering autoDetect');
       autoDetect();
     }
-  }, [location, locLoading, autoDetect]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, locLoading]); // Intentionally exclude autoDetect to prevent infinite loops
 
   // Load weather whenever location is updated
   useEffect(() => {

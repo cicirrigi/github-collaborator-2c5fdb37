@@ -29,6 +29,7 @@ export function SimpleTestCard() {
         icon={Route}
         title='Luxury Trip Manager'
         subtitle='Premium all-in-one booking experience'
+        showWeather={true}
       />
       <div className='vl-card-inner'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 h-full relative'>
