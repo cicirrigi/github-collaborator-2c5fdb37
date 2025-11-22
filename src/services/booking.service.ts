@@ -13,7 +13,7 @@ import {
   mapTripConfigToBooking,
   validateBookingRecord,
   type BookingRecord,
-} from './booking-mapping.service';
+} from './booking-mapping';
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
