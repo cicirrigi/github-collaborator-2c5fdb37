@@ -82,7 +82,7 @@ export const AdditionalStops = ({
 
       {/* Stop Number */}
       <div className='flex-shrink-0'>
-        <div className='flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-[#CBB26A] to-[#D4AF37] text-xs font-medium text-white'>
+        <div className='flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)] text-xs font-medium text-white'>
           {index + 1}
         </div>
       </div>
@@ -117,7 +117,7 @@ export const AdditionalStops = ({
     <div className={cn('space-y-4', className)}>
       {/* Header */}
       <div className='mb-4 flex items-center gap-3'>
-        <div className='h-5 w-5 rounded-full bg-gradient-to-r from-[#CBB26A] to-[#D4AF37]' />
+        <div className='h-5 w-5 rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]' />
         <h4 className='font-semibold text-gray-700 dark:text-gray-300'>Additional Stops</h4>
         <span className='ml-auto text-xs text-gray-500'>Max {maxStops}</span>
       </div>

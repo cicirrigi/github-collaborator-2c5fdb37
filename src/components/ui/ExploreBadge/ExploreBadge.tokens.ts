@@ -53,6 +53,12 @@ export const exploreBadgeTokens = {
       scale: '1.05',
       translateX: '4px',
     },
+    arrow: {
+      name: 'bounce-right',
+      duration: '2s',
+      easing: 'ease-in-out',
+      iteration: 'infinite',
+    },
   },
 
   // Border radius

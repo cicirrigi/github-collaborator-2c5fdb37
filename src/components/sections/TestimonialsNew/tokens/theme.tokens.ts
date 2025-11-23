@@ -22,9 +22,9 @@ export const themeTokens = {
       quote: 'rgba(31, 41, 55, 0.85)', // gray-800 cu opacity
     },
     accent: {
-      primary: '#CBB26A', // Golden accent
-      secondary: '#E5D485', // Lighter golden
-      glow: 'rgba(203, 178, 106, 0.15)',
+      primary: 'var(--brand-primary)', // Golden accent
+      secondary: 'var(--brand-accent)', // Lighter golden
+      glow: 'var(--brand-primary)/15',
     },
   },
 
@@ -45,9 +45,9 @@ export const themeTokens = {
       quote: 'rgba(229, 231, 235, 0.9)', // gray-200 cu opacity
     },
     accent: {
-      primary: '#E5D485', // Brighter golden pentru dark mode
-      secondary: '#CBB26A', // Standard golden
-      glow: 'rgba(229, 212, 133, 0.2)',
+      primary: 'var(--brand-accent)', // Brighter golden pentru dark mode
+      secondary: 'var(--brand-primary)', // Standard golden
+      glow: 'var(--brand-accent)/20',
     },
   },
 
@@ -92,8 +92,8 @@ export const themeTokens = {
       '--testimonial-text': 'rgba(31, 41, 55, 0.85)',
       '--testimonial-text-primary': 'rgba(17, 24, 39, 0.9)',
       '--testimonial-text-secondary': 'rgba(75, 85, 99, 0.8)',
-      '--testimonial-accent': '#CBB26A',
-      '--testimonial-accent-glow': 'rgba(203, 178, 106, 0.15)',
+      '--testimonial-accent': 'var(--brand-primary)',
+      '--testimonial-accent-glow': 'var(--brand-primary)/15',
     },
     // Variabile pentru dark mode
     dark: {
@@ -106,8 +106,8 @@ export const themeTokens = {
       '--testimonial-text': 'rgba(229, 231, 235, 0.9)',
       '--testimonial-text-primary': 'rgba(249, 250, 251, 0.95)',
       '--testimonial-text-secondary': 'rgba(209, 213, 219, 0.85)',
-      '--testimonial-accent': '#E5D485',
-      '--testimonial-accent-glow': 'rgba(229, 212, 133, 0.2)',
+      '--testimonial-accent': 'var(--brand-accent)',
+      '--testimonial-accent-glow': 'var(--brand-accent)/20',
     },
   },
 
@@ -125,7 +125,57 @@ export const themeTokens = {
     },
     // Gradient pentru text accents
     textAccent: {
-      both: 'linear-gradient(135deg, #CBB26A, #E5D485)',
+      both: 'linear-gradient(135deg, var(--brand-primary), var(--brand-accent))',
+    },
+  },
+
+  // 🎨 Job Badge Colors - Toate ca Oliver Smith (Executive Transfer)
+  jobBadges: {
+    'Executive Transfer': {
+      background: 'var(--gold-classic)',
+      text: 'var(--background-dark)', // Text negru orchestrat
+      border: 'var(--gold-classic)/30',
+    },
+    'Private Hire': {
+      background: 'var(--gold-classic)',
+      text: 'var(--background-dark)', // Text negru orchestrat
+      border: 'var(--gold-classic)/30',
+    },
+    'Regular Client': {
+      background: 'var(--gold-classic)',
+      text: 'var(--background-dark)', // Text negru orchestrat
+      border: 'var(--gold-classic)/30',
+    },
+    'Corporate Service': {
+      background: 'var(--gold-classic)',
+      text: 'var(--background-dark)', // Text negru orchestrat
+      border: 'var(--gold-classic)/30',
+    },
+    'Business Account': {
+      background: 'var(--gold-classic)',
+      text: 'var(--background-dark)', // Text negru orchestrat
+      border: 'var(--gold-classic)/30',
+    },
+    'Chauffeur Service': {
+      background: 'var(--gold-classic)',
+      text: 'var(--background-dark)', // Text negru orchestrat
+      border: 'var(--gold-classic)/30',
+    },
+    'Corporate Transfer': {
+      background: 'var(--gold-classic)',
+      text: 'var(--background-dark)', // Text negru orchestrat
+      border: 'var(--gold-classic)/30',
+    },
+    'Event Transport': {
+      background: 'var(--gold-classic)',
+      text: 'var(--background-dark)', // Text negru orchestrat
+      border: 'var(--gold-classic)/30',
+    },
+    // Default fallback
+    default: {
+      background: 'var(--gold-classic)',
+      text: 'var(--background-dark)', // Text negru orchestrat
+      border: 'var(--gold-classic)/30',
     },
   },
 

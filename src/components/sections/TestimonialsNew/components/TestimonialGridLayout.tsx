@@ -9,11 +9,13 @@
 
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
-import type React from 'react';
 import { forwardRef } from 'react';
 
+import { animations } from '@/config/animations.config';
+import { SlideIndicator } from '@/components/ui/SlideIndicator/SlideIndicator';
 import gridStyles from '../styles/grid.module.css';
-import { type GridVariant, type CardVariant, motionTokens } from '../tokens';
+import themeStyles from '../styles/theme.module.css';
+import { type CardVariant, type GridVariant } from '../tokens';
 import { TestimonialCardNew, type Testimonial } from './TestimonialCardNew';
 
 export interface TestimonialGridLayoutProps {
@@ -79,19 +81,31 @@ export const TestimonialGridLayout = forwardRef<HTMLDivElement, TestimonialGridL
 
     const scrollRight = () => {
       if (ref && 'current' in ref && ref.current) {
-        // Pause auto-scroll temporarily to avoid conflicts
         onPause?.();
 
-        const cardWidth = 320 + 32; // card width + gap
-        ref.current.scrollBy({
-          left: cardWidth,
-          behavior: 'smooth',
-        });
+        const scrollLeft = ref.current.scrollLeft;
+        const scrollWidth = ref.current.scrollWidth;
+        const clientWidth = ref.current.clientWidth;
 
-        // Resume auto-scroll after manual scroll completes
+        // Check dacă suntem aproape de capăt
+        if (scrollLeft + clientWidth >= scrollWidth - 100) {
+          // Suntem la capăt, resetăm la început
+          ref.current.scrollTo({
+            left: 0,
+            behavior: 'smooth',
+          });
+        } else {
+          // Scroll normal la următorul card
+          const cardWidth = 320 + 32; // card width + gap
+          ref.current.scrollBy({
+            left: cardWidth,
+            behavior: 'smooth',
+          });
+        }
+
         setTimeout(() => {
           onResume?.();
-        }, 500); // Wait for smooth scroll to complete
+        }, 500);
       }
     };
 
@@ -107,7 +121,7 @@ export const TestimonialGridLayout = forwardRef<HTMLDivElement, TestimonialGridL
                   flexDirection: 'row',
                   overflowX: 'auto',
                   overflowY: 'visible',
-                  gap: 'clamp(1.25rem, 2.5vw, 2rem)',
+                  gap: '1rem',
                   padding: '2rem 2rem 2rem 1rem',
                   scrollSnapType: 'x mandatory',
                   scrollbarWidth: 'none',
@@ -119,18 +133,17 @@ export const TestimonialGridLayout = forwardRef<HTMLDivElement, TestimonialGridL
                 }
               : {}),
           }}
-          variants={motionTokens.grid.container}
-          initial='initial'
-          animate='animate'
-          viewport={motionTokens.scroll.viewport}
+          variants={animations.staggerContainer}
+          initial='hidden'
+          whileInView='visible'
+          viewport={animations.viewport}
           onMouseEnter={isCarousel ? onPause : undefined}
           onMouseLeave={isCarousel ? onResume : undefined}
         >
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map(testimonial => (
             <motion.div
               key={testimonial.id}
-              variants={motionTokens.grid.item}
-              custom={index}
+              variants={animations.fadeInUp}
               style={{
                 // Pentru carousel variant, adaugă scroll-snap
                 ...(variant === 'carousel' && {
@@ -147,10 +160,13 @@ export const TestimonialGridLayout = forwardRef<HTMLDivElement, TestimonialGridL
         {/* 🎮 Carousel Navigation Buttons - AFARA containerului */}
         {isCarousel && testimonials.length > 1 && (
           <>
-            {/* Buton Stânga */}
+            {/* Buton Stânga - ascuns pe mobil */}
             <button
               onClick={scrollLeft}
-              className='absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 active:bg-[#cbb26a]/40 active:border-[#cbb26a]/60 transition-all duration-200 shadow-lg hover:shadow-xl'
+              className={cn(
+                'hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white hover:bg-white/20 active:bg-[#cbb26a]/40 active:border-[#cbb26a]/60 transition-all duration-200 shadow-lg hover:shadow-xl',
+                themeStyles.navigationButton
+              )}
               aria-label='Scroll left'
             >
               <svg
@@ -167,10 +183,13 @@ export const TestimonialGridLayout = forwardRef<HTMLDivElement, TestimonialGridL
               </svg>
             </button>
 
-            {/* Buton Dreapta */}
+            {/* Buton Dreapta - ascuns pe mobil */}
             <button
               onClick={scrollRight}
-              className='absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 active:bg-[#cbb26a]/40 active:border-[#cbb26a]/60 transition-all duration-200 shadow-lg hover:shadow-xl'
+              className={cn(
+                'hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white hover:bg-white/20 active:bg-[#cbb26a]/40 active:border-[#cbb26a]/60 transition-all duration-200 shadow-lg hover:shadow-xl',
+                themeStyles.navigationButton
+              )}
               aria-label='Scroll right'
             >
               <svg
@@ -187,6 +206,13 @@ export const TestimonialGridLayout = forwardRef<HTMLDivElement, TestimonialGridL
               </svg>
             </button>
           </>
+        )}
+
+        {/* 📱 Swipe Indicator - doar pe mobil */}
+        {isCarousel && (
+          <div className='flex justify-start pl-20 -mt-2 md:hidden'>
+            <SlideIndicator text='Swipe for more' showText={true} />
+          </div>
         )}
       </div>
     );

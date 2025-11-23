@@ -27,18 +27,20 @@ const variantClasses = {
     // Background gradient (flexible pentru toate use case-urile)
     'bg-gradient-to-br',
     'from-white/95',
-    'via-neutral-50/90',
+    'via-white/90',
     'to-white/95',
-    'dark:from-neutral-900',
-    'dark:via-neutral-950',
-    'dark:to-neutral-900',
-    // Border
-    'border',
-    'border-neutral-200',
-    'dark:border-neutral-800',
-    'hover:border-[var(--luxury-glow-color)]/60',
-    'dark:hover:border-[var(--luxury-glow-color)]/20',
-    // Shadow (folosesc design tokens)
+    'dark:from-[var(--background-elevated)]',
+    'dark:via-[var(--background-subtle)]',
+    'dark:to-[var(--background-elevated)]',
+    // Border with subtle 3D effect - top/left lighter, bottom/right present
+    'border-2',
+    'border-t-[var(--border-subtle)]',
+    'border-l-[var(--border-subtle)]',
+    'border-b-[var(--border-default)]',
+    'border-r-[var(--border-default)]',
+    'hover:border-t-[var(--luxury-glow-color)]/30',
+    'hover:border-l-[var(--luxury-glow-color)]/30',
+    // Shadow with hover glow
     'shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),0_2px_4px_-1px_rgba(0,0,0,0.2)]',
     'hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.4),0_10px_10px_-5px_rgba(0,0,0,0.2),0_0_30px_rgba(203,178,106,0.15)]',
     // Hover scale

@@ -74,7 +74,7 @@ export function renderContent({
         })}
         {title && (
           <h3
-            className='duration-[var(--luxury-glow-duration)] relative z-10 mb-3 text-xl font-medium text-white transition-colors line-clamp-2 min-h-[3.5rem]'
+            className='duration-[var(--luxury-glow-duration)] relative z-10 mb-3 text-xl font-medium text-white dark:text-white transition-colors line-clamp-2 min-h-[3.5rem]'
             style={
               {
                 '--hover-color': glowColor || luxuryCardTokens.colors.goldGlow,
@@ -94,13 +94,11 @@ export function renderContent({
           </h3>
         )}
         {description && (
-          <p className='text-sm leading-relaxed text-neutral-300 line-clamp-3 min-h-[4.5rem]'>
+          <p className='text-sm leading-relaxed text-neutral-300 dark:text-neutral-400 line-clamp-3 min-h-[4.5rem]'>
             {description}
           </p>
         )}
-        {footer && (
-          <div className='mt-4 border-t border-neutral-200 pt-4 dark:border-white/10'>{footer}</div>
-        )}
+        {footer && <div className='mt-4 border-t border-white/10 pt-4'>{footer}</div>}
       </div>
 
       {/* Badge area - grid row 2, mereu aliniat */}

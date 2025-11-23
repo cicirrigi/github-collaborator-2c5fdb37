@@ -66,8 +66,8 @@ export const BookingTabsPro = ({
             <motion.div
               animate={
                 selectedTab === tab.id
-                  ? { scale: [1, 1.15, 1], color: '#CBB26A' }
-                  : { scale: 1, color: '#A3A3A3' }
+                  ? { scale: [1, 1.15, 1], color: 'var(--brand-primary)' }
+                  : { scale: 1, color: 'var(--text-muted)' }
               }
               transition={{ duration: 1.2, repeat: Infinity, repeatType: 'reverse' }}
             >

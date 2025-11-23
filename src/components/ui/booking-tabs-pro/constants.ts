@@ -9,10 +9,10 @@ export const BOOKING_TABS: BookingTab[] = [
 ];
 
 export const TAB_GRADIENTS = {
-  oneway: { from: '#CBB26A', to: '#D4AF37' },
-  return: { from: '#FFD479', to: '#E2B64C' },
-  hourly: { from: '#EAB308', to: '#CBB26A' },
-  fleet: { from: '#D4AF37', to: '#A07F3E' },
+  oneway: { from: 'var(--brand-primary)', to: 'var(--brand-accent)' },
+  return: { from: 'var(--brand-accent)', to: 'var(--brand-secondary)' },
+  hourly: { from: 'var(--brand-secondary)', to: 'var(--brand-primary)' },
+  fleet: { from: 'var(--brand-accent)', to: 'var(--brand-primary)' },
 } as const;
 
 export const SIZE_CLASSES = {

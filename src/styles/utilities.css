@@ -1,0 +1,181 @@
+/**
+ * 🛠️ UTILITIES STYLES - Vantage Lane 2.0
+ * Custom utilities, helper classes, performance optimizations
+ */
+
+/* --- 🎴 VANTAGE LANE CARD SYSTEM --- */
+
+/* MASTER unified card style */
+.vl-card {
+  @apply rounded-2xl border border-white/10 backdrop-blur-xl
+  p-6 shadow-[0_12px_40px_rgba(0,0,0,0.45)];
+  background: rgba(10, 10, 10, 0.8);
+}
+
+/* Fix equal height grid */
+.vl-equal-grid {
+  @apply grid items-stretch;
+}
+
+.vl-equal {
+  @apply flex flex-col h-full;
+}
+
+/* MOBILE SIMETRIE PERFECTĂ */
+@media (max-width: 768px) {
+  .vl-card {
+    min-height: 180px;
+  }
+}
+
+/* --- 🎨 GRADIENT UTILITIES --- */
+
+.gradient-brand {
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
+}
+
+.gradient-luxury {
+  background: linear-gradient(
+    135deg,
+    var(--brand-primary) 0%,
+    var(--gold-classic) 50%,
+    var(--brand-accent) 100%
+  );
+}
+
+.gradient-dark {
+  background: linear-gradient(135deg, var(--background-dark) 0%, var(--neutral-900) 100%);
+}
+
+/* --- 🔥 GLOW EFFECTS --- */
+
+.glow-brand {
+  box-shadow: 0 0 20px var(--brand-primary);
+}
+
+.glow-luxury {
+  box-shadow:
+    0 0 30px var(--brand-primary),
+    0 0 60px var(--brand-primary);
+}
+
+/* --- 📱 RESPONSIVE UTILITIES --- */
+
+.safe-area-inset {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.scroll-smooth {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+/* --- ⚡ PERFORMANCE UTILITIES --- */
+
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.will-change-scroll {
+  will-change: scroll-position;
+}
+
+.contain-layout {
+  contain: layout;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+/* --- 🎭 INTERACTION UTILITIES --- */
+
+.hover-lift {
+  transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+}
+
+.click-shrink {
+  transition: transform 0.1s ease;
+}
+
+.click-shrink:active {
+  transform: scale(0.95);
+}
+
+/* --- 🌟 TEXT EFFECTS UTILITIES --- */
+
+.text-glow-gold {
+  text-shadow:
+    0 0 10px rgba(203, 178, 106, 0.25),
+    0 0 20px rgba(203, 178, 106, 0.15),
+    0 0 30px rgba(203, 178, 106, 0.08);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Force GPU layer pentru Safari */
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.logo-shimmer {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep 3s linear infinite;
+}
+
+/* --- 🏗️ LAYOUT UTILITIES --- */
+
+.fleet-card-vertical {
+  aspect-ratio: 3/4;
+}
+
+.motion-optimized {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* --- 📱 NAVBAR UTILITIES --- */
+
+.navbar-container {
+  background-color: var(--background-elevated);
+  border-bottom-color: var(--border-subtle);
+}
+
+.navbar-luxury {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  isolation: isolate;
+  backdrop-filter: blur(12px);
+  background-color: color-mix(in srgb, var(--background-elevated) 88%, rgba(0, 0, 0, 0.28) 12%);
+}
+
+@supports (backdrop-filter: blur(16px)) {
+  .navbar-backdrop {
+    backdrop-filter: blur(16px);
+  }
+}
+
+/* Pe mobil DISABLE blur complet - e prea scump pentru GPU */
+@media (max-width: 768px) {
+  .navbar-luxury {
+    backdrop-filter: none;
+    background-color: var(--background-elevated);
+  }
+}

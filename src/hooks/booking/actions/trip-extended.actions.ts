@@ -3,10 +3,10 @@
  * Structured sections, no duplicated logic (<180 lines)
  */
 
-import { BOOKING_CONSTANTS } from '../../../types/booking/index';
-import type { BookingStore, TripConfiguration } from '../../../types/booking/index';
 import type { GooglePlace } from '../../../components/ui/location-picker/types';
 import type { FleetSelection } from '../../../types/booking';
+import type { BookingStore, TripConfiguration } from '../../../types/booking/index';
+import { BOOKING_CONSTANTS } from '../../../types/booking/index';
 
 // ================== 🔧 SHARED HELPERS ==================
 type ZustandSet = (
@@ -155,8 +155,12 @@ export interface TripExtendedActions {
   setReturnAdditionalStops: (stops: GooglePlace[]) => void;
   setReturnDetails: (details: PartialTripConfig) => void;
 
+  // Flight numbers
+  setFlightNumberPickup: (flightNumber: string) => void;
+  setFlightNumberReturn: (flightNumber: string) => void;
+
   // Hourly specific
-  setHoursRequested: (hours: number | string) => void;
+  setHoursRequested: (hours: number) => void;
 
   // Passenger/Baggage with validation
   setPassengerCount: (count: number) => void;
@@ -165,10 +169,19 @@ export interface TripExtendedActions {
   getMaxBaggageForSelection: () => number;
   validatePassengerLimits: () => boolean;
 
-  // Missing BookingActions methods (TODO: move to proper modules)
+  // Canonical TripConfiguration actions (enterprise contract)
+  setPickup: (location: GooglePlace | null) => void;
+  setDropoff: (location: GooglePlace | null) => void;
+  setAdditionalStops: (stops: GooglePlace[]) => void;
+  setPickupDateTime: (date: Date | null, time: string) => void;
+  setReturnDateTime: (date: Date | null, time: string) => void;
+  setPassengers: (count: number) => void;
+  setBaggage: (count: number) => void;
+  resetTrip: () => void;
+
+  // Legacy-compatible aliases (to be migrated away from)
   setPickupLocation: (location: GooglePlace | null) => void;
   setDropoffLocation: (location: GooglePlace | null) => void;
-  setAdditionalStops: (stops: GooglePlace[]) => void;
   setFleetSelection: (selection: FleetSelection[]) => void;
   setDateTime: (date: Date | null, time: string) => void;
 }
@@ -182,35 +195,141 @@ export const createTripExtendedActions = (
   ...createHourlyActions(set, get),
   ...createPassengerActions(set, get),
 
-  // TODO: Implement missing BookingActions methods properly
-  setPickupLocation: (location: GooglePlace | null) => {
+  // Canonical TripConfiguration actions
+  setPickup: (location: GooglePlace | null) => {
     set(state => ({
-      tripConfiguration: { ...state.tripConfiguration, pickupLocation: location },
+      tripConfiguration: { ...state.tripConfiguration, pickup: location },
       isDirty: true,
     }));
+    safeRecalculatePricing(get);
   },
-  setDropoffLocation: (location: GooglePlace | null) => {
+
+  setDropoff: (location: GooglePlace | null) => {
     set(state => ({
-      tripConfiguration: { ...state.tripConfiguration, dropoffLocation: location },
+      tripConfiguration: { ...state.tripConfiguration, dropoff: location },
       isDirty: true,
     }));
+    safeRecalculatePricing(get);
   },
+
   setAdditionalStops: (stops: GooglePlace[]) => {
     set(state => ({
       tripConfiguration: { ...state.tripConfiguration, additionalStops: stops },
       isDirty: true,
     }));
+    safeRecalculatePricing(get);
   },
+
+  setPickupDateTime: (date: Date | null, time: string) => {
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        pickupDate: date,
+        pickupTime: time,
+      },
+      isDirty: true,
+    }));
+    safeRecalculatePricing(get);
+  },
+
+  setReturnDateTime: (date: Date | null, time: string) => {
+    set(state => {
+      const { returnDate: _prevReturnDate, ...rest } = state.tripConfiguration;
+      void _prevReturnDate;
+
+      const nextConfig: TripConfiguration =
+        date === null
+          ? {
+              ...rest,
+              returnTime: time,
+            }
+          : {
+              ...rest,
+              returnDate: date,
+              returnTime: time,
+            };
+
+      return {
+        tripConfiguration: nextConfig,
+        isDirty: true,
+      };
+    });
+    safeRecalculatePricing(get);
+  },
+
+  setPassengers: (count: number) => {
+    const state = get();
+    state.setPassengerCount(count);
+  },
+
+  setBaggage: (count: number) => {
+    const state = get();
+    state.setBaggageCount(count);
+  },
+
+  setFlightNumberPickup: (flightNumber: string) => {
+    set(state => ({
+      tripConfiguration: { ...state.tripConfiguration, flightNumberPickup: flightNumber },
+      isDirty: true,
+    }));
+  },
+
+  setFlightNumberReturn: (flightNumber: string) => {
+    set(state => ({
+      tripConfiguration: { ...state.tripConfiguration, flightNumberReturn: flightNumber },
+      isDirty: true,
+    }));
+  },
+
+  setHoursRequested: (hours: number) => {
+    set(state => ({
+      tripConfiguration: { ...state.tripConfiguration, hoursRequested: hours },
+      isDirty: true,
+    }));
+    safeRecalculatePricing(get);
+  },
+
+  resetTrip: () => {
+    const state = get();
+    if (typeof state.resetStep === 'function') {
+      state.resetStep(1);
+    }
+  },
+
+  // Legacy-compatible aliases (prefer canonical methods above)
+  setPickupLocation: (location: GooglePlace | null) => {
+    set(current => ({
+      tripConfiguration: { ...current.tripConfiguration, pickup: location },
+      isDirty: true,
+    }));
+    safeRecalculatePricing(get);
+  },
+
+  setDropoffLocation: (location: GooglePlace | null) => {
+    set(current => ({
+      tripConfiguration: { ...current.tripConfiguration, dropoff: location },
+      isDirty: true,
+    }));
+    safeRecalculatePricing(get);
+  },
+
   setFleetSelection: (selection: FleetSelection[]) => {
     set(state => ({
       tripConfiguration: { ...state.tripConfiguration, fleetSelection: selection },
       isDirty: true,
     }));
+    safeRecalculatePricing(get);
   },
+
   setDateTime: (date: Date | null, time: string) => {
-    set(state => ({
-      tripConfiguration: { ...state.tripConfiguration, date, time },
+    set(current => ({
+      tripConfiguration: {
+        ...current.tripConfiguration,
+        pickupDate: date,
+        pickupTime: time,
+      },
       isDirty: true,
     }));
+    safeRecalculatePricing(get);
   },
 });

@@ -7,7 +7,7 @@ import type React from 'react';
 
 import cardStyles from '../styles/card.module.css';
 import themeStyles from '../styles/theme.module.css';
-import { cardTokens, CardVariant, motionTokens } from '../tokens';
+import { motionTokens } from '../tokens';
 import { TestimonialBadge } from './TestimonialBadge';
 
 /**
@@ -37,7 +37,7 @@ interface TestimonialCardNewProps {
   /** Datele testimonialului */
   testimonial: Testimonial;
   /** Varianta cardului */
-  variant?: CardVariant;
+  variant?: 'default' | 'compact' | 'featured';
   /** CSS class suplimentară */
   className?: string;
   /** Click functionality removed - cards are display only */
@@ -49,23 +49,30 @@ export function TestimonialCardNew({
   className,
   // onClick removed - cards no longer clickable
 }: TestimonialCardNewProps): React.JSX.Element {
-  const variantStyles = cardTokens.variants[variant];
-
   return (
     <motion.article
       className={cn(
         cardStyles.card,
-        themeStyles.glass,
+        // Diagonal gradient background like Services
+        'bg-gradient-to-br',
+        'from-white/95 via-neutral-50/90 to-white/95',
+        'dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900',
+        // 3D border like Services
+        'border-2',
+        'border-t-neutral-700/40 border-l-neutral-700/40',
+        'border-b-neutral-800 border-r-neutral-800',
+        'dark:border-t-white/5 dark:border-l-white/5',
+        'dark:border-b-black dark:border-r-black',
+        // Glass effects + shadows
+        'backdrop-blur-xl',
+        'shadow-[0_8px_32px_rgba(0,0,0,0.1),0_1px_0_rgba(255,255,255,0.05)_inset]',
+        // Remove selection outline
+        'outline-none focus:outline-none focus-visible:outline-none',
         themeStyles.themeTransition,
         themeStyles.hoverGlow,
         cardStyles[variant],
         className
       )}
-      style={{
-        ...cardTokens.layout,
-        ...cardTokens.effects.base,
-        ...variantStyles,
-      }}
       variants={motionTokens.card}
       initial='initial'
       animate='animate'

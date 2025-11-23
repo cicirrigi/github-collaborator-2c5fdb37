@@ -13,8 +13,8 @@ import type { ReactNode } from 'react';
 import { luxuryCardTokens } from '@/design-system/tokens/luxury-card';
 
 import {
-  getIconEnhancementClasses,
-  getIconGlowBackgroundClasses,
+  // getIconEnhancementClasses,
+  // getIconGlowBackgroundClasses,
   getIconShimmerClasses,
   getIconShimmerInnerClasses,
   getIconSizeClasses,
@@ -54,8 +54,8 @@ export function renderIcon({
 
   // Generate dynamic classes based on props
   const iconSizeClasses = getIconSizeClasses(iconSize);
-  const _iconEnhancementClasses = getIconEnhancementClasses(iconEnhancement, !disabled);
-  const _iconGlowBackgroundClasses = getIconGlowBackgroundClasses(iconEnhancement);
+  // const iconEnhancementClasses = getIconEnhancementClasses(iconEnhancement, !disabled);
+  // const iconGlowBackgroundClasses = getIconGlowBackgroundClasses(iconEnhancement);
   const iconShimmerClasses = getIconShimmerClasses(iconEnhancement);
   const iconShimmerInnerClasses = getIconShimmerInnerClasses();
 
@@ -102,17 +102,18 @@ export function renderIcon({
           </div>
         )}
 
-        {/* 🎯 Icon Shimmer pe TOATE cardurile cu hover shimmer - cu luxury tokens */}
+        {/* 🎯 Icon Shimmer pe TOATE cardurile cu hover shimmer - ORCHESTRATED */}
         {hover === 'shimmer' && !disabled && (
-          <div className='duration-[var(--luxury-glow-duration)] pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity group-hover:opacity-100'>
+          <div className='pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
             <div
-              className='duration-[var(--luxury-shimmer-duration)] absolute inset-0 -translate-x-full -skew-x-12 transform transition-transform ease-out group-hover:translate-x-full'
+              className='absolute inset-0 -translate-x-full -skew-x-12 transform transition-transform ease-out group-hover:translate-x-full'
               style={{
-                width: luxuryCardTokens.effects.shimmer.width,
+                width: '200%',
                 height: '100%',
+                transitionDuration: '1200ms',
                 backgroundImage: shimmerColor
                   ? `linear-gradient(90deg, transparent, ${shimmerColor}66, transparent)`
-                  : luxuryCardTokens.effects.shimmer.gradient.replace('0.2', '0.4'), // Mai intens pentru iconițe
+                  : 'linear-gradient(90deg, transparent, rgba(var(--brand-secondary-rgb), 0.4), transparent)',
               }}
             />
           </div>

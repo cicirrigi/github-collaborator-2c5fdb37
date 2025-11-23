@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Facebook, Instagram, Youtube } from 'lucide-react';
 import type React from 'react';
 import { memo } from 'react';
@@ -77,13 +76,7 @@ const FooterBrand = memo(function FooterBrand({
 }: FooterBrandProps): React.JSX.Element {
   const tokens = useThemeTokens();
   return (
-    <motion.div
-      className={cn('space-y-6', className)}
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.6, ease: tokens.motion.easing.ease }}
-      viewport={{ once: true }}
-    >
+    <div className={cn('space-y-6', className)}>
       {/* Logo & Brand Name - Identical to Header but smaller */}
       <div className='space-y-4'>
         <div className='flex flex-col items-center md:items-start gap-1'>
@@ -156,7 +149,7 @@ const FooterBrand = memo(function FooterBrand({
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 });
 

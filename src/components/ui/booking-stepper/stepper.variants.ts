@@ -36,6 +36,7 @@ export const stepVariants = cva(
         ],
       },
       size: {
+        xs: 'w-6 h-6 text-xs',
         sm: 'w-8 h-8 text-xs',
         md: 'w-12 h-12 text-sm',
         lg: 'w-16 h-16 text-base',
@@ -81,7 +82,7 @@ export const connectorVariants = cva(
 export const stepperContainerVariants = cva('flex items-center w-full', {
   variants: {
     orientation: {
-      horizontal: 'flex-row justify-between items-center w-full',
+      horizontal: 'flex-row justify-center items-center w-full space-x-2',
       vertical: 'flex-col space-y-8 items-center',
     },
     spacing: {

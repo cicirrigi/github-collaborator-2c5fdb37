@@ -8,7 +8,7 @@ export const RoutePreview = ({ plan }: RoutePreviewProps) => {
   return (
     <div className='min-h-80 rounded-xl border border-gray-200/50 bg-gray-50/50 p-6 dark:border-gray-700/50 dark:bg-gray-800/50'>
       <div className='mb-4 flex items-center gap-3'>
-        <div className='h-5 w-5 rounded-full bg-gradient-to-r from-[#CBB26A] to-[#D4AF37]' />
+        <div className='h-5 w-5 rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]' />
         <h4 className='font-semibold text-gray-700 dark:text-gray-300'>Route Preview</h4>
       </div>
 

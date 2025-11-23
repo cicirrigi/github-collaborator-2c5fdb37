@@ -27,16 +27,17 @@ export interface FleetSwipeIndicatorProps {
  * Displays swipe instruction with smart auto-hide behavior
  */
 export function FleetSwipeIndicator({
-  text = 'Swipe to see our fleet',
+  text = 'Swipe to discover our fleet',
   autoHide,
   className,
 }: FleetSwipeIndicatorProps): React.JSX.Element {
   return (
     <div
-      className={`md:hidden flex justify-start pl-12 -mt-12 mb-8 ${className || ''}`}
+      className={`md:hidden flex justify-center -mt-12 mb-8 ${className || ''}`}
       style={{
         opacity: autoHide.isVisible ? 1 : 0,
         scale: autoHide.isVisible ? 1 : 0.95,
+        marginLeft: '-3rem', // Puțin mai la stânga
         transition:
           'opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), scale 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)',
       }}

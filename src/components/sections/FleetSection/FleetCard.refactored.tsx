@@ -11,6 +11,7 @@ import { motion } from 'framer-motion';
 import type React from 'react';
 import { memo } from 'react';
 
+import { animations } from '@/config/animations.config';
 import { designTokens } from '@/config/theme.config';
 import { cn } from '@/lib/utils/cn';
 
@@ -30,10 +31,11 @@ export const FleetCardRefactored = memo(function FleetCardRefactored({
   showPrice = true,
 }: FleetCardProps): React.JSX.Element {
   return (
-    <div
+    <motion.div
       className={cn('group relative', className)}
       role='article'
       aria-label={`${vehicle.name} vehicle details`}
+      variants={animations.fadeInUp}
     >
       {/* Motion Card Container */}
       <motion.div
@@ -79,7 +81,7 @@ export const FleetCardRefactored = memo(function FleetCardRefactored({
           }}
         />
       </motion.div>
-    </div>
+    </motion.div>
   );
 });
 

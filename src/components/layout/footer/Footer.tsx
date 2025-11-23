@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { animations } from '@/config/animations.config';
 import type React from 'react';
 import { memo } from 'react';
 
@@ -47,7 +48,7 @@ const Footer = memo(function Footer({
       role='contentinfo'
       className={cn('relative mt-auto backdrop-blur-lg transition-colors', className)}
       style={{
-        backgroundColor: designTokens.colors.background?.dark || 'var(--background-dark)',
+        backgroundColor: 'var(--background-dark)',
         marginLeft: 'auto',
         marginRight: 'auto',
         width: '100%',
@@ -66,30 +67,33 @@ const Footer = memo(function Footer({
         }}
       />
 
-      {/* Main Content with Motion */}
+      {/* Main Content with Motion - ORCHESTRATED */}
       <Container size='xl' className='relative py-16 ml-0'>
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-          viewport={{ once: true, margin: '-50px' }}
+          variants={animations.staggerContainer}
+          initial='hidden'
+          whileInView='visible'
+          viewport={animations.viewport}
           className='grid grid-cols-1 lg:grid-cols-12'
           style={{ gap: designTokens.footer.spacing.mainGrid }}
         >
-          {/* Brand Section with Social Icons */}
+          {/* Brand Section with Social Icons - Order 2 on mobile (appears last) */}
           {!hideBrand && (
-            <div className='lg:col-span-4'>
+            <motion.div className='order-2 lg:order-1 lg:col-span-4' variants={animations.fadeInUp}>
               <FooterBrand
                 brand={config.brand}
                 {...(!hideSocials && { socials: config.socials })}
               />
-            </div>
+            </motion.div>
           )}
 
-          {/* Links Section */}
-          <div className={cn(!hideBrand ? 'lg:col-span-8' : 'lg:col-span-12')}>
+          {/* Links Section - Order 1 on mobile (appears first) */}
+          <motion.div
+            className={cn('order-1 lg:order-2', !hideBrand ? 'lg:col-span-8' : 'lg:col-span-12')}
+            variants={animations.fadeInUp}
+          >
             <FooterLinks links={config.links} />
-          </div>
+          </motion.div>
         </motion.div>
       </Container>
 

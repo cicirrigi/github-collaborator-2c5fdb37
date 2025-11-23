@@ -1,4 +1,4 @@
-import tailwindcssForms from '@tailwindcss/forms';
+// import tailwindcssForms from '@tailwindcss/forms'; // Removed - causes focus ring conflicts
 import tailwindcssTypography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
 import tailwindcssAnimate from 'tailwindcss-animate';
@@ -11,6 +11,7 @@ const config: Config = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/features/**/*.{js,ts,jsx,tsx,mdx}', // ← AUTH MODULE!
     './src/design-system/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
@@ -115,16 +116,21 @@ const config: Config = {
           '0%, 95%, 100%': { opacity: '0', transform: 'translateX(-100%)' },
           '45%, 55%': { opacity: '0.25', transform: 'translateX(100%)' },
         },
+        'bounce-right': {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(6px)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'luxury-float': 'luxury-float 5s ease-in-out infinite',
         'shimmer-sweep': 'shimmer-sweep 6s infinite',
+        'bounce-right': 'bounce-right 4s ease-in-out infinite',
       },
     },
   },
-  plugins: [tailwindcssAnimate, tailwindcssForms, tailwindcssTypography],
+  plugins: [tailwindcssAnimate, tailwindcssTypography], // Removed tailwindcssForms - conflicts with custom focus
 };
 
 export default config;

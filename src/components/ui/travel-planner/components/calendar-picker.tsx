@@ -77,7 +77,7 @@ export const CalendarPicker = ({
   const getDayStyle = (date: Date) => {
     if (isPastDate(date)) return 'cursor-not-allowed opacity-40 text-gray-400';
     if (isPickupDate(date))
-      return 'bg-gradient-to-r from-[#CBB26A] to-[#D4AF37] text-white shadow-md';
+      return 'bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)] text-white shadow-md';
     if (isReturnDate(date))
       return 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md';
     if (isInRange(date))

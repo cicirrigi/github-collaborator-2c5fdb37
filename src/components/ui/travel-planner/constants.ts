@@ -1,3 +1,4 @@
+// LEGACY / DEMO: folosit doar în dev-demos. Styling curățat pe tokens, restul neschimbat.
 import { type TimeSlot } from '@/components/ui/travel-planner/types';
 
 // 🧩 Generate TIME_SLOTS automatically (zero hardcoding)
@@ -28,8 +29,8 @@ export const TIME_SLOTS = generateTimeSlots(6, 23, 15);
 
 // Smart Section Awareness - accent vizual per booking type
 export const SECTION_ACCENTS = {
-  oneway: 'border-l-4 border-[#CBB26A]',
-  return: 'border-l-4 border-[#D4AF37]',
+  oneway: 'border-l-4 border-[var(--brand-primary)]',
+  return: 'border-l-4 border-[var(--brand-accent)]',
   hourly: 'border-l-4 border-amber-500/70',
   fleet: 'border-l-4 border-yellow-400/60',
 } as const;
@@ -49,22 +50,25 @@ export const TRAVEL_THEME = {
     day: 'w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer',
     dayInactive: 'text-gray-400 dark:text-gray-600',
     dayToday: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
-    daySelected: 'bg-gradient-to-r from-[#CBB26A] to-[#D4AF37] text-white',
+    daySelected: 'bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)] text-white',
     dayInRange: 'bg-yellow-100/50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200',
     dayHover: 'hover:bg-yellow-50 dark:hover:bg-yellow-900/20',
   },
   timeSlots: {
     container: 'grid grid-cols-3 gap-2 max-h-60 overflow-y-auto pr-2',
     slot: 'px-3 py-2 rounded-full text-sm transition-all cursor-pointer text-center',
-    slotInactive: 'text-gray-600 dark:text-gray-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20',
-    slotSelected: 'bg-gradient-to-r from-[#CBB26A] to-[#D4AF37] text-white',
+    slotInactive:
+      'text-gray-600 dark:text-gray-400 hover:bg-yellow-50 dark:hover:bg-neutral-700/20',
+    slotSelected:
+      'bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)] text-white',
     slotDisabled: 'text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-50',
   },
   counters: {
     button: 'w-8 h-8 rounded-full flex items-center justify-center transition-colors',
     buttonInactive:
       'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-yellow-100 dark:hover:bg-yellow-900/20',
-    buttonActive: 'bg-gradient-to-r from-[#CBB26A] to-[#D4AF37] text-white',
+    buttonActive:
+      'bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)] text-white',
     display: 'min-w-12 text-center font-medium text-gray-700 dark:text-gray-300',
   },
   skeleton: {

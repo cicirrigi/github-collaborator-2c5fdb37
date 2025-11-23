@@ -5,7 +5,7 @@ import type React from 'react';
 import { cn } from '@/lib/utils/cn';
 
 // Theme styles imported via CSS custom properties
-import { motionTokens } from '../tokens';
+import { motionTokens, themeTokens } from '../tokens';
 
 /**
  * 🏷️ TestimonialBadge - Service Badge Component
@@ -102,9 +102,14 @@ const badgeStyles = {
 export function TestimonialBadge({
   service,
   variant = 'solid',
-  tone = 'gold',
+  tone: _tone = 'gold', // Unused but kept for API compatibility
   className,
 }: TestimonialBadgeProps): React.JSX.Element {
+  // Get orchestrated colors for this service
+  const serviceColors =
+    themeTokens.jobBadges[service as keyof typeof themeTokens.jobBadges] ||
+    themeTokens.jobBadges.default;
+
   return (
     <motion.span
       className={cn(
@@ -113,8 +118,11 @@ export function TestimonialBadge({
       )}
       style={{
         ...badgeStyles.base,
-        ...badgeStyles.variants[variant],
-        ...badgeStyles.tones[tone],
+        // Use orchestrated colors instead of variants
+        background: serviceColors.background,
+        color: serviceColors.text,
+        border: `1px solid ${serviceColors.border}`,
+        boxShadow: variant === 'solid' ? `0 2px 8px ${serviceColors.border}` : 'none',
         zIndex: 10, // Ensure badge stays above other elements
       }}
       variants={motionTokens.badge}

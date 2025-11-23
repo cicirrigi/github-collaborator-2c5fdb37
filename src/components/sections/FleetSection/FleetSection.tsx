@@ -7,9 +7,12 @@
 
 'use client';
 
+import { motion } from 'framer-motion';
 import type React from 'react';
 import { memo } from 'react';
 
+import { typography } from '@/design-system/tokens/typography';
+import { animations } from '@/config/animations.config';
 import { Container } from '@/components/layout/Container';
 import { SectionOrchestrator } from '@/components/layout/SectionOrchestrator';
 import { Text } from '@/components/ui';
@@ -54,7 +57,7 @@ const FleetSection = memo(function FleetSection({
         {!hideTitle && (
           <div className='text-center mb-16'>
             <h2
-              className='mb-4 tracking-wide text-4xl md:text-5xl font-light text-center'
+              className={`${typography.classes.sectionTitle} text-center mb-4`}
               style={{ color: 'var(--text-primary)' }}
             >
               <span
@@ -70,9 +73,8 @@ const FleetSection = memo(function FleetSection({
               <span
                 style={{
                   color: 'var(--brand-primary)',
-                  textShadow:
-                    '0 0 22px rgba(203, 178, 106, 0.6), 0 0 32px rgba(203, 178, 106, 0.35)',
-                  filter: 'brightness(1.18)',
+                  textShadow: typography.effects.goldGlow.textShadow,
+                  filter: typography.effects.goldGlow.filter,
                 }}
               >
                 {config.title.accent}
@@ -83,8 +85,7 @@ const FleetSection = memo(function FleetSection({
             <div
               className='w-24 h-1 mx-auto mb-6'
               style={{
-                background:
-                  'linear-gradient(to right, var(--brand-primary), var(--brand-secondary, #E5D485))',
+                background: 'linear-gradient(to right, var(--brand-primary), var(--brand-accent))',
               }}
             />
 
@@ -94,10 +95,14 @@ const FleetSection = memo(function FleetSection({
           </div>
         )}
 
-        {/* Vehicle Grid */}
-        <div
+        {/* Vehicle Grid - ORCHESTRATED (stânga → dreapta) */}
+        <motion.div
           className={cn('grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3', config.cta && 'mb-16')}
           style={{ gap: designTokens.fleet.spacing.cardGap }}
+          variants={animations.staggerContainer}
+          initial='hidden'
+          whileInView='visible'
+          viewport={animations.viewport}
         >
           {displayVehicles.map(vehicle => (
             <FleetCard
@@ -107,7 +112,7 @@ const FleetSection = memo(function FleetSection({
               showPrice={true}
             />
           ))}
-        </div>
+        </motion.div>
 
         {/* CTA Section */}
         {config.cta && (
@@ -128,7 +133,7 @@ const FleetSection = memo(function FleetSection({
                 color: 'var(--background-dark)',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.backgroundColor = 'var(--brand-secondary, #E5D485)';
+                e.currentTarget.style.backgroundColor = 'var(--brand-accent)';
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.backgroundColor = 'var(--brand-primary)';
@@ -152,7 +157,7 @@ const FleetSection = memo(function FleetSection({
             className='absolute left-1/2 top-0 -translate-x-1/2 w-96 h-px blur-sm'
             style={{
               background:
-                'linear-gradient(to right, transparent, var(--brand-secondary, #E5D485), transparent)',
+                'linear-gradient(to right, transparent, var(--brand-accent), transparent)',
               opacity: 0.6,
             }}
           />

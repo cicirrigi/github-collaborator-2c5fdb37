@@ -103,12 +103,7 @@ export const BookingStepper: React.FC<BookingStepperProps> = ({
         }}
       >
         <div className='w-full max-w-[1400px] px-4 sm:px-8 overflow-visible'>
-          {/* Progress Info */}
-          <div className='text-center mb-6'>
-            <div className='text-sm text-neutral-600 dark:text-neutral-400'>
-              {Math.round(progressPercentage)}% complete • Step {currentStep} of {steps.length}
-            </div>
-          </div>
+          {/* Progress Info - HIDDEN */}
 
           {/* Steps Container */}
           <div
@@ -179,7 +174,7 @@ export const BookingStepper: React.FC<BookingStepperProps> = ({
                           state: getConnectorState(),
                           filling: getConnectorFilling(),
                         }),
-                        'flex-1 h-0.5 mx-2 sm:mx-4 md:mx-6 lg:mx-8 rounded-full transition-all duration-500 ease-in-out',
+                        'w-4 sm:w-6 md:w-8 lg:w-10 h-px mx-0.5 sm:mx-1 md:mx-1.5 lg:mx-2 rounded-full transition-all duration-500 ease-in-out',
                         connectorClassName
                       )}
                     />

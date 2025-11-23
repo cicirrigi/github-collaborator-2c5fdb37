@@ -1,0 +1,93 @@
+/**
+ * 🎭 ANIMATIONS STYLES - Vantage Lane 2.0
+ * Keyframes, transitions, orchestrated animations
+ */
+
+/* --- ✨ LUXURY ANIMATIONS --- */
+
+@keyframes luxury-float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(2deg);
+  }
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-200%) skewX(-15deg);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(0%) skewX(-15deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+    opacity: 0;
+  }
+}
+
+@keyframes bounce-right {
+  0%,
+  100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px var(--brand-primary);
+  }
+  50% {
+    box-shadow: 0 0 40px var(--brand-primary);
+  }
+}
+
+/* --- 🎨 TEXT EFFECTS --- */
+
+.text-glow {
+  text-shadow:
+    0 0 10px var(--brand-primary),
+    0 0 20px var(--brand-primary),
+    0 0 30px var(--brand-primary);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- ⚡ GPU ACCELERATION HELPERS --- */
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* --- 👑 ANIMATION CLASS UTILITIES --- */
+
+.animate-logoGlow {
+  animation: glow-pulse 2.5s ease-in-out infinite;
+}
+
+.animate-luxuryFloat {
+  animation: luxury-float 4s ease-in-out infinite;
+}
+
+.animate-shimmerText {
+  animation: shimmer-sweep 4s linear infinite;
+}
+
+.animate-tilt {
+  animation: bounce-right 10s infinite linear;
+}

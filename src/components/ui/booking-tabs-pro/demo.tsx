@@ -18,7 +18,7 @@ export const BookingTabsProDemo = () => {
 
       <div className='mt-10 text-center'>
         <h2 className='text-2xl font-semibold text-white mb-2'>Selected:</h2>
-        <p className='text-[#CBB26A] text-xl font-medium capitalize'>{tab}</p>
+        <p className='text-[var(--brand-primary)] text-xl font-medium capitalize'>{tab}</p>
       </div>
 
       <div className='mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl'>

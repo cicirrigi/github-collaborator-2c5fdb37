@@ -1,217 +1,119 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/**
+ * 🎨 GLOBAL STYLES - Vantage Lane 2.0
+ * Modular CSS architecture for maintainability
+ */
 
-/* --- 🏛 1. FOUNDATION --- */
-@layer base {
-  :root {
-    color-scheme: dark;
+/* --- 📦 MODULAR IMPORTS --- */
+@import '../styles/base.css';
+@import '../styles/components.css';
 
-    /* Brand core */
-    --brand-primary: #cbb26a;
-    --brand-secondary: #1a1a1a;
-    --brand-accent: #d4af37;
+@import '../styles/animations.css';
+@import '../styles/utilities.css';
 
-    /* Backgrounds */
-    --background-light: #f9f9f9;
-    --background-dark: #0a0a0a;
-    --background-elevated: #1a1a1a;
-    --background-subtle: #0f0f0f;
+/* ⭕ STEP CONTAINER - REMOVED FOR MOBILE OPTIMIZATION */
 
-    /* Text */
-    --text-primary: #ffffff;
-    --text-secondary: #a3a3a3;
-    --text-muted: #737373;
-
-    /* Borders */
-    --border-default: rgba(255, 255, 255, 0.1);
-    --border-subtle: rgba(255, 255, 255, 0.05);
-
-    /* Brand variants */
-    --brand-primary-20: rgba(203, 178, 106, 0.2);
-    --brand-primary-30: rgba(203, 178, 106, 0.3);
-
-    /* States */
-    --success: #10b981;
-    --success-subtle: rgba(16, 185, 129, 0.1);
-    --destructive: #dc2626;
-    --destructive-foreground: #ffffff;
-    --destructive-hover: #b91c1c;
-    --destructive-subtle: rgba(220, 38, 38, 0.1);
-
-    /* System states */
-    --status-success: #10b981;
-    --status-warning: #f59e0b;
-    --status-error: #ef4444;
-
-    /* Durations */
-    --duration-fast: 150ms;
-    --duration-normal: 300ms;
-    --duration-slow: 500ms;
-  }
-
-  .light {
-    color-scheme: light;
-
-    /* Text */
-    --text-primary: #1a1a1a;
-    --text-secondary: #404040;
-    --text-muted: #737373;
-
-    /* Backgrounds */
-    --background-light: #ffffff;
-    --background-dark: #f3f3f3;
-    --background-elevated: #ffffff;
-    --background-subtle: #f8f8f8;
-
-    /* Borders */
-    --border-default: rgba(0, 0, 0, 0.1);
-    --border-subtle: rgba(0, 0, 0, 0.05);
-
-    /* Brand variants - same gold but with light transparency */
-    --brand-primary-20: rgba(203, 178, 106, 0.2);
-    --brand-primary-30: rgba(203, 178, 106, 0.3);
-
-    /* States */
-    --success: #059669;
-    --success-subtle: rgba(5, 150, 105, 0.1);
-    --destructive: #dc2626;
-    --destructive-foreground: #ffffff;
-    --destructive-hover: #b91c1c;
-    --destructive-subtle: rgba(220, 38, 38, 0.1);
-  }
-
-  /* Shadcn/ui compatibility */
-  :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --radius: 0.5rem;
-  }
-}
-
-/* --- 🧱 2. BASE STYLING --- */
-html,
-body {
-  font-family: 'Inter', sans-serif;
-  margin: 0;
-  padding: 0;
+/* 🟩 PREMIUM GRID */
+.vl-grid-premium {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+  align-items: start;
+  grid-auto-rows: auto;
   width: 100%;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
+}
+@media (min-width: 768px) {
+  .vl-grid-premium {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-flow: row dense;
+  }
 }
 
-::selection {
-  background-color: rgba(203, 178, 106, 0.25);
-  color: var(--brand-primary);
+/* 🟥 CARD CONTAINER */
+.vl-card-flex {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.45);
+  transition: all 0.25s ease;
+}
+@media (min-width: 768px) {
+  .vl-card-flex {
+    padding: 26px;
+  }
+}
+.vl-card-flex:hover {
+  transform: translateY(-3px);
+  background: rgba(10, 10, 10, 0.8);
+  border-color: rgba(245, 212, 105, 0.4);
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(245, 212, 105, 0.2);
 }
 
-/* Controlled theme transitions - only when needed */
-.theme-transition * {
-  transition:
-    color var(--duration-normal) ease,
-    background-color var(--duration-normal) ease,
-    border-color var(--duration-normal) ease;
+/* INTERNAL */
+.vl-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
 }
 
-input::placeholder {
-  color: var(--text-muted) !important;
+.vl-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: white;
+}
+.vl-input:focus {
+  outline: none;
+  border-color: #f5d469;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 0 2px rgba(245, 212, 105, 0.3);
+}
+
+/* NON-CONFLICTING DISPLAY INPUT */
+.vl-display-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: white;
+  /* Match input element behavior */
+  box-sizing: border-box;
+  display: block;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: normal;
+}
+
+/* RETURN BOX */
+.vl-return-box {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 128, 255, 0.4);
+  background: rgba(0, 128, 255, 0.15);
+  color: #7dc8ff;
+  text-align: center;
+  font-size: 13px;
+}
+
+/* FOOTER HINT */
+.vl-hint-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
   opacity: 0.7;
 }
-
-/* --- ⚡ 3. EFFECTS & ANIMATIONS --- */
-
-/* 🪩 Shimmer text-only (for logo text) */
-@keyframes shimmerText {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* ✨ Glow for icons/logos */
-@keyframes logoGlow {
-  0%,
-  100% {
-    filter: brightness(1) drop-shadow(0 0 8px rgba(203, 178, 106, 0.3));
-  }
-  50% {
-    filter: brightness(1.1) drop-shadow(0 0 12px rgba(203, 178, 106, 0.6));
-  }
-}
-
-/* 💨 Subtle float */
-@keyframes luxuryFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-2px);
-  }
-}
-
-/* 🎯 Tilt effect */
-@keyframes tilt {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(2deg);
-  }
-}
-
-/* 👑 Class utilities */
-.animate-logoGlow {
-  animation: logoGlow 2.5s ease-in-out infinite;
-}
-.animate-luxuryFloat {
-  animation: luxuryFloat 4s ease-in-out infinite;
-}
-.animate-shimmerText {
-  animation: shimmerText 4s linear infinite;
-}
-.animate-tilt {
-  animation: tilt 10s infinite linear;
-}
-
-/* ✅ Modern shimmer — masked version (no rectangular artifacts) */
-.logo-shimmer {
-  position: relative;
-  display: inline-block;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmerText 3s linear infinite;
-}
-
-/* 🎨 Fleet card vertical aspect ratio */
-.fleet-card-vertical {
-  aspect-ratio: 3/4;
-}
-
-/* ✅ Backdrop blur for navbars */
-@supports (backdrop-filter: blur(16px)) {
-  .navbar-backdrop {
-    backdrop-filter: blur(16px);
-  }
+.vl-hint-value {
+  color: #f5d469;
+  font-weight: 600;
 }

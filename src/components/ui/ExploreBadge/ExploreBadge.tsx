@@ -5,8 +5,8 @@
 
 'use client';
 
+import { ArrowRight, Eye } from 'lucide-react';
 import { forwardRef } from 'react';
-import { Eye } from 'lucide-react';
 
 import { cn } from '@/lib/utils/cn';
 import { exploreBadgeTokens } from './ExploreBadge.tokens';
@@ -125,19 +125,37 @@ export const ExploreBadge: ExploreBadgeComponent = forwardRef<HTMLDivElement, Ex
           {/* Badge Text - ascuns pe mobile */}
           <span className='whitespace-nowrap hidden md:inline'>{children}</span>
 
-          {/* Eye Icon cu animation */}
+          {/* Icons: Eye pe mobil, Arrow pe desktop */}
           {showArrow && (
-            <Eye
-              className={cn(
-                'transition-transform duration-200 ease-out',
-                'group-hover:scale-110' // scale for eye zoom effect
-              )}
-              style={{
-                width: `calc(${sizeTokens.fontSize} * 1.1)`,
-                height: `calc(${sizeTokens.fontSize} * 1.1)`,
-                strokeWidth: 2,
-              }}
-            />
+            <>
+              {/* Eye Icon - doar pe mobil */}
+              <Eye
+                className={cn(
+                  'md:hidden transition-transform duration-200 ease-out',
+                  'group-hover:scale-110'
+                )}
+                style={{
+                  width: `calc(${sizeTokens.fontSize} * 1.1)`,
+                  height: `calc(${sizeTokens.fontSize} * 1.1)`,
+                  strokeWidth: 2,
+                }}
+              />
+              {/* Arrow Icon - doar pe desktop cu animație permanentă */}
+              <ArrowRight
+                className={cn(
+                  'hidden md:inline-block transition-colors',
+                  'text-[var(--brand-primary)]', // Auriu by default
+                  'group-hover:text-[var(--background-dark)]' // Albă pe hover
+                )}
+                style={{
+                  width: `calc(${sizeTokens.fontSize} * 1.1)`,
+                  height: `calc(${sizeTokens.fontSize} * 1.1)`,
+                  strokeWidth: 2,
+                  transitionDuration: tokens.animations.duration,
+                  animation: `${tokens.animations.arrow.name} ${tokens.animations.arrow.duration} ${tokens.animations.arrow.easing} ${tokens.animations.arrow.iteration}`,
+                }}
+              />
+            </>
           )}
         </div>
 
@@ -161,8 +179,8 @@ export const ExploreBadge: ExploreBadgeComponent = forwardRef<HTMLDivElement, Ex
 );
 
 export type {
+  ExploreBadgeHover,
   ExploreBadgeProps,
   ExploreBadgeSize,
   ExploreBadgeVariant,
-  ExploreBadgeHover,
 } from './ExploreBadge.types';

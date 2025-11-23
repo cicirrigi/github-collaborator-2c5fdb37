@@ -26,7 +26,7 @@ export const brandConfig = {
       weight: 'light',
     },
     colors: {
-      primary: '#CBB26A', // Gold for VANTAGE
+      primary: 'var(--brand-primary)', // Gold for VANTAGE
       secondary: 'var(--text-primary)', // White/theme for LANE
     },
   },
@@ -100,23 +100,23 @@ export const brandConfig = {
 
   /** 🎨 VISUAL IDENTITY (Design System) */
   colors: {
-    primary: '#CBB26A', // Gold – prestige & warmth
-    secondary: '#1A1A1A', // Deep black – elegance & power
-    accent: '#D4AF37', // Champagne gold accent
+    primary: 'var(--brand-primary)', // Gold – prestige & warmth
+    secondary: 'var(--brand-secondary)', // Deep black – elegance & power
+    accent: 'var(--brand-accent)', // Champagne gold accent
     text: {
-      primary: '#FFFFFF',
-      secondary: '#A3A3A3',
-      muted: '#737373',
+      primary: 'var(--text-primary)',
+      secondary: 'var(--text-secondary)',
+      muted: 'var(--text-muted)',
     },
     background: {
-      light: '#F9F9F9',
-      dark: '#0A0A0A',
-      elevated: '#1A1A1A',
+      light: 'var(--background-light)',
+      dark: 'var(--background-dark)',
+      elevated: 'var(--background-elevated)',
     },
     status: {
-      success: '#10B981',
-      warning: '#F59E0B',
-      error: '#EF4444',
+      success: 'var(--success)',
+      warning: 'var(--status-warning)',
+      error: 'var(--status-error)',
     },
   },
 

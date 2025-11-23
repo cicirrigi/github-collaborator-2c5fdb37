@@ -2,11 +2,11 @@
 
 import type React from 'react';
 
+import { BackgroundOrchestrator } from '@/design-system/backgrounds';
 import { cn } from '@/lib/utils/cn';
 
 import Footer from './footer/Footer';
 // import Navbar from './navbar/Navbar'; // 🛡️ Stable version
-import { NewsletterSection } from '@/components/sections/NewsletterSection';
 import { NavbarLuxury as Navbar } from './navbar'; // ✨ Testing luxury version
 import { NavbarPortal } from './NavbarPortal';
 
@@ -34,21 +34,19 @@ import { NavbarPortal } from './NavbarPortal';
  */
 
 export interface LayoutProps {
-  /** Main content */
+  /** Page content */
   readonly children: React.ReactNode;
-  /** Hide navigation bar */
+  /** Hide navbar */
   readonly hideNavbar?: boolean;
   /** Hide footer */
   readonly hideFooter?: boolean;
-  /** Hide newsletter section */
-  readonly hideNewsletter?: boolean;
-  /** Custom main content styling */
+  /** Custom styling */
   readonly className?: string;
-  /** Main content container styling */
+  /** Custom container styling */
   readonly containerClassName?: string;
-  /** Enable full height layout */
+  /** Enable full-height layout (for single page apps) */
   readonly fullHeight?: boolean;
-  /** Page title for SEO */
+  /** Page-specific title for SEO */
   readonly pageTitle?: string;
 }
 
@@ -60,7 +58,6 @@ export default function Layout({
   children,
   hideNavbar = false,
   hideFooter = false,
-  hideNewsletter = false,
   className,
   containerClassName,
   fullHeight = false,
@@ -70,6 +67,9 @@ export default function Layout({
     <>
       {/* SEO Title */}
       {pageTitle && <title>{pageTitle} | Vantage Lane</title>}
+
+      {/* 🎨 Premium Background - Theme-aware, performance-optimized */}
+      <BackgroundOrchestrator preset='luxury' />
 
       {/* 🛡️ Portal-based Navbar (always fixed to viewport) */}
       {!hideNavbar && (
@@ -104,9 +104,6 @@ export default function Layout({
             {children}
           </div>
         </main>
-
-        {/* Newsletter Section - Luxury VIP area above footer */}
-        {!hideFooter && !hideNewsletter && <NewsletterSection />}
 
         {/* Footer */}
         {!hideFooter && <Footer />}

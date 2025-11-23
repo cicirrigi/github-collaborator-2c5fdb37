@@ -68,7 +68,7 @@ export const TravelPlannerDemo = () => {
       {/* Features Overview */}
       <div className='mt-12 grid gap-6 md:grid-cols-3'>
         <div className='rounded-xl bg-white p-6 text-center shadow-sm dark:bg-gray-800'>
-          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-[#CBB26A] to-[#D4AF37]'>
+          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]'>
             <span className='font-bold text-white'>📅</span>
           </div>
           <h4 className='mb-2 font-semibold'>Smart Calendar</h4>
@@ -78,7 +78,7 @@ export const TravelPlannerDemo = () => {
         </div>
 
         <div className='rounded-xl bg-white p-6 text-center shadow-sm dark:bg-gray-800'>
-          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-[#CBB26A] to-[#D4AF37]'>
+          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]'>
             <span className='font-bold text-white'>🗺️</span>
           </div>
           <h4 className='mb-2 font-semibold'>Dynamic Stops</h4>
@@ -88,7 +88,7 @@ export const TravelPlannerDemo = () => {
         </div>
 
         <div className='rounded-xl bg-white p-6 text-center shadow-sm dark:bg-gray-800'>
-          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-[#CBB26A] to-[#D4AF37]'>
+          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]'>
             <span className='font-bold text-white'>⚡</span>
           </div>
           <h4 className='mb-2 font-semibold'>Enterprise UX</h4>

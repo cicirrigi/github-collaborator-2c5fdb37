@@ -51,6 +51,10 @@ export interface TripConfiguration {
   fleetSelection: FleetSelection[];
   isFleetByHour?: boolean;
 
+  // Flight numbers (for airport transfers)
+  flightNumberPickup?: string;
+  flightNumberReturn?: string;
+
   // Pasageri și bagaje
   passengers: number;
   baggage: number;
@@ -58,7 +62,7 @@ export interface TripConfiguration {
   // Dates & times
   pickupDate: Date | null;
   pickupTime: string;
-  
+
   // Distance calculation (filled by Google Maps API)
   distanceKm?: number;
 }

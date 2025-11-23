@@ -3,14 +3,14 @@
  * Modular orchestrator importing from design-system/tokens
  */
 
-import { colors } from '../design-system/tokens/colors';
 import { animations, motion } from '../design-system/tokens/animations';
-import { typography } from '../design-system/tokens/typography';
-import { spacing } from '../design-system/tokens/spacing';
+import { colors } from '../design-system/tokens/colors';
 import { gradients } from '../design-system/tokens/gradients';
+import { spacing } from '../design-system/tokens/spacing';
+import { typography } from '../design-system/tokens/typography';
 import { buttonVariants } from '../design-system/variants/button.variants';
-import { textVariants } from '../design-system/variants/text.variants';
 import { newsletterVariants } from '../design-system/variants/newsletter.variants';
+import { textVariants } from '../design-system/variants/text.variants';
 
 // Consolidated design tokens (imported from modular files)
 export const designTokens = {
@@ -54,7 +54,7 @@ export const designTokens = {
       // 3D Floating Effects
       shadowElevated: '0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.08)',
       shadowFloat: '0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)',
-      goldBorder: '2px solid var(--brand-primary)',
+      goldBorder: '1px solid var(--brand-primary)',
       goldGlow: '0 0 20px rgba(203, 178, 106, 0.3), 0 0 40px rgba(203, 178, 106, 0.1)',
       transition: {
         duration: 0.3, // 300ms transitions
@@ -62,11 +62,11 @@ export const designTokens = {
       },
     },
     categoryColors: {
-      Executive: '#CBB26A', // gold brand color (unified)
-      Luxury: '#CBB26A', // gold brand color
-      SUV: '#CBB26A', // gold brand color (unified)
-      MPV: '#CBB26A', // gold brand color (unified)
-      Sports: '#CBB26A', // gold brand color (unified)
+      Executive: 'var(--brand-primary)', // gold brand color (unified)
+      Luxury: 'var(--brand-primary)', // gold brand color
+      SUV: 'var(--brand-primary)', // gold brand color (unified)
+      MPV: 'var(--brand-primary)', // gold brand color (unified)
+      Sports: 'var(--brand-primary)', // gold brand color (unified)
     },
     statusColors: {
       available: {

@@ -43,7 +43,7 @@ export interface BookingState {
   auth?: import('./common.types').AuthState;
   limits?: { passengers: number; baggage: number };
   stepDurations?: Record<number, number>;
-  
+
   // Advanced functionality
   onComplete?: (summary: import('./step3.types').BookingSummary) => void;
   clearStepError?: (step: number) => void;
@@ -75,6 +75,19 @@ export interface BookingActions {
   setBaggageCount: (count: number) => void;
   setDateTime: (date: Date | null, time: string) => void;
 
+  // Canonical TripConfiguration helpers
+  setPickup: (
+    location: import('../../components/ui/location-picker/types').GooglePlace | null
+  ) => void;
+  setDropoff: (
+    location: import('../../components/ui/location-picker/types').GooglePlace | null
+  ) => void;
+  setPickupDateTime: (date: Date | null, time: string) => void;
+  setReturnDateTime: (date: Date | null, time: string) => void;
+  setPassengers: (count: number) => void;
+  setBaggage: (count: number) => void;
+  resetTrip: () => void;
+
   // Vehicle & Services
   setVehicleSelection: (selection: import('./step2.types').VehicleSelection) => void;
   toggleService: (serviceId: string) => void;
@@ -93,15 +106,15 @@ export interface BookingActions {
   resetBooking: () => void;
   saveToStorage: () => void;
   loadFromStorage: () => void;
-  
+
   // Enhanced utility actions
   getBookingSummary: () => import('./step3.types').BookingSummary;
   resetStep: (step: number) => void;
-  
+
   // Time tracking
   startTimer: (step: number) => void;
   stopTimer: (step: number) => void;
-  
+
   // Completion
   setOnComplete: (callback: (summary: import('./step3.types').BookingSummary) => void) => void;
   completeBooking: () => void;

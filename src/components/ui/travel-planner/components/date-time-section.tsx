@@ -106,7 +106,7 @@ export const DateTimeSection = ({
       <div className='space-y-4'>
         {/* Time Header */}
         <div className='mb-4 flex items-center gap-3'>
-          <div className='h-5 w-5 rounded-full bg-gradient-to-r from-[#CBB26A] to-[#D4AF37]' />
+          <div className='h-5 w-5 rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]' />
           <h4 className='font-semibold text-gray-700 dark:text-gray-300'>Select Time</h4>
         </div>
 

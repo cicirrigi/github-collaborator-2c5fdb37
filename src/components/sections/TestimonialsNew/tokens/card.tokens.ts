@@ -85,11 +85,18 @@ export const cardTokens = {
     },
   },
 
-  // 🌟 Effects pentru glassmorphism
+  // 🌟 Effects pentru glassmorphism cu 3D border and diagonal gradient
   effects: {
     base: {
-      background: 'var(--testimonial-bg)',
-      border: '1px solid var(--testimonial-border)',
+      background:
+        'linear-gradient(to bottom right, var(--background-elevated), var(--background-dark), var(--background-elevated))',
+      // 3D beveled border - stronger contrast like Services cards
+      borderWidth: '2px',
+      borderStyle: 'solid',
+      borderTopColor: 'rgba(255, 255, 255, 0.05)',
+      borderLeftColor: 'rgba(255, 255, 255, 0.05)',
+      borderBottomColor: 'var(--background-dark)',
+      borderRightColor: 'var(--background-dark)',
       backdropFilter: 'blur(12px)',
       WebkitBackdropFilter: 'blur(12px)',
       boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.05) inset',
@@ -102,7 +109,8 @@ export const cardTokens = {
       willChange: 'transform, box-shadow',
     },
     glow: {
-      boxShadow: '0 0 20px rgba(203, 178, 106, 0.2), 0 8px 32px rgba(0, 0, 0, 0.1)',
+      background:
+        'linear-gradient(to bottom right, var(--background-elevated), var(--background-dark), var(--background-elevated))',
     },
   },
 

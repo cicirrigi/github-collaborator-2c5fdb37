@@ -126,7 +126,7 @@ const LuxuryCard = forwardRef<HTMLElement, LuxuryCardProps>(
         })}
 
         {/* Content Layer */}
-        <div className='relative z-10'>
+        <div className='relative z-10 h-full'>
           {renderContent({
             children,
             icon,

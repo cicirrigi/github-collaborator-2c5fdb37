@@ -35,26 +35,18 @@ export function TapIndicator({
       }}
       // Fără animație pe container - doar ripple-ul să fie animat
     >
-      {/* Hand suprapus cu punct cu ripple */}
-      <div className='relative flex items-center justify-center'>
+      {/* Punct cu ripple și text "Tap" */}
+      <div className='relative flex flex-col items-center justify-center gap-1'>
+        {/* Text "Tap" mic deasupra */}
+        <span
+          className='text-xs font-medium tracking-wide'
+          style={{ color: 'var(--brand-primary)' }}
+        >
+          Tap
+        </span>
+
         {/* Punct static cu ripple */}
-        <div className='relative w-3 h-3 flex items-center justify-center translate-y-1 -translate-x-1'>
-          {/* Hand Icon suprapus - ajustat poziția */}
-          <motion.div
-            className='absolute top-1 -left-1 transform -translate-x-1/2 z-20'
-            animate={{
-              y: [0, -3, 0],
-            }}
-            transition={{
-              duration: 1.8,
-              repeat: Infinity,
-              ease: [0.4, 0, 0.6, 1],
-              repeatDelay: 0.4,
-            }}
-            style={{ willChange: 'transform' }}
-          >
-            <span className='text-xl'>👆</span>
-          </motion.div>
+        <div className='relative w-3 h-3 flex items-center justify-center'>
           {/* Punct plin central - static */}
           <div
             className='w-3 h-3 bg-current rounded-full relative z-10'

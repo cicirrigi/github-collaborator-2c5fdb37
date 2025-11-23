@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { animations } from '@/config/animations.config';
 import type React from 'react';
 import { memo, useState } from 'react';
 
@@ -55,16 +56,19 @@ const FooterNewsletter = memo(function FooterNewsletter({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-      viewport={{ once: true }}
+      variants={animations.fadeInUp}
+      initial='hidden'
+      whileInView='visible'
+      viewport={animations.viewport}
       className={cn(
         'relative mx-auto w-full max-w-[420px] p-8 rounded-3xl',
-        'backdrop-blur-xl bg-black/40 border border-white/5 shadow-[0_0_40px_-10px_rgba(203,178,106,0.25)]',
+        'backdrop-blur-xl bg-black/40 shadow-[0_0_40px_-10px_rgba(203,178,106,0.25)]',
         'overflow-hidden',
         className
       )}
+      style={{
+        border: '1px solid rgba(203, 178, 106, 0.2)',
+      }}
     >
       {/* Glow subtle aurie */}
       <div className='absolute inset-0 rounded-3xl bg-[radial-gradient(circle_at_top,var(--brand-primary)/8,transparent_70%)]' />

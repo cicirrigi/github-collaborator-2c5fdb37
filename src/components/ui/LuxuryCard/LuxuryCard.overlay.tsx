@@ -7,7 +7,7 @@
 
 import type { ReactNode } from 'react';
 
-import { luxuryCardTokens } from '@/design-system/tokens/luxury-card';
+// import { luxuryCardTokens } from '@/design-system/tokens/luxury-card';
 
 import type { LuxuryCardHover } from './LuxuryCard.types';
 
@@ -36,27 +36,27 @@ export function renderShimmerOverlay({
 
   return (
     <>
-      {/* 🌟 Golden glow on hover - folosind luxury tokens */}
+      {/* 🌟 Golden glow on hover - ORCHESTRATED */}
       <div
-        className='duration-[var(--luxury-glow-duration)] absolute inset-0 rounded-xl opacity-0 transition-opacity group-hover:opacity-100'
+        className='absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-100'
         style={{
           background: glowColor
-            ? `linear-gradient(135deg, ${glowColor}0D, transparent)`
-            : luxuryCardTokens.effects.glow.gradient,
+            ? `linear-gradient(135deg, ${glowColor}1A, transparent)`
+            : 'linear-gradient(135deg, rgba(var(--brand-primary-rgb), 0.1), transparent)',
         }}
       />
 
-      {/* ⚡ Card shimmer sweep effect - folosind luxury tokens */}
-      <div className='duration-[var(--luxury-glow-duration)] pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity group-hover:opacity-100'>
+      {/* ⚡ Card shimmer sweep effect - ORCHESTRATED */}
+      <div className='pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
         <div
           className='absolute inset-0 -translate-x-full -skew-x-12 transform transition-transform ease-out group-hover:translate-x-full'
           style={{
-            width: luxuryCardTokens.effects.shimmer.width,
+            width: '200%',
             height: '100%',
-            transitionDuration: luxuryCardTokens.effects.shimmer.duration,
+            transitionDuration: '1000ms',
             backgroundImage: shimmerColor
-              ? `linear-gradient(90deg, transparent, ${shimmerColor}33, transparent)`
-              : luxuryCardTokens.effects.shimmer.gradient,
+              ? `linear-gradient(90deg, transparent, ${shimmerColor}4D, transparent)`
+              : 'linear-gradient(90deg, transparent, rgba(var(--brand-primary-rgb), 0.3), transparent)',
           }}
         />
       </div>

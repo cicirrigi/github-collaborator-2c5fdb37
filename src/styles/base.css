@@ -1,0 +1,46 @@
+/**
+ * 🏛️ BASE STYLES - Vantage Lane 2.0
+ * Tailwind imports, browser resets, minimal foundation
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './tokens.css';
+@import './utilities.css';
+@import './typography.css';
+@import './compat-shadcn.css';
+
+/* --- 🔧 BROWSER RESETS --- */
+
+/* Fix browser defaults DOAR pentru auth inputs, NU pentru buttons */
+input[type='text']:not([class*='focus:ring']),
+input[type='email']:not([class*='focus:ring']),
+input[type='password']:not([class*='focus:ring']),
+input[type='tel']:not([class*='focus:ring']),
+input[type='checkbox']:not([class*='focus:ring']) {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  outline: none !important;
+  /* border: 0 !important; */ /* COMMENTED - this was overriding Pricing button borders! */
+  /* box-shadow: none !important; */ /* COMMENTED - this was killing focus rings! */
+}
+
+/* Safari specific border fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='tel'],
+  input[type='checkbox'] {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    -webkit-border-radius: 8px !important;
+    border-radius: 8px !important;
+    -webkit-background-clip: padding-box !important;
+    background-clip: padding-box !important;
+    /* border: 0 !important; */ /* COMMENTED - this was overriding Pricing button borders! */
+  }
+}

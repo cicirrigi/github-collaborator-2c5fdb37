@@ -1,0 +1,345 @@
+/**
+ * 📅 Unified DatePicker Styling - Vantage Lane
+ * Scoped after react-datepicker.css, using bookingType className:
+ * - .oneway-calendar, .hourly-calendar, .fleet-calendar, .bespoke-calendar
+ * - .return-calendar (modal light)
+ * - .daily-calendar (range)
+ */
+
+:root {
+  --dp-dark: #050505;
+  --dp-light: #fff;
+  --dp-border-dark: rgba(255, 255, 255, 0.08);
+  --dp-border-light: rgba(0, 0, 0, 0.08);
+  --dp-accent: #f5d469;
+  --dp-text-light: #fff;
+  --dp-text-dark: #1a1a1a;
+}
+
+/* Calendar MUST NOT draw its own card - Force stable layout */
+.react-datepicker {
+  border: none !important;
+  background: rgba(10, 10, 10, 0.8) !important;
+  box-shadow: none !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  font-family: inherit !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  align-items: stretch !important;
+  min-width: 300px !important;
+  width: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Force full width for calendar wrapper */
+.react-datepicker-wrapper {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.react-datepicker__month {
+  width: 100% !important;
+}
+
+/* Month container pentru perfect alignment */
+.react-datepicker__month-container {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.react-datepicker__input-container {
+  width: 100% !important;
+}
+
+.react-datepicker__header {
+  background: rgba(10, 10, 10, 0.8) !important;
+  border-bottom: 1px solid var(--dp-border-dark) !important;
+}
+
+.react-datepicker__current-month {
+  color: var(--dp-accent) !important;
+  font-weight: 600 !important;
+}
+
+/* Time header să aibă aceeași culoare ca luna - specificitate mare */
+.react-datepicker__header--time,
+.react-datepicker__header--time .react-datepicker__header__dropdown,
+.react-datepicker__header--time * {
+  color: var(--dp-accent) !important;
+  font-weight: 600 !important;
+  background: rgba(10, 10, 10, 0.8) !important;
+}
+
+/* Force time header text color pentru toate calendare inline */
+.oneway-calendar .react-datepicker__header--time,
+.hourly-calendar .react-datepicker__header--time,
+.daily-calendar .react-datepicker__header--time,
+.fleet-calendar .react-datepicker__header--time,
+.bespoke-calendar .react-datepicker__header--time {
+  color: var(--dp-accent) !important;
+  font-weight: 600 !important;
+  background: rgba(10, 10, 10, 0.8) !important;
+}
+
+.react-datepicker__day-name {
+  color: #888 !important;
+}
+
+.react-datepicker__day {
+  color: var(--dp-text-light) !important;
+}
+
+/* Hover pentru zile normale - glow effect în loc de background */
+.react-datepicker__day:hover {
+  background: transparent !important;
+  color: var(--dp-text-light) !important;
+  border-radius: 8px !important;
+  transform: scale(1.05) !important;
+  transition: all 0.15s ease !important;
+  box-shadow: 0 0 12px rgba(245, 212, 105, 0.4) !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background: rgba(245, 212, 105, 0.6) !important;
+  color: var(--dp-text-light) !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  outline: 2px solid rgba(245, 212, 105, 0.8) !important;
+  outline-offset: -1px !important;
+}
+
+/* Data de azi - auriu plin */
+.react-datepicker__day--today {
+  background: var(--dp-accent) !important;
+  color: var(--dp-text-dark) !important;
+  border-radius: 8px !important;
+}
+
+/* Date din trecut - grayed out */
+.react-datepicker__day--disabled {
+  background: rgba(10, 10, 10, 0.8) !important;
+  color: rgba(255, 255, 255, 0.3) !important;
+  cursor: not-allowed !important;
+}
+
+.react-datepicker__day--disabled:hover {
+  background: rgba(10, 10, 10, 0.8) !important;
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Time Picker - Force immediate visibility */
+.react-datepicker__time-container {
+  width: 120px !important;
+  min-width: 120px !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(10, 10, 10, 0.8) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.react-datepicker__time {
+  background: rgba(10, 10, 10, 0.8) !important;
+}
+
+.react-datepicker__time-box {
+  background: rgba(10, 10, 10, 0.8) !important;
+}
+
+.react-datepicker__time-list {
+  background: rgba(10, 10, 10, 0.8) !important;
+  height: 200px !important;
+  overflow-y: auto !important;
+  padding-right: 12px !important;
+}
+
+.react-datepicker__time-list-item {
+  padding: 8px 8px 8px 12px !important;
+  color: var(--dp-text-light) !important;
+  background: rgba(10, 10, 10, 0.8) !important;
+  border-radius: 6px !important;
+  margin: 2px 8px 2px 4px !important;
+  text-align: center !important;
+  display: block !important;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace !important;
+  font-size: 13px !important;
+}
+
+.react-datepicker__time-list-item:hover {
+  background: transparent !important;
+  width: 100% !important;
+  margin: 2px 0px !important;
+  padding: 8px 8px !important;
+  box-sizing: border-box !important;
+  border-radius: 6px !important;
+  box-shadow: 0 0 8px rgba(245, 212, 105, 0.3) !important;
+  transition: all 0.15s ease !important;
+}
+
+.react-datepicker__time-list-item--selected {
+  background: var(--dp-accent) !important;
+  color: var(--dp-text-dark) !important;
+  font-weight: 600 !important;
+  width: 100% !important;
+  margin: 2px 0px !important;
+  padding: 8px 8px !important;
+  box-sizing: border-box !important;
+}
+
+/* Hover special pentru ora selectată - păstrează auriu dar mai intens */
+.react-datepicker__time-list-item--selected:hover {
+  background: var(--dp-accent) !important;
+  color: var(--dp-text-dark) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 0 8px rgba(245, 212, 105, 0.5) !important;
+  transform: scale(1.02) !important;
+  transition: all 0.15s ease !important;
+}
+
+.react-datepicker__time-list-item--disabled {
+  color: #666 !important;
+  background: rgba(10, 10, 10, 0.8) !important;
+  opacity: 0.5 !important;
+}
+
+/* Scroll subtil și fin pentru time picker */
+.react-datepicker__time-list {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent !important;
+}
+
+.react-datepicker__time-list::-webkit-scrollbar {
+  width: 4px !important;
+}
+
+.react-datepicker__time-list::-webkit-scrollbar-track {
+  background: rgba(10, 10, 10, 0.8) !important;
+}
+
+.react-datepicker__time-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 2px !important;
+}
+
+.react-datepicker__time-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Daily - now uses single date + time picker like hourly */
+
+/* Return modal calendar - folosește tema default dark ca oneway */
+.return-calendar .react-datepicker {
+  border: none !important;
+  background: rgba(10, 10, 10, 0.8) !important;
+  box-shadow: none !important;
+}
+
+.return-calendar .react-datepicker__header {
+  background: rgba(10, 10, 10, 0.8) !important;
+  border-bottom: 1px solid var(--dp-border-dark) !important;
+}
+
+.return-calendar .react-datepicker__current-month {
+  color: var(--dp-accent) !important;
+  font-weight: 600 !important;
+}
+
+.return-calendar .react-datepicker__header--time {
+  color: var(--dp-accent) !important;
+  font-weight: 600 !important;
+  background: rgba(10, 10, 10, 0.8) !important;
+}
+
+.return-calendar .react-datepicker__day-name {
+  color: #888 !important;
+}
+
+.return-calendar .react-datepicker__day {
+  color: var(--dp-text-light) !important;
+}
+
+.return-calendar .react-datepicker__day:hover {
+  background: transparent !important;
+  color: var(--dp-text-light) !important;
+  border-radius: 8px !important;
+  transform: scale(1.05) !important;
+  transition: all 0.15s ease !important;
+  box-shadow: 0 0 12px rgba(245, 212, 105, 0.4) !important;
+}
+
+.return-calendar .react-datepicker__day--selected,
+.return-calendar .react-datepicker__day--keyboard-selected {
+  background: rgba(245, 212, 105, 0.6) !important;
+  color: var(--dp-text-light) !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  outline: 2px solid rgba(245, 212, 105, 0.8) !important;
+  outline-offset: -1px !important;
+}
+
+.return-calendar .react-datepicker__day--today {
+  background: var(--dp-accent) !important;
+  color: var(--dp-text-dark) !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+}
+
+.return-calendar .react-datepicker__time-container {
+  background: rgba(10, 10, 10, 0.8) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.return-calendar .react-datepicker__time-list-item {
+  color: var(--dp-text-light) !important;
+  background: rgba(10, 10, 10, 0.8) !important;
+}
+
+.return-calendar .react-datepicker__time-list-item:hover {
+  background: transparent !important;
+  box-shadow: 0 0 8px rgba(245, 212, 105, 0.3) !important;
+  transition: all 0.15s ease !important;
+}
+
+.return-calendar .react-datepicker__time-list-item--selected {
+  background: var(--dp-accent) !important;
+  color: var(--dp-text-dark) !important;
+  font-weight: 600 !important;
+}
+
+.return-calendar .react-datepicker__time-list-item--selected:hover {
+  background: var(--dp-accent) !important;
+  color: var(--dp-text-dark) !important;
+  box-shadow: 0 0 8px rgba(245, 212, 105, 0.5) !important;
+}
+
+/* Zile disabled în return-calendar - la fel ca la inline */
+.return-calendar .react-datepicker__day--disabled {
+  background: rgba(10, 10, 10, 0.8) !important;
+  color: rgba(255, 255, 255, 0.3) !important;
+  cursor: not-allowed !important;
+}
+
+.return-calendar .react-datepicker__day--disabled:hover {
+  background: rgba(10, 10, 10, 0.8) !important;
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.return-calendar .react-datepicker__time-list-item--disabled {
+  color: #666 !important;
+  background: rgba(10, 10, 10, 0.8) !important;
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Ascunde săgețile default - păstrăm funcționalitatea dar le facem invizibile */
+.react-datepicker__navigation {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

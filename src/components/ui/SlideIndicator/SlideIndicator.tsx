@@ -8,27 +8,33 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { ChevronRight } from 'lucide-react';
 import type React from 'react';
 
 export interface SlideIndicatorProps {
-  readonly text: string;
+  readonly text?: string;
   readonly className?: string;
+  readonly showText?: boolean;
 }
 
 export const SlideIndicator = function SlideIndicator({
   text,
   className = '',
+  showText = true,
 }: SlideIndicatorProps): React.JSX.Element {
   return (
     <div
-      className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium gap-2 ${className}`}
+      className={`inline-flex items-center text-sm font-medium gap-2 px-3 py-1.5 rounded-lg ${className}`}
       style={{
-        backgroundColor: 'var(--brand-primary-05)',
         color: 'var(--brand-primary)',
-        border: '1px solid var(--brand-primary-20)',
+        backgroundColor: 'rgba(203, 178, 106, 0.05)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        border: '0.5px solid rgba(203, 178, 106, 0.15)',
+        boxShadow: '0 2px 8px rgba(203, 178, 106, 0.08)',
       }}
     >
-      <span>{text}</span>
+      {showText && text && <span>{text}</span>}
       <motion.div
         animate={{ x: [0, 4, 0] }}
         transition={{
@@ -37,7 +43,7 @@ export const SlideIndicator = function SlideIndicator({
           ease: 'easeInOut',
         }}
       >
-        →
+        <ChevronRight size={18} strokeWidth={2} />
       </motion.div>
     </div>
   );

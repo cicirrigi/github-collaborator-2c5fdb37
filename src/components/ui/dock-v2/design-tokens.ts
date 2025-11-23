@@ -55,7 +55,7 @@ export const dockTokens = {
 
     // Brand colors - CSS variables compatible
     primary: 'var(--brand-primary)',
-    gold: '#CBB26A', // Authentic gold color for dock icons
+    gold: 'var(--brand-primary)', // Authentic gold color for dock icons
 
     // Border colors - ADAPTIVE
     border: {

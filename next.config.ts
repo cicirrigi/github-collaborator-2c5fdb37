@@ -1,5 +1,5 @@
-import type { NextConfig } from 'next';
 import { withSentryConfig } from '@sentry/nextjs';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -49,7 +49,8 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+            value:
+              'camera=(), microphone=(), geolocation=(self "localhost:3002"), payment=(), usb=()',
           },
           {
             key: 'Content-Security-Policy',
