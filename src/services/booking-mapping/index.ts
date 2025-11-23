@@ -20,11 +20,17 @@ export { mapHourlyBooking } from './mappers/hourly.mapper';
 export { mapOnewayBooking } from './mappers/oneway.mapper';
 export { mapReturnBooking } from './mappers/return.mapper';
 
+// Future implementation - placeholder mapper exports
+export { mapCorporateBooking } from './mappers/corporate.mapper';
+export { mapEventsBooking } from './mappers/events.mapper';
+
 // Export utilities
 export { mapAdditionalStops, mapReturnAdditionalStops } from './additional-stops';
 export {
   mapBespokeBookingToLegs,
+  mapCorporateBookingToLegs,
   mapDailyBookingToLegs,
+  mapEventsBookingToLegs,
   mapFleetBookingToLegs,
   mapHourlyBookingToLegs,
   mapOnewayBookingToLegs,

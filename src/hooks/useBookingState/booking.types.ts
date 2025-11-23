@@ -14,7 +14,15 @@ export interface LocationData {
   components: Record<string, string>;
 }
 
-export type BookingType = 'oneway' | 'return' | 'hourly' | 'daily' | 'fleet' | 'bespoke';
+export type BookingType =
+  | 'oneway'
+  | 'return'
+  | 'hourly'
+  | 'daily'
+  | 'fleet'
+  | 'bespoke'
+  | 'events'
+  | 'corporate';
 
 export interface TripConfiguration {
   // Locations

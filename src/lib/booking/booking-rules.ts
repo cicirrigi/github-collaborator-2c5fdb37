@@ -5,7 +5,15 @@
 
 import type { TripConfiguration } from '@/hooks/useBookingState';
 
-export type BookingType = 'oneway' | 'return' | 'hourly' | 'daily' | 'fleet' | 'bespoke';
+export type BookingType =
+  | 'oneway'
+  | 'return'
+  | 'hourly'
+  | 'daily'
+  | 'fleet'
+  | 'bespoke'
+  | 'events'
+  | 'corporate';
 
 /**
  * 🔑 Field IDs derivate STRICT din TripConfiguration (zero mismatch!)
@@ -104,6 +112,26 @@ export const BOOKING_RULES: Record<BookingType, BookingRule> = {
     showPassengers: true,
     showFlightNumbers: true, // Often for VIP/special events
     requiredFields: ['pickup', 'pickupDateTime', 'passengers', 'customRequirements'], // Custom requirements mandatory for quote
+  },
+  events: {
+    showReturn: false, // TO BE IMPLEMENTED - Events might need return coordination
+    showDualTime: false,
+    showStops: true, // Events often involve multiple locations
+    showDuration: false,
+    dropoffOptional: false, // Events typically have specific destinations
+    showPassengers: true,
+    showFlightNumbers: true, // For guest arrivals
+    requiredFields: ['pickup', 'dropoff', 'pickupDateTime', 'passengers'], // TO BE EXTENDED with event-specific fields
+  },
+  corporate: {
+    showReturn: false, // TO BE IMPLEMENTED - Corporate might need return trips
+    showDualTime: false,
+    showStops: true, // Corporate often involves meeting-to-meeting transfers
+    showDuration: false,
+    dropoffOptional: false, // Corporate typically has specific destinations
+    showPassengers: true,
+    showFlightNumbers: true, // For business travel
+    requiredFields: ['pickup', 'dropoff', 'pickupDateTime', 'passengers'], // TO BE EXTENDED with corporate-specific fields
   },
 } as const;
 

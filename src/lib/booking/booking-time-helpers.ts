@@ -15,6 +15,8 @@ const BOOKING_BUFFER_HOURS: Record<BookingType, number> = {
   daily: 2,
   fleet: 2,
   bespoke: 0, // Bespoke = doar cerere, fără buffer
+  events: 4, // Events = mai mult timp pentru pregătire
+  corporate: 1, // Corporate = mai puțin buffer pentru business efficiency
 } as const;
 
 /**

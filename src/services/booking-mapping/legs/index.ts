@@ -15,3 +15,7 @@ export { mapFleetBookingToLegs } from './fleet-legs';
 export { mapHourlyBookingToLegs } from './hourly-legs';
 export { mapOnewayBookingToLegs } from './oneway-legs';
 export { mapReturnBookingToLegs } from './return-legs';
+
+// Future implementation - placeholder exports
+export { mapCorporateBookingToLegs } from './corporate-legs';
+export { mapEventsBookingToLegs } from './events-legs';

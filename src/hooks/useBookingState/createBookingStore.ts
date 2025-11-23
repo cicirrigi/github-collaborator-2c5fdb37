@@ -248,11 +248,20 @@ export const createBookingStore = create<BookingState>((set, get) => ({
     return { distanceKm: 25, durationMinutes: 35 };
   },
 
+  // 🚗 VEHICLE SELECTION (minimal implementation to fix TypeScript)
+  selectVehicleCategory: () => {}, // TO BE IMPLEMENTED
+  selectVehicleModel: () => {}, // TO BE IMPLEMENTED
+  clearVehicleSelection: () => {}, // TO BE IMPLEMENTED
+  getAvailableVehicleCategories: () => [], // TO BE IMPLEMENTED
+  validateStep1Complete: () => true, // TO BE IMPLEMENTED
+  prepareReturnTripBookings: () => ({ outbound: {} as any, inbound: {} as any }), // TO BE IMPLEMENTED
+
   // 🔥 RESET
-  resetTrip: () =>
+  resetTrip: () => {
     set({
       tripConfiguration: initialConfig,
       currentStep: 1,
       completedSteps: [],
-    }),
+    });
+  },
 }));
