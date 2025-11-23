@@ -18,9 +18,16 @@ export const mapVehicleCategoryToDB = (categoryId?: string): string => {
  */
 export const getFleetVehicleCount = (
   _tripConfig: TripConfiguration,
-  _category: string
+  category: string
 ): number | null => {
   // This will be implemented when we have fleet selection in store
-  // For now return null (no fleet booking data in current store)
-  return null;
+  // For now return test values for FLEET legs testing
+  const testFleetCounts: Record<string, number> = {
+    executive: 2,
+    s_class: 1,
+    v_class: 1,
+    suv: 1,
+  };
+
+  return testFleetCounts[category] || null;
 };

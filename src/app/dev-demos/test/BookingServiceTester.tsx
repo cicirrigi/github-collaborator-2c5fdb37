@@ -34,6 +34,7 @@ export default function BookingServiceTester() {
     setLuggage,
     setHoursRequested,
     setDaysRequested,
+    setCustomRequirements,
     selectVehicleCategory,
     selectVehicleModel,
   } = useBookingState();
@@ -160,6 +161,25 @@ export default function BookingServiceTester() {
       console.log('🚗 Daily Mode: Multi-day chauffeur service (5 days at disposal)');
     }
 
+    // Set FLEET booking data
+    if (bookingType === 'fleet') {
+      // Fleet composition: 2 executive + 1 s_class + 1 v_class + 1 suv = 5 vehicles
+      console.log(
+        '🚛 Fleet Composition: 2 executive, 1 S-Class, 1 V-Class, 1 SUV (Total: 5 vehicles)'
+      );
+      console.log('🚗 Fleet Mode: Multiple vehicles with coordination required');
+    }
+
+    // Set BESPOKE booking data
+    if (bookingType === 'bespoke') {
+      // Custom requirements for personalized service
+      const customRequirements =
+        'Need luxury vehicle with champagne service, red carpet arrival, professional photographer for VIP client event. Special requirements: child seats (2), extra luggage space, meet & greet with name board. Prefer Mercedes S-Class or similar premium vehicle.';
+      setCustomRequirements(customRequirements);
+      console.log('🎨 Custom Requirements:', customRequirements.substring(0, 100) + '...');
+      console.log('🚗 Bespoke Mode: Personalized quote will be prepared');
+    }
+
     // Import and select vehicle category
     try {
       const { vehicleCategories } = await import('@/hooks/useBookingState/vehicle.data');
@@ -261,6 +281,26 @@ export default function BookingServiceTester() {
           >
             📅 DAILY
           </button>
+          <button
+            onClick={() => setBookingType('fleet')}
+            className={`px-4 py-2 rounded border ${
+              bookingType === 'fleet'
+                ? 'bg-red-600 text-white border-red-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+            }`}
+          >
+            🚛 FLEET
+          </button>
+          <button
+            onClick={() => setBookingType('bespoke')}
+            className={`px-4 py-2 rounded border ${
+              bookingType === 'bespoke'
+                ? 'bg-pink-600 text-white border-pink-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+            }`}
+          >
+            🎨 BESPOKE
+          </button>
         </div>
       </div>
 
@@ -295,6 +335,14 @@ export default function BookingServiceTester() {
           {bookingType === 'daily' && (
             <p>
               <strong>Days Requested:</strong> {tripConfiguration.daysRequested || 'Not set'}
+            </p>
+          )}
+          {bookingType === 'bespoke' && (
+            <p>
+              <strong>Custom Requirements:</strong>{' '}
+              {tripConfiguration.customRequirements
+                ? tripConfiguration.customRequirements.substring(0, 100) + '...'
+                : 'Not set'}
             </p>
           )}
           <p>

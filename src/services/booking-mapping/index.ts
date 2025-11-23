@@ -23,7 +23,9 @@ export { mapReturnBooking } from './mappers/return.mapper';
 // Export utilities
 export { mapAdditionalStops, mapReturnAdditionalStops } from './additional-stops';
 export {
+  mapBespokeBookingToLegs,
   mapDailyBookingToLegs,
+  mapFleetBookingToLegs,
   mapHourlyBookingToLegs,
   mapOnewayBookingToLegs,
   mapReturnBookingToLegs,
