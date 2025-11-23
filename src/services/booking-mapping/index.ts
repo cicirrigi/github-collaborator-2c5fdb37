@@ -4,7 +4,13 @@
  */
 
 // Export all types
-export type { AdditionalStopRecord, BookingRecord, BookingType, TripConfiguration } from './types';
+export type {
+  AdditionalStopRecord,
+  BookingLegRecord,
+  BookingRecord,
+  BookingType,
+  TripConfiguration,
+} from './types';
 
 // Export individual mappers
 export { mapBespokeBooking } from './mappers/bespoke.mapper';
@@ -15,7 +21,8 @@ export { mapOnewayBooking } from './mappers/oneway.mapper';
 export { mapReturnBooking } from './mappers/return.mapper';
 
 // Export utilities
-export { mapAdditionalStops } from './additional-stops';
+export { mapAdditionalStops, mapReturnAdditionalStops } from './additional-stops';
+export { mapOnewayBookingToLegs, mapReturnBookingToLegs } from './booking-legs';
 export { debugBookingMapping, validateBookingRecord } from './validation';
 
 // Main mapping function - delegates to appropriate mapper

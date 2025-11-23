@@ -37,6 +37,13 @@ const initialConfig: TripConfiguration = {
   hoursRequested: null,
   daysRequested: null,
   customRequirements: '',
+
+  // 🚗 Step 2: Vehicle Selection
+  selectedVehicle: {
+    category: null,
+    model: null,
+    selectedAt: null,
+  },
 };
 
 export const createBookingStore = create<BookingState>((set, get) => ({
@@ -132,7 +139,7 @@ export const createBookingStore = create<BookingState>((set, get) => ({
         returnTime: date
           ? date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
           : '',
-        returnDateTime: date, // Sync unified format
+        returnDateTime: date, // Unified format - MAIN field pentru mapping
       },
     })),
 

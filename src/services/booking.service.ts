@@ -1,40 +1,22 @@
 /**
- * 💾 Booking Service - Supabase Integration
- *
- * Handles booking creation and management with Supabase database.
- * Uses the booking-mapping.service for data transformation.
+ * Booking Service - Production Version
  */
 
-import type { BookingType, TripConfiguration } from '@/hooks/useBookingState/booking.types';
 import { createClient } from '@supabase/supabase-js';
 import {
-  debugBookingMapping,
   mapAdditionalStops,
+  mapOnewayBookingToLegs,
+  mapReturnAdditionalStops,
+  mapReturnBookingToLegs,
   mapTripConfigToBooking,
   validateBookingRecord,
-  type BookingRecord,
 } from './booking-mapping';
+import type { BookingRecord, BookingType, TripConfiguration } from './booking-mapping/types';
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-// Mock authentication for testing - simulate admin user
-const mockAuth = async () => {
-  // Create a mock JWT token for admin user - mimics the actual admin user from DB
-  const mockToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzM0OTAyNTI4LCJpYXQiOjE3MzQ4OTg5MjgsImlzcyI6Imh0dHBzOi8vZm1lb251dm1sb3BrdXRiamVqbG8uc3VwYWJhc2UuY28vYXV0aC92MSIsInN1YiI6IjU0M2RhYTg4LWQzMTQtNDg0MC1hOGY1LWI4MmM3YTI0YTAxMCIsImVtYWlsIjoiY3Jpc3RpQHZhbnRhZ2VsYW5lLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnt9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzM0ODk4OTI4fV0sInNlc3Npb25faWQiOiIyNzMyNTQ3MS1iNDE0LTQ4MGItYTVhZS1hZTkxOTQ4MTg3NzEifQ.bVr2Sg6D0V4Qz1Xo9zfJ8iY_3CZ_eLm1Kp7RnzFGVq4';
-
-  // Set the session manually
-  await supabase.auth.setSession({
-    access_token: mockToken,
-    refresh_token: 'mock_refresh_token',
-  });
-
-  return supabase.auth.getSession();
-};
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 // Result interfaces
 export interface BookingSuccess {
@@ -52,111 +34,100 @@ export interface BookingError {
 
 export type BookingResult = BookingSuccess | BookingError;
 
-/**
- * Converts ISO timestamp to PostgreSQL timestamp format
- */
-const normalizeTimestamp = (isoString: string): string => {
-  // Convert "2025-11-22T22:01:00.123Z" to "2025-11-22 22:01:00"
-  return isoString
+// Normalize timestamp
+const normalizeTimestamp = (iso: string) =>
+  iso
     .replace('T', ' ')
     .replace(/\.\d{3}Z$/, '')
     .replace('Z', '');
-};
 
 /**
- * Saves a booking to Supabase database
+ * Create a booking
  */
 export const saveBooking = async (
   tripConfig: TripConfiguration,
   bookingType: BookingType
 ): Promise<BookingResult> => {
   try {
-    // Step 0: Authenticate for testing (development only)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔐 Authenticating as admin user for testing...');
-      await mockAuth();
-    }
+    // 1. Transform
+    const record = mapTripConfigToBooking(tripConfig, bookingType);
 
-    // Step 1: Map TripConfiguration to BookingRecord
-    const bookingRecord = mapTripConfigToBooking(tripConfig, bookingType);
-
-    // Step 2: Validate booking record
-    const validationErrors = validateBookingRecord(bookingRecord);
+    // 2. Validate
+    const validationErrors = validateBookingRecord(record);
     if (validationErrors.length > 0) {
-      return {
-        success: false,
-        error: 'Booking validation failed',
-        details: validationErrors,
-        code: 'VALIDATION_ERROR',
-      };
+      return { success: false, error: 'Validation failed', details: validationErrors };
     }
 
-    // Step 3: Normalize timestamps for PostgreSQL
-    const normalizedRecord = {
-      ...bookingRecord,
-      start_at: normalizeTimestamp(bookingRecord.start_at),
-      return_date: bookingRecord.return_date || null,
-      return_time: bookingRecord.return_time || null,
+    // 3. Normalize timestamp
+    const payload = {
+      ...record,
+      start_at: normalizeTimestamp(record.start_at),
+      return_date: record.return_date || null,
+      return_time: record.return_time || null,
     };
 
-    // Step 4: Debug log (development only)
-    if (process.env.NODE_ENV === 'development') {
-      debugBookingMapping(tripConfig, bookingType, normalizedRecord);
-    }
-
-    // Step 5: Insert into Supabase
-    const { data, error } = await supabase
-      .from('bookings')
-      .insert(normalizedRecord)
-      .select()
-      .single();
+    // 4. Insert main booking
+    const { data, error } = await supabase.from('bookings').insert(payload).select().single();
 
     if (error) {
-      console.error('❌ Supabase insert error:', error);
-      return {
-        success: false,
-        error: 'Failed to save booking to database',
-        details: [error.message],
-        code: error.code || 'SUPABASE_ERROR',
-      };
+      return { success: false, error: error.message, code: error.code };
     }
 
-    if (!data) {
-      return {
-        success: false,
-        error: 'No data returned from database insert',
-        code: 'NO_DATA_RETURNED',
-      };
-    }
-
-    // Step 6: Save additional stops (if any)
-    if (tripConfig.additionalStops && tripConfig.additionalStops.length > 0) {
-      const additionalStops = mapAdditionalStops(data.id, tripConfig);
-
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`🚏 Saving ${additionalStops.length} additional stops:`, additionalStops);
-      }
-
-      const { error: stopsError } = await supabase
-        .from('booking_additional_stops')
-        .insert(additionalStops);
-
+    // 5. Insert additional stops (optional) - non-blocking
+    if (tripConfig.additionalStops?.length) {
+      const stops = mapAdditionalStops(data.id, tripConfig);
+      const { error: stopsError } = await supabase.from('booking_additional_stops').insert(stops);
       if (stopsError) {
-        console.error('❌ Failed to save additional stops:', stopsError);
-        // Note: We don't fail the whole booking if stops fail - booking is already created
-        // In production, you might want to log this for manual intervention
+        console.warn('Failed to insert additional stops:', stopsError.message);
       }
     }
 
-    // Step 7: Success response
+    // 5.1. Insert booking legs pentru ONE-WAY trips
+    if (bookingType === 'oneway') {
+      const legs = mapOnewayBookingToLegs(data.id, tripConfig);
+      const { error: legsError } = await supabase.from('booking_legs').insert(legs);
+      if (legsError) {
+        console.warn('Failed to insert ONE-WAY booking legs:', legsError.message);
+      }
+    }
+
+    // 5.2. Insert booking legs pentru RETURN trips
+    if (bookingType === 'return') {
+      console.log('🚗 DEBUG: Creating booking legs for RETURN trip...');
+      const legs = mapReturnBookingToLegs(data.id, tripConfig);
+      console.log('🚗 DEBUG: Generated legs:', legs);
+
+      const { error: legsError } = await supabase.from('booking_legs').insert(legs);
+      if (legsError) {
+        console.error('❌ ERROR inserting booking legs:', legsError);
+      } else {
+        console.log('✅ Booking legs inserted successfully');
+      }
+
+      // 6.1. Insert return additional stops pentru RETURN trips
+      if (tripConfig.returnAdditionalStops?.length) {
+        console.log('🚏 DEBUG: Creating return additional stops...');
+        const returnStops = mapReturnAdditionalStops(data.id, tripConfig);
+        console.log('🚏 DEBUG: Generated return stops:', returnStops);
+
+        const { error: returnStopsError } = await supabase
+          .from('booking_additional_stops')
+          .insert(returnStops);
+        if (returnStopsError) {
+          console.error('❌ ERROR inserting return additional stops:', returnStopsError);
+        } else {
+          console.log('✅ Return additional stops inserted successfully');
+        }
+      }
+    }
+
+    // 7. Return success
     return {
       success: true,
-      booking: data as BookingRecord & { id: string },
-      message: `${bookingType} booking created successfully with ${tripConfig.additionalStops?.length || 0} additional stops`,
+      booking: data,
+      message: `${bookingType} booking created`,
     };
   } catch (error) {
-    console.error('❌ Unexpected error in saveBooking:', error);
-
     return {
       success: false,
       error: 'Unexpected error occurred while saving booking',
@@ -167,105 +138,23 @@ export const saveBooking = async (
 };
 
 /**
- * Test function to validate booking creation with current store data
- * ONLY for ONE-WAY bookings initially
+ * Fetch booking by ID
  */
-export const testOneWayBooking = async (tripConfig: TripConfiguration): Promise<BookingResult> => {
-  console.log('🧪 Testing ONE-WAY booking creation...');
+export const getBooking = async (id: string) => {
+  const { data, error } = await supabase.from('bookings').select('*').eq('id', id).single();
 
-  // Validate minimum required fields for ONE-WAY
-  if (!tripConfig.pickupDateTime) {
-    return {
-      success: false,
-      error: 'Pickup date/time is required for ONE-WAY booking',
-      code: 'MISSING_PICKUP_DATETIME',
-    };
-  }
-
-  if (!tripConfig.selectedVehicle?.category) {
-    return {
-      success: false,
-      error: 'Vehicle category is required for ONE-WAY booking',
-      code: 'MISSING_VEHICLE_CATEGORY',
-    };
-  }
-
-  // Create ONE-WAY booking
-  return await saveBooking(tripConfig, 'oneway');
+  if (error) return null;
+  return data;
 };
 
 /**
- * Utility function to check Supabase connection
+ * List bookings (optional)
  */
-export const testSupabaseConnection = async (): Promise<{ connected: boolean; error?: string }> => {
-  try {
-    const { error } = await supabase.from('organizations').select('id').limit(1);
+export const listBookings = async () => {
+  const { data } = await supabase
+    .from('bookings')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-    if (error) {
-      return { connected: false, error: error.message };
-    }
-
-    return { connected: true };
-  } catch (error) {
-    return {
-      connected: false,
-      error: error instanceof Error ? error.message : 'Unknown connection error',
-    };
-  }
-};
-
-/**
- * Get booking by ID (for testing/verification)
- */
-export const getBooking = async (id: string): Promise<BookingRecord | null> => {
-  try {
-    const { data, error } = await supabase.from('bookings').select('*').eq('id', id).single();
-
-    if (error || !data) {
-      console.error('Error fetching booking:', error);
-      return null;
-    }
-
-    return data as BookingRecord;
-  } catch (error) {
-    console.error('Unexpected error fetching booking:', error);
-    return null;
-  }
-};
-
-/**
- * Development helper to log booking record structure
- */
-export const logBookingStructure = (
-  tripConfig: TripConfiguration,
-  bookingType: BookingType
-): void => {
-  if (process.env.NODE_ENV !== 'development') return;
-
-  console.group('📋 Booking Structure Preview');
-
-  const bookingRecord = mapTripConfigToBooking(tripConfig, bookingType);
-  const validation = validateBookingRecord(bookingRecord);
-
-  console.log('Input from Store:', {
-    bookingType,
-    pickup: tripConfig.pickup?.address,
-    dropoff: tripConfig.dropoff?.address,
-    pickupDateTime: tripConfig.pickupDateTime,
-    passengers: tripConfig.passengers,
-    luggage: tripConfig.luggage,
-    selectedVehicle: {
-      category: tripConfig.selectedVehicle?.category?.id,
-      model: tripConfig.selectedVehicle?.model?.name,
-    },
-  });
-
-  console.log('Generated DB Record:', bookingRecord);
-  console.log('Validation Status:', validation.length === 0 ? '✅ Valid' : '❌ Invalid');
-
-  if (validation.length > 0) {
-    console.warn('Validation Errors:', validation);
-  }
-
-  console.groupEnd();
+  return data || [];
 };

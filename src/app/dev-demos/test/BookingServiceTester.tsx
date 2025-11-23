@@ -5,8 +5,9 @@ import type { BookingResult } from '@/services/booking.service';
 import {
   logBookingStructure,
   testOneWayBooking,
+  testReturnBooking,
   testSupabaseConnection,
-} from '@/services/booking.service';
+} from '@/services/booking.test-service';
 import { useState } from 'react';
 
 export default function BookingServiceTester() {
@@ -20,21 +21,39 @@ export default function BookingServiceTester() {
   const {
     tripConfiguration,
     bookingType,
+    setBookingType,
     setPickupDateTime,
-    selectVehicleCategory,
-    selectVehicleModel,
-    setPassengers,
-    setLuggage,
+    setReturnDateTime,
     setFlightNumberPickup,
+    setFlightNumberReturn,
+    setIsDifferentReturnLocation,
     setPickup,
     setDropoff,
     setAdditionalStops,
+    setPassengers,
+    setLuggage,
+    selectVehicleCategory,
+    selectVehicleModel,
   } = useBookingState();
 
   const handleTestConnection = async () => {
     setIsLoading(true);
     const result = await testSupabaseConnection();
     setConnectionStatus(result);
+    setIsLoading(false);
+  };
+
+  const handleTestOneWayBooking = async () => {
+    setIsLoading(true);
+    const result = await testOneWayBooking(tripConfiguration);
+    setTestResult(result);
+    setIsLoading(false);
+  };
+
+  const handleTestReturnBooking = async () => {
+    setIsLoading(true);
+    const result = await testReturnBooking(tripConfiguration);
+    setTestResult(result);
     setIsLoading(false);
   };
 
@@ -100,6 +119,25 @@ export default function BookingServiceTester() {
     setAdditionalStops(additionalStops);
     console.log('🚏 Additional Stops: Oxford Street + Hyde Park Corner (2 stops × £15 = £30)');
 
+    // Set RETURN booking data
+    if (bookingType === 'return') {
+      // Set return date/time (3 hours later)
+      console.log('🔍 DEBUG pickupDateTime:', tripConfiguration.pickupDateTime);
+      const returnDateTime = new Date(tripConfiguration.pickupDateTime!);
+      returnDateTime.setHours(returnDateTime.getHours() + 3);
+      console.log('🔍 DEBUG calculated returnDateTime:', returnDateTime);
+      setReturnDateTime(returnDateTime);
+      console.log('🔄 Return DateTime: ' + returnDateTime.toLocaleString());
+
+      // Set return flight number
+      setFlightNumberReturn('BA456'); // Return British Airways flight
+      console.log('✈️ Return Flight: BA456');
+
+      // For testing: Leave isDifferentReturnLocation = false (normal return)
+      setIsDifferentReturnLocation(false);
+      console.log('🔄 Return Mode: Normal (same locations reversed)');
+    }
+
     // Import and select vehicle category
     try {
       const { vehicleCategories } = await import('@/hooks/useBookingState/vehicle.data');
@@ -137,7 +175,12 @@ export default function BookingServiceTester() {
     setTestResult(null);
 
     try {
-      const result = await testOneWayBooking(tripConfiguration);
+      let result;
+      if (bookingType === 'return') {
+        result = await testReturnBooking(tripConfiguration);
+      } else {
+        result = await testOneWayBooking(tripConfiguration);
+      }
       setTestResult(result);
     } catch (error) {
       setTestResult({
@@ -153,6 +196,33 @@ export default function BookingServiceTester() {
   return (
     <div className='p-6 bg-white border rounded-lg shadow'>
       <h3 className='text-xl font-bold mb-4'>🧪 Booking Service Tester</h3>
+
+      {/* Booking Type Selector */}
+      <div className='mb-6 p-4 bg-blue-50 border border-blue-200 rounded'>
+        <h4 className='font-semibold mb-3'>🎯 Select Booking Type:</h4>
+        <div className='flex gap-3'>
+          <button
+            onClick={() => setBookingType('oneway')}
+            className={`px-4 py-2 rounded border ${
+              bookingType === 'oneway'
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+            }`}
+          >
+            ➡️ ONE-WAY
+          </button>
+          <button
+            onClick={() => setBookingType('return')}
+            className={`px-4 py-2 rounded border ${
+              bookingType === 'return'
+                ? 'bg-green-600 text-white border-green-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+            }`}
+          >
+            🔄 RETURN
+          </button>
+        </div>
+      </div>
 
       {/* Current Store State */}
       <div className='mb-6 p-4 bg-gray-50 rounded'>
@@ -217,7 +287,9 @@ export default function BookingServiceTester() {
           disabled={isLoading}
           className='w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50'
         >
-          {isLoading ? 'Creating Booking...' : '💾 Test ONE-WAY Booking Creation'}
+          {isLoading
+            ? 'Creating Booking...'
+            : `💾 Test ${bookingType.toUpperCase()} Booking Creation`}
         </button>
       </div>
 
