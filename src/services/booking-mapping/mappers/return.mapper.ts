@@ -15,21 +15,13 @@ import type { BookingRecord, TripConfiguration } from '../types';
 export const mapReturnBooking = (tripConfig: TripConfiguration): BookingRecord => {
   const baseRecord = createBaseBookingRecord(tripConfig, 'return');
 
-  // DEBUG: Log ALL return fields
-  console.log('🔄 DEBUG Return Mapper - returnDateTime:', tripConfig.returnDateTime);
-  console.log('🔄 DEBUG Return Mapper - returnDate (legacy):', tripConfig.returnDate);
-  console.log('🔄 DEBUG Return Mapper - typeof returnDateTime:', typeof tripConfig.returnDateTime);
-
-  // Try both fields as fallback
-  const sourceDateTime = tripConfig.returnDateTime || tripConfig.returnDate;
-  console.log('🔄 DEBUG Return Mapper - sourceDateTime:', sourceDateTime);
-
   // Ensure proper null handling for TypeScript strict mode
-  const returnDate = sourceDateTime ? sourceDateTime.toISOString().split('T')[0] : null;
-  const returnTime = sourceDateTime ? sourceDateTime.toTimeString().split(' ')[0] : null;
-
-  console.log('🔄 DEBUG Return Mapper - FINAL returnDate:', returnDate);
-  console.log('🔄 DEBUG Return Mapper - FINAL returnTime:', returnTime);
+  const returnDate = tripConfig.returnDateTime
+    ? tripConfig.returnDateTime.toISOString().split('T')[0]
+    : null;
+  const returnTime = tripConfig.returnDateTime
+    ? tripConfig.returnDateTime.toTimeString().split(' ')[0]
+    : null;
 
   return {
     ...baseRecord,

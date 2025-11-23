@@ -121,9 +121,9 @@ export default function BookingServiceTester() {
 
     // Set RETURN booking data
     if (bookingType === 'return') {
-      // Set return date/time (3 hours later)
-      console.log('🔍 DEBUG pickupDateTime:', tripConfiguration.pickupDateTime);
-      const returnDateTime = new Date(tripConfiguration.pickupDateTime!);
+      // Set return date/time (3 hours later) - use mockDateTime directly!
+      console.log('🔍 DEBUG mockDateTime for return calculation:', mockDateTime);
+      const returnDateTime = new Date(mockDateTime);
       returnDateTime.setHours(returnDateTime.getHours() + 3);
       console.log('🔍 DEBUG calculated returnDateTime:', returnDateTime);
       setReturnDateTime(returnDateTime);
