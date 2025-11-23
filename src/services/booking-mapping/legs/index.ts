@@ -8,6 +8,7 @@
  * 4. Update imports only after everything is moved
  */
 
-// Modular exports - all functions migrated
+// Modular exports - migrating booking types one by one
+export { mapHourlyBookingToLegs } from './hourly-legs';
 export { mapOnewayBookingToLegs } from './oneway-legs';
 export { mapReturnBookingToLegs } from './return-legs';

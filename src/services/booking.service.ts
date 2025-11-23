@@ -5,6 +5,7 @@
 import { createClient } from '@supabase/supabase-js';
 import {
   mapAdditionalStops,
+  mapHourlyBookingToLegs,
   mapOnewayBookingToLegs,
   mapReturnAdditionalStops,
   mapReturnBookingToLegs,
@@ -118,6 +119,15 @@ export const saveBooking = async (
         } else {
           console.log('✅ Return additional stops inserted successfully');
         }
+      }
+    }
+
+    // 5.3. Insert booking legs pentru HOURLY trips
+    if (bookingType === 'hourly') {
+      const legs = mapHourlyBookingToLegs(data.id, tripConfig);
+      const { error: legsError } = await supabase.from('booking_legs').insert(legs);
+      if (legsError) {
+        console.warn('Failed to insert HOURLY booking legs:', legsError.message);
       }
     }
 

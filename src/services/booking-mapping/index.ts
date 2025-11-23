@@ -22,7 +22,7 @@ export { mapReturnBooking } from './mappers/return.mapper';
 
 // Export utilities
 export { mapAdditionalStops, mapReturnAdditionalStops } from './additional-stops';
-export { mapOnewayBookingToLegs, mapReturnBookingToLegs } from './legs';
+export { mapHourlyBookingToLegs, mapOnewayBookingToLegs, mapReturnBookingToLegs } from './legs';
 export { debugBookingMapping, validateBookingRecord } from './validation';
 
 // Main mapping function - delegates to appropriate mapper

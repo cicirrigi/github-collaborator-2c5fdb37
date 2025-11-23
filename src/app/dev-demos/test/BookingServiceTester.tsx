@@ -32,6 +32,7 @@ export default function BookingServiceTester() {
     setAdditionalStops,
     setPassengers,
     setLuggage,
+    setHoursRequested,
     selectVehicleCategory,
     selectVehicleModel,
   } = useBookingState();
@@ -138,6 +139,16 @@ export default function BookingServiceTester() {
       console.log('🔄 Return Mode: Normal (same locations reversed)');
     }
 
+    // Set HOURLY booking data
+    if (bookingType === 'hourly') {
+      // Set hours requested (3 hours chauffeur service)
+      setHoursRequested(3);
+      console.log('⏰ Hours Requested: 3h chauffeur service');
+
+      // For HOURLY, can have same pickup/dropoff for "at disposal" service
+      console.log('🚗 Hourly Mode: Chauffeur service (3 hours at disposal)');
+    }
+
     // Import and select vehicle category
     try {
       const { vehicleCategories } = await import('@/hooks/useBookingState/vehicle.data');
@@ -175,12 +186,10 @@ export default function BookingServiceTester() {
     setTestResult(null);
 
     try {
-      let result;
-      if (bookingType === 'return') {
-        result = await testReturnBooking(tripConfiguration);
-      } else {
-        result = await testOneWayBooking(tripConfiguration);
-      }
+      // Use saveBooking directly with the correct bookingType from store
+      const { saveBooking } = await import('@/services/booking.service');
+      console.log(`🧪 Testing ${bookingType.toUpperCase()} booking creation...`);
+      const result = await saveBooking(tripConfiguration, bookingType);
       setTestResult(result);
     } catch (error) {
       setTestResult({
@@ -221,6 +230,16 @@ export default function BookingServiceTester() {
           >
             🔄 RETURN
           </button>
+          <button
+            onClick={() => setBookingType('hourly')}
+            className={`px-4 py-2 rounded border ${
+              bookingType === 'hourly'
+                ? 'bg-orange-600 text-white border-orange-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+            }`}
+          >
+            ⏰ HOURLY
+          </button>
         </div>
       </div>
 
@@ -247,6 +266,11 @@ export default function BookingServiceTester() {
           <p>
             <strong>Luggage:</strong> {tripConfiguration.luggage}
           </p>
+          {bookingType === 'hourly' && (
+            <p>
+              <strong>Hours Requested:</strong> {tripConfiguration.hoursRequested || 'Not set'}
+            </p>
+          )}
           <p>
             <strong>Vehicle Category:</strong>{' '}
             {tripConfiguration.selectedVehicle?.category?.id || 'Not selected'}
