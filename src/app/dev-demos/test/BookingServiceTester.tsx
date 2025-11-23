@@ -33,6 +33,7 @@ export default function BookingServiceTester() {
     setPassengers,
     setLuggage,
     setHoursRequested,
+    setDaysRequested,
     selectVehicleCategory,
     selectVehicleModel,
   } = useBookingState();
@@ -149,6 +150,16 @@ export default function BookingServiceTester() {
       console.log('🚗 Hourly Mode: Chauffeur service (3 hours at disposal)');
     }
 
+    // Set DAILY booking data
+    if (bookingType === 'daily') {
+      // Set days requested (5 days chauffeur service)
+      setDaysRequested(5);
+      console.log('📅 Days Requested: 5 day multi-day service');
+
+      // For DAILY, extended chauffeur service over multiple days
+      console.log('🚗 Daily Mode: Multi-day chauffeur service (5 days at disposal)');
+    }
+
     // Import and select vehicle category
     try {
       const { vehicleCategories } = await import('@/hooks/useBookingState/vehicle.data');
@@ -240,6 +251,16 @@ export default function BookingServiceTester() {
           >
             ⏰ HOURLY
           </button>
+          <button
+            onClick={() => setBookingType('daily')}
+            className={`px-4 py-2 rounded border ${
+              bookingType === 'daily'
+                ? 'bg-purple-600 text-white border-purple-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+            }`}
+          >
+            📅 DAILY
+          </button>
         </div>
       </div>
 
@@ -269,6 +290,11 @@ export default function BookingServiceTester() {
           {bookingType === 'hourly' && (
             <p>
               <strong>Hours Requested:</strong> {tripConfiguration.hoursRequested || 'Not set'}
+            </p>
+          )}
+          {bookingType === 'daily' && (
+            <p>
+              <strong>Days Requested:</strong> {tripConfiguration.daysRequested || 'Not set'}
             </p>
           )}
           <p>

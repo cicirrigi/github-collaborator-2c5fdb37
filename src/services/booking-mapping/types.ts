@@ -32,6 +32,9 @@ export interface BookingRecord {
   // Hourly booking fields
   hours?: number;
 
+  // Daily booking fields
+  days?: number;
+
   // Fleet booking fields
   fleet_executive?: number | null;
   fleet_s_class?: number | null;

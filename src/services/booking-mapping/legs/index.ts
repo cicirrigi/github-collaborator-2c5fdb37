@@ -9,6 +9,7 @@
  */
 
 // Modular exports - migrating booking types one by one
+export { mapDailyBookingToLegs } from './daily-legs';
 export { mapHourlyBookingToLegs } from './hourly-legs';
 export { mapOnewayBookingToLegs } from './oneway-legs';
 export { mapReturnBookingToLegs } from './return-legs';

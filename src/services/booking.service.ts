@@ -5,6 +5,7 @@
 import { createClient } from '@supabase/supabase-js';
 import {
   mapAdditionalStops,
+  mapDailyBookingToLegs,
   mapHourlyBookingToLegs,
   mapOnewayBookingToLegs,
   mapReturnAdditionalStops,
@@ -128,6 +129,15 @@ export const saveBooking = async (
       const { error: legsError } = await supabase.from('booking_legs').insert(legs);
       if (legsError) {
         console.warn('Failed to insert HOURLY booking legs:', legsError.message);
+      }
+    }
+
+    // 5.4. Insert booking legs pentru DAILY trips
+    if (bookingType === 'daily') {
+      const legs = mapDailyBookingToLegs(data.id, tripConfig);
+      const { error: legsError } = await supabase.from('booking_legs').insert(legs);
+      if (legsError) {
+        console.warn('Failed to insert DAILY booking legs:', legsError.message);
       }
     }
 
