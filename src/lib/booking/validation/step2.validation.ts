@@ -92,27 +92,9 @@ const VEHICLE_RULES_BY_BOOKING_TYPE: Record<
  */
 const PREMIUM_FEATURES_ALLOWED_CATEGORIES = ['luxury', 'suv', 'mpv'];
 
-/**
- * Etichete umane pentru câmpuri
- */
-const FIELD_LABELS: Record<Step2FieldId, string> = {
-  vehicleCategory: 'Vehicle category',
-  vehicleModel: 'Vehicle model',
-  premiumFeatures: 'Premium features',
-  tripPreferences: 'Trip preferences',
-  paidUpgrades: 'Paid upgrades',
-};
-
-/**
- * Mapare câmp → cod de eroare
- */
-const FIELD_ERROR_CODE_MAP: Record<Step2FieldId, Step2ErrorCode> = {
-  vehicleCategory: 'MISSING_VEHICLE_CATEGORY',
-  vehicleModel: 'MISSING_VEHICLE_MODEL',
-  premiumFeatures: 'INVALID_PREMIUM_FEATURES_FOR_CATEGORY',
-  tripPreferences: 'MISSING_VEHICLE_CATEGORY', // Nu are eroare proprie
-  paidUpgrades: 'MISSING_VEHICLE_CATEGORY', // Nu are eroare proprie
-};
+// Note: Field labels and error code mappings available if needed for UI
+// const FIELD_LABELS: Record<Step2FieldId, string> = { ... }
+// const FIELD_ERROR_CODE_MAP: Record<Step2FieldId, Step2ErrorCode> = { ... }
 
 /**
  * Verifică dacă categoria de vehicul e validă pentru booking type

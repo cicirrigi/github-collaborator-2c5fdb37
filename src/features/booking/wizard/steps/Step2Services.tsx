@@ -29,11 +29,11 @@ export function Step2Services() {
       {/* 🟨 4. Premium Features - CONDITIONAL (Luxury/SUV/MPV only) */}
       <PremiumFeaturesV2 />
 
-      {/* 🟩 5. Trip Preferences - UNIVERSAL (Music, Temperature, Communication) */}
-      <TripPreferencesV2 />
-
-      {/* 🟥 6. Paid Upgrades - UNIVERSAL (Flowers, Champagne, Security) */}
+      {/* 🟥 5. Paid Upgrades - UNIVERSAL (Flowers, Champagne, Security) */}
       <PaidUpgradesV2 />
+
+      {/* 🟩 6. Trip Preferences - UNIVERSAL (Music, Temperature, Communication) */}
+      <TripPreferencesV2 />
     </div>
   );
 }

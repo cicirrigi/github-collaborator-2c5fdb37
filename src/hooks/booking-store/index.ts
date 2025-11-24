@@ -6,6 +6,7 @@ import { createInitialTripConfiguration, initialWizardState } from './initialSta
 // Import individual action creators
 import { createBookingActions } from './booking.actions';
 import { createDateTimeActions } from './datetime.actions';
+import { createFleetActions } from './fleet.actions';
 import { createLocationActions } from './location.actions';
 import { createPassengerActions } from './passenger.actions';
 import { createValidationActions } from './validation';
@@ -39,8 +40,11 @@ export const useBookingState = create<BookingState>((set, get) => ({
   // 👥 PASSENGER & LOGISTICS ACTIONS
   ...createPassengerActions(set, get),
 
-  // 🚗 VEHICLE SELECTION ACTIONS
+  // 🚗 VEHICLE SELECTION ACTIONS (single vehicle)
   ...createVehicleActions(set, get),
+
+  // 🚛 FLEET SELECTION ACTIONS (multiple vehicles)
+  ...createFleetActions(set, get),
 
   // 🎁 STEP 2: SERVICE PACKAGE ACTIONS
   ...createServicesActions(set, get),

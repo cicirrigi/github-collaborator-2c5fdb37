@@ -37,11 +37,19 @@ export const createInitialTripConfiguration = (): TripConfiguration => ({
   daysRequested: null,
   customRequirements: '',
 
-  // 🚗 Step 2: Vehicle Selection
+  // 🚗 Step 2: Vehicle Selection (single vehicle)
   selectedVehicle: {
     category: null,
     model: null,
     selectedAt: null,
+  },
+
+  // 🚛 Step 2: Fleet Selection (multiple vehicles)
+  fleetSelection: {
+    vehicles: [],
+    totalVehicles: 0,
+    totalCapacity: 0,
+    updatedAt: null,
   },
 
   // 🎁 Step 2: Service Packages

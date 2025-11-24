@@ -1,8 +1,16 @@
 // 🎯 BOOKING TYPES - All type definitions for the unified booking system
 
 // Import and re-export vehicle types for easy access
+import type { FleetActions, FleetSelection, FleetSummary } from './fleet.types';
 import type { VehicleCategory, VehicleModel, VehicleSelection } from './vehicle.types';
-export type { VehicleCategory, VehicleModel, VehicleSelection };
+export type {
+  FleetActions,
+  FleetSelection,
+  FleetSummary,
+  VehicleCategory,
+  VehicleModel,
+  VehicleSelection,
+};
 
 export type Coordinates = [number, number];
 
@@ -64,8 +72,11 @@ export interface TripConfiguration {
   // Bespoke bookings
   customRequirements: string;
 
-  // 🚗 Step 2: Vehicle Selection
+  // 🚗 Step 2: Vehicle Selection (single vehicle)
   selectedVehicle: VehicleSelection;
+
+  // 🚛 Step 2: Fleet Selection (multiple vehicles)
+  fleetSelection: FleetSelection;
 
   // 🎁 Step 2: Service Packages
   servicePackages: ServicePackages;
@@ -112,11 +123,20 @@ export interface BookingState {
   setDaysRequested: (value: number | null) => void;
   setCustomRequirements: (value: string) => void;
 
-  // 🚗 VEHICLE SELECTION ACTIONS
+  // 🚗 VEHICLE SELECTION ACTIONS (single vehicle)
   selectVehicleCategory: (category: VehicleCategory) => void;
   selectVehicleModel: (model: VehicleModel | null) => void;
   clearVehicleSelection: () => void;
   getAvailableVehicleCategories: () => VehicleCategory[];
+
+  // 🚛 FLEET SELECTION ACTIONS (multiple vehicles)
+  addFleetVehicle: (category: VehicleCategory, model: VehicleModel, quantity?: number) => void;
+  removeFleetVehicle: (itemId: string) => void;
+  updateFleetVehicleQuantity: (itemId: string, quantity: number) => void;
+  clearFleetSelection: () => void;
+  getFleetSummary: () => FleetSummary;
+  getFleetTotalPrice: () => number;
+  validateFleetSelection: () => boolean;
 
   // WIZARD ACTIONS
   setCurrentStep: (step: number) => void;

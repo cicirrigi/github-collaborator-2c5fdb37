@@ -114,8 +114,8 @@ export const validateCrossStep = (
  * Provides intelligent suggestions based on Step 1 + 2 data
  */
 export const getSmartRecommendations = (
-  bookingType: BookingType,
-  tripConfiguration: TripConfiguration
+  _bookingType: BookingType,
+  _tripConfiguration: TripConfiguration
 ): string[] => {
   const recommendations: string[] = [];
 

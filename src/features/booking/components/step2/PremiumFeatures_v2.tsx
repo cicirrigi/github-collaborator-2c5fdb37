@@ -27,7 +27,6 @@ export function PremiumFeaturesV2({ className = '' }: PremiumFeaturesV2Props) {
       <div className='flex items-center gap-2'>
         <Crown className='w-4 h-4 text-yellow-400' />
         <h3 className='text-white font-medium text-base'>Premium Features</h3>
-        <span className='text-yellow-200/50 text-xs'>({PREMIUM_FEATURES.length})</span>
         <div className='px-2 py-1 rounded text-xs bg-yellow-400/20 text-yellow-200'>
           FREE for {selectedCategory.name}
         </div>

@@ -60,17 +60,7 @@ export function UnifiedCalendar({
     return getAvailableFromMessage(bookingType, date);
   }, [bookingType, date, hasTime]);
 
-  // Debugging specific pentru problema de refresh
-  useEffect(() => {
-    console.log('🔍 Calendar Debug:', {
-      bookingType,
-      isInline,
-      hasTime,
-      showTime: hasTime && isInline,
-      dateValue: date,
-      isReady,
-    });
-  }, [bookingType, isInline, hasTime, date, isReady]);
+  // Debug info available for development if needed
 
   const calendarClassName = `${bookingType}-calendar`;
 

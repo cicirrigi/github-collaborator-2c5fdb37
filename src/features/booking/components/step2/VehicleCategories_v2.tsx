@@ -32,11 +32,11 @@ export function VehicleCategoriesV2({ className = '' }: VehicleCategoriesV2Props
       case 'hourly':
         return ['executive', 'luxury', 'suv', 'mpv']; // All allowed, luxury/suv recommended
       case 'daily':
-        return ['luxury', 'suv', 'mpv']; // Long-term comfort - no executive
+        return ['executive', 'luxury', 'suv', 'mpv']; // All vehicles allowed for daily bookings
       case 'fleet':
         return ['suv', 'mpv']; // Group capacity only - large vehicles
       case 'bespoke':
-        return ['luxury', 'suv']; // Premium only for bespoke service
+        return []; // Bespoke bookings don't use Step 2 vehicle selection
       case 'events':
         return ['luxury', 'suv', 'mpv']; // Special events - premium vehicles
       case 'corporate':
@@ -50,6 +50,11 @@ export function VehicleCategoriesV2({ className = '' }: VehicleCategoriesV2Props
   const availableCategories = vehicleCategories.filter(category =>
     allowedCategoryIds.includes(category.id)
   );
+
+  // Don't render vehicle selection for bespoke bookings
+  if (bookingType === 'bespoke') {
+    return null;
+  }
 
   return (
     <section className={`space-y-4 ${className}`}>
