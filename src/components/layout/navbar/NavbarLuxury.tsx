@@ -8,7 +8,7 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { navigation } from '@/config/site.config';
 import { cn } from '@/lib/utils/cn';
@@ -52,6 +52,13 @@ export function NavbarLuxury({
 }: NavbarLuxuryProps): React.JSX.Element {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
+
+  // 🔧 Hot reload fix - force re-initialization
+  const [remountKey, setRemountKey] = useState(0);
+  useEffect(() => {
+    setRemountKey(Date.now());
+  }, []);
+
   const { mobileOpen, setMobileOpen, panelRef } = useNavbarState();
   const prefersReducedMotion = useReducedMotion();
   const navItems = customNavItems || navigation.main;
@@ -95,6 +102,7 @@ export function NavbarLuxury({
 
   return (
     <motion.header
+      key={remountKey}
       ref={ref}
       layout
       style={{
