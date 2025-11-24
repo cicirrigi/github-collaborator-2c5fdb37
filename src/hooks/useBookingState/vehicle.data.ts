@@ -194,7 +194,7 @@ export const vehicleAvailabilityRules: VehicleAvailabilityRule[] = [
   },
   {
     bookingTypes: ['fleet'],
-    availableCategories: ['executive', 'mpv'],
+    availableCategories: ['executive', 'luxury', 'suv', 'mpv'], // ✅ All 4 categories for fleet
     defaultCategory: 'mpv',
     restrictions: {
       minPassengers: 5,

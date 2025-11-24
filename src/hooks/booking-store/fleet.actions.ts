@@ -37,7 +37,7 @@ const isFleetCompatibleModel = (category: VehicleCategory, model: VehicleModel):
   const capacity = getVehicleCapacity(model);
   return (
     capacity >= 4 && // Fleet vehicles should accommodate groups
-    ['suv', 'mpv', 'executive'].includes(category.id) && // Appropriate categories
+    ['executive', 'luxury', 'suv', 'mpv'].includes(category.id) && // ✅ All 4 categories compatible
     model.specifications?.fuelType !== 'Unknown' // Valid vehicle data
   );
 };
