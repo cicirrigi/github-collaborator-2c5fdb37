@@ -66,6 +66,12 @@ export interface TripConfiguration {
 
   // 🚗 Step 2: Vehicle Selection
   selectedVehicle: VehicleSelection;
+
+  // 🎁 Step 2: Service Packages
+  servicePackages: ServicePackages;
+
+  // 🔮 Future Features (hidden from UI)
+  futureFeatures: FutureFeatures;
 }
 
 export interface BookingState {
@@ -108,7 +114,7 @@ export interface BookingState {
 
   // 🚗 VEHICLE SELECTION ACTIONS
   selectVehicleCategory: (category: VehicleCategory) => void;
-  selectVehicleModel: (model: VehicleModel) => void;
+  selectVehicleModel: (model: VehicleModel | null) => void;
   clearVehicleSelection: () => void;
   getAvailableVehicleCategories: () => VehicleCategory[];
 
@@ -141,6 +147,39 @@ export interface SingleBooking {
   flightNumber?: string;
   specialRequirements?: string;
   estimatedPrice?: number;
+}
+
+// 🎁 STEP 2 SERVICE PACKAGES TYPES
+export interface ServicePackages {
+  // A. Included Services (ALL classes)
+  includedServices: string[]; // Always all 9 services
+
+  // B. Free Premium Options (Luxury, SUV, MPV only)
+  premiumFeatures: {
+    paparazziSafeMode: boolean;
+    frontSeatRequest: boolean;
+    comfortRideMode: boolean;
+    personalLuggagePrivacy: boolean;
+  };
+
+  // C. Universal Trip Preferences (ALL classes)
+  tripPreferences: {
+    music: 'no-preference' | 'classical' | 'jazz' | 'pop' | 'rock' | 'silence';
+    temperature: 'no-preference' | 'cool' | 'comfortable' | 'warm';
+    communication: 'no-preference' | 'friendly' | 'professional' | 'minimal';
+  };
+
+  // D. Paid Premium Upgrades (ALL classes)
+  paidUpgrades: {
+    flowers: null | 'standard' | 'exclusive';
+    champagne: null | 'moet' | 'dom-perignon';
+    securityEscort: boolean;
+  };
+}
+
+// 🔮 FUTURE FEATURES (hidden from UI)
+export interface FutureFeatures {
+  oshiboriTowels: boolean;
 }
 
 // 🔧 UTILITY TYPE EXPORTS

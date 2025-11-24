@@ -9,7 +9,7 @@ const executiveModels: VehicleModel[] = [
     name: 'Mercedes E-Class',
     brand: 'Mercedes',
     model: 'E-Class',
-    image: '/images/vehicles/mercedes-e-class.jpg',
+    image: '/images/vehicles-webp/E class Left side angle.webp',
     features: ['Leather interior', 'Dual-zone climate', 'Premium sound', 'WiFi hotspot'],
     capacity: {
       passengers: 4,
@@ -27,7 +27,7 @@ const executiveModels: VehicleModel[] = [
     name: 'BMW 5 Series',
     brand: 'BMW',
     model: '5 Series',
-    image: '/images/vehicles/bmw-5-series.jpg',
+    image: '/images/vehicles-webp/5 Series Left side angle.webp',
     features: ['Sport seats', 'Navigation', 'Heated seats', 'Premium audio'],
     capacity: {
       passengers: 4,
@@ -48,7 +48,7 @@ const luxuryModels: VehicleModel[] = [
     name: 'Mercedes S-Class',
     brand: 'Mercedes',
     model: 'S-Class',
-    image: '/images/vehicles/mercedes-s-class.jpg',
+    image: '/images/vehicles-webp/S class Left side angle.webp',
     features: ['Massage seats', 'Champagne service', 'Executive rear', 'Ambient lighting'],
     capacity: {
       passengers: 4,
@@ -66,7 +66,7 @@ const luxuryModels: VehicleModel[] = [
     name: 'BMW 7 Series',
     brand: 'BMW',
     model: '7 Series',
-    image: '/images/vehicles/bmw-7-series.jpg',
+    image: '/images/vehicles-webp/7 Series Left side angle.webp',
     features: ['Executive lounge', 'Sky lounge', 'Premium sound', 'Rear entertainment'],
     capacity: {
       passengers: 4,
@@ -87,7 +87,7 @@ const suvModels: VehicleModel[] = [
     name: 'Range Rover',
     brand: 'Land Rover',
     model: 'Range Rover',
-    image: '/images/vehicles/range-rover.jpg',
+    image: '/images/vehicles-webp/Range Rover Left side angle.webp',
     features: ['All-terrain', '4WD capability', 'Premium interior', 'Panoramic roof'],
     capacity: {
       passengers: 5,
@@ -108,7 +108,7 @@ const mpvModels: VehicleModel[] = [
     name: 'Mercedes V-Class',
     brand: 'Mercedes',
     model: 'V-Class',
-    image: '/images/vehicles/mercedes-v-class.jpg',
+    image: '/images/vehicles-webp/V class Left side angle.webp',
     features: ['8 passenger seating', 'Conference layout', 'Premium interior', 'Extra luggage'],
     capacity: {
       passengers: 8,

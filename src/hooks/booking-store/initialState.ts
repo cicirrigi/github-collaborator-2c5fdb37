@@ -43,6 +43,49 @@ export const createInitialTripConfiguration = (): TripConfiguration => ({
     model: null,
     selectedAt: null,
   },
+
+  // 🎁 Step 2: Service Packages
+  servicePackages: {
+    // A. Included Services (ALL classes) - always active
+    includedServices: [
+      'meet-greet',
+      'onboard-wifi',
+      'phone-chargers',
+      'refreshments',
+      'luggage-assistance',
+      'pet-friendly',
+      'priority-support',
+      'airport-wait-time',
+      'extra-stops',
+    ],
+
+    // B. Free Premium Options (Luxury, SUV, MPV only)
+    premiumFeatures: {
+      paparazziSafeMode: false,
+      frontSeatRequest: false,
+      comfortRideMode: false,
+      personalLuggagePrivacy: false,
+    },
+
+    // C. Universal Trip Preferences (ALL classes)
+    tripPreferences: {
+      music: 'no-preference' as const,
+      temperature: 'no-preference' as const,
+      communication: 'no-preference' as const,
+    },
+
+    // D. Paid Premium Upgrades (ALL classes)
+    paidUpgrades: {
+      flowers: null,
+      champagne: null,
+      securityEscort: false,
+    },
+  },
+
+  // 🔮 Future Features (hidden from UI)
+  futureFeatures: {
+    oshiboriTowels: false,
+  },
 });
 
 /**
