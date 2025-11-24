@@ -1,7 +1,7 @@
 'use client';
 
 import { useBookingState } from '@/hooks/useBookingState';
-import { AlertCircle, BarChart3, CheckCircle, Truck, Users } from 'lucide-react';
+import { AlertCircle, BarChart3, Car, CheckCircle, Crown, Truck, Users } from 'lucide-react';
 import React from 'react';
 
 interface FleetSummaryCardProps {
@@ -63,10 +63,14 @@ export function FleetSummaryCard({ className = '' }: FleetSummaryCardProps) {
         {/* Vehicle Breakdown */}
         {Object.keys(fleetSummary.categories).length > 0 && (
           <div className='mb-4'>
-            <h4 className='text-amber-200/80 text-xs font-medium tracking-wider uppercase mb-3'>
-              Vehicle Breakdown
-            </h4>
-            <div className='space-y-2'>
+            <div className='flex items-center justify-center gap-2 mb-3'>
+              <BarChart3 className='w-3 h-3 text-amber-200/60' />
+              <h4 className='text-amber-200/80 text-xs font-medium tracking-wider uppercase'>
+                Vehicle Breakdown
+              </h4>
+            </div>
+            <div className='w-full h-px bg-white/10 mb-3'></div>
+            <div className='grid grid-cols-2 gap-3 relative'>
               {Object.entries(fleetSummary.categories).map(([categoryId, categoryData]) => (
                 <VehicleBreakdownItem
                   key={categoryId}
@@ -75,18 +79,20 @@ export function FleetSummaryCard({ className = '' }: FleetSummaryCardProps) {
                   models={categoryData.models}
                 />
               ))}
+              {/* Single center separator */}
+              <div className='absolute left-1/2 top-0 bottom-0 w-px bg-white/10 transform -translate-x-0.5'></div>
+            </div>
+
+            {/* Validation Status - moved under separator */}
+            <div className='mt-3'>
+              <ValidationStatus
+                isValid={isValidSelection}
+                totalCapacity={fleetSelection.totalCapacity}
+                passengers={passengers}
+              />
             </div>
           </div>
         )}
-
-        {/* Validation Status */}
-        <div className='mb-4'>
-          <ValidationStatus
-            isValid={isValidSelection}
-            totalCapacity={fleetSelection.totalCapacity}
-            passengers={passengers}
-          />
-        </div>
 
         {/* Price Estimate */}
         <div className='pt-4 border-t border-white/10'>
@@ -153,20 +159,37 @@ function VehicleBreakdownItem({ categoryId, count, models }: VehicleBreakdownIte
       ? 'First Class'
       : categoryId.charAt(0).toUpperCase() + categoryId.slice(1);
 
+  // Vehicle category icons
+  const getVehicleIcon = (category: string) => {
+    switch (category) {
+      case 'luxury':
+        return Crown;
+      case 'suv':
+        return Truck;
+      case 'mpv':
+        return Users;
+      default:
+        return Car;
+    }
+  };
+
+  const VehicleIcon = getVehicleIcon(categoryId);
+
   return (
-    <div className='flex items-center justify-between py-2'>
-      <div className='flex-1'>
+    <div className='flex flex-col items-center py-3 text-center px-2'>
+      <div className='flex items-center gap-1.5 mb-1'>
+        <VehicleIcon className='w-3.5 h-3.5 text-amber-200/70' />
         <span className='text-white text-sm font-medium'>
           {count}x {categoryName}
         </span>
-        <div className='text-white/50 text-xs mt-0.5'>
-          {Object.entries(models).map(([modelName, modelCount], index) => (
-            <span key={modelName}>
-              {index > 0 && ', '}
-              {modelCount}x {modelName}
-            </span>
-          ))}
-        </div>
+      </div>
+      <div className='text-white/50 text-xs'>
+        {Object.entries(models).map(([modelName, modelCount], index) => (
+          <span key={modelName}>
+            {index > 0 && ', '}
+            {modelCount}x {modelName}
+          </span>
+        ))}
       </div>
     </div>
   );
