@@ -9,7 +9,7 @@ import { PaidUpgradesV2 } from '../../components/step2/PaidUpgradesV2';
 import { PremiumFeaturesV2 } from '../../components/step2/PremiumFeatures_v2';
 import { TripPreferencesV2 } from '../../components/step2/TripPreferences_v2';
 import { VehicleCategoriesV2 } from '../../components/step2/VehicleCategories_v2';
-import { VehicleModelsV2 } from '../../components/step2/VehicleModels_v2';
+import { VehicleModelGrid } from '../../components/step2/VehicleModelGrid';
 
 // Step2Services.tsx - Add-ons & pricing
 export function Step2Services() {
@@ -44,8 +44,8 @@ export function Step2Services() {
           {/* 🚗 1. Vehicle Categories - COMPACT */}
           <VehicleCategoriesV2 />
 
-          {/* 🔧 2. Vehicle Models - CONDITIONAL */}
-          <VehicleModelsV2 />
+          {/* 🔧 2. Vehicle Models Grid - NEW DESIGN */}
+          <VehicleModelGrid />
         </>
       )}
 
