@@ -17,6 +17,22 @@ export function CalendarSection() {
 
   const bookingRule = getBookingRule(bookingType);
 
+  // Smart minDate: după 22:00 începe direct cu mâine
+  const getSmartMinDate = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    // Dacă e după 22:00, începe cu mâine
+    if (currentHour >= 22) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      return tomorrow;
+    }
+
+    return now; // Altfel, începe cu azi
+  };
+
   return (
     <div className='flex flex-col'>
       {/* Real UnifiedCalendar */}
@@ -26,12 +42,12 @@ export function CalendarSection() {
           <span className='text-white font-medium text-sm'>Select Date & Time</span>
         </div>
 
-        {bookingType === 'oneway' && (
+        {['oneway', 'hourly', 'daily', 'fleet', 'bespoke'].includes(bookingType) && (
           <UnifiedCalendar
-            bookingType='oneway'
+            bookingType={bookingType}
             date={tripConfiguration.pickupDateTime}
             onChangeDate={setPickupDateTime}
-            minDate={new Date()}
+            minDate={getSmartMinDate()}
           />
         )}
 
@@ -104,15 +120,6 @@ export function CalendarSection() {
               </div>
             )}
           </div>
-        )}
-
-        {['hourly', 'daily', 'fleet', 'bespoke'].includes(bookingType) && (
-          <UnifiedCalendar
-            bookingType={bookingType}
-            date={tripConfiguration.pickupDateTime}
-            onChangeDate={setPickupDateTime}
-            minDate={new Date()}
-          />
         )}
       </div>
 

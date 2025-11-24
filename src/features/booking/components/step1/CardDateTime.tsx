@@ -9,6 +9,22 @@ export function CardDateTime() {
   const { tripConfiguration, bookingType, setPickupDateTime, setReturnDateTime } =
     useBookingState();
 
+  // Smart minDate: după 22:00 începe direct cu mâine
+  const getSmartMinDate = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    // Dacă e după 22:00, începe cu mâine
+    if (currentHour >= 22) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      return tomorrow;
+    }
+
+    return now; // Altfel, începe cu azi
+  };
+
   return (
     <div className='vl-card-flex'>
       <CardHeader icon={Calendar} title='Date & Time' subtitle='Select when you travel' />
@@ -64,6 +80,8 @@ export function CardDateTime() {
             bookingType={bookingType}
             date={tripConfiguration.pickupDateTime}
             onChangeDate={setPickupDateTime}
+            minDate={getSmartMinDate()}
+            placeholder={`Select ${bookingType} date & time`}
           />
         )}
       </div>
