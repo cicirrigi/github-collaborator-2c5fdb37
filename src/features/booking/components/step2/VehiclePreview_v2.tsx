@@ -1,6 +1,7 @@
 'use client';
 
 import { CheckCircle, Crown, Shield, Users } from 'lucide-react';
+import Image from 'next/image';
 
 // 🚗 VEHICLE IMAGES MAPPING
 const VEHICLE_IMAGES = {
@@ -95,10 +96,13 @@ export function VehiclePreviewV2({
               }}
             >
               {vehicleImage ? (
-                <img
+                <Image
                   src={vehicleImage}
                   alt={selectedModel.name}
+                  width={80}
+                  height={50}
                   className='w-full h-full object-cover'
+                  priority
                 />
               ) : (
                 <Crown className='w-4 h-4 text-yellow-400/60' />

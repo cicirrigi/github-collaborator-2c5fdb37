@@ -85,10 +85,6 @@ export const BookingStepper: React.FC<BookingStepperProps> = ({
     return 'disabled';
   };
 
-  // Calculate progress percentage
-  const progressPercentage =
-    ((completedSteps.length + (currentStep > completedSteps.length ? 1 : 0)) / steps.length) * 100;
-
   return (
     <div className={cn('w-full', className)}>
       {/* 🎯 Fluid Scale Wrapper - responsive scaling */}

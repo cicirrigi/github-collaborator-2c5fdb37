@@ -4,6 +4,7 @@ import { useBookingState } from '@/hooks/useBookingState';
 import { vehicleCategories } from '@/hooks/useBookingState/vehicle.data';
 import type { VehicleCategory, VehicleModel } from '@/hooks/useBookingState/vehicle.types';
 import { Car, Check, Crown, Shield, Users } from 'lucide-react';
+import Image from 'next/image';
 import React from 'react';
 
 interface VehicleModelsV2Props {
@@ -180,10 +181,13 @@ function CompactModelCard({ model, category, isSelected, onSelect }: CompactMode
                   }}
                 >
                   {vehicleImage ? (
-                    <img
+                    <Image
                       src={vehicleImage}
                       alt={model.name}
+                      width={120}
+                      height={60}
                       className='w-full h-full object-contain scale-[2.2]'
+                      priority
                     />
                   ) : (
                     <div className='w-full h-full flex items-center justify-center'>
