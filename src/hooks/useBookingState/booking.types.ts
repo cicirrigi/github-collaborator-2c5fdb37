@@ -126,6 +126,14 @@ export interface BookingState {
   canProceedToStep: (step: number) => boolean;
   validateCurrentStep: () => boolean;
   validateStep1Complete: () => boolean;
+  validateStep2Complete: () => { isValid: boolean; errors: string[]; warnings: string[] };
+  validateCrossStep: () => {
+    isValid: boolean;
+    recommendations: string[];
+    warnings: string[];
+    errors: string[];
+  };
+  getSmartRecommendations: () => string[];
   resetTrip: () => void;
 
   // UTILITY ACTIONS

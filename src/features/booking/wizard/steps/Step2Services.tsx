@@ -1,6 +1,7 @@
 'use client';
 
 import { IncludedServicesV2 } from '../../components/step2/IncludedServices_v2';
+import { PaidUpgradesV2 } from '../../components/step2/PaidUpgradesV2';
 import { PremiumFeaturesV2 } from '../../components/step2/PremiumFeatures_v2';
 import { TripPreferencesV2 } from '../../components/step2/TripPreferences_v2';
 import { VehicleCategoriesV2 } from '../../components/step2/VehicleCategories_v2';
@@ -31,10 +32,8 @@ export function Step2Services() {
       {/* 🟩 5. Trip Preferences - UNIVERSAL (Music, Temperature, Communication) */}
       <TripPreferencesV2 />
 
-      {/* 🟥 Următoarele secțiuni... */}
-      <div className='p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center'>
-        <p className='text-amber-200/70 text-sm'>Paid Upgrades - Coming next...</p>
-      </div>
+      {/* 🟥 6. Paid Upgrades - UNIVERSAL (Flowers, Champagne, Security) */}
+      <PaidUpgradesV2 />
     </div>
   );
 }

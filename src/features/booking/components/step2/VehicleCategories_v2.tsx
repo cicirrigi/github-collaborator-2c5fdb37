@@ -19,8 +19,37 @@ interface VehicleCategoriesV2Props {
 
 export function VehicleCategoriesV2({ className = '' }: VehicleCategoriesV2Props) {
   // 🎮 Use Zustand store for selection
-  const { tripConfiguration, selectVehicleCategory, clearVehicleSelection } = useBookingState();
+  const { bookingType, tripConfiguration, selectVehicleCategory, clearVehicleSelection } =
+    useBookingState();
   const selectedCategory = tripConfiguration.selectedVehicle?.category;
+
+  // 🚗 Filter categories based on booking type rules - ENTERPRISE LOGIC
+  const allowedCategoryIds = (() => {
+    switch (bookingType) {
+      case 'oneway':
+      case 'return':
+        return ['executive', 'luxury', 'suv', 'mpv']; // All categories allowed
+      case 'hourly':
+        return ['executive', 'luxury', 'suv', 'mpv']; // All allowed, luxury/suv recommended
+      case 'daily':
+        return ['luxury', 'suv', 'mpv']; // Long-term comfort - no executive
+      case 'fleet':
+        return ['suv', 'mpv']; // Group capacity only - large vehicles
+      case 'bespoke':
+        return ['luxury', 'suv']; // Premium only for bespoke service
+      case 'events':
+        return ['luxury', 'suv', 'mpv']; // Special events - premium vehicles
+      case 'corporate':
+        return ['executive', 'luxury']; // Professional appearance
+      default:
+        return ['executive', 'luxury', 'suv', 'mpv']; // Fallback - all categories
+    }
+  })();
+
+  // Filter available categories based on booking type
+  const availableCategories = vehicleCategories.filter(category =>
+    allowedCategoryIds.includes(category.id)
+  );
 
   return (
     <section className={`space-y-4 ${className}`}>
@@ -32,7 +61,7 @@ export function VehicleCategoriesV2({ className = '' }: VehicleCategoriesV2Props
 
       {/* 🚗 Compact Categories Grid - 4 în linie */}
       <div className='grid grid-cols-2 sm:grid-cols-4 gap-3'>
-        {vehicleCategories.map(category => (
+        {availableCategories.map(category => (
           <CompactVehicleCard
             key={category.id}
             category={category}

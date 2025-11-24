@@ -88,8 +88,8 @@ function PreferenceDropdown({ preference, selectedValue, onValueChange }: Prefer
     }
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
     }
 
     // Return undefined pentru code paths care nu returnează cleanup function
@@ -97,7 +97,7 @@ function PreferenceDropdown({ preference, selectedValue, onValueChange }: Prefer
   }, [isOpen]);
 
   return (
-    <div className='relative' ref={dropdownRef}>
+    <div className='relative z-50' style={{ overflow: 'visible' }} ref={dropdownRef}>
       {/* 🎨 Main Container */}
       <div
         className='p-4 rounded-xl backdrop-blur-sm transition-all duration-200 bg-white/5 border border-white/10 group-hover:shadow-lg group cursor-pointer'
@@ -141,11 +141,14 @@ function PreferenceDropdown({ preference, selectedValue, onValueChange }: Prefer
           {/* Dropdown Options */}
           {isOpen && (
             <div
-              className='absolute top-full left-0 right-0 mt-2 rounded-lg overflow-hidden z-[60]'
+              className='absolute top-full left-0 right-0 mt-2 rounded-lg overflow-hidden'
               style={{
+                zIndex: 9999,
+                position: 'absolute',
+                overflow: 'visible',
                 backgroundColor: 'rgba(20,20,20,0.95)',
                 border: '1px solid rgba(255,255,255,0.15)',
-                backdropFilter: 'blur(16px)',
+                backdropFilter: 'none',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
               }}
             >
