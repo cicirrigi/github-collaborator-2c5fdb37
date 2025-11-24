@@ -10,11 +10,18 @@ export interface FleetVehicleItem {
   addedAt: Date;
 }
 
+export type FleetMode = 'standard' | 'hourly' | 'daily';
+
 export interface FleetSelection {
   vehicles: FleetVehicleItem[];
   totalVehicles: number; // Cache pentru suma quantităților
   totalCapacity: number; // Cache pentru suma pasagerilor
   updatedAt: Date | null; // When fleet was last modified
+
+  // 🕐 Fleet Modes
+  fleetMode: FleetMode;
+  fleetHours: number | null;
+  fleetDays: number | null;
 }
 
 export interface FleetSummary {

@@ -182,7 +182,52 @@ export const createFleetActions = (
           vehicles: [],
           totalVehicles: 0,
           totalCapacity: 0,
-          updatedAt: null, // ✅ Fixed
+          updatedAt: null,
+          fleetMode: 'standard',
+          fleetHours: null,
+          fleetDays: null,
+        },
+      },
+    }));
+  },
+
+  // 🕐 Fleet Mode Actions
+  setFleetMode: (mode: 'standard' | 'hourly' | 'daily') => {
+    set(state => ({
+      ...state,
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        fleetSelection: {
+          ...state.tripConfiguration.fleetSelection,
+          fleetMode: mode,
+          fleetHours: mode === 'hourly' ? 2 : null,
+          fleetDays: mode === 'daily' ? 1 : null,
+        },
+      },
+    }));
+  },
+
+  setFleetHours: (hours: number) => {
+    set(state => ({
+      ...state,
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        fleetSelection: {
+          ...state.tripConfiguration.fleetSelection,
+          fleetHours: hours,
+        },
+      },
+    }));
+  },
+
+  setFleetDays: (days: number) => {
+    set(state => ({
+      ...state,
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        fleetSelection: {
+          ...state.tripConfiguration.fleetSelection,
+          fleetDays: days,
         },
       },
     }));

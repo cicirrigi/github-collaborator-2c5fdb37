@@ -134,6 +134,12 @@ export interface BookingState {
   removeFleetVehicle: (itemId: string) => void;
   updateFleetVehicleQuantity: (itemId: string, quantity: number) => void;
   clearFleetSelection: () => void;
+
+  // Fleet Mode Actions
+  setFleetMode: (mode: 'standard' | 'hourly' | 'daily') => void;
+  setFleetHours: (hours: number) => void;
+  setFleetDays: (days: number) => void;
+
   getFleetSummary: () => FleetSummary;
   getFleetTotalPrice: () => number;
   validateFleetSelection: () => boolean;

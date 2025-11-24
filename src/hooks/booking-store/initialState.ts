@@ -50,6 +50,9 @@ export const createInitialTripConfiguration = (): TripConfiguration => ({
     totalVehicles: 0,
     totalCapacity: 0,
     updatedAt: null,
+    fleetMode: 'standard',
+    fleetHours: null,
+    fleetDays: null,
   },
 
   // 🎁 Step 2: Service Packages

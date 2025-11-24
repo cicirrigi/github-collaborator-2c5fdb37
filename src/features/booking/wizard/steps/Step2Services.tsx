@@ -1,6 +1,7 @@
 'use client';
 
 import { useBookingState } from '@/hooks/useBookingState';
+import { FleetModeSelector } from '../../components/step2/FleetModeSelector';
 import { FleetSummaryCard } from '../../components/step2/FleetSummaryCard';
 import { FleetVehicleSelector } from '../../components/step2/FleetVehicleSelector';
 import { IncludedServicesV2 } from '../../components/step2/IncludedServices_v2';
@@ -31,6 +32,7 @@ export function Step2Services() {
       {/* 🚛 FLEET BOOKING - Special UI */}
       {bookingType === 'fleet' && (
         <>
+          <FleetModeSelector />
           <FleetVehicleSelector />
           <FleetSummaryCard />
         </>
