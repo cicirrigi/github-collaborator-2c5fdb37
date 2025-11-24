@@ -18,7 +18,7 @@ const getVehicleCapacity = (model: VehicleModel): number => {
 const getVehiclePrice = (category: VehicleCategory, model: VehicleModel): number => {
   // Enterprise pricing structure with proper validation
   const basePrice = category.basePrice || 0;
-  const multiplier = model.priceMultiplier || 1;
+  const multiplier = model.priceMultiplier ?? 1;
 
   if (basePrice === 0) {
     // Note: No base price available for category
@@ -32,14 +32,35 @@ const getVehiclePrice = (category: VehicleCategory, model: VehicleModel): number
   return basePrice * multiplier;
 };
 
+// Enterprise fleet compatibility - extensible category list
+const ALLOWED_FLEET_CATEGORIES = [
+  'executive',
+  'luxury',
+  'suv',
+  'mpv',
+  'premium',
+  'first',
+  'estate',
+];
+
 const isFleetCompatibleModel = (category: VehicleCategory, model: VehicleModel): boolean => {
   // Ensure model is suitable for fleet bookings
   const capacity = getVehicleCapacity(model);
   return (
     capacity >= 4 && // Fleet vehicles should accommodate groups
-    ['executive', 'luxury', 'suv', 'mpv'].includes(category.id) && // ✅ All 4 categories compatible
+    ALLOWED_FLEET_CATEGORIES.includes(category.id) && // Extensible category whitelist
     model.specifications?.fuelType !== 'Unknown' // Valid vehicle data
   );
+};
+
+// Helper to recalculate fleet totals - eliminates duplicate logic
+const recalculateFleetTotals = (vehicles: FleetVehicleItem[]) => {
+  const totalVehicles = vehicles.reduce((sum, item) => sum + item.quantity, 0);
+  const totalCapacity = vehicles.reduce(
+    (sum, item) => sum + getVehicleCapacity(item.model) * item.quantity,
+    0
+  );
+  return { totalVehicles, totalCapacity };
 };
 
 export const createFleetActions = (
@@ -89,12 +110,7 @@ export const createFleetActions = (
         updatedVehicles = [...currentFleet.vehicles, newItem];
       }
 
-      // ✅ SAFE CALCULATIONS with proper capacity handling
-      const totalVehicles = updatedVehicles.reduce((sum, item) => sum + item.quantity, 0);
-      const totalCapacity = updatedVehicles.reduce((sum, item) => {
-        const vehicleCapacity = getVehicleCapacity(item.model);
-        return sum + vehicleCapacity * item.quantity;
-      }, 0);
+      const { totalVehicles, totalCapacity } = recalculateFleetTotals(updatedVehicles);
 
       return {
         ...state,
@@ -105,7 +121,7 @@ export const createFleetActions = (
             vehicles: updatedVehicles,
             totalVehicles,
             totalCapacity,
-            updatedAt: new Date(), // ✅ Consistent naming
+            updatedAt: Date.now(), // ✅ Consistent naming
           },
         },
       };
@@ -118,11 +134,7 @@ export const createFleetActions = (
         item => item.id !== itemId
       );
 
-      const totalVehicles = updatedVehicles.reduce((sum, item) => sum + item.quantity, 0);
-      const totalCapacity = updatedVehicles.reduce((sum, item) => {
-        const vehicleCapacity = getVehicleCapacity(item.model);
-        return sum + vehicleCapacity * item.quantity;
-      }, 0);
+      const { totalVehicles, totalCapacity } = recalculateFleetTotals(updatedVehicles);
 
       return {
         ...state,
@@ -133,7 +145,7 @@ export const createFleetActions = (
             vehicles: updatedVehicles,
             totalVehicles,
             totalCapacity,
-            updatedAt: updatedVehicles.length > 0 ? new Date() : null, // ✅ Fixed
+            updatedAt: updatedVehicles.length > 0 ? Date.now() : null,
           },
         },
       };
@@ -151,11 +163,7 @@ export const createFleetActions = (
         item.id === itemId ? { ...item, quantity } : item
       );
 
-      const totalVehicles = updatedVehicles.reduce((sum, item) => sum + item.quantity, 0);
-      const totalCapacity = updatedVehicles.reduce(
-        (sum, item) => sum + item.model.capacity.passengers * item.quantity,
-        0
-      );
+      const { totalVehicles, totalCapacity } = recalculateFleetTotals(updatedVehicles);
 
       return {
         ...state,
@@ -166,7 +174,7 @@ export const createFleetActions = (
             vehicles: updatedVehicles,
             totalVehicles,
             totalCapacity,
-            updatedAt: new Date(), // ✅ Fixed
+            updatedAt: Date.now(), // ✅ Fixed
           },
         },
       };

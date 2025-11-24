@@ -16,7 +16,7 @@ export interface FleetSelection {
   vehicles: FleetVehicleItem[];
   totalVehicles: number; // Cache pentru suma quantităților
   totalCapacity: number; // Cache pentru suma pasagerilor
-  updatedAt: Date | null; // When fleet was last modified
+  updatedAt: number | null; // When fleet was last modified (timestamp for performance)
 
   // 🕐 Fleet Modes
   fleetMode: FleetMode;

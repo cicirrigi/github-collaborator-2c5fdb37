@@ -23,8 +23,7 @@ export function FleetSummaryCard({ className = '' }: FleetSummaryCardProps) {
     return null;
   }
 
-  // Calculate estimated price per hour (example rate)
-  const estimatedHourlyRate = totalPrice * 1.2; // Base price + markup
+  // Fleet pricing is now handled dynamically based on fleet mode
 
   return (
     <section className={`space-y-4 ${className}`}>
@@ -99,8 +98,14 @@ export function FleetSummaryCard({ className = '' }: FleetSummaryCardProps) {
           <div className='flex items-center justify-between'>
             <span className='text-white/70 text-sm'>Estimated Total</span>
             <div className='text-right'>
-              <div className='text-white font-medium'>£{Math.round(estimatedHourlyRate)}</div>
-              <div className='text-white/50 text-xs'>per hour</div>
+              <div className='text-white font-medium'>£{Math.round(totalPrice)}</div>
+              <div className='text-white/50 text-xs'>
+                {fleetSelection.fleetMode === 'standard'
+                  ? 'per transfer'
+                  : fleetSelection.fleetMode === 'hourly'
+                    ? `for ${fleetSelection.fleetHours || 2}h`
+                    : `for ${fleetSelection.fleetDays || 1} day${(fleetSelection.fleetDays || 1) > 1 ? 's' : ''}`}
+              </div>
             </div>
           </div>
         </div>
