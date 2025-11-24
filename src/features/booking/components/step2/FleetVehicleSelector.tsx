@@ -147,7 +147,7 @@ interface VehicleCardProps {
 function VehicleCard({ category, model, quantity, onQuantityChange }: VehicleCardProps) {
   return (
     <div
-      className='relative p-4 rounded-xl backdrop-blur-sm transition-all duration-200'
+      className='relative p-3 rounded-xl backdrop-blur-sm transition-all duration-200'
       style={{
         backgroundColor: 'rgba(255,255,255,0.04)',
         border: '1px solid rgba(255,255,255,0.06)',
@@ -155,15 +155,12 @@ function VehicleCard({ category, model, quantity, onQuantityChange }: VehicleCar
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 4px 12px rgba(0,0,0,0.2)',
       }}
     >
-      {/* Vehicle Info */}
-      <div className='flex items-start gap-3 mb-3'>
-        {/* Vehicle Image - Only photo container enlarged */}
+      {/* Vehicle Info - Extended Image Layout */}
+      <div className='relative mb-2' style={{ height: '6rem' }}>
+        {/* Extended Vehicle Image */}
         <div
-          className='relative w-44 h-20 rounded-lg overflow-hidden flex-shrink-0'
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.12) 100%)',
-          }}
+          className='absolute w-full rounded-lg overflow-hidden bg-gradient-to-br from-stone-700 to-stone-950'
+          style={{ height: 'calc(6rem + 3mm)' }}
         >
           {model.image ? (
             <Image
@@ -171,7 +168,22 @@ function VehicleCard({ category, model, quantity, onQuantityChange }: VehicleCar
               alt={model.name}
               width={128}
               height={80}
-              className='w-full h-full object-contain scale-[2.2]'
+              className={`w-full h-full ${
+                category.id === 'suv'
+                  ? 'object-contain scale-[1.85]'
+                  : category.id === 'mpv'
+                    ? 'object-contain scale-[2.0]'
+                    : 'object-contain scale-[2.2]'
+              }`}
+              style={
+                model.name === 'BMW 7 Series' || model.name === 'Mercedes S-Class'
+                  ? { objectPosition: 'center center' }
+                  : model.name === 'BMW 5 Series'
+                    ? { objectPosition: 'center calc(50% + 3px)' }
+                    : category.id === 'luxury'
+                      ? { objectPosition: 'center calc(50% + 7px)' }
+                      : undefined
+              }
               priority
             />
           ) : (
@@ -180,17 +192,14 @@ function VehicleCard({ category, model, quantity, onQuantityChange }: VehicleCar
             </div>
           )}
         </div>
-
-        {/* Vehicle Details */}
-        <div className='flex-1 min-w-0'>
-          <h5 className='text-white font-medium text-sm truncate'>{model.name}</h5>
-          <p className='text-white/60 text-xs mt-0.5 line-clamp-2'>{model.features[0]}</p>
-        </div>
       </div>
 
-      {/* Quantity Controls */}
-      <div className='flex items-center justify-between'>
-        <span className='text-white/40 text-xs'>{model.capacity.passengers} passengers</span>
+      {/* Vehicle Info & Quantity Controls */}
+      <div className='flex items-center justify-between' style={{ transform: 'translateY(2mm)' }}>
+        <div className='flex items-center gap-2 flex-1'>
+          <h5 className='text-white font-medium text-sm'>{model.name}</h5>
+          <span className='text-white/40 text-xs'>• {model.capacity.passengers} passengers</span>
+        </div>
 
         <div className='flex items-center gap-2'>
           <QuantityButton

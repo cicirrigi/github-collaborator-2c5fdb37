@@ -108,7 +108,7 @@ function VehicleModelCard({ model, category, isSelected, onSelect }: VehicleMode
 
       <div className='p-3 space-y-2'>
         {/* Vehicle Image */}
-        <div className='relative w-full h-44 bg-gradient-to-br from-gray-900 to-black rounded-lg overflow-hidden'>
+        <div className='relative w-full h-44 bg-gradient-to-br from-stone-700 to-stone-950 rounded-lg overflow-hidden'>
           {model.image ? (
             <Image
               src={model.image}
