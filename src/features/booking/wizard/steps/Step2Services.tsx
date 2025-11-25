@@ -5,7 +5,7 @@ import { FleetModeSelector } from '../../components/step2/FleetModeSelector';
 import { FleetSummaryCard } from '../../components/step2/FleetSummaryCard';
 import { FleetVehicleSelector } from '../../components/step2/FleetVehicleSelector';
 import { IncludedServicesV2 } from '../../components/step2/IncludedServices_v2';
-import { PaidUpgradesV2 } from '../../components/step2/PaidUpgradesV2';
+import { PaidUpgradesV3 } from '../../components/step2/PaidUpgradesV3';
 import { PremiumFeaturesV2 } from '../../components/step2/PremiumFeatures_v2';
 import { TripPreferencesV2 } from '../../components/step2/TripPreferences_v2';
 import { VehicleCategoriesV2 } from '../../components/step2/VehicleCategories_v2';
@@ -56,7 +56,7 @@ export function Step2Services() {
       <PremiumFeaturesV2 />
 
       {/* 🟥 5. Paid Upgrades - UNIVERSAL (Flowers, Champagne, Security) */}
-      <PaidUpgradesV2 />
+      <PaidUpgradesV3 />
 
       {/* 🟩 6. Trip Preferences - UNIVERSAL (Music, Temperature, Communication) */}
       <TripPreferencesV2 />

@@ -81,14 +81,8 @@ function CompactFeatureCard({ feature }: CompactFeatureCardProps) {
       >
         {/* 🎯 Content */}
         <div className='text-center space-y-2'>
-          {/* Icon - Background gri negricios fără border */}
-          <div
-            className='mx-auto w-8 h-8 rounded-lg flex items-center justify-center'
-            style={{
-              backgroundColor: isSelected ? 'rgba(203,178,106,0.3)' : 'rgba(60,60,60,0.8)',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
-            }}
-          >
+          {/* Icon - Same gradient as IncludedServices */}
+          <div className='mx-auto w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-stone-700 to-stone-950'>
             <Icon className='w-5 h-5' style={{ color: isSelected ? '#CBB26A' : '#CBB26A' }} />
           </div>
 

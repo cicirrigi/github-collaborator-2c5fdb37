@@ -129,14 +129,8 @@ function CompactVehicleCard({ category, isSelected, onSelect }: CompactVehicleCa
         {/* 🎯 Content */}
         <div className='text-center space-y-2'>
           {/* Icon */}
-          <div
-            className='mx-auto w-8 h-8 rounded-lg flex items-center justify-center'
-            style={{
-              backgroundColor: 'rgba(60,60,60,0.8)',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
-            }}
-          >
-            <Icon className='w-4 h-4' style={{ color: '#CBB26A' }} />
+          <div className='mx-auto flex items-center justify-center'>
+            <Icon className='w-8 h-8' style={{ color: '#CBB26A' }} />
           </div>
 
           {/* Text */}

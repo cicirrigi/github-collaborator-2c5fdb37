@@ -34,19 +34,19 @@ export interface IncludedService {
 export const INCLUDED_SERVICES: IncludedService[] = [
   {
     id: 'meet-greet',
-    title: 'Meet & Greet',
+    title: 'Greeting',
     description: 'Personal welcome service at pickup location',
     icon: Users,
   },
   {
     id: 'onboard-wifi',
-    title: 'On-board Wi-Fi',
+    title: 'WiFi',
     description: 'Stay connected during your journey',
     icon: Wifi,
   },
   {
     id: 'phone-chargers',
-    title: 'Phone Chargers',
+    title: 'Chargers',
     description: 'Charging cables for all major devices',
     icon: Phone,
   },
@@ -58,7 +58,7 @@ export const INCLUDED_SERVICES: IncludedService[] = [
   },
   {
     id: 'luggage-assistance',
-    title: 'Luggage Assistance',
+    title: 'Assistance',
     description: 'Help with your bags',
     icon: Luggage,
   },
@@ -70,7 +70,7 @@ export const INCLUDED_SERVICES: IncludedService[] = [
   },
   {
     id: 'airport-wait-time',
-    title: 'Airport Waiting Time',
+    title: 'Waiting Time',
     description: 'Complimentary included waiting time',
     icon: Clock,
   },

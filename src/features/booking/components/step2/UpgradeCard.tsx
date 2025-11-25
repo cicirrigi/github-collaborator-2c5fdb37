@@ -46,13 +46,7 @@ export function UpgradeCard({
         >
           {/* Icon & Title */}
           <div className={`${isFullWidth ? 'flex items-center gap-2' : 'space-y-1.5'}`}>
-            <div
-              className='w-8 h-8 rounded-lg flex items-center justify-center mx-auto'
-              style={{
-                backgroundColor: 'rgba(60,60,60,0.8)',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
-              }}
-            >
+            <div className='w-8 h-8 rounded-lg flex items-center justify-center mx-auto bg-gradient-to-br from-stone-700 to-stone-950'>
               <Icon className='w-5 h-5' style={{ color: '#CBB26A' }} />
             </div>
 

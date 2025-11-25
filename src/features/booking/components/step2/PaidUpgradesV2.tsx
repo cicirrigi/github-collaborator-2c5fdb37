@@ -47,9 +47,9 @@ export function PaidUpgradesV2({ className = '' }: PaidUpgradesV2Props) {
         )}
       </div>
 
-      {/* 🎨 Modern Compact Frame */}
+      {/* 🎨 Compact Frame - Reduced spacing */}
       <div
-        className='relative p-4 rounded-3xl backdrop-blur-sm space-y-4'
+        className='relative p-2.5 rounded-3xl backdrop-blur-sm space-y-3'
         style={{
           backgroundColor: 'rgba(255,255,255,0.02)',
           border: '1px solid rgba(203,178,106,0.15)',
@@ -58,14 +58,14 @@ export function PaidUpgradesV2({ className = '' }: PaidUpgradesV2Props) {
         }}
       >
         {/* 🌹 FLOWERS SECTION */}
-        <div className='space-y-3'>
+        <div className='space-y-2'>
           <div className='flex items-center gap-2'>
             <Flower className='w-3.5 h-3.5 text-pink-400' />
             <h4 className='text-amber-200/80 text-xs font-medium tracking-wider uppercase'>
               Luxury Flowers
             </h4>
           </div>
-          <div className='grid grid-cols-2 gap-3'>
+          <div className='grid grid-cols-2 gap-2'>
             {flowerUpgrades.map(upgrade => (
               <UpgradeCard
                 key={upgrade.id}
@@ -84,7 +84,7 @@ export function PaidUpgradesV2({ className = '' }: PaidUpgradesV2Props) {
         </div>
 
         {/* 🍾 CHAMPAGNE SECTION */}
-        <div className='space-y-3'>
+        <div className='space-y-2'>
           <div className='flex items-center gap-2'>
             <Wine className='w-3.5 h-3.5 text-purple-400' />
             <h4 className='text-amber-200/80 text-xs font-medium tracking-wider uppercase'>
@@ -92,7 +92,7 @@ export function PaidUpgradesV2({ className = '' }: PaidUpgradesV2Props) {
             </h4>
           </div>
 
-          <div className='grid grid-cols-2 gap-3'>
+          <div className='grid grid-cols-2 gap-2'>
             {champagneUpgrades.map(upgrade => (
               <UpgradeCard
                 key={upgrade.id}
@@ -111,7 +111,7 @@ export function PaidUpgradesV2({ className = '' }: PaidUpgradesV2Props) {
         </div>
 
         {/* 🛡️ SECURITY SECTION */}
-        <div className='space-y-3'>
+        <div className='space-y-2'>
           <div className='flex items-center gap-2'>
             <ShieldCheck className='w-3.5 h-3.5 text-blue-400/70' />
             <h4 className='text-amber-200/80 text-xs font-medium tracking-wider uppercase'>
@@ -119,7 +119,7 @@ export function PaidUpgradesV2({ className = '' }: PaidUpgradesV2Props) {
             </h4>
           </div>
 
-          <div className='grid grid-cols-1 gap-3'>
+          <div className='grid grid-cols-1 gap-2'>
             {securityUpgrades.map(upgrade => (
               <UpgradeCard
                 key={upgrade.id}

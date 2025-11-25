@@ -107,13 +107,7 @@ function PreferenceDropdown({ preference, selectedValue, onValueChange }: Prefer
       >
         {/* Header cu Icon & Title */}
         <div className='flex items-center gap-3 mb-3'>
-          <div
-            className='w-8 h-8 rounded-lg flex items-center justify-center'
-            style={{
-              backgroundColor: 'rgba(60,60,60,0.8)',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
-            }}
-          >
+          <div className='w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-stone-700 to-stone-950'>
             <Icon className='w-4 h-4' style={{ color: '#CBB26A' }} />
           </div>
           <h4 className='text-white font-medium text-sm'>{title}</h4>
