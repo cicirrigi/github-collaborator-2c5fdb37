@@ -111,7 +111,7 @@ export const PREMIUM_FEATURES: PremiumFeature[] = [
   },
   {
     id: 'personalLuggagePrivacy',
-    title: 'Personal Luggage Privacy',
+    title: 'Luggage Privacy',
     description: 'Driver will NOT touch bags or doors. Full privacy',
     icon: Shield,
   },

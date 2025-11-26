@@ -53,12 +53,14 @@ export function BookingWizard() {
       <Container size='lg' className='flex justify-center !px-2 sm:!px-6'>
         <div
           className='
-            w-full sm:max-w-5xl
-            bg-black/40 backdrop-blur-xl
-            border border-white/10
-            rounded-2xl sm:rounded-3xl shadow-[0_18px_60px_rgba(0,0,0,0.6)]
-            pt-1 pb-2 px-2 sm:pt-4 sm:pb-8 sm:px-8 space-y-4 sm:space-y-10
-          '
+          w-full
+          sm:max-w-[1440px]
+          bg-black/40 backdrop-blur-xl
+          border border-white/10
+          rounded-3xl
+          shadow-[0_18px_60px_rgba(0,0,0,0.6)]
+          pt-4 pb-10 px-4 space-y-14
+        '
         >
           {/* 🔹 BOOKING TYPE DOCK ÎNĂUNTRU */}
           <div className='w-full flex justify-center pt-4 -mb-6'>

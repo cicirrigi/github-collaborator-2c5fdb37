@@ -237,3 +237,4 @@ function UpgradeItem({ upgrade }: UpgradeItemProps) {
 }
 
 export type { PaidUpgradesCardV2Props };
+export default PaidUpgradesCardV2;

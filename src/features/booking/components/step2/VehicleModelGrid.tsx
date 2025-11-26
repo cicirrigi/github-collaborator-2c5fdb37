@@ -32,12 +32,13 @@ export function VehicleModelGrid({ className = '' }: VehicleModelGridProps) {
         <h3 className='text-white font-medium text-lg'>Choose {selectedCategory.name} Model</h3>
       </div>
 
-      {/* 2-Column Grid Layout */}
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-        {models.map(model => (
+      {/* Vertical Stack Layout - One Under Another */}
+      <div className='space-y-4 ml-0'>
+        {models.map((model, index) => (
           <VehicleModelCard
             key={model.id}
             model={model}
+            index={index}
             category={selectedCategory}
             isSelected={selectedModel?.id === model.id}
             onSelect={() => {
@@ -60,9 +61,10 @@ interface VehicleModelCardProps {
   category: VehicleCategory;
   isSelected: boolean;
   onSelect: () => void;
+  index: number;
 }
 
-function VehicleModelCard({ model, category, isSelected, onSelect }: VehicleModelCardProps) {
+function VehicleModelCard({ model, category, isSelected, onSelect, index }: VehicleModelCardProps) {
   const price = Math.round(category.basePrice * model.priceMultiplier);
 
   // Get category icon
@@ -83,29 +85,23 @@ function VehicleModelCard({ model, category, isSelected, onSelect }: VehicleMode
 
   return (
     <div
-      className={`relative rounded-xl backdrop-blur-sm cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
+      className={`relative rounded-xl backdrop-blur-sm cursor-pointer transition-all duration-300 w-full hover:scale-[1.02] animate-slideIn ${
         isSelected ? 'ring-2 ring-yellow-400/50' : ''
       }`}
       style={{
-        backgroundColor: isSelected ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        animationDelay: `${index * 120}ms`,
+        animationFillMode: 'both',
+        backgroundColor: isSelected ? 'rgba(250, 204, 21, 0.08)' : 'rgba(255,255,255,0.04)',
+        border: isSelected
+          ? '1px solid rgba(250, 204, 21, 0.15)'
+          : '1px solid rgba(255,255,255,0.06)',
         backdropFilter: 'blur(16px)',
         boxShadow: isSelected
-          ? 'inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 20px rgba(0,0,0,0.3)'
+          ? 'inset 0 1px 0 rgba(250, 204, 21, 0.12), 0 8px 20px rgba(0,0,0,0.3)'
           : 'inset 0 1px 0 rgba(255,255,255,0.04), 0 4px 12px rgba(0,0,0,0.2)',
       }}
       onClick={onSelect}
     >
-      {/* Selected Indicator */}
-      {isSelected && (
-        <div className='absolute top-3 right-3 z-10'>
-          <div className='flex items-center gap-1 bg-yellow-400/20 backdrop-blur-sm rounded-full px-2 py-1 border border-yellow-400/30'>
-            <Check className='w-3 h-3 text-yellow-400' />
-            <span className='text-yellow-400 text-xs font-medium'>Selected</span>
-          </div>
-        </div>
-      )}
-
       <div className='p-3 space-y-2'>
         {/* Vehicle Image */}
         <div className='relative w-full h-44 bg-gradient-to-br from-stone-700 to-stone-950 rounded-lg overflow-hidden'>
@@ -152,9 +148,10 @@ function VehicleModelCard({ model, category, isSelected, onSelect }: VehicleMode
             </div>
           </div>
 
-          {/* Compact Info Row - All on one line */}
-          <div className='flex items-center justify-between text-xs text-white/60'>
-            <div className='flex items-center gap-3'>
+          {/* Info Rows - Clean Layout */}
+          <div className='space-y-2'>
+            {/* First Row - Basic Info */}
+            <div className='flex items-center gap-4 text-xs text-white/60'>
               <div className='flex items-center gap-1'>
                 <Users className='w-3 h-3' />
                 <span>{model.capacity.passengers} passengers</span>
@@ -165,19 +162,38 @@ function VehicleModelCard({ model, category, isSelected, onSelect }: VehicleMode
               </div>
             </div>
 
-            {/* Features on same line */}
-            {model.specifications && (
-              <div className='flex items-center gap-1'>
-                <span className='text-xs bg-white/5 text-white/60 px-1.5 py-0.5 rounded'>
-                  Leather Seats
-                </span>
-                {model.specifications.transmission && (
-                  <span className='text-xs bg-white/5 text-white/60 px-1.5 py-0.5 rounded'>
-                    {model.specifications.transmission}
-                  </span>
+            {/* Second Row - Features + Select Button */}
+            <div className='flex items-center justify-between'>
+              <div className='flex items-center gap-2'>
+                {model.specifications && (
+                  <>
+                    <span className='text-xs bg-white/5 text-white/60 px-1.5 py-0.5 rounded'>
+                      Leather Seats
+                    </span>
+                    {model.specifications.transmission && (
+                      <span className='text-xs bg-white/5 text-white/60 px-1.5 py-0.5 rounded'>
+                        {model.specifications.transmission}
+                      </span>
+                    )}
+                  </>
                 )}
               </div>
-            )}
+
+              {/* Select Button with Check */}
+              <button
+                className={`
+                flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all duration-200
+                ${
+                  isSelected
+                    ? 'bg-yellow-400/20 text-yellow-400 border border-yellow-400/40'
+                    : 'bg-yellow-400/10 text-yellow-400/80 border border-yellow-400/20 hover:bg-yellow-400/15 hover:text-yellow-400'
+                }
+              `}
+              >
+                {isSelected && <Check className='w-3 h-3' />}
+                {isSelected ? 'Selected' : 'Select'}
+              </button>
+            </div>
           </div>
         </div>
       </div>

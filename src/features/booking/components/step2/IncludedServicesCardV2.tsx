@@ -3,32 +3,25 @@
 import { Check } from 'lucide-react';
 import { useState } from 'react';
 import { INCLUDED_SERVICES, type IncludedService } from './service-config';
-// 🔮 Future Zustand Integration Imports
-// import { useBookingState } from '@/hooks/useBookingState';
 
 interface IncludedServicesCardV2Props {
   className?: string;
 }
 
 export function IncludedServicesCardV2({ className = '' }: IncludedServicesCardV2Props) {
-  // 🔮 ZUSTAND INTEGRATION READY - Architecture matches PremiumFeaturesCardV2
-  // Uncomment when integrating:
-  // const bookingStore = useBookingState();
-  // const { tripConfiguration } = bookingStore;
-
-  // Dynamic services - ready for Zustand filtering/selection (no hardcoding)
   const availableServices = INCLUDED_SERVICES;
 
-  // 🔮 Future: Filter services based on booking configuration or vehicle category
-  // const filteredServices = availableServices.filter(service =>
-  //   isServiceAvailable(service, tripConfiguration)
-  // );
-
   return (
-    <div className={`relative ${className}`}>
-      {/* 💎 Luxury Black-Glass Card */}
+    <div className={className}>
       <div
-        className='relative p-5 rounded-3xl transition-all duration-300 h-full'
+        className='
+          relative
+          p-5
+          rounded-3xl
+          transition-all
+          duration-300
+          bg-black/40
+        '
         style={{
           background: 'linear-gradient(145deg, rgba(10,10,10,0.65), rgba(15,15,15,0.55))',
           border: '1px solid rgba(203,178,106,0.35)',
@@ -36,7 +29,7 @@ export function IncludedServicesCardV2({ className = '' }: IncludedServicesCardV
           boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 40px rgba(0,0,0,0.55)',
         }}
       >
-        {/* Header */}
+        {/* HEADER */}
         <div className='flex items-center gap-3 mb-5'>
           <div
             className='w-9 h-9 rounded-xl flex items-center justify-center shadow-lg'
@@ -51,28 +44,25 @@ export function IncludedServicesCardV2({ className = '' }: IncludedServicesCardV
 
           <div>
             <h3 className='text-white font-semibold text-lg tracking-wide'>Included Services</h3>
-            <p className='text-amber-200/50 text-xs'>Always included</p>
+            <p className='text-amber-200/50 text-xs'>Included at no extra cost</p>
           </div>
         </div>
 
-        {/* Icons Grid - Dynamic services ready for filtering */}
-        {/* 🔮 Future: Use filteredServices instead of availableServices when filtering is implemented */}
+        {/* ICON GRID - ORIGINAL DESIGN */}
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
           {availableServices.map(service => (
             <ServiceIcon key={service.id} service={service} />
           ))}
-        </div>
-
-        {/* Footer */}
-        <div className='text-center mt-5 pt-4 border-t border-white/10'>
-          <p className='text-amber-200/50 text-xs tracking-wide'>Included at no extra cost</p>
         </div>
       </div>
     </div>
   );
 }
 
-// 🎯 Service Icon Component - Same as original
+/* ------------------------------------------------------------------------------------ */
+/* ICON COMPONENT — IDENTIC CU ORIGINALUL */
+/* ------------------------------------------------------------------------------------ */
+
 interface ServiceIconProps {
   service: IncludedService;
 }
@@ -87,9 +77,7 @@ function ServiceIcon({ service }: ServiceIconProps) {
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
-      {/* Icon + Label */}
       <div className='flex flex-col items-center space-y-2'>
-        {/* 💎 Gold Crystal Icon */}
         <div
           className='w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110'
           style={{
@@ -101,13 +89,9 @@ function ServiceIcon({ service }: ServiceIconProps) {
           <Icon className='w-5 h-5' style={{ color: '#CBB26A' }} />
         </div>
 
-        {/* Label */}
-        <span className='text-white/90 font-medium text-xs leading-tight text-center line-clamp-1 max-w-full tracking-wide'>
-          {title}
-        </span>
+        <span className='text-white/90 font-medium text-xs leading-tight text-center'>{title}</span>
       </div>
 
-      {/* 🔍 Hover Tooltip - ORIGINAL */}
       {showTooltip && (
         <div className='absolute bottom-full left-1/2 -translate-x-1/2 mb-4 z-50 w-56 pointer-events-none'>
           <div
@@ -151,3 +135,4 @@ function ServiceIcon({ service }: ServiceIconProps) {
 }
 
 export type { IncludedServicesCardV2Props };
+export default IncludedServicesCardV2;

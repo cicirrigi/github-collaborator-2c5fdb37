@@ -178,3 +178,4 @@ function PremiumFeatureIcon({ feature }: PremiumFeatureIconProps) {
 }
 
 export type { PremiumFeaturesCardV2Props };
+export default PremiumFeaturesCardV2;
