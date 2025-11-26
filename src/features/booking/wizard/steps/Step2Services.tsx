@@ -1,10 +1,13 @@
 'use client';
 
-import IncludedServicesCardV2 from '@/features/booking/components/step2/IncludedServicesCardV2';
-import { PaidUpgradesCardV2 } from '@/features/booking/components/step2/PaidUpgradesCardV2';
-import PremiumFeaturesCardV2 from '@/features/booking/components/step2/PremiumFeaturesCardV2';
-import { TripPreferencesSlim } from '@/features/booking/components/step2/TripPreferencesSlim';
 import { useBookingState } from '@/hooks/useBookingState';
+import { FleetModeSelector } from '../../components/step2/FleetModeSelector';
+import { FleetSummaryCard } from '../../components/step2/FleetSummaryCard';
+import { FleetVehicleSelector } from '../../components/step2/FleetVehicleSelector';
+import IncludedServicesCardV2 from '../../components/step2/IncludedServicesCardV2';
+import { PaidUpgradesCardV2 } from '../../components/step2/PaidUpgradesCardV2';
+import PremiumFeaturesCardV2 from '../../components/step2/PremiumFeaturesCardV2';
+import { TripPreferencesSlim } from '../../components/step2/TripPreferencesSlim';
 import { VehicleCategoriesV2 } from '../../components/step2/VehicleCategories_v2';
 import { VehicleModelGrid } from '../../components/step2/VehicleModelGrid';
 
@@ -70,7 +73,18 @@ export function Step2Services() {
 
       {/* FLEET MODE */}
       {bookingType === 'fleet' && (
-        <div className='text-white/40 text-center py-20'>FLEET MODE - NOT IMPLEMENTED YET</div>
+        <div className='space-y-8'>
+          {/* Fleet Header */}
+          <div className='text-center space-y-2'>
+            <h2 className='text-white font-medium text-xl'>Fleet Selection</h2>
+            <p className='text-amber-200/70 text-sm'>Select multiple vehicles with quantities</p>
+          </div>
+
+          {/* Fleet Components */}
+          <FleetModeSelector />
+          <FleetVehicleSelector />
+          <FleetSummaryCard />
+        </div>
       )}
     </div>
   );

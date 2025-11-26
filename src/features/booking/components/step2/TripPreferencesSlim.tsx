@@ -46,11 +46,11 @@ export function TripPreferencesSlim({ className = '' }: TripPreferencesSlimProps
           flex flex-col
           px-4 py-3 rounded-xl
           backdrop-blur-xl
-          border border-yellow-400/30
+          border border-white/10
           shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_8px_25px_rgba(0,0,0,0.45)]
         '
         style={{
-          background: 'linear-gradient(145deg, rgba(10,10,10,0.65), rgba(15,15,15,0.55))',
+          background: 'linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.04))',
         }}
       >
         {/* Title Row */}
@@ -60,7 +60,7 @@ export function TripPreferencesSlim({ className = '' }: TripPreferencesSlimProps
             style={{
               background:
                 'conic-gradient(from 210deg, rgba(203,178,106,0.25), rgba(203,178,106,0.10), rgba(203,178,106,0.25))',
-              boxShadow: '0 0 12px rgba(203,178,106,0.2)',
+              boxShadow: '0 0 10px rgba(203,178,106,0.15)',
             }}
           >
             {(() => {
@@ -109,7 +109,7 @@ export function TripPreferencesSlim({ className = '' }: TripPreferencesSlimProps
                     '
                     style={{
                       background: 'rgba(15,15,15,0.95)',
-                      border: '1px solid rgba(203,178,106,0.3)',
+                      border: '1px solid rgba(255,255,255,0.06)',
                       boxShadow: '0 20px 40px rgba(0,0,0,0.6), 0 0 20px rgba(203,178,106,0.2)',
                     }}
                   >

@@ -23,8 +23,8 @@ export function IncludedServicesCardV2({ className = '' }: IncludedServicesCardV
           bg-black/40
         '
         style={{
-          background: 'linear-gradient(145deg, rgba(10,10,10,0.65), rgba(15,15,15,0.55))',
-          border: '1px solid rgba(203,178,106,0.35)',
+          background: 'linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.04))',
+          border: '1px solid rgba(255,255,255,0.06)',
           backdropFilter: 'blur(22px)',
           boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 40px rgba(0,0,0,0.55)',
         }}
@@ -36,7 +36,7 @@ export function IncludedServicesCardV2({ className = '' }: IncludedServicesCardV
             style={{
               background:
                 'conic-gradient(from 210deg at 50% 50%, rgba(203,178,106,0.25), rgba(203,178,106,0.1), rgba(203,178,106,0.25))',
-              boxShadow: '0 0 15px rgba(203,178,106,0.25)',
+              boxShadow: '0 0 12px rgba(203,178,106,0.15)',
             }}
           >
             <Check className='w-5 h-5' style={{ color: '#CBB26A' }} />
@@ -98,7 +98,7 @@ function ServiceIcon({ service }: ServiceIconProps) {
             className='relative p-4 rounded-2xl shadow-2xl'
             style={{
               background: 'rgba(15,15,15,0.95)',
-              border: '1px solid rgba(203,178,106,0.35)',
+              border: '1px solid rgba(255,255,255,0.06)',
               backdropFilter: 'blur(16px)',
               boxShadow: '0 25px 45px rgba(0,0,0,0.6), 0 0 25px rgba(203,178,106,0.25)',
             }}
