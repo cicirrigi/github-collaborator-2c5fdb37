@@ -1,8 +1,9 @@
 'use client';
 
+import { memo } from 'react';
 import type { CalendarDayProps } from '../core/calendar-types';
 
-export function CalendarDay({ date, onSelect, className = '' }: CalendarDayProps) {
+function CalendarDayBase({ date, onSelect, className = '' }: CalendarDayProps) {
   const { date: dayDate, isToday, isSelected, isDisabled, isCurrentMonth } = date;
 
   const dayNumber = dayDate.getDate();
@@ -12,14 +13,10 @@ export function CalendarDay({ date, onSelect, className = '' }: CalendarDayProps
     return <div aria-hidden='true' className={`w-full h-full rounded-md ${className}`} />;
   }
 
-  const handleClick = () => {
-    if (!isDisabled) onSelect(dayDate);
-  };
-
   return (
     <button
       type='button'
-      onClick={handleClick}
+      onClick={() => !isDisabled && onSelect(dayDate)}
       disabled={isDisabled}
       className={`
         relative
@@ -48,3 +45,17 @@ export function CalendarDay({ date, onSelect, className = '' }: CalendarDayProps
     </button>
   );
 }
+
+// 🧠 optimize: re-render only if date-state changes
+export const CalendarDay = memo(CalendarDayBase, (prev, next) => {
+  const a = prev.date;
+  const b = next.date;
+
+  return (
+    a.date.getTime() === b.date.getTime() &&
+    a.isToday === b.isToday &&
+    a.isSelected === b.isSelected &&
+    a.isDisabled === b.isDisabled &&
+    a.isCurrentMonth === b.isCurrentMonth
+  );
+});

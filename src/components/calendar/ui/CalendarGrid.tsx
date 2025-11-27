@@ -1,26 +1,37 @@
 'use client';
 
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import type { CalendarGridProps } from '../core/calendar-types';
 import { generateWeekdays } from '../core/calendar-utils';
 import { useCalendarMeasure } from '../core/useCalendarMeasure';
 import { CalendarDay } from './CalendarDay';
 
-export function CalendarGrid({
+function CalendarGridBase({
   month,
   onDateSelect,
-  selection: _selection,
-  mode: _mode,
-  orientation = 'portrait', // ⭐ new
+  orientation = 'portrait',
   className = '',
 }: CalendarGridProps) {
-  const { ref, width, sizeTier } = useCalendarMeasure();
+  const { ref, width, sizeTier, isReady } = useCalendarMeasure();
 
-  // 📐 Cell size fluid
+  const weekdays = useMemo(() => generateWeekdays('Europe/London'), []);
+
+  // 🔥 FIX FINAL — NU RANDĂM GRIDUL până nu e măsurat 100%
+  if (!isReady || width < 60) {
+    // container gol → nu se strânge ca acordeon
+    return (
+      <div
+        ref={ref}
+        className={`flex flex-col ${className}`}
+        style={{ minHeight: 280 }} // mic placeholder stabil
+      />
+    );
+  }
+
   const cellSize = Math.floor(width / 7);
   const isLandscape = orientation === 'landscape';
+  const weeks = month.weeks;
 
-  // 📏 Gap scaling
   const gap =
     sizeTier === 'xs'
       ? 'gap-[2px]'
@@ -30,7 +41,6 @@ export function CalendarGrid({
           ? 'gap-1'
           : 'gap-1.5';
 
-  // 📏 Weekday styles
   const weekdayClass =
     sizeTier === 'xs'
       ? 'py-0.5 text-[9px]'
@@ -40,7 +50,6 @@ export function CalendarGrid({
           ? 'py-1 text-[11px]'
           : 'py-1 text-xs';
 
-  // 📏 Day font scaling
   const dayFont =
     sizeTier === 'xs'
       ? 'text-[10px]'
@@ -49,8 +58,6 @@ export function CalendarGrid({
         : sizeTier === 'md'
           ? 'text-sm'
           : 'text-base';
-
-  const weekdays = generateWeekdays('Europe/London');
 
   return (
     <div ref={ref} className={`flex flex-col ${className}`}>
@@ -63,16 +70,16 @@ export function CalendarGrid({
         ))}
       </div>
 
-      {/* GRID 6x7 */}
+      {/* GRID */}
       <div className={`grid grid-cols-7 ${gap}`}>
-        {month.weeks.map((week, wIndex) => (
+        {weeks.map((week, wIndex) => (
           <React.Fragment key={wIndex}>
             {week.days.map((day, dIndex) => (
               <div
                 key={`${wIndex}-${dIndex}`}
                 style={{
                   width: cellSize,
-                  height: isLandscape ? cellSize * 0.55 : cellSize, // ⭐ core landscape logic
+                  height: isLandscape ? cellSize * 0.55 : cellSize,
                 }}
               >
                 <CalendarDay
@@ -88,3 +95,13 @@ export function CalendarGrid({
     </div>
   );
 }
+
+// 🧠 EXTREME MEMOIZATION
+export const CalendarGrid = memo(CalendarGridBase, (prev, next) => {
+  // reacționează doar dacă se schimbă luna sau orientation
+  return (
+    prev.month.year === next.month.year &&
+    prev.month.month === next.month.month &&
+    prev.orientation === next.orientation
+  );
+});

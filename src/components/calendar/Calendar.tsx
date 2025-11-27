@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback } from 'react';
 import type { CalendarProps } from './core/calendar-types';
 
 import { useCalendar } from './core/useCalendar';
@@ -33,6 +34,14 @@ export function Calendar({
     maxDate,
   });
 
+  // 🎯 Stable callback to prevent CalendarDay re-renders
+  const stableHandleDateSelect = useCallback(
+    (date: Date) => {
+      handleDateSelect(date);
+    },
+    [handleDateSelect]
+  );
+
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       {/* Header: Month navigation */}
@@ -45,7 +54,7 @@ export function Calendar({
       {/* Main 6x7 Grid */}
       <CalendarGrid
         month={calendarMonth}
-        onDateSelect={handleDateSelect}
+        onDateSelect={stableHandleDateSelect}
         selection={selection}
         mode={mode}
         orientation={orientation} // ⭐ new

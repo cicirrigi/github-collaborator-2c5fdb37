@@ -1,6 +1,8 @@
 'use client';
 
 import { Calendar } from '@/components/calendar/Calendar';
+import { DesktopCalendarModal } from '@/components/calendar/variants/modals/DesktopCalendarModal';
+import { useDesktopCalendarModal } from '@/components/calendar/variants/modals/useDesktopCalendarModal';
 import { useState } from 'react';
 
 export default function CalendarTestPage() {
@@ -31,7 +33,10 @@ export default function CalendarTestPage() {
               <div className='text-center'>
                 <p className='text-amber-200/60 text-sm mb-4'>Very Compact - 220px</p>
                 <div
-                  style={{ width: 220 }}
+                  style={{
+                    width: 220,
+                    minHeight: 280, // ⭐ STABLE HEIGHT - prevents jump
+                  }}
                   className='bg-white/5 border border-amber-200/20 rounded-xl p-4'
                 >
                   <Calendar
@@ -47,7 +52,10 @@ export default function CalendarTestPage() {
               <div className='text-center'>
                 <p className='text-amber-200/60 text-sm mb-4'>Mobile Standard - 280px</p>
                 <div
-                  style={{ width: 280 }}
+                  style={{
+                    width: 280,
+                    minHeight: 300, // ⭐ STABLE HEIGHT
+                  }}
                   className='bg-white/5 border border-amber-200/20 rounded-xl p-4'
                 >
                   <Calendar
@@ -63,7 +71,10 @@ export default function CalendarTestPage() {
               <div className='text-center'>
                 <p className='text-amber-200/60 text-sm mb-4'>Mobile Large - 320px</p>
                 <div
-                  style={{ width: 320 }}
+                  style={{
+                    width: 320,
+                    minHeight: 320, // ⭐ STABLE HEIGHT
+                  }}
                   className='bg-white/5 border border-amber-200/20 rounded-xl p-4'
                 >
                   <Calendar
@@ -349,6 +360,71 @@ export default function CalendarTestPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Desktop Calendar Modal Test Section */}
+      <div className='mt-24 border-t border-amber-200/20 pt-16'>
+        <DesktopModalTestSection />
+      </div>
+    </div>
+  );
+}
+
+function DesktopModalTestSection() {
+  const [committedDate, setCommittedDate] = useState<Date | null>(null);
+
+  // 🎯 HOOK ÎN PĂRINTE - ARHITECTURA CORECTĂ!
+  const calendarModal = useDesktopCalendarModal(committedDate);
+
+  const handleConfirm = () => {
+    const confirmedDate = calendarModal.confirm();
+    setCommittedDate(confirmedDate);
+    // console.log('Modal confirmed with date:', confirmedDate);
+  };
+
+  return (
+    <div className='max-w-4xl mx-auto'>
+      {/* Header */}
+      <div className='text-center mb-12'>
+        <h2 className='text-3xl font-bold text-amber-300 mb-4'>🖥️ Desktop Calendar Modal System</h2>
+        <p className='text-amber-200/70 text-lg'>
+          Premium luxury slide-up modal with Vantage Lane styling
+        </p>
+      </div>
+
+      {/* Modal Test Controls */}
+      <div className='bg-white/5 border border-amber-200/20 rounded-xl p-8'>
+        <div className='flex items-center justify-between mb-6'>
+          <div>
+            <h3 className='text-xl font-semibold text-amber-300 mb-2'>
+              Modal Test Controls - CONTROLLED ARCHITECTURE
+            </h3>
+            <p className='text-amber-200/60 text-sm'>
+              Committed: {committedDate?.toDateString() || 'None'}
+            </p>
+            <p className='text-amber-200/40 text-xs'>
+              Temp: {calendarModal.tempDate?.toDateString() || 'None'}
+            </p>
+          </div>
+
+          <button
+            onClick={() => calendarModal.open(committedDate)}
+            className='px-6 py-3 bg-amber-500 text-black font-medium rounded-lg hover:bg-amber-400 transition-all'
+          >
+            Open Calendar Modal
+          </button>
+        </div>
+
+        {/* Modal Integration - CONTROLLED */}
+        <DesktopCalendarModal
+          isOpen={calendarModal.isOpen}
+          onClose={calendarModal.close}
+          onSelect={calendarModal.select}
+          onConfirm={handleConfirm}
+          value={calendarModal.tempDate}
+          timezone='Europe/London'
+          label='Choose Your Journey Date'
+        />
       </div>
     </div>
   );
