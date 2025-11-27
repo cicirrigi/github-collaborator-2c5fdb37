@@ -2,6 +2,8 @@
 
 import { Calendar } from '../../Calendar';
 import type { CalendarProps } from '../../core/calendar-types';
+import { MobileModalContainer } from './MobileModalContainer';
+import { MobileModalOverlay } from './MobileModalOverlay';
 
 interface MobileCalendarModalProps extends Omit<CalendarProps, 'className' | 'variant'> {
   open: boolean;
@@ -18,48 +20,56 @@ export function MobileCalendarModal({
   minDate,
   maxDate,
 }: MobileCalendarModalProps) {
-  if (!open) return null;
-
   const handleSelect = (date: Date | [Date, Date] | null) => {
     onChange(date);
     onClose();
   };
 
   return (
-    <div
-      className='
-        fixed inset-0 z-50
-        flex flex-col
-        bg-black/50
-      '
-    >
-      {/* Sheet container */}
-      <div
-        className='
-          mt-auto
-          bg-white
-          rounded-t-2xl
-          p-4
-          shadow-lg
-        '
-      >
-        {/* Header Close */}
-        <div className='flex justify-between items-center mb-3'>
-          <button onClick={onClose}>Cancel</button>
-          <div className='font-medium text-base'>Select Date</div>
+    <>
+      <MobileModalOverlay visible={open} onClose={onClose} />
+
+      <MobileModalContainer visible={open}>
+        {/* HEADER */}
+        <div className='sticky top-0 z-50 bg-[#0c0c0c] px-4 py-4 flex items-center justify-between border-b border-white/10'>
+          <button className='text-amber-300' onClick={onClose}>
+            Cancel
+          </button>
+
+          <div className='text-base font-medium'>Select Date</div>
+
           <div className='w-10' />
         </div>
 
-        {/* Calendar */}
-        <Calendar
-          value={value}
-          onChange={handleSelect}
-          timezone={timezone}
-          minDate={minDate}
-          maxDate={maxDate}
-          mode={mode}
-        />
-      </div>
-    </div>
+        {/* BODY */}
+        <div className='flex-1 overflow-y-auto px-4 py-2'>
+          <Calendar
+            value={value}
+            onChange={handleSelect}
+            timezone={timezone}
+            minDate={minDate}
+            maxDate={maxDate}
+            mode={mode}
+          />
+        </div>
+
+        {/* FOOTER */}
+        <div className='sticky bottom-0 z-50 bg-[#0c0c0c] px-4 py-4 border-t border-white/10'>
+          <button
+            className='
+              w-full py-3 rounded-xl
+              bg-amber-500 text-black font-semibold text-base
+              shadow-lg
+            '
+            onClick={() => {
+              onChange(value || null);
+              onClose();
+            }}
+          >
+            Confirm
+          </button>
+        </div>
+      </MobileModalContainer>
+    </>
   );
 }
