@@ -4,12 +4,12 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import type React from 'react';
 
-import { typography } from '@/design-system/tokens/typography';
 import { Container } from '@/components/layout/Container';
 import { ExploreBadge } from '@/components/ui/ExploreBadge';
 import { LuxuryCard } from '@/components/ui/LuxuryCard';
 import { designTokens } from '@/config/theme.config';
 import { layoutTokens } from '@/design-system/tokens/layout';
+import { typography } from '@/design-system/tokens/typography';
 import { cn } from '@/lib/utils/cn';
 
 import { ServicesSwipeIndicator } from './components';
@@ -134,7 +134,7 @@ export function ServicesSection({
             <motion.div
               key={service.id}
               variants={itemVariants}
-              className='flex-shrink-0 w-[270px] snap-center md:w-auto'
+              className='flex-shrink-0 w-[min(270px,80vw)] snap-center md:w-auto'
             >
               <LuxuryCard
                 as={Link}

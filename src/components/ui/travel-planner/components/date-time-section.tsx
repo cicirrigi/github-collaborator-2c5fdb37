@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/travel-planner/types';
 import { cn } from '@/lib/utils';
 
-import { CalendarPicker } from './calendar-picker';
+// import { CalendarPicker } from './calendar-picker'; // TEMPORAR COMENTAT
 import { TimeSlotsPicker } from './time-slots-picker';
 
 export const DateTimeSection = ({
@@ -92,14 +92,9 @@ export const DateTimeSection = ({
           )}
         </div>
 
-        <CalendarPicker
-          currentMonth={currentMonth}
-          pickupDate={pickupDate}
-          returnDate={returnDate || null}
-          onSelect={handleDateSelect}
-          onNavigate={handleMonthNavigate}
-          showReturn={showReturn}
-        />
+        <div className='p-8 text-center text-yellow-600 bg-yellow-50/10 rounded-lg border border-yellow-200/20'>
+          📅 Calendar component temporarily removed
+        </div>
       </div>
 
       {/* Time Selection Section */}

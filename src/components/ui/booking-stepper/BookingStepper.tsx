@@ -89,7 +89,7 @@ export const BookingStepper: React.FC<BookingStepperProps> = ({
     <div className={cn('w-full', className)}>
       {/* 🎯 Fluid Scale Wrapper - responsive scaling */}
       <div
-        className={cn('relative z-[1] flex w-full justify-center overflow-visible !max-w-none')}
+        className={cn('relative z-[1] flex w-full justify-center overflow-hidden !max-w-none')}
         style={{
           transform: scale < 0.95 ? `scale(${scale})` : 'scale(1)',
           transformOrigin: 'top center',
@@ -98,7 +98,7 @@ export const BookingStepper: React.FC<BookingStepperProps> = ({
           pointerEvents: 'auto',
         }}
       >
-        <div className='w-full max-w-[1400px] px-4 sm:px-8 overflow-visible'>
+        <div className='w-full max-w-[min(1400px,95vw)] px-4 sm:px-8 overflow-hidden'>
           {/* Progress Info - HIDDEN */}
 
           {/* Steps Container */}

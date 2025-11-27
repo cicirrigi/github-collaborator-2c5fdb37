@@ -7,7 +7,6 @@
 
 'use client';
 
-import type React from 'react';
 import { forwardRef } from 'react';
 
 import { cn } from '@/lib/utils/cn';
@@ -56,7 +55,7 @@ export const FleetCarousel = forwardRef<HTMLDivElement, FleetCarouselProps>(func
           className={cn(
             'transform-gpu',
             // Mobile: fixed width pentru carousel + snap
-            'flex-shrink-0 w-[280px] snap-center',
+            'flex-shrink-0 w-[min(280px,85vw)] snap-center',
             // Desktop: auto width pentru grid
             'md:w-auto md:flex-shrink'
           )}

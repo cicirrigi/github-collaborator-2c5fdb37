@@ -18,12 +18,13 @@ export function Step2Services() {
     <div
       className='
       w-full
-      sm:max-w-[1440px]
+      max-w-[1440px]
+      mx-auto
       bg-black/40 backdrop-blur-xl
       border border-white/10
       rounded-3xl
       shadow-[0_18px_60px_rgba(0,0,0,0.6)]
-      pt-4 pb-10 px-2 space-y-14
+      pt-4 pb-6 lg:pb-10 px-2 lg:px-4 space-y-8 lg:space-y-14
       mx-auto
     '
     >
@@ -35,24 +36,24 @@ export function Step2Services() {
             <VehicleCategoriesV2 />
           </div>
 
-          {/* MAIN GRID: 2 coloane – stânga mașini fix 350px, dreapta servicii restul */}
-          <div className='grid grid-cols-[350px_minmax(0,1fr)] gap-4 items-start'>
-            {/* STÂNGA – VEHICLES (fix 350px) */}
-            <div className='w-[350px]'>
+          {/* MAIN GRID: 2 coloane desktop, 1 coloană mobile */}
+          <div className='grid grid-cols-1 lg:grid-cols-[350px_minmax(0,1fr)] gap-4 lg:gap-6 items-start'>
+            {/* VEHICLES - full width mobile, fix 350px desktop */}
+            <div className='w-full lg:w-[350px]'>
               <VehicleModelGrid />
             </div>
 
-            {/* DREAPTA – SERVICES */}
-            <div className='flex flex-col gap-6 mt-10'>
-              {/* GRID SUS: 2 coloane – stânga Included+Premium, dreapta PaidUpgrades (row-span-2) */}
-              <div className='grid grid-cols-[320px_minmax(0,1fr)] gap-4 items-start'>
+            {/* SERVICES - responsive layout */}
+            <div className='flex flex-col gap-6 mt-0 lg:mt-10'>
+              {/* SERVICES GRID: 1 col mobile, 2 cols desktop */}
+              <div className='grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-4 lg:gap-6 items-start'>
                 {/* Included Services – micșorat un pic, dar identic vizual */}
                 <div className='scale-[1.0] origin-top-left'>
                   <IncludedServicesCardV2 />
                 </div>
 
-                {/* Paid Upgrades – card înalt, ocupă 2 rânduri */}
-                <div className='row-span-2 min-w-0 w-full'>
+                {/* Paid Upgrades – 2 rows desktop, normal mobile */}
+                <div className='lg:row-span-2 min-w-0 w-full'>
                   <PaidUpgradesCardV2 />
                 </div>
 
@@ -73,11 +74,13 @@ export function Step2Services() {
 
       {/* FLEET MODE */}
       {bookingType === 'fleet' && (
-        <div className='space-y-8'>
-          {/* Fleet Header */}
-          <div className='text-center space-y-2'>
-            <h2 className='text-white font-medium text-xl'>Fleet Selection</h2>
-            <p className='text-amber-200/70 text-sm'>Select multiple vehicles with quantities</p>
+        <div className='space-y-6 lg:space-y-8'>
+          {/* Fleet Header - responsive text */}
+          <div className='text-center space-y-2 px-4'>
+            <h2 className='text-white font-medium text-lg lg:text-xl'>Fleet Selection</h2>
+            <p className='text-amber-200/70 text-xs lg:text-sm'>
+              Select multiple vehicles with quantities
+            </p>
           </div>
 
           {/* Fleet Components */}

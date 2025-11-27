@@ -30,9 +30,9 @@ export function BookingWizard() {
   };
 
   return (
-    <div className='w-full space-y-8'>
+    <div className='w-full space-y-8 overflow-x-hidden'>
       {/* 🔹 BOOKING STEPPER AFARĂ (din formular) */}
-      <div className='w-full flex justify-center py-4 sm:py-6 px-2 sm:px-4'>
+      <div className='w-full flex justify-center py-4 sm:py-6 px-1 sm:px-2'>
         <div className='w-full max-w-lg'>
           <BookingStepper
             steps={BOOKING_STEPS}
@@ -50,16 +50,17 @@ export function BookingWizard() {
       </div>
 
       {/* 2️⃣ BOOKING FORM — LUXURY BOX */}
-      <Container size='lg' className='flex justify-center !px-2 sm:!px-6'>
+      <Container size='lg' className='flex justify-center !px-1 sm:!px-2'>
         <div
           className='
           w-full
-          sm:max-w-[1440px]
+          max-w-[1440px]
+          mx-auto
           bg-black/40 backdrop-blur-xl
           border border-white/10
           rounded-3xl
           shadow-[0_18px_60px_rgba(0,0,0,0.6)]
-          pt-4 pb-10 px-4 space-y-14
+          pt-4 pb-10 px-2 sm:px-4 space-y-14
         '
         >
           {/* 🔹 BOOKING TYPE DOCK ÎNĂUNTRU */}
