@@ -1,123 +1,148 @@
 /**
- * 🕒 VANTAGE LANE — StatefulTimePicker
- * Desktop popover + Mobile fullscreen modal controller.
- * Zero styling — only logic + structure.
+ * 🕒 VANTAGE LANE — StatefulTimePicker (FINAL ENTERPRISE VERSION)
  */
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import type { TimePickerProps, TimeValue } from './core/time-types';
+import { useEffect, useState } from 'react';
+import {
+  extractTime,
+  LEAD_TIME_MINUTES,
+  minimumBookableMoment,
+  roundTo15,
+} from '../../utils/timezone-uk';
+
+import type { TimeValue } from './core/useTimeEngine';
+
+import { DesktopTimePickerModal } from './desktop/DesktopTimePickerModal';
 import { MobileTimePickerModal } from './mobile/MobileTimePickerModal';
-import { TimePicker } from './TimePicker';
+
+interface StatefulTimePickerProps {
+  /** Selected date from Calendar */
+  date: Date;
+
+  /** Selected time (HH:mm) */
+  value: TimeValue | null;
+
+  /** Callback when user selects a time */
+  onChange: (t: TimeValue | null) => void;
+
+  /** Interval, min/max, lead */
+  interval?: number;
+  minTime?: TimeValue;
+  maxTime?: TimeValue;
+  leadMinutes?: number;
+
+  className?: string;
+}
 
 export function StatefulTimePicker({
+  date,
   value,
   onChange,
-  timezone,
-  interval,
+  interval = 15,
   minTime,
   maxTime,
-  leadMinutes,
+  leadMinutes = LEAD_TIME_MINUTES,
   className = '',
-}: TimePickerProps) {
-  const [open, setOpen] = useState(false);
+}: StatefulTimePickerProps) {
+  /* -------------------------------------------------------
+     1. MOBILE DETECTION (SSR SAFE)
+  --------------------------------------------------------- */
   const [isMobile, setIsMobile] = useState(false);
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  /* -----------------------------------------------------
-     Detect mobile vs desktop
-     ----------------------------------------------------- */
   useEffect(() => {
-    const check = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    setMounted(true);
+    const check = () => setIsMobile(window.innerWidth < 768);
     check();
+
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  /* -----------------------------------------------------
-     Handle outside click to close popover (desktop only)
-     ----------------------------------------------------- */
+  /* -------------------------------------------------------
+     2. PRESELECT DEFAULT TIME WHEN OPENING
+  --------------------------------------------------------- */
   useEffect(() => {
-    if (isMobile) return; // modal handles itself on mobile
-    if (!open) return;
+    if (open && !value) {
+      const base = minimumBookableMoment(leadMinutes);
+      const rounded = roundTo15(base);
 
-    const handler = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      if (!containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [open, isMobile]);
-
-  /* -----------------------------------------------------
-     Handlers
-     ----------------------------------------------------- */
-  const handleInputClick = () => {
-    setOpen(true);
-  };
-
-  const handleChange = (t: TimeValue | null) => {
-    onChange(t);
-    if (!isMobile) {
-      setOpen(false); // desktop: close after select
+      const timeValue = extractTime(rounded);
+      onChange(timeValue);
     }
+  }, [open, value, onChange, leadMinutes]);
+
+  /* -------------------------------------------------------
+     3. CONFIRM HANDLERS
+  --------------------------------------------------------- */
+  const handleConfirm = (t: TimeValue | null) => {
+    onChange(t);
+    setOpen(false);
   };
 
-  /* -----------------------------------------------------
-     UI Rendering
-     ----------------------------------------------------- */
+  /* -------------------------------------------------------
+     4. FORMATTED DISPLAY VALUE
+  --------------------------------------------------------- */
+  const formattedValue = value
+    ? `${String(value.hours).padStart(2, '0')}:${String(value.minutes).padStart(2, '0')}`
+    : 'Select time';
+
+  /* -------------------------------------------------------
+     5. RETURN JSX (SSR SAFE)
+  --------------------------------------------------------- */
   return (
-    <div ref={containerRef} className={`relative ${className}`} data-stateful-timepicker='true'>
-      {/* Input field trigger */}
+    <div className={`relative ${className}`}>
+      {/* TRIGGER BUTTON */}
       <button
         type='button'
-        onClick={handleInputClick}
-        className='w-full p-3 text-left bg-white/5 border border-amber-200/20 rounded-lg hover:bg-white/10 transition-colors text-amber-100'
-        data-timepicker-trigger='true'
+        onClick={() => setOpen(true)}
+        className='
+          w-full p-3 text-left rounded-lg
+          bg-white/5 text-amber-200
+          border border-white/10
+          hover:bg-white/10 transition
+        '
       >
-        {value
-          ? `${String(value.hours).padStart(2, '0')}:${String(value.minutes).padStart(2, '0')}`
-          : 'Select time'}
+        {formattedValue}
       </button>
 
-      {/* Desktop popover */}
-      {!isMobile && open && (
-        <div
-          className='absolute left-0 top-full mt-2 z-50 w-64 bg-black/95 backdrop-blur-lg border border-amber-200/20 rounded-lg shadow-xl'
-          data-timepicker-popover='true'
-        >
-          <TimePicker
-            value={value}
-            onChange={handleChange}
-            timezone={timezone}
-            interval={interval}
-            minTime={minTime}
-            maxTime={maxTime}
-            leadMinutes={leadMinutes}
-          />
-        </div>
-      )}
+      {/* MODALS - Only render after mount to prevent hydration mismatch */}
+      {mounted && (
+        <>
+          {/* DESKTOP MODAL */}
+          {!isMobile && (
+            <DesktopTimePickerModal
+              isOpen={open}
+              onClose={() => setOpen(false)}
+              onConfirm={handleConfirm}
+              value={value}
+              date={date}
+              interval={interval}
+              minTime={minTime}
+              maxTime={maxTime}
+              leadMinutes={leadMinutes}
+            />
+          )}
 
-      {/* Mobile modal */}
-      {isMobile && (
-        <MobileTimePickerModal
-          open={open}
-          onClose={() => setOpen(false)}
-          onConfirm={handleChange}
-          value={value}
-          onChange={onChange}
-          timezone={timezone}
-          interval={interval}
-          minTime={minTime}
-          maxTime={maxTime}
-          leadMinutes={leadMinutes}
-        />
+          {/* MOBILE MODAL */}
+          {isMobile && (
+            <MobileTimePickerModal
+              open={open}
+              onClose={() => setOpen(false)}
+              onConfirm={handleConfirm}
+              value={value}
+              onChange={onChange}
+              date={date}
+              interval={interval}
+              minTime={minTime}
+              maxTime={maxTime}
+              leadMinutes={leadMinutes}
+            />
+          )}
+        </>
       )}
     </div>
   );

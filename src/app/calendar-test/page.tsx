@@ -2,10 +2,13 @@
 
 import { Calendar } from '@/components/calendar/Calendar';
 import { DesktopCalendarModal } from '@/components/calendar/variants/modals/DesktopCalendarModal';
+import { StatefulTimePicker } from '@/components/time/StatefulTimePicker';
+import type { TimeValue } from '@/components/time/core/time-types';
 import { useState } from 'react';
 
 export default function CalendarTestPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<TimeValue | null>({ hours: 14, minutes: 30 });
 
   return (
     <div className='min-h-screen bg-black text-white p-8'>
@@ -364,6 +367,42 @@ export default function CalendarTestPage() {
       {/* Desktop Calendar Modal Test Section */}
       <div className='mt-24 border-t border-amber-200/20 pt-16'>
         <DesktopModalTestSection />
+      </div>
+
+      {/* Time Picker Test Section */}
+      <div className='mt-24 border-t border-amber-200/20 pt-16'>
+        <div className='text-center mb-12'>
+          <h2 className='text-3xl font-bold text-amber-300 mb-4'>🕒 Desktop Time Picker</h2>
+          <p className='text-amber-200/70 text-lg'>
+            Consistent with Calendar modal UX - temp/committed pattern
+          </p>
+        </div>
+
+        <div className='max-w-md mx-auto space-y-6'>
+          <div className='bg-white/5 rounded-xl p-6 border border-amber-200/20'>
+            <h3 className='text-lg font-semibold text-amber-300 mb-4'>Current Selection</h3>
+            <p className='text-amber-200/80'>
+              Time:{' '}
+              {selectedTime
+                ? `${String(selectedTime.hours).padStart(2, '0')}:${String(selectedTime.minutes).padStart(2, '0')}`
+                : 'None'}
+            </p>
+          </div>
+
+          <div className='bg-white/5 rounded-xl p-6 border border-amber-200/20'>
+            <h3 className='text-lg font-semibold text-amber-300 mb-4'>Time Picker Test</h3>
+            <StatefulTimePicker
+              value={selectedTime}
+              onChange={setSelectedTime}
+              timezone='Europe/London'
+              interval={15}
+              className='w-full'
+            />
+            <p className='text-xs text-amber-200/60 mt-2'>
+              Desktop: Confirm/Cancel flow | Mobile: Direct selection
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

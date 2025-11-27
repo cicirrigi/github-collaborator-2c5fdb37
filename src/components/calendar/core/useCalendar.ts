@@ -1,131 +1,131 @@
 /**
- * 📅 VANTAGE LANE — useCalendar Hook (FINAL VERSION)
+ * 📅 VANTAGE LANE — useCalendar FINAL FIXED
+ * ZERO TIMEZONE CONVERSIONS — stable month navigation.
  */
 
+import { isBefore } from 'date-fns';
 import { useCallback, useMemo, useState } from 'react';
-import type { CalendarMonth, CalendarProps, CalendarSelection } from './calendar-types';
 
+import type { CalendarMonth, CalendarProps, CalendarSelection } from './calendar-types';
 import {
-  createDateInTimezone,
+  createDateLocal,
   formatMonthYear,
   generateCalendarMonth,
-  getCurrentTimeInZone,
   getNextMonth,
+  getNowLocal,
   getPreviousMonth,
 } from './calendar-utils';
 
 export function useCalendar({
   mode = 'single',
-  timezone,
   value,
   onChange,
   minDate,
   maxDate,
-}: Pick<CalendarProps, 'mode' | 'timezone' | 'value' | 'onChange' | 'minDate' | 'maxDate'>) {
-  /* --------------------------------------------
-     📌 Current visible month (IN timezone)
-     -------------------------------------------- */
-  const [currentMonth, setCurrentMonth] = useState(() => {
-    const now = getCurrentTimeInZone(timezone);
-    return createDateInTimezone(now.getFullYear(), now.getMonth(), 1, timezone);
-  });
+}: Pick<CalendarProps, 'mode' | 'value' | 'onChange' | 'minDate' | 'maxDate'>) {
+  /* ------------------------------
+     INITIAL MONTH = TODAY
+  --------------------------------*/
+  const today = getNowLocal();
+  const [currentMonth, setCurrentMonth] = useState(
+    createDateLocal(today.getFullYear(), today.getMonth(), 1)
+  );
 
-  /* --------------------------------------------
-     🎯 Convert prop value → internal selection
-     -------------------------------------------- */
-  const selection = useMemo((): CalendarSelection => {
+  /* ------------------------------
+     SELECTION NORMALIZATION
+  --------------------------------*/
+  const selection = useMemo<CalendarSelection>(() => {
     if (!value) return { single: null, range: null };
 
     if (mode === 'single') {
-      return { single: value as Date, range: null };
+      return { single: new Date(value as Date), range: null };
     }
 
-    if (mode === 'range') {
-      return { single: null, range: value as [Date, Date] };
-    }
-
-    return { single: null, range: null };
+    const [a, b] = value as [Date, Date];
+    return { single: null, range: [new Date(a), new Date(b)] };
   }, [value, mode]);
 
-  /* --------------------------------------------
-     📅 Generate month grid for UI
-     -------------------------------------------- */
+  /* ------------------------------
+     GENERATE MONTH GRID
+  --------------------------------*/
   const calendarMonth: CalendarMonth = useMemo(() => {
     return generateCalendarMonth(
       currentMonth.getFullYear(),
       currentMonth.getMonth(),
-      timezone,
       selection,
       mode,
-      minDate,
-      maxDate
+      minDate || undefined,
+      maxDate || undefined
     );
-  }, [currentMonth, timezone, selection, mode, minDate, maxDate]);
+  }, [currentMonth, selection, mode, minDate, maxDate]);
 
-  /* --------------------------------------------
-     ⬅️➡️ Month navigation (timezone-safe)
-     -------------------------------------------- */
+  /* ------------------------------
+     MONTH NAVIGATION
+  --------------------------------*/
   const goToPreviousMonth = useCallback(() => {
-    setCurrentMonth(prev => getPreviousMonth(prev));
-  }, []);
+    const prev = getPreviousMonth(currentMonth);
+    if (minDate && isBefore(prev, minDate)) return;
+    setCurrentMonth(prev);
+  }, [currentMonth, minDate]);
 
   const goToNextMonth = useCallback(() => {
-    setCurrentMonth(prev => getNextMonth(prev));
-  }, []);
+    const next = getNextMonth(currentMonth);
+    if (maxDate && isBefore(maxDate, next)) return;
+    setCurrentMonth(next);
+  }, [currentMonth, maxDate]);
 
   const goToMonth = useCallback(
     (year: number, month: number) => {
-      setCurrentMonth(createDateInTimezone(year, month, 1, timezone));
+      const newMonth = createDateLocal(year, month, 1);
+      if (minDate && isBefore(newMonth, minDate)) return;
+      if (maxDate && isBefore(maxDate, newMonth)) return;
+      setCurrentMonth(newMonth);
     },
-    [timezone]
+    [minDate, maxDate]
   );
 
-  /* --------------------------------------------
-     📍 Date Selection
-     -------------------------------------------- */
+  /* ------------------------------
+     DATE SELECTION
+  --------------------------------*/
   const handleDateSelect = useCallback(
-    (selectedDate: Date) => {
+    (selected: Date) => {
+      const normalized = createDateLocal(
+        selected.getFullYear(),
+        selected.getMonth(),
+        selected.getDate()
+      );
+
       if (mode === 'single') {
-        onChange(selectedDate);
+        onChange(normalized);
         return;
       }
 
-      if (mode === 'range') {
-        const currentRange = selection.range;
+      const r = selection.range;
+      if (!r) return onChange([normalized, normalized]);
 
-        if (!currentRange) {
-          onChange([selectedDate, selectedDate]);
-          return;
-        }
+      const [start, end] = r;
 
-        const [start, end] = currentRange;
-
-        // Same date → clear
-        if (
-          selectedDate.getTime() === start.getTime() &&
-          selectedDate.getTime() === end.getTime()
-        ) {
-          onChange(null);
-          return;
-        }
-
-        // Start == end → choose range directionally
-        if (start.getTime() === end.getTime()) {
-          if (selectedDate < start) onChange([selectedDate, start]);
-          else onChange([start, selectedDate]);
-          return;
-        }
-
-        // New range
-        onChange([selectedDate, selectedDate]);
+      // same → clear
+      if (normalized.getTime() === start.getTime() && normalized.getTime() === end.getTime()) {
+        return onChange(null);
       }
+
+      // extend
+      if (start.getTime() === end.getTime()) {
+        if (normalized < start) onChange([normalized, start]);
+        else onChange([start, normalized]);
+        return;
+      }
+
+      // reset
+      onChange([normalized, normalized]);
     },
     [mode, selection, onChange]
   );
 
-  /* --------------------------------------------
-     🏷 Month label
-     -------------------------------------------- */
+  /* ------------------------------
+     MONTH LABEL
+  --------------------------------*/
   const monthYearLabel = useMemo(() => formatMonthYear(currentMonth), [currentMonth]);
 
   return {
@@ -133,11 +133,9 @@ export function useCalendar({
     calendarMonth,
     selection,
     monthYearLabel,
-
     goToPreviousMonth,
     goToNextMonth,
     goToMonth,
-
     handleDateSelect,
   };
 }

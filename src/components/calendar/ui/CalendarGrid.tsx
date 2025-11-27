@@ -16,15 +16,19 @@ function CalendarGridBase({
 
   const weekdays = useMemo(() => generateWeekdays('Europe/London'), []);
 
-  // 🔥 FIX FINAL — NU RANDĂM GRIDUL până nu e măsurat 100%
+  // 🔥 FIX FINAL — Loading state fără duplicate key
   if (!isReady || width < 60) {
-    // container gol → nu se strânge ca acordeon
     return (
-      <div
-        ref={ref}
-        className={`flex flex-col ${className}`}
-        style={{ minHeight: 280 }} // mic placeholder stabil
-      />
+      <div ref={ref} className={className} style={{ minHeight: 320 }}>
+        {/* păstrăm headerul ca să nu dispară luni/săptămâni */}
+        <div className='grid grid-cols-7 opacity-30'>
+          {weekdays.map(w => (
+            <div key={w.full} className='text-xs py-1 text-center'>
+              {w.short}
+            </div>
+          ))}
+        </div>
+      </div>
     );
   }
 
@@ -60,7 +64,7 @@ function CalendarGridBase({
           : 'text-base';
 
   return (
-    <div ref={ref} className={`flex flex-col ${className}`}>
+    <div key={`${month.year}-${month.month}`} ref={ref} className={`flex flex-col ${className}`}>
       {/* WEEKDAY HEADER */}
       <div className={`grid grid-cols-7 text-center select-none ${gap}`}>
         {weekdays.map(w => (
