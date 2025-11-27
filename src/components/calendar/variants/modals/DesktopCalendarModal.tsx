@@ -8,7 +8,7 @@ import { ModalOverlay } from './ModalOverlay';
 interface DesktopCalendarModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelect: (date: Date) => void;
+  onSelect: (date: Date | null) => void;
   onConfirm: () => void;
   value: Date | null;
   timezone: string;
@@ -39,7 +39,7 @@ export function DesktopCalendarModal({
             </button>
           </div>
 
-          {/* CALENDAR - 100% CONTROLLED */}
+          {/* CALENDAR CONTROLLED DIRECT BY PROPS */}
           <Calendar
             value={value}
             onChange={d => onSelect(d as Date)}
@@ -48,7 +48,7 @@ export function DesktopCalendarModal({
             className='mt-2'
           />
 
-          {/* FOOTER - EXTRACTED COMPONENT */}
+          {/* FOOTER */}
           <DesktopCalendarFooter onCancel={onClose} onConfirm={onConfirm} />
         </div>
       </ModalContainer>

@@ -1,6 +1,5 @@
 'use client';
 
-import { memo } from 'react';
 import type { CalendarDayProps } from '../core/calendar-types';
 
 function CalendarDayBase({ date, onSelect, className = '' }: CalendarDayProps) {
@@ -29,7 +28,7 @@ function CalendarDayBase({ date, onSelect, className = '' }: CalendarDayProps) {
 
         ${
           isSelected
-            ? 'bg-amber-500 text-black font-medium'
+            ? 'bg-amber-500 text-black font-medium shadow-lg ring-2 ring-amber-400'
             : isToday
               ? 'bg-amber-500/20 text-amber-300 ring-1 ring-amber-400'
               : isDisabled
@@ -46,16 +45,5 @@ function CalendarDayBase({ date, onSelect, className = '' }: CalendarDayProps) {
   );
 }
 
-// 🧠 optimize: re-render only if date-state changes
-export const CalendarDay = memo(CalendarDayBase, (prev, next) => {
-  const a = prev.date;
-  const b = next.date;
-
-  return (
-    a.date.getTime() === b.date.getTime() &&
-    a.isToday === b.isToday &&
-    a.isSelected === b.isSelected &&
-    a.isDisabled === b.isDisabled &&
-    a.isCurrentMonth === b.isCurrentMonth
-  );
-});
+// 🧠 MEMO TEMPORARILY REMOVED - WAS PREVENTING isSelected UPDATES
+export const CalendarDay = CalendarDayBase;

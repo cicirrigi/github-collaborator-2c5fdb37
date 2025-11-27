@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import type { CalendarGridProps } from '../core/calendar-types';
 import { generateWeekdays } from '../core/calendar-utils';
 import { useCalendarMeasure } from '../core/useCalendarMeasure';
@@ -97,11 +97,5 @@ function CalendarGridBase({
 }
 
 // 🧠 EXTREME MEMOIZATION
-export const CalendarGrid = memo(CalendarGridBase, (prev, next) => {
-  // reacționează doar dacă se schimbă luna sau orientation
-  return (
-    prev.month.year === next.month.year &&
-    prev.month.month === next.month.month &&
-    prev.orientation === next.orientation
-  );
-});
+// 🧠 MEMO TEMPORARILY REMOVED - WAS PREVENTING selection UPDATES
+export const CalendarGrid = CalendarGridBase;

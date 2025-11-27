@@ -2,7 +2,6 @@
 
 import { Calendar } from '@/components/calendar/Calendar';
 import { DesktopCalendarModal } from '@/components/calendar/variants/modals/DesktopCalendarModal';
-import { useDesktopCalendarModal } from '@/components/calendar/variants/modals/useDesktopCalendarModal';
 import { useState } from 'react';
 
 export default function CalendarTestPage() {
@@ -372,14 +371,26 @@ export default function CalendarTestPage() {
 
 function DesktopModalTestSection() {
   const [committedDate, setCommittedDate] = useState<Date | null>(null);
+  const [tempDate, setTempDate] = useState<Date | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 🎯 HOOK ÎN PĂRINTE - ARHITECTURA CORECTĂ!
-  const calendarModal = useDesktopCalendarModal(committedDate);
+  const handleOpen = () => {
+    setTempDate(committedDate); // Initialize temp with committed
+    setIsModalOpen(true);
+  };
+
+  const handleSelect = (date: Date | null) => {
+    setTempDate(date); // Update temp on selection
+  };
 
   const handleConfirm = () => {
-    const confirmedDate = calendarModal.confirm();
-    setCommittedDate(confirmedDate);
-    // console.log('Modal confirmed with date:', confirmedDate);
+    setCommittedDate(tempDate); // Commit temp to final
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setTempDate(committedDate); // Reset temp to committed
+    setIsModalOpen(false);
   };
 
   return (
@@ -397,31 +408,29 @@ function DesktopModalTestSection() {
         <div className='flex items-center justify-between mb-6'>
           <div>
             <h3 className='text-xl font-semibold text-amber-300 mb-2'>
-              Modal Test Controls - CONTROLLED ARCHITECTURE
+              Modal Test Controls - PURE CONTROLLED MODAL
             </h3>
             <p className='text-amber-200/60 text-sm'>
               Committed: {committedDate?.toDateString() || 'None'}
             </p>
-            <p className='text-amber-200/40 text-xs'>
-              Temp: {calendarModal.tempDate?.toDateString() || 'None'}
-            </p>
+            <p className='text-amber-200/40 text-xs'>Temp: {tempDate?.toDateString() || 'None'}</p>
           </div>
 
           <button
-            onClick={() => calendarModal.open(committedDate)}
+            onClick={handleOpen}
             className='px-6 py-3 bg-amber-500 text-black font-medium rounded-lg hover:bg-amber-400 transition-all'
           >
             Open Calendar Modal
           </button>
         </div>
 
-        {/* Modal Integration - CONTROLLED */}
+        {/* Modal Integration - PURE CONTROLLED */}
         <DesktopCalendarModal
-          isOpen={calendarModal.isOpen}
-          onClose={calendarModal.close}
-          onSelect={calendarModal.select}
+          isOpen={isModalOpen}
+          onClose={handleCancel}
+          onSelect={handleSelect}
           onConfirm={handleConfirm}
-          value={calendarModal.tempDate}
+          value={tempDate}
           timezone='Europe/London'
           label='Choose Your Journey Date'
         />

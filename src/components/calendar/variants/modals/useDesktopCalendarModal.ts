@@ -22,7 +22,7 @@ export function useDesktopCalendarModal(initial: Date | null = null) {
 
     close: () => setIsOpen(false),
 
-    select: (date: Date) => {
+    select: (date: Date | null) => {
       setTempDate(date);
     },
 

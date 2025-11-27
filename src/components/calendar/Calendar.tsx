@@ -42,6 +42,8 @@ export function Calendar({
     [handleDateSelect]
   );
 
+  // Debug removed - was causing infinite re-renders
+
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       {/* Header: Month navigation */}
