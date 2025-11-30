@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { TimePicker } from '../TimePicker';
 import type { TimeValue } from '../core/time-types';
 
@@ -25,17 +25,36 @@ export function MobileTimePickerModal({
   onClose,
   onConfirm,
   value,
-  onChange,
+  onChange, // eslint-disable-line @typescript-eslint/no-unused-vars
   date,
   interval,
   minTime,
   maxTime,
   leadMinutes,
 }: Props) {
+  const [tempTime, setTempTime] = useState<TimeValue | null>(value);
+
+  // Sync temp with value when modal opens
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) {
+      setTempTime(value);
+    }
+  }, [open, value]);
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
     return () => {
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     };
   }, [open]);
 
@@ -59,8 +78,8 @@ export function MobileTimePickerModal({
         <div className='flex-1 overflow-y-auto px-4 py-2'>
           <TimePicker
             date={date}
-            value={value}
-            onChange={onChange}
+            value={tempTime}
+            onChange={setTempTime}
             interval={interval}
             minTime={minTime}
             maxTime={maxTime}
@@ -74,14 +93,18 @@ export function MobileTimePickerModal({
         </div>
 
         {/* FOOTER */}
-        <div className='sticky bottom-0 z-50 bg-[#0c0c0c] px-4 py-4 border-t border-white/10'>
+        <div className='sticky bottom-0 z-[60] bg-[#0c0c0c] px-4 py-4 border-t border-white/10'>
           <button
+            type='button'
+            style={{ pointerEvents: 'auto' }}
             className='
               w-full py-3 rounded-xl
               bg-amber-500 text-black font-semibold text-base
-              shadow-lg
+              shadow-lg active:scale-95 transition-transform
+              touch-manipulation
             '
-            onClick={() => onConfirm(value)}
+            onClick={() => onConfirm(tempTime)}
+            onTouchStart={() => {}}
           >
             Confirm
           </button>

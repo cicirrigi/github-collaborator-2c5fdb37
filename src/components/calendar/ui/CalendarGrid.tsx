@@ -64,7 +64,7 @@ function CalendarGridBase({
           : 'text-base';
 
   return (
-    <div key={`${month.year}-${month.month}`} ref={ref} className={`flex flex-col ${className}`}>
+    <div ref={ref} className={`flex flex-col ${className}`}>
       {/* WEEKDAY HEADER */}
       <div className={`grid grid-cols-7 text-center select-none ${gap}`}>
         {weekdays.map(w => (

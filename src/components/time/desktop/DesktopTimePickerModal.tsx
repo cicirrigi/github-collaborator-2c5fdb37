@@ -87,7 +87,8 @@ export function DesktopTimePickerModal({
             </button>
             <button
               onClick={confirm}
-              className='px-4 py-2 text-sm rounded-md bg-amber-500 text-black font-medium hover:bg-amber-400 transition'
+              style={{ pointerEvents: 'auto' }}
+              className='px-4 py-2 text-sm rounded-md bg-amber-500 text-black font-medium hover:bg-amber-400 transition touch-manipulation'
             >
               Confirm
             </button>
