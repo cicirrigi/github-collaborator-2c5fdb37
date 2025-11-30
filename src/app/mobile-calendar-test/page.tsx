@@ -85,11 +85,10 @@ export default function MobileCalendarTestPage() {
               </p>
             </div>
             <StatefulTimePicker
+              date={selectedDate || new Date()}
               value={selectedTime}
               onChange={setSelectedTime}
-              timezone='Europe/London'
               interval={15}
-              className='w-full'
             />
             <p className='text-xs text-amber-200/60'>
               iOS-style fullscreen modal with sticky header and auto-scroll

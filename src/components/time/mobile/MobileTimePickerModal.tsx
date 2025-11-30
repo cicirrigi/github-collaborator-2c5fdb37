@@ -1,37 +1,24 @@
 'use client';
 
 import { useEffect } from 'react';
-import type { TimeValue } from '../core/time-types';
 import { TimePicker } from '../TimePicker';
+import type { TimeValue } from '../core/time-types';
+
 import { MobileTimeModalContainer } from './MobileTimeModalContainer';
 import { MobileTimeModalOverlay } from './MobileTimeModalOverlay';
 
-interface MobileTimePickerModalProps {
+interface Props {
   open: boolean;
   onClose: () => void;
   onConfirm: (t: TimeValue | null) => void;
   value: TimeValue | null;
   onChange: (t: TimeValue | null) => void;
-  timezone: string;
-  interval?: number;
+  date: Date;
+  interval?: number | undefined;
   minTime?: TimeValue | undefined;
   maxTime?: TimeValue | undefined;
   leadMinutes?: number | undefined;
 }
-
-/**
- * VANTAGE LANE — Mobile TimePicker Modal (Enterprise)
- *
- * Fullscreen bottom-sheet modal:
- *  - overlay blur
- *  - sticky header
- *  - cancel / done actions
- *  - time grid full height
- *  - lead warning
- *  - body scroll prevention
- *
- * Uses TimePicker + TimeEngine
- */
 
 export function MobileTimePickerModal({
   open,
@@ -39,20 +26,14 @@ export function MobileTimePickerModal({
   onConfirm,
   value,
   onChange,
-  timezone,
-  interval = 15,
+  date,
+  interval,
   minTime,
   maxTime,
   leadMinutes,
-}: MobileTimePickerModalProps) {
-  // Prevent body scroll when modal is open (Enterprise UX)
+}: Props) {
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-
+    document.body.style.overflow = open ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
@@ -65,43 +46,45 @@ export function MobileTimePickerModal({
       <MobileTimeModalOverlay open={open} onClose={onClose} />
 
       <MobileTimeModalContainer>
-        {/* HEADER PREMIUM */}
-        <div
-          className='
-            sticky top-0 z-50
-            flex items-center justify-between
-            py-2 mb-3
-            bg-[#0B0B0B]
-          '
-        >
-          <button onClick={onClose} className='text-amber-300 text-base font-medium'>
+        <div className='sticky top-0 z-50 bg-[#0c0c0c] px-4 py-4 flex items-center justify-between border-b border-white/10'>
+          <button onClick={onClose} className='text-amber-300'>
             Cancel
           </button>
 
-          <h2 className='text-white text-lg font-semibold tracking-wide'>Select Time</h2>
+          <h2 className='text-base font-medium'>Select Time</h2>
 
-          <button onClick={() => onConfirm(value)} className='text-amber-400 font-semibold'>
-            Done
-          </button>
+          <div className='w-10' />
         </div>
 
-        {/* TIME GRID FULL HEIGHT */}
-        <div className='flex-1 overflow-y-auto scroll-smooth pb-4'>
+        <div className='flex-1 overflow-y-auto px-4 py-2'>
           <TimePicker
+            date={date}
             value={value}
             onChange={onChange}
-            timezone={timezone}
             interval={interval}
             minTime={minTime}
             maxTime={maxTime}
             leadMinutes={leadMinutes}
           />
 
-          {/* Lead time warning */}
           <p className='text-xs text-white/40 mt-4 text-center'>
-            Bookings must be made at least{' '}
-            <span className='text-amber-300'>2 hours in advance</span> (UK time)
+            Bookings must be made at least
+            <span className='text-amber-300'> 2 hours </span> in advance (London time).
           </p>
+        </div>
+
+        {/* FOOTER */}
+        <div className='sticky bottom-0 z-50 bg-[#0c0c0c] px-4 py-4 border-t border-white/10'>
+          <button
+            className='
+              w-full py-3 rounded-xl
+              bg-amber-500 text-black font-semibold text-base
+              shadow-lg
+            '
+            onClick={() => onConfirm(value)}
+          >
+            Confirm
+          </button>
         </div>
       </MobileTimeModalContainer>
     </>

@@ -10,11 +10,11 @@ import { CalendarHeader } from './ui/CalendarHeader';
 export function Calendar({
   value,
   onChange,
-  timezone,
   mode = 'single',
+  timezone: _timezone = 'Europe/London',
   minDate,
   maxDate,
-  orientation = 'portrait', // ⭐ new default
+  orientation = 'portrait',
   className = '',
 }: CalendarProps) {
   const {
@@ -27,7 +27,6 @@ export function Calendar({
     handleDateSelect,
   } = useCalendar({
     mode,
-    timezone,
     value,
     onChange,
     minDate,

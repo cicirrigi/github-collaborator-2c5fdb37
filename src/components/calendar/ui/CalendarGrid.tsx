@@ -14,7 +14,7 @@ function CalendarGridBase({
 }: CalendarGridProps) {
   const { ref, width, sizeTier, isReady } = useCalendarMeasure();
 
-  const weekdays = useMemo(() => generateWeekdays('Europe/London'), []);
+  const weekdays = useMemo(() => generateWeekdays(), []);
 
   // 🔥 FIX FINAL — Loading state fără duplicate key
   if (!isReady || width < 60) {

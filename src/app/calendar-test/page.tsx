@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export default function CalendarTestPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<TimeValue | null>({ hours: 14, minutes: 30 });
+  const [selectedTime, setSelectedTime] = useState<TimeValue | null>(null);
 
   return (
     <div className='min-h-screen bg-black text-white p-8'>
@@ -392,11 +392,10 @@ export default function CalendarTestPage() {
           <div className='bg-white/5 rounded-xl p-6 border border-amber-200/20'>
             <h3 className='text-lg font-semibold text-amber-300 mb-4'>Time Picker Test</h3>
             <StatefulTimePicker
+              date={selectedDate || new Date()}
               value={selectedTime}
               onChange={setSelectedTime}
-              timezone='Europe/London'
               interval={15}
-              className='w-full'
             />
             <p className='text-xs text-amber-200/60 mt-2'>
               Desktop: Confirm/Cancel flow | Mobile: Direct selection

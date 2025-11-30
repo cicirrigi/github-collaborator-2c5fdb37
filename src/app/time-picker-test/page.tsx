@@ -2,8 +2,8 @@
 
 import { StatefulTimePicker } from '@/components/time/StatefulTimePicker';
 import type { TimeValue } from '@/components/time/core/time-types';
+import { DesktopTimePickerModal } from '@/components/time/desktop/DesktopTimePickerModal';
 import { MobileTimePickerModal } from '@/components/time/mobile/MobileTimePickerModal';
-import { DesktopTimePickerModal } from '@/components/time/modals/DesktopTimePickerModal';
 import { useState } from 'react';
 
 function formatTime(time: TimeValue | null): string {
@@ -12,7 +12,8 @@ function formatTime(time: TimeValue | null): string {
 }
 
 export default function TimePickerTestPage() {
-  const [selectedTime, setSelectedTime] = useState<TimeValue | null>({ hours: 14, minutes: 30 });
+  const [selectedDate] = useState<Date>(new Date());
+  const [selectedTime, setSelectedTime] = useState<TimeValue | null>(null);
   const [tempTime, setTempTime] = useState<TimeValue | null>(null);
 
   // Desktop modal test
@@ -73,11 +74,10 @@ export default function TimePickerTestPage() {
           </h2>
           <div className='bg-white/5 rounded-xl p-6 border border-white/10'>
             <StatefulTimePicker
+              date={selectedDate}
               value={selectedTime}
               onChange={time => setSelectedTime(time)}
-              timezone='Europe/London'
               interval={15}
-              className='w-full p-3 bg-white/10 rounded-lg border border-white/20'
             />
             <p className='text-xs text-amber-200/60 mt-2'>
               Automatically detects device and shows appropriate modal
@@ -143,12 +143,10 @@ export default function TimePickerTestPage() {
       <DesktopTimePickerModal
         isOpen={isDesktopModalOpen}
         onClose={handleDesktopCancel}
-        onSelect={handleDesktopSelect}
         onConfirm={handleDesktopConfirm}
         value={tempTime}
-        timezone='Europe/London'
+        date={selectedDate}
         interval={15}
-        label='Choose Your Time'
       />
 
       {/* Mobile Modal */}
@@ -161,7 +159,7 @@ export default function TimePickerTestPage() {
         }}
         value={selectedTime}
         onChange={time => setSelectedTime(time)}
-        timezone='Europe/London'
+        date={selectedDate}
         interval={15}
       />
     </div>

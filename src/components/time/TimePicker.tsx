@@ -1,31 +1,9 @@
 'use client';
 
-/**
- * 🕒 VANTAGE LANE — TimePicker (Core UI Component)
- *
- * Uses:
- *  - useTimeEngine (slots, disabled logic, default selection)
- *  - auto-scroll to selected/firstValid slot
- *
- * No heavy styling here — just structure + logic.
- */
-
 import { useEffect, useRef } from 'react';
 import { SCROLL_OFFSET, TIME_PICKER_ITEM_HEIGHT } from './core/time-constants';
-import { useTimeEngine, type TimeValue } from './core/useTimeEngine';
-
-interface TimePickerProps {
-  date: Date;
-  value: TimeValue | null;
-  onChange: (t: TimeValue | null) => void;
-
-  interval?: number;
-  minTime?: TimeValue;
-  maxTime?: TimeValue;
-  leadMinutes?: number;
-
-  className?: string;
-}
+import type { TimeValue } from './core/time-types';
+import { useTimeEngine } from './core/useTimeEngine';
 
 export function TimePicker({
   date,
@@ -36,10 +14,16 @@ export function TimePicker({
   maxTime,
   leadMinutes,
   className = '',
-}: TimePickerProps) {
-  /* -------------------------------------------------------
-     1. Time Engine — business logic
-  --------------------------------------------------------- */
+}: {
+  date: Date;
+  value: TimeValue | null;
+  onChange: (t: TimeValue | null) => void;
+  interval?: number;
+  minTime?: TimeValue;
+  maxTime?: TimeValue;
+  leadMinutes?: number;
+  className?: string;
+}) {
   const { slots, disabledMap, selectedSlot, selectedIndex, select } = useTimeEngine({
     date,
     value,
@@ -50,55 +34,39 @@ export function TimePicker({
     leadMinutes,
   });
 
-  /* -------------------------------------------------------
-     2. Ref pentru lista scrollabilă
-  --------------------------------------------------------- */
-  const listRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
-  /* -------------------------------------------------------
-     3. Auto-scroll la slotul selectat
-  --------------------------------------------------------- */
   useEffect(() => {
     if (!listRef.current) return;
-
-    const indexToScroll = selectedIndex >= 0 ? selectedIndex : 0;
-
-    const scrollTop = indexToScroll * TIME_PICKER_ITEM_HEIGHT - SCROLL_OFFSET;
+    const index = selectedIndex >= 0 ? selectedIndex : 0;
+    const top = index * TIME_PICKER_ITEM_HEIGHT - SCROLL_OFFSET;
 
     listRef.current.scrollTo({
-      top: scrollTop < 0 ? 0 : scrollTop,
+      top: top < 0 ? 0 : top,
       behavior: 'smooth',
     });
   }, [selectedIndex]);
 
-  /* -------------------------------------------------------
-     4. Rendering
-  --------------------------------------------------------- */
   return (
     <div
       ref={listRef}
-      className={`max-h-[60vh] overflow-y-auto scroll-smooth space-y-1 ${className}`}
+      className={`max-h-[60vh] overflow-y-auto space-y-1 scroll-smooth ${className}`}
     >
-      {slots.map((slot, index) => {
-        const disabled = disabledMap[index];
-        const isSelected =
-          selectedSlot &&
-          selectedSlot.hours === slot.hours &&
-          selectedSlot.minutes === slot.minutes;
+      {slots.map((slot, i) => {
+        const disabled = disabledMap[i];
+        const selected =
+          selectedSlot?.hours === slot.hours && selectedSlot.minutes === slot.minutes;
 
         return (
           <button
             key={`${slot.hours}-${slot.minutes}`}
-            type='button'
             disabled={disabled}
             onClick={() => select(slot)}
-            className={`
-              w-full h-[48px] flex items-center
-              px-4 rounded-lg text-left transition
+            className={`w-full h-[48px] px-4 rounded-lg text-left flex items-center transition
               ${
                 disabled
                   ? 'opacity-40 cursor-not-allowed text-white/30'
-                  : isSelected
+                  : selected
                     ? 'bg-amber-400/20 border border-amber-300/40 text-amber-200'
                     : 'text-white hover:bg-white/10'
               }

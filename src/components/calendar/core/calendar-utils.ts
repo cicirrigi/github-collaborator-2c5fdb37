@@ -6,7 +6,6 @@
 import {
   addDays,
   addMonths,
-  eachDayOfInterval,
   endOfMonth,
   endOfWeek,
   format,
@@ -17,6 +16,19 @@ import {
   startOfWeek,
   subMonths,
 } from 'date-fns';
+
+// Manual implementation of eachDayOfInterval to avoid import issues
+function eachDayOfInterval(interval: { start: Date; end: Date }): Date[] {
+  const days: Date[] = [];
+  const current = new Date(interval.start);
+
+  while (current <= interval.end) {
+    days.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
+
+  return days;
+}
 
 import type {
   CalendarDate,
@@ -81,7 +93,7 @@ export function generateCalendarMonth(
   }
   if (gridDays.length > 42) gridDays = gridDays.slice(0, 42);
 
-  const calendarDates: CalendarDate[] = gridDays.map(date =>
+  const calendarDates: CalendarDate[] = gridDays.map((date: Date) =>
     createCalendarDate(date, monthStart, selection, mode, minDate, maxDate)
   );
 
@@ -125,8 +137,12 @@ export function createCalendarDate(
    🎯 SELECTION LOGIC
 ----------------------------------------------------- */
 
-export function isDateSelected(date: Date, selection: CalendarSelection, mode: 'single' | 'range') {
-  if (mode === 'single') return selection.single && isSameDay(date, selection.single);
+export function isDateSelected(
+  date: Date,
+  selection: CalendarSelection,
+  mode: 'single' | 'range'
+): boolean {
+  if (mode === 'single') return !!(selection.single && isSameDay(date, selection.single));
   if (mode === 'range' && selection.range) {
     const [a, b] = selection.range;
     return isSameDay(date, a) || isSameDay(date, b);
@@ -144,12 +160,16 @@ export function isDateRangeStart(
   date: Date,
   selection: CalendarSelection,
   mode: 'single' | 'range'
-) {
-  return mode === 'range' && selection.range && isSameDay(date, selection.range[0]);
+): boolean {
+  return !!(mode === 'range' && selection.range && isSameDay(date, selection.range[0]));
 }
 
-export function isDateRangeEnd(date: Date, selection: CalendarSelection, mode: 'single' | 'range') {
-  return mode === 'range' && selection.range && isSameDay(date, selection.range[1]);
+export function isDateRangeEnd(
+  date: Date,
+  selection: CalendarSelection,
+  mode: 'single' | 'range'
+): boolean {
+  return !!(mode === 'range' && selection.range && isSameDay(date, selection.range[1]));
 }
 
 /* -----------------------------------------------------

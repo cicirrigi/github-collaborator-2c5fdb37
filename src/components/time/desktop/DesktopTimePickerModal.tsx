@@ -1,36 +1,19 @@
 'use client';
 
-/**
- * 🖥️ VANTAGE LANE — Desktop TimePicker Modal (Enterprise)
- *
- * Features:
- *  - overlay blur
- *  - centered modal
- *  - safe temp selection
- *  - identical styling to Desktop Calendar Modal
- *  - confirm / cancel actions
- */
-
 import { useEffect, useState } from 'react';
 import { TimePicker } from '../TimePicker';
-import { type TimeValue } from '../core/useTimeEngine';
+import type { TimeValue } from '../core/time-types';
 
-interface DesktopTimePickerModalProps {
+interface Props {
   isOpen: boolean;
   onClose: () => void;
-
-  /** Called when selection is confirmed */
   onConfirm: (t: TimeValue | null) => void;
-
-  /** Controlled value */
   value: TimeValue | null;
-
   date: Date;
-  interval?: number;
-  minTime?: TimeValue;
-  maxTime?: TimeValue;
-  leadMinutes?: number;
-  label?: string;
+  interval?: number | undefined;
+  minTime?: TimeValue | undefined;
+  maxTime?: TimeValue | undefined;
+  leadMinutes?: number | undefined;
 }
 
 export function DesktopTimePickerModal({
@@ -43,80 +26,46 @@ export function DesktopTimePickerModal({
   minTime,
   maxTime,
   leadMinutes,
-  label = 'Select Time',
-}: DesktopTimePickerModalProps) {
-  /* -------------------------------------------------------
-     1. Temp selection (safe editing)
-  --------------------------------------------------------- */
-  const [tempValue, setTempValue] = useState<TimeValue | null>(value);
+}: Props) {
+  const [temp, setTemp] = useState<TimeValue | null>(value);
 
-  useEffect(() => {
-    setTempValue(value);
-  }, [value]);
+  useEffect(() => setTemp(value), [value]);
 
   if (!isOpen) return null;
 
-  /* -------------------------------------------------------
-     2. Close handler
-  --------------------------------------------------------- */
-  const handleCancel = () => {
-    setTempValue(value);
+  const cancel = () => {
+    setTemp(value);
     onClose();
   };
 
-  const handleConfirm = () => {
-    onConfirm(tempValue);
+  const confirm = () => {
+    onConfirm(temp);
     onClose();
   };
 
-  /* -------------------------------------------------------
-     3. Render
-  --------------------------------------------------------- */
   return (
     <>
-      {/* OVERLAY */}
-      <div
-        onClick={handleCancel}
-        className='
-          fixed inset-0 z-40
-          bg-black/60 backdrop-blur-sm
-        '
-      />
+      <div onClick={cancel} className='fixed inset-0 z-40 bg-black/60 backdrop-blur-sm' />
 
-      {/* MODAL WRAPPER */}
-      <div
-        className='
-          fixed inset-0 z-50
-          flex items-center justify-center
-          p-4
-        '
-      >
-        {/* MODAL */}
+      <div className='fixed inset-0 z-50 flex items-center justify-center p-4'>
         <div
           className='
-            bg-[#0B0B0B]
-            rounded-2xl
-            w-full max-w-md
-            p-6
+            bg-[#0B0B0B] rounded-2xl w-full max-w-md p-6
             shadow-[0_0_40px_rgba(0,0,0,0.55)]
-            border border-white/10
-            flex flex-col gap-4
+            border border-white/10 flex flex-col gap-4
           '
         >
-          {/* HEADER */}
-          <div className='flex items-center justify-between mb-2'>
-            <h2 className='text-white text-lg font-medium tracking-wide'>{label}</h2>
-
-            <button onClick={handleCancel} className='text-amber-300 hover:text-white transition'>
+          <div className='flex items-center justify-between'>
+            <h2 className='text-white text-lg font-medium tracking-wide'>Select Time</h2>
+            <button onClick={cancel} className='text-amber-300 hover:text-white transition-colors'>
               ✕
             </button>
           </div>
 
-          {/* TIME PICKER */}
           <TimePicker
             date={date}
-            value={tempValue}
-            onChange={setTempValue}
+            value={temp}
+            onChange={setTemp}
             interval={interval}
             minTime={minTime}
             maxTime={maxTime}
@@ -124,38 +73,21 @@ export function DesktopTimePickerModal({
             className='max-h-[55vh]'
           />
 
-          {/* WARNING */}
           <p className='text-xs text-white/40 text-center'>
-            Bookings must be made at least{' '}
-            <span className='text-amber-300'>2 hours in advance</span> (London time).
+            Bookings must be made at least
+            <span className='text-amber-300'> 2 hours </span> in advance (London time).
           </p>
 
-          {/* FOOTER */}
-          <div
-            className='
-              flex items-center justify-end
-              gap-4 mt-4
-            '
-          >
+          <div className='flex items-center justify-end gap-3 mt-2'>
             <button
-              onClick={handleCancel}
-              className='
-                px-4 py-2 rounded-lg
-                bg-white/10 text-white
-                hover:bg-white/20 transition
-              '
+              onClick={cancel}
+              className='px-4 py-2 text-sm rounded-md text-white/80 hover:text-white transition'
             >
               Cancel
             </button>
-
             <button
-              onClick={handleConfirm}
-              className='
-                px-4 py-2 rounded-lg
-                bg-amber-400/20 border border-amber-300/40
-                text-amber-200 font-medium
-                hover:bg-amber-400/30 transition
-              '
+              onClick={confirm}
+              className='px-4 py-2 text-sm rounded-md bg-amber-500 text-black font-medium hover:bg-amber-400 transition'
             >
               Confirm
             </button>
