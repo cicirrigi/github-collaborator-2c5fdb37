@@ -27,10 +27,6 @@ export default function TimePickerTestPage() {
     setIsDesktopModalOpen(true);
   };
 
-  const handleDesktopSelect = (time: TimeValue | null) => {
-    setTempTime(time);
-  };
-
   const handleDesktopConfirm = () => {
     setSelectedTime(tempTime);
     setIsDesktopModalOpen(false);

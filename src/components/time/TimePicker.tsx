@@ -18,10 +18,10 @@ export function TimePicker({
   date: Date;
   value: TimeValue | null;
   onChange: (t: TimeValue | null) => void;
-  interval?: number;
-  minTime?: TimeValue;
-  maxTime?: TimeValue;
-  leadMinutes?: number;
+  interval?: number | undefined;
+  minTime?: TimeValue | undefined;
+  maxTime?: TimeValue | undefined;
+  leadMinutes?: number | undefined;
   className?: string;
 }) {
   const { slots, disabledMap, selectedSlot, selectedIndex, select } = useTimeEngine({

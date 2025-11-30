@@ -18,10 +18,10 @@ export function useTimeEngine({
   date: Date;
   value: TimeValue | null;
   onChange: (t: TimeValue | null) => void;
-  interval?: number;
-  minTime?: TimeValue;
-  maxTime?: TimeValue;
-  leadMinutes?: number;
+  interval?: number | undefined;
+  minTime?: TimeValue | undefined;
+  maxTime?: TimeValue | undefined;
+  leadMinutes?: number | undefined;
 }) {
   const slots = useMemo(() => generateTimeSlots(interval), [interval]);
 

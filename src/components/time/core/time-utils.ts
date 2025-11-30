@@ -122,8 +122,8 @@ export function isTimeDisabled({
   slot: { hours: number; minutes: number };
   date: Date;
   lead?: number;
-  minTime?: { hours: number; minutes: number };
-  maxTime?: { hours: number; minutes: number };
+  minTime?: { hours: number; minutes: number } | undefined;
+  maxTime?: { hours: number; minutes: number } | undefined;
 }) {
   const slotDate = mergeDateAndTime(date, slot);
 
