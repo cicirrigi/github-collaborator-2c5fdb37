@@ -64,7 +64,7 @@ export function MobileTimePickerModal({
     <>
       <MobileTimeModalOverlay open={open} onClose={onClose} />
 
-      <MobileTimeModalContainer>
+      <MobileTimeModalContainer visible={open}>
         <div className='sticky top-0 z-50 bg-[#0c0c0c] px-4 py-4 flex items-center justify-between border-b border-white/10'>
           <button onClick={onClose} className='text-amber-300'>
             Cancel
