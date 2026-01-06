@@ -40,7 +40,7 @@ export function TripPreferencesSlim({ className = '' }: TripPreferencesSlimProps
   };
 
   return (
-    <div ref={containerRef} className={`inline-block ${className}`}>
+    <div ref={containerRef} className={`block w-full ${className}`}>
       <div
         className='
           flex flex-col
@@ -53,29 +53,32 @@ export function TripPreferencesSlim({ className = '' }: TripPreferencesSlimProps
           background: 'linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.04))',
         }}
       >
-        {/* Title Row */}
-        <div className='flex items-center gap-2 mb-3'>
+        {/* Header */}
+        <div className='flex items-center gap-3 mb-5'>
           <div
-            className='w-7 h-7 rounded-lg flex items-center justify-center'
+            className='w-9 h-9 rounded-xl flex items-center justify-center shadow-lg'
             style={{
               background:
-                'conic-gradient(from 210deg, rgba(203,178,106,0.25), rgba(203,178,106,0.10), rgba(203,178,106,0.25))',
-              boxShadow: '0 0 10px rgba(203,178,106,0.15)',
+                'conic-gradient(from 210deg at 50% 50%, rgba(203,178,106,0.25), rgba(203,178,106,0.1), rgba(203,178,106,0.25))',
+              boxShadow: '0 0 12px rgba(203,178,106,0.15)',
             }}
           >
             {(() => {
               const IconComponent = TRIP_PREFERENCES[0]?.icon;
               return IconComponent ? (
-                <IconComponent className='w-4 h-4' style={{ color: '#CBB26A' }} />
+                <IconComponent className='w-5 h-5' style={{ color: '#CBB26A' }} />
               ) : null;
             })()}
           </div>
 
-          <span className='text-white font-medium text-sm tracking-wide'>Trip Preferences</span>
+          <div>
+            <h3 className='text-white font-semibold text-lg tracking-wide'>Trip Preferences</h3>
+            <p className='text-amber-200/50 text-xs'>Optional Included</p>
+          </div>
         </div>
 
-        {/* Preferences Row */}
-        <div className='flex items-center gap-3'>
+        {/* Preferences Column - Vertical Stack */}
+        <div className='flex flex-col gap-2'>
           {TRIP_PREFERENCES.map(pref => {
             const current = preferences[pref.id];
             const selectedLabel = pref.options.find(o => o.value === current)?.label || pref.title;
@@ -84,20 +87,22 @@ export function TripPreferencesSlim({ className = '' }: TripPreferencesSlimProps
               <div key={pref.id} className='relative'>
                 <button
                   className='
-                    px-3 py-2 flex items-center gap-2
+                    w-full px-3 py-2 flex items-center justify-between gap-2
                     rounded-lg border border-white/10
                     bg-white/5 backdrop-blur-sm
                     hover:bg-white/10 hover:border-white/20
                     transition-all duration-150
-                    text-white text-sm whitespace-nowrap
+                    text-white text-sm
                   '
                   onClick={e => {
                     e.stopPropagation();
                     setOpenId(openId === pref.id ? null : pref.id);
                   }}
                 >
-                  <pref.icon className='w-4 h-4 text-amber-300' />
-                  {selectedLabel}
+                  <div className='flex items-center gap-2'>
+                    <pref.icon className='w-4 h-4 text-amber-300' />
+                    <span>{selectedLabel}</span>
+                  </div>
                 </button>
 
                 {openId === pref.id && (

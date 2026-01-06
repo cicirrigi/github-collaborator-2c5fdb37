@@ -75,9 +75,9 @@ export function Step2Services() {
                         <PremiumFeaturesCardV2 />
                       </div>
 
-                      {/* Trip Preferences - doar pentru Executive (3 casete, compact) */}
+                      {/* Trip Preferences - pentru Executive (desktop: stânga, mobil: ascuns) */}
                       {isExecutive && hasSelectedVehicle && (
-                        <div className='scale-[1.0] origin-top-left'>
+                        <div className='scale-[1.0] origin-top-left hidden lg:block'>
                           <TripPreferencesSlim />
                         </div>
                       )}
@@ -86,6 +86,13 @@ export function Step2Services() {
                     {/* Coloana 2 - Paid Upgrades + Trip Preferences pentru non-Executive */}
                     <div className='min-w-0 w-full space-y-4'>
                       <PaidUpgradesCardV2 />
+
+                      {/* Trip Preferences - pentru Executive (mobil: dreapta, desktop: ascuns) */}
+                      {isExecutive && hasSelectedVehicle && (
+                        <div className='scale-[1.0] origin-top-left block lg:hidden'>
+                          <TripPreferencesSlim />
+                        </div>
+                      )}
 
                       {/* Trip Preferences - pentru Luxury/SUV/MPV (evită 4 casete în stânga) */}
                       {!isExecutive && hasSelectedVehicle && (
