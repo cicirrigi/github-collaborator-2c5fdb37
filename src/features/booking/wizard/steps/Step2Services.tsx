@@ -1,6 +1,7 @@
 'use client';
 
 import { useBookingState } from '@/hooks/useBookingState';
+import { Car } from 'lucide-react';
 import { FleetModeSelector } from '../../components/step2/FleetModeSelector';
 import { FleetSummaryCard } from '../../components/step2/FleetSummaryCard';
 import { FleetVehicleSelector } from '../../components/step2/FleetVehicleSelector';
@@ -12,7 +13,19 @@ import { VehicleCategoriesV2 } from '../../components/step2/VehicleCategories_v2
 import { VehicleModelGrid } from '../../components/step2/VehicleModelGrid';
 
 export function Step2Services() {
-  const { bookingType } = useBookingState();
+  const { bookingType, tripConfiguration } = useBookingState();
+
+  // ✅ CONDITIONAL LOGIC - Pentru flow progresiv corect
+  const hasSelectedCategory = tripConfiguration.selectedVehicle?.category;
+  const hasSelectedVehicle = tripConfiguration.selectedVehicle?.model;
+
+  // Trip Preferences positioning logic - Executive vs other categories
+  const selectedVehicle = tripConfiguration.selectedVehicle;
+  const selectedModel = selectedVehicle?.model;
+
+  // Check if selected model is from executive category (Mercedes E-Class, BMW 5 Series)
+  const modelName = selectedModel?.name || '';
+  const isExecutive = modelName.includes('E-Class') || modelName.includes('5 Series');
 
   return (
     <div
@@ -45,28 +58,73 @@ export function Step2Services() {
 
             {/* SERVICES - responsive layout */}
             <div className='flex flex-col gap-6 mt-0 lg:mt-10'>
-              {/* SERVICES GRID: 1 col mobile, 2 cols desktop */}
-              <div className='grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-4 lg:gap-6 items-start'>
-                {/* Included Services – micșorat un pic, dar identic vizual */}
-                <div className='scale-[1.0] origin-top-left'>
-                  <IncludedServicesCardV2 />
-                </div>
+              {/* ✅ CONDITIONAL SERVICES - Apar doar după vehicle selection */}
+              {hasSelectedVehicle ? (
+                <div className='animate-slideIn'>
+                  {/* SERVICES GRID: 1 col mobile, 2 cols desktop */}
+                  <div className='grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-4 lg:gap-6 items-start'>
+                    {/* Coloana 1 - Included Services + Premium Features + Trip Preferences */}
+                    <div className='space-y-4'>
+                      {/* Included Services */}
+                      <div className='scale-[1.0] origin-top-left'>
+                        <IncludedServicesCardV2 />
+                      </div>
 
-                {/* Paid Upgrades – 2 rows desktop, normal mobile */}
-                <div className='lg:row-span-2 min-w-0 w-full'>
-                  <PaidUpgradesCardV2 />
-                </div>
+                      {/* Premium Features */}
+                      <div className='scale-[1.0] origin-top-left'>
+                        <PremiumFeaturesCardV2 />
+                      </div>
 
-                {/* Premium Features – sub Included, aceeași lățime, același scale */}
-                <div className='scale-[1.0] origin-top-left -mt-2'>
-                  <PremiumFeaturesCardV2 />
-                </div>
-              </div>
+                      {/* Trip Preferences - doar pentru Executive (3 casete, compact) */}
+                      {isExecutive && hasSelectedVehicle && (
+                        <div className='scale-[1.0] origin-top-left'>
+                          <TripPreferencesSlim />
+                        </div>
+                      )}
+                    </div>
 
-              {/* Jos pe toată lățimea – Trip Preferences Slim */}
-              <div>
-                <TripPreferencesSlim />
-              </div>
+                    {/* Coloana 2 - Paid Upgrades + Trip Preferences pentru non-Executive */}
+                    <div className='min-w-0 w-full space-y-4'>
+                      <PaidUpgradesCardV2 />
+
+                      {/* Trip Preferences - pentru Luxury/SUV/MPV (evită 4 casete în stânga) */}
+                      {!isExecutive && hasSelectedVehicle && (
+                        <div className='scale-[1.0] origin-top-left'>
+                          <TripPreferencesSlim />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : hasSelectedCategory ? (
+                /* PREMIUM MESSAGE - Doar după category selection */
+                <div className='flex items-center justify-center h-64 lg:h-80'>
+                  <div className='text-center space-y-4 max-w-md mx-auto'>
+                    <div
+                      className='w-16 h-16 mx-auto rounded-2xl flex items-center justify-center'
+                      style={{
+                        background:
+                          'linear-gradient(145deg, rgba(203,178,106,0.15), rgba(203,178,106,0.08))',
+                        border: '1px solid rgba(203,178,106,0.25)',
+                        backdropFilter: 'blur(16px)',
+                        boxShadow: '0 8px 25px rgba(203,178,106,0.15)',
+                      }}
+                    >
+                      <Car className='w-8 h-8' style={{ color: '#CBB26A' }} />
+                    </div>
+
+                    <div className='space-y-2'>
+                      <h3 className='text-white font-semibold text-lg tracking-wide'>
+                        Select Your Vehicle
+                      </h3>
+                      <p className='text-amber-200/70 text-sm leading-relaxed'>
+                        Please choose your preferred vehicle model to unlock premium services and
+                        customization options
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
