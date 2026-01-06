@@ -4,6 +4,7 @@ import { ZustandBookingTypeDock } from '@/components/booking/ZustandBookingTypeD
 import { Container } from '@/components/layout/Container';
 import { BookingStepper } from '@/components/ui/booking-stepper/BookingStepper';
 import { useBookingState } from '@/hooks/useBookingState';
+import { useEffect, useRef } from 'react';
 
 import { WizardFooter } from './components/WizardFooter';
 import { Step1BookingDetails } from './steps/Step1BookingDetails';
@@ -22,6 +23,24 @@ const BOOKING_STEPS = [
 export function BookingWizard() {
   const { currentStep, completedSteps, setCurrentStep, canProceedToStep, nextStep, prevStep } =
     useBookingState();
+
+  // Ref pentru containerul principal al wizard-ului
+  const wizardContainerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll la schimbarea step-ului (soluție standard din practică)
+  useEffect(() => {
+    // Skip initial render (step 1)
+    if (currentStep === 1) return;
+
+    // Single scroll method - no conflicts
+    if (wizardContainerRef.current) {
+      wizardContainerRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
+    }
+  }, [currentStep]);
 
   const handleStepClick = (stepNumber: number) => {
     if (canProceedToStep(stepNumber)) {
@@ -52,6 +71,7 @@ export function BookingWizard() {
       {/* 2️⃣ BOOKING FORM — LUXURY BOX */}
       <Container size='lg' className='flex justify-center !px-1 sm:!px-2'>
         <div
+          ref={wizardContainerRef}
           className='
           w-full
           max-w-[1440px]

@@ -12,6 +12,9 @@ export const createBookingActions = (
 
     set({
       bookingType: type,
+      // Reset wizard to Step 1 when booking type changes (industry standard)
+      currentStep: 1,
+      completedSteps: [],
       tripConfiguration: {
         ...currentConfig,
         // Clear incompatible fields when booking type changes
