@@ -51,20 +51,22 @@ export function BookingWizard() {
   return (
     <div className='w-full space-y-8 overflow-x-hidden'>
       {/* 🔹 BOOKING STEPPER AFARĂ (din formular) */}
-      <div className='w-full flex justify-center py-4 sm:py-6 px-1 sm:px-2'>
-        <div className='w-full max-w-lg'>
-          <BookingStepper
-            steps={BOOKING_STEPS}
-            currentStep={currentStep}
-            completedSteps={completedSteps}
-            onStepClick={handleStepClick}
-            size='xs'
-            animated={true}
-            pulseOnCurrent={true}
-            showLabels={true}
-            labelPosition='bottom'
-            spacing='compact'
-          />
+      <div className='w-full flex justify-center py-4 sm:py-6 px-0 sm:px-2'>
+        <div className='w-full max-w-lg flex justify-center items-center'>
+          <div className='w-full max-w-xs sm:max-w-lg flex justify-center items-center mx-auto'>
+            <BookingStepper
+              steps={BOOKING_STEPS}
+              currentStep={currentStep}
+              completedSteps={completedSteps}
+              onStepClick={handleStepClick}
+              size='xs'
+              animated={true}
+              pulseOnCurrent={true}
+              showLabels={true}
+              labelPosition='bottom'
+              spacing='compact'
+            />
+          </div>
         </div>
       </div>
 

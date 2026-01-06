@@ -7,7 +7,7 @@
 
 import { injectStepperStyles } from '@/lib/animations/stepper.animations';
 import { cn } from '@/lib/utils';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { StepItem } from './StepItem';
 import type { BookingStepperProps, StepState } from './stepper.types';
 import { connectorVariants, stepperContainerVariants } from './stepper.variants';
@@ -29,43 +29,12 @@ export const BookingStepper: React.FC<BookingStepperProps> = ({
   stepClassName,
   connectorClassName,
 }) => {
-  // 🎯 Responsive Scaling State
-  const [scale, setScale] = useState(1);
-
   // 🎭 Inject keyframes pentru animations
   useEffect(() => {
     if (animated) {
       injectStepperStyles();
     }
   }, [animated]);
-
-  // 📐 Fluid Scale Logic - responsive scaling nu layout
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-
-      // 🔹 Natural scaling logic (ca la carte):
-      // peste 1400px = 1 (full size)
-      // între 768px și 1399px = scale gradual descrescător
-      // sub 768px = scale minim pentru mobile (0.75)
-      if (width >= 1400) {
-        setScale(1); // Desktop full size
-      } else if (width >= 768) {
-        // Gradual scaling între 0.75 (la 768px) și 1 (la 1400px)
-        const minScale = 0.75;
-        const scaleRange = 1 - minScale;
-        const widthRange = 1400 - 768;
-        const currentRange = width - 768;
-        setScale(minScale + (currentRange / widthRange) * scaleRange);
-      } else {
-        setScale(0.75); // Mobile minim fix
-      }
-    };
-
-    handleResize(); // Initial call
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Calculate step state
   const getStepState = (stepId: number): StepState => {
@@ -87,18 +56,9 @@ export const BookingStepper: React.FC<BookingStepperProps> = ({
 
   return (
     <div className={cn('w-full', className)}>
-      {/* 🎯 Fluid Scale Wrapper - responsive scaling */}
-      <div
-        className={cn('relative z-[1] flex w-full justify-center overflow-hidden !max-w-none')}
-        style={{
-          transform: scale < 0.95 ? `scale(${scale})` : 'scale(1)',
-          transformOrigin: 'top center',
-          transition: 'transform 0.3s ease',
-          width: scale < 1 ? `${100 / scale}%` : '100%',
-          pointerEvents: 'auto',
-        }}
-      >
-        <div className='w-full max-w-[min(1400px,95vw)] px-4 sm:px-8 overflow-hidden'>
+      {/* 🎯 Clean Container - no more JavaScript scaling */}
+      <div className={cn('relative z-[1] flex w-full justify-center overflow-hidden !max-w-none')}>
+        <div className='w-full max-w-[min(1400px,95vw)] px-2 sm:px-4 md:px-8 overflow-hidden flex justify-center'>
           {/* Progress Info - HIDDEN */}
 
           {/* Steps Container */}

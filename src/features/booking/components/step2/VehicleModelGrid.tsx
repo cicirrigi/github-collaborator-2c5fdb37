@@ -34,22 +34,31 @@ export function VehicleModelGrid({ className = '' }: VehicleModelGridProps) {
 
       {/* Vertical Stack Layout - One Under Another */}
       <div className='space-y-4 ml-0'>
-        {models.map((model, index) => (
-          <VehicleModelCard
-            key={model.id}
-            model={model}
-            index={index}
-            category={selectedCategory}
-            isSelected={selectedModel?.id === model.id}
-            onSelect={() => {
-              if (selectedModel?.id === model.id) {
-                selectVehicleModel(null); // Deselect if already selected
-              } else {
-                selectVehicleModel(model); // Select new model
-              }
-            }}
-          />
-        ))}
+        {models
+          .filter(model => {
+            // Mobile-only UX: when a vehicle is selected, hide others for cleaner UI
+            // Desktop: always show all vehicles (unchanged behavior)
+            if (typeof window !== 'undefined' && window.innerWidth < 768) {
+              return !selectedModel || model.id === selectedModel.id;
+            }
+            return true; // Desktop - show all models
+          })
+          .map((model, index) => (
+            <VehicleModelCard
+              key={model.id}
+              model={model}
+              index={index}
+              category={selectedCategory}
+              isSelected={selectedModel?.id === model.id}
+              onSelect={() => {
+                if (selectedModel?.id === model.id) {
+                  selectVehicleModel(null); // Deselect if already selected
+                } else {
+                  selectVehicleModel(model); // Select new model
+                }
+              }}
+            />
+          ))}
       </div>
     </section>
   );
