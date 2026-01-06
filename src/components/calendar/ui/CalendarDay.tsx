@@ -17,6 +17,15 @@ export function CalendarDay({ date, onSelect, className = '' }: CalendarDayProps
         ? 'text-amber-200/30 cursor-not-allowed'
         : 'text-amber-100 hover:bg-amber-200/10 hover:text-amber-50';
 
+  // Hide days from other months completely
+  if (!isCurrentMonth) {
+    return (
+      <div className={`w-full h-full ${className}`}>
+        {/* Empty space for days outside current month */}
+      </div>
+    );
+  }
+
   return (
     <button
       type='button'
@@ -25,7 +34,6 @@ export function CalendarDay({ date, onSelect, className = '' }: CalendarDayProps
       className={`
         w-full h-full flex items-center justify-center
         rounded-md text-sm transition
-        ${!isCurrentMonth ? 'opacity-40' : ''}
         ${classes}
         ${className}
       `}

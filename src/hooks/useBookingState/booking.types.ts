@@ -144,6 +144,24 @@ export interface BookingState {
   getFleetTotalPrice: () => number;
   validateFleetSelection: () => boolean;
 
+  // 🎁 STEP 2 SERVICE ACTIONS
+  setMusicPreference: (music: ServicePackages['tripPreferences']['music']) => void;
+  setTemperaturePreference: (
+    temperature: ServicePackages['tripPreferences']['temperature']
+  ) => void;
+  setCommunicationStyle: (
+    communication: ServicePackages['tripPreferences']['communication']
+  ) => void;
+  resetTripPreferences: () => void;
+  togglePremiumFeature: (feature: keyof ServicePackages['premiumFeatures']) => void;
+
+  // 💰 PAID UPGRADES ACTIONS
+  setFlowersUpgrade: (flowers: ServicePackages['paidUpgrades']['flowers']) => void;
+  setChampagneUpgrade: (champagne: ServicePackages['paidUpgrades']['champagne']) => void;
+  toggleSecurityEscort: () => void;
+  calculateUpgradesCost: () => number;
+  clearAllUpgrades: () => void;
+
   // WIZARD ACTIONS
   setCurrentStep: (step: number) => void;
   setCompletedSteps: (steps: number[]) => void;

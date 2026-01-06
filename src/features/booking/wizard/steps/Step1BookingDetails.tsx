@@ -23,7 +23,9 @@ export function Step1BookingDetails() {
         {bookingType === 'daily' && <DaysDurationSelector />}
 
         {/* RIGHT COLUMN - Weather widget moved to compact version in CardHeader */}
-        <div className='space-y-3'>{bookingType !== 'bespoke' && <CardAdditionalStops />}</div>
+        <div className='space-y-3'>
+          {bookingType !== 'bespoke' && bookingType !== 'oneway' && <CardAdditionalStops />}
+        </div>
         {bookingType === 'return' && <CardReturnAdditionalStops />}
       </div>
 

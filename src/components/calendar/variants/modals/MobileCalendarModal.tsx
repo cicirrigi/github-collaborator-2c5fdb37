@@ -42,7 +42,7 @@ export function MobileCalendarModal({
         </div>
 
         {/* BODY */}
-        <div className='flex-1 overflow-y-auto px-4 py-2'>
+        <div className='flex-1 min-h-0 overflow-y-auto px-4 py-2 overscroll-contain'>
           <Calendar
             value={value}
             onChange={handleSelect}

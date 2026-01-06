@@ -8,26 +8,25 @@ interface MobileModalContainerProps {
 }
 
 export function MobileModalContainer({ visible, children }: MobileModalContainerProps) {
-  // Lock background scroll
   useEffect(() => {
-    if (visible) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = '';
-
+    if (!visible) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = prev;
     };
   }, [visible]);
 
+  if (!visible) return null; // ✅ important: nu ține "papirusul" în DOM
+
   return (
     <div
-      className={`
-        fixed inset-0 z-50
-        flex flex-col
-        bg-[#0c0c0c]
-        text-white
-        transition-transform duration-300
-        ${visible ? 'translate-y-0' : 'translate-y-full'}
-      `}
+      className={[
+        'fixed inset-x-0 bottom-0 z-50',
+        'h-[100dvh]', // ✅ fix pentru mobile viewport
+        'bg-[#0c0c0c] text-white',
+        'flex flex-col min-h-0', // ✅ min-h-0 pentru flex + overflow corect
+      ].join(' ')}
     >
       {children}
     </div>

@@ -2,6 +2,7 @@
 
 import { StatefulTimePicker } from '@/components/time/StatefulTimePicker';
 import type { TimeValue } from '@/components/time/core/time-types';
+import { earliestValidBookingDate } from '@/components/time/core/time-utils';
 import { DesktopTimePickerModal } from '@/components/time/desktop/DesktopTimePickerModal';
 import { MobileTimePickerModal } from '@/components/time/mobile/MobileTimePickerModal';
 import { useState } from 'react';
@@ -12,7 +13,7 @@ function formatTime(time: TimeValue | null): string {
 }
 
 export default function TimePickerTestPage() {
-  const [selectedDate] = useState<Date>(new Date());
+  const [selectedDate] = useState<Date>(earliestValidBookingDate());
   const [selectedTime, setSelectedTime] = useState<TimeValue | null>(null);
   const [tempTime, setTempTime] = useState<TimeValue | null>(null);
 

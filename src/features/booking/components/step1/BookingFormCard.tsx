@@ -1,6 +1,7 @@
 'use client';
 
 import { Route } from 'lucide-react';
+import { AdditionalStopsInline } from './AdditionalStopsInline';
 import { CalendarPlaceholder } from './CalendarPlaceholder';
 import { CardHeader } from './CardHeader';
 import { FlightInformationSection } from './FlightInformationSection';
@@ -24,6 +25,7 @@ export function BookingFormCard() {
             <TravelRouteSection />
             <PassengerLuggageSelector />
             <JourneyEstimateDisplay />
+            <AdditionalStopsInline />
           </div>
 
           {/* Refined Divider - Desktop Only */}

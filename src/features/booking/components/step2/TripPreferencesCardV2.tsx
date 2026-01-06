@@ -1,5 +1,6 @@
 'use client';
 
+import { useBookingState } from '@/hooks/useBookingState';
 import { Music } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { TRIP_PREFERENCES, type TripPreference } from './service-config';
@@ -37,7 +38,10 @@ export function TripPreferencesCardV2({ className = '' }: TripPreferencesCardV2P
           </div>
 
           <div>
-            <h3 className='text-white font-semibold text-lg tracking-wide'>Trip Preferences</h3>
+            <h3 className='text-white font-semibold text-xl tracking-wide'>
+              Trip Preferences{' '}
+              <span className='text-amber-200/60 text-sm font-normal'>optional</span>
+            </h3>
             <p className='text-amber-200/50 text-xs'>Personal comfort settings</p>
           </div>
         </div>
@@ -75,9 +79,10 @@ interface PreferenceItemProps {
 }
 
 function PreferenceItem({ preference, activeDropdown, setActiveDropdown }: PreferenceItemProps) {
-  const [selectedValue, setSelectedValue] = useState<string | null>(null); // Local state for testing
-  // const bookingStore = useBookingState(); // TODO: Use when integrating with Zustand
-  // const { tripConfiguration } = bookingStore; // TODO: Use when integrating with Zustand
+  const { tripConfiguration, setMusicPreference, setTemperaturePreference, setCommunicationStyle } =
+    useBookingState(); // ✅ Activat store integration
+
+  // ✅ Store integration completed - no local state needed
   const { icon: Icon, title, options } = preference;
 
   const showDropdown = activeDropdown === preference.id;
@@ -105,29 +110,25 @@ function PreferenceItem({ preference, activeDropdown, setActiveDropdown }: Prefe
     return undefined; // Explicit return for non-cleanup case
   }, [showDropdown, setActiveDropdown]);
 
-  // 🔮 ZUSTAND INTEGRATION PLACEHOLDER - Trip preferences not implemented yet
-  // const { tripPreferences } = tripConfiguration.servicePackages;
+  // ✅ ZUSTAND INTEGRATION ACTIVE - Trip preferences fully implemented
+  const { tripPreferences } = tripConfiguration.servicePackages;
 
-  // Get current selection - using local state until Zustand is implemented
-  const currentValue = selectedValue; // TODO: Replace with tripPreferences[preference.id] when implemented
+  // Get current selection from store instead of local state
+  const currentValue = tripPreferences[preference.id as keyof typeof tripPreferences];
   const currentOption = options.find(opt => opt.value === currentValue);
 
   const handleOptionSelect = (optionValue: string) => {
-    const newValue = optionValue === 'no-preference' ? null : optionValue;
-
-    // Update local state for testing
-    setSelectedValue(newValue);
-
-    // 🔮 ZUSTAND INTEGRATION PLACEHOLDER - Store actions not implemented yet
+    // ✅ ZUSTAND INTEGRATION ACTIVE - Store actions implemented with proper typing
     if (preference.id === 'music') {
-      // store.setMusicPreference(newValue);
-      // TODO: Set music preference in Zustand store
+      setMusicPreference(
+        optionValue as 'no-preference' | 'classical' | 'jazz' | 'pop' | 'rock' | 'silence'
+      );
     } else if (preference.id === 'temperature') {
-      // store.setTemperaturePreference(newValue);
-      // TODO: Set temperature preference in Zustand store
+      setTemperaturePreference(optionValue as 'no-preference' | 'cool' | 'comfortable' | 'warm');
     } else if (preference.id === 'communication') {
-      // store.setCommunicationPreference(newValue);
-      // TODO: Set communication preference in Zustand store
+      setCommunicationStyle(
+        optionValue as 'no-preference' | 'friendly' | 'professional' | 'minimal'
+      );
     }
 
     setActiveDropdown(null);

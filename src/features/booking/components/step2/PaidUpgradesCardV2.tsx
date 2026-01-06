@@ -10,20 +10,14 @@ interface PaidUpgradesCardV2Props {
 }
 
 export function PaidUpgradesCardV2({ className = '' }: PaidUpgradesCardV2Props) {
-  const bookingStore = useBookingState();
-  // const { tripConfiguration } = bookingStore; // TODO: Use when integrating with Zustand
+  const { tripConfiguration } = useBookingState(); // ✅ Activat store integration
 
-  // Store actions will be used by child components
-
-  // Access store actions
-  const store = bookingStore as typeof bookingStore & {
-    setFlowersUpgrade: (flowers: 'standard' | 'exclusive' | null) => void;
-    setChampagneUpgrade: (champagne: 'moet' | 'dom-perignon' | null) => void;
-    toggleSecurityEscort: () => void;
-    calculateUpgradesCost: () => number;
-  };
-
-  const totalCost = store.calculateUpgradesCost();
+  // ✅ Calculate total cost from current upgrades in store
+  const { paidUpgrades } = tripConfiguration.servicePackages;
+  const totalCost = PAID_UPGRADES.reduce((total, upgrade) => {
+    const isSelected = paidUpgrades[upgrade.id as keyof typeof paidUpgrades];
+    return total + (isSelected ? upgrade.price : 0);
+  }, 0);
 
   return (
     <div className={`relative ${className}`}>

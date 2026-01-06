@@ -45,6 +45,9 @@ export function useTimeEngine({
   );
 
   const selectedSlot = useMemo(() => {
+    console.log('🔍 useTimeEngine - value:', value);
+    console.log('🔍 useTimeEngine - firstValidSlot:', firstValidSlot);
+
     if (
       value &&
       !isTimeDisabled({
@@ -55,18 +58,20 @@ export function useTimeEngine({
         maxTime,
       })
     ) {
+      console.log('✅ Using provided value:', value);
       return value;
     }
+    console.log('🎯 Falling back to firstValidSlot:', firstValidSlot);
     return firstValidSlot;
   }, [value, firstValidSlot, date, leadMinutes, minTime, maxTime]);
 
-  const selectedIndex = useMemo(
-    () =>
-      selectedSlot
-        ? slots.findIndex(s => s.hours === selectedSlot.hours && s.minutes === selectedSlot.minutes)
-        : -1,
-    [selectedSlot, slots]
-  );
+  const selectedIndex = useMemo(() => {
+    const index = selectedSlot
+      ? slots.findIndex(s => s.hours === selectedSlot.hours && s.minutes === selectedSlot.minutes)
+      : -1;
+    console.log('📍 selectedIndex calculated:', index, 'for slot:', selectedSlot);
+    return index;
+  }, [selectedSlot, slots]);
 
   const select = useCallback(
     (slot: TimeValue) => {

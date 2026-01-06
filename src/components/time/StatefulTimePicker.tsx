@@ -2,10 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { DEFAULT_LEAD_TIME_MINUTES } from './core/time-constants';
-
-import { extractTime, minimumBookableMoment, roundToInterval } from './core/time-utils';
-
 import type { TimeValue } from './core/time-types';
+import { generateTimeSlots, isTimeDisabled } from './core/time-utils';
 import { DesktopTimePickerModal } from './desktop/DesktopTimePickerModal';
 import { MobileTimePickerModal } from './mobile/MobileTimePickerModal';
 
@@ -41,13 +39,30 @@ export function StatefulTimePicker({
   }, []);
 
   useEffect(() => {
+    // Only auto-select if no initial value is provided and no default has been set
     if (!defaultSet.current && !value) {
-      const base = minimumBookableMoment(leadMinutes);
-      const rounded = roundToInterval(base, interval);
-      onChange(extractTime(rounded));
+      // Use the same logic as useTimeEngine to find first valid slot
+      const slots = generateTimeSlots(interval);
+      const firstValidSlot = slots.find(
+        slot =>
+          !isTimeDisabled({
+            slot,
+            date,
+            lead: leadMinutes,
+            minTime,
+            maxTime,
+          })
+      );
+
+      if (firstValidSlot) {
+        onChange(firstValidSlot);
+      }
+      defaultSet.current = true;
+    } else if (value && !defaultSet.current) {
+      // If initial value is provided, mark default as set to prevent override
       defaultSet.current = true;
     }
-  }, [value, leadMinutes, interval, onChange]);
+  }, [value, leadMinutes, interval, onChange, date, minTime, maxTime]);
 
   const formatted =
     value && value.hours !== undefined
