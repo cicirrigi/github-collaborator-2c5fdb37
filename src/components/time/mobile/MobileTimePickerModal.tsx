@@ -42,23 +42,24 @@ export function MobileTimePickerModal({
   }, [open, value]);
 
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-    } else {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-    }
+    if (!open) return;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.style.overflow = prevOverflow;
     };
   }, [open]);
 
-  if (!open) return null;
+  console.log('🔍 MobileTimePickerModal props:', { open });
+
+  if (!open) {
+    console.log('❌ MobileTimePickerModal NOT rendering - open is false');
+    return null;
+  }
+
+  console.log('✅ MobileTimePickerModal rendering - open is true');
 
   return (
     <>
@@ -103,7 +104,11 @@ export function MobileTimePickerModal({
               shadow-lg active:scale-95 transition-transform
               touch-manipulation
             '
-            onClick={() => onConfirm(tempTime)}
+            onClick={() => {
+              console.log('🔍 CONFIRM CLICKED - tempTime:', tempTime);
+              onConfirm(tempTime);
+              onClose(); // Close modal after confirming
+            }}
             onTouchStart={() => {}}
           >
             Confirm
