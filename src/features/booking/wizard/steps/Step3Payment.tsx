@@ -1,12 +1,7 @@
 'use client';
 
 import { useBookingState } from '@/hooks/useBookingState';
-import {
-  PaymentCard,
-  ServicesSummaryCard,
-  TripSummaryCard,
-  VehicleSummaryCard,
-} from '../components/step3';
+import { BookingSummaryCard, PaymentCard } from '../components/step3';
 
 /**
  * 🎯 STEP 3 - PAYMENT & SUMMARY
@@ -37,15 +32,13 @@ export function Step3Payment() {
 
   return (
     <div className='vl-grid-premium'>
-      {/* LEFT COLUMN - Summary */}
-      <div className='space-y-3'>
-        <TripSummaryCard />
-        <VehicleSummaryCard />
-        <ServicesSummaryCard />
+      {/* LEFT COLUMN - Unified Summary */}
+      <div>
+        <BookingSummaryCard />
       </div>
 
       {/* RIGHT COLUMN - Payment */}
-      <div className='space-y-3'>
+      <div>
         <PaymentCard />
       </div>
     </div>

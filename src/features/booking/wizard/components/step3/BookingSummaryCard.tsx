@@ -71,17 +71,18 @@ const SubsectionTitle = ({
   </div>
 );
 
-export function BookingSummaryCard() {
-  const { bookingType, tripConfiguration, calculateUpgradesCost } = useBookingState();
-  const bookingRule = getBookingRule(bookingType);
+export default function BookingSummaryCard() {
+  const { bookingType, tripConfiguration, calculateUpgradesCost, getFleetSummary } =
+    useBookingState();
 
   const {
     pickup,
     dropoff,
-    additionalStops,
     pickupDateTime,
     returnDateTime,
     dailyRange,
+    additionalStops,
+    returnAdditionalStops,
     passengers,
     luggage,
     flightNumberPickup,
@@ -90,11 +91,15 @@ export function BookingSummaryCard() {
     daysRequested,
     customRequirements,
     selectedVehicle,
+    fleetSelection,
     servicePackages,
   } = tripConfiguration;
 
   const { tripPreferences, paidUpgrades } = servicePackages;
   const totalUpgradesCost = calculateUpgradesCost();
+
+  // Booking rules
+  const bookingRule = getBookingRule(bookingType);
 
   // Format helpers
   const formatLocation = (location: typeof pickup) => location?.address || 'Not selected';
@@ -109,8 +114,8 @@ export function BookingSummaryCard() {
   // Preferences logic
   const hasPreferences =
     tripPreferences.music !== 'no-preference' ||
-    tripPreferences.temperature !== 'comfortable' ||
-    tripPreferences.communication !== 'professional';
+    tripPreferences.temperature !== 'no-preference' ||
+    tripPreferences.communication !== 'no-preference';
 
   // Simplified upgrade details (reduces 12+ lines to 3 lines)
   const upgradeDetails = [
@@ -242,41 +247,75 @@ export function BookingSummaryCard() {
           </div>
 
           {/* SECTION 2: VEHICLE SELECTION */}
-          {selectedVehicle?.category && (
-            <div className='space-y-4'>
-              <SectionHeader icon={IconComponent} title='Selected Vehicle' />
+          {bookingType === 'fleet'
+            ? /* FLEET VEHICLE DISPLAY */
+              fleetSelection?.totalVehicles > 0 && (
+                <div className='space-y-4'>
+                  <SectionHeader icon={Users} title='Fleet Selection' />
 
-              <div className='grid grid-cols-2 gap-4 text-sm'>
-                <InfoRow
-                  label='Category'
-                  value={categoryData?.name || String(selectedVehicle.category) || 'Unknown'}
-                />
-                <InfoRow label='Model' value={selectedVehicle.model?.name || null} />
-                <InfoRow
-                  label='Capacity'
-                  value={
-                    selectedVehicle.model?.capacity?.passengers
-                      ? `${selectedVehicle.model.capacity.passengers} passengers`
-                      : null
-                  }
-                  condition={!!selectedVehicle.model?.capacity}
-                />
-              </div>
+                  <div className='grid grid-cols-2 gap-4 text-sm'>
+                    <InfoRow label='Total Vehicles' value={fleetSelection.totalVehicles} />
+                    <InfoRow
+                      label='Total Capacity'
+                      value={`${fleetSelection.totalCapacity} passengers`}
+                    />
+                  </div>
 
-              {selectedVehicle.model?.features && (
-                <div className='flex flex-wrap gap-2'>
-                  {selectedVehicle.model.features.slice(0, 3).map(feature => (
-                    <span
-                      key={feature}
-                      className='px-2 py-1 rounded-md bg-blue-500/10 text-blue-300 text-xs border border-blue-500/20'
-                    >
-                      {feature}
-                    </span>
-                  ))}
+                  {/* Fleet Breakdown */}
+                  <div className='space-y-2'>
+                    <div className='text-xs text-neutral-400 font-medium'>Vehicle Breakdown:</div>
+                    {fleetSelection.vehicles.map((vehicle, index) => (
+                      <div
+                        key={index}
+                        className='flex justify-between items-center text-sm bg-white/5 rounded-lg px-3 py-2'
+                      >
+                        <div className='flex items-center gap-2'>
+                          <Car className='w-4 h-4 text-amber-400' />
+                          <span>{vehicle.model.name}</span>
+                          <span className='text-neutral-400'>({vehicle.category.name})</span>
+                        </div>
+                        <span className='text-amber-400 font-medium'>×{vehicle.quantity}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            : /* NORMAL VEHICLE DISPLAY */
+              selectedVehicle?.category && (
+                <div className='space-y-4'>
+                  <SectionHeader icon={IconComponent} title='Selected Vehicle' />
+
+                  <div className='grid grid-cols-2 gap-4 text-sm'>
+                    <InfoRow
+                      label='Category'
+                      value={categoryData?.name || String(selectedVehicle.category) || 'Unknown'}
+                    />
+                    <InfoRow label='Model' value={selectedVehicle.model?.name || null} />
+                    <InfoRow
+                      label='Capacity'
+                      value={
+                        selectedVehicle.model?.capacity?.passengers
+                          ? `${selectedVehicle.model.capacity.passengers} passengers`
+                          : null
+                      }
+                      condition={!!selectedVehicle.model?.capacity}
+                    />
+                  </div>
+
+                  {selectedVehicle.model?.features && (
+                    <div className='flex flex-wrap gap-2'>
+                      {selectedVehicle.model.features.slice(0, 3).map(feature => (
+                        <span
+                          key={feature}
+                          className='px-2 py-1 rounded-md bg-blue-500/10 text-blue-300 text-xs border border-blue-500/20'
+                        >
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
-          )}
 
           {/* SECTION 3: SERVICES & UPGRADES */}
           {(hasPreferences || totalUpgradesCost > 0) && (
@@ -296,12 +335,12 @@ export function BookingSummaryCard() {
                     <InfoRow
                       label='Temperature'
                       value={tripPreferences.temperature}
-                      condition={tripPreferences.temperature !== 'comfortable'}
+                      condition={tripPreferences.temperature !== 'no-preference'}
                     />
                     <InfoRow
                       label='Communication'
                       value={tripPreferences.communication}
-                      condition={tripPreferences.communication !== 'professional'}
+                      condition={tripPreferences.communication !== 'no-preference'}
                     />
                   </div>
                 </div>

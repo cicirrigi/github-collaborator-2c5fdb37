@@ -1,5 +1,4 @@
-import type { TripConfiguration } from '../../../hooks/useBookingState';
-import type { BookingType } from '../booking-rules';
+import type { BookingType, TripConfiguration } from '../../../hooks/useBookingState';
 
 /**
  * 🚗 STEP 2 VALIDATION ENGINE - Vehicle Selection & Services
@@ -152,6 +151,43 @@ const isValidPassengerCapacity = (
 };
 
 /**
+ * ✅ Fleet-specific Step 2 validation
+ */
+const validateFleetStep2 = (config: TripConfiguration): Step2ValidationResult => {
+  const errors: Step2ValidationError[] = [];
+  const missingFields: Step2FieldId[] = [];
+
+  const { fleetSelection } = config;
+
+  // 1. VALIDARE FLEET SELECTION OBLIGATORIE
+  if (!fleetSelection || fleetSelection.totalVehicles === 0) {
+    missingFields.push('vehicleCategory');
+    errors.push({
+      code: 'MISSING_VEHICLE_CATEGORY',
+      field: 'vehicleCategory',
+      message: 'Please select fleet vehicles.',
+      severity: 'error',
+    });
+  }
+
+  // 2. VALIDARE CAPACITATE FLEET
+  if (fleetSelection && fleetSelection.totalCapacity < config.passengers) {
+    errors.push({
+      code: 'INVALID_PASSENGER_CAPACITY',
+      field: 'vehicleCategory',
+      message: `Selected fleet vehicles cannot accommodate ${config.passengers} passengers. Current capacity: ${fleetSelection.totalCapacity}`,
+      severity: 'error',
+    });
+  }
+
+  return {
+    isValid: errors.filter(e => e.severity === 'error').length === 0,
+    errors,
+    missingFields,
+  };
+};
+
+/**
  * ✅ Validator principal pentru Step 2
  */
 export const validateStep2 = (
@@ -161,6 +197,12 @@ export const validateStep2 = (
   const errors: Step2ValidationError[] = [];
   const missingFields: Step2FieldId[] = [];
 
+  // Handle fleet vs normal booking validation differently
+  if (bookingType === 'fleet') {
+    return validateFleetStep2(config);
+  }
+
+  // Normal booking validation (oneway, return, hourly, daily, bespoke)
   const { selectedVehicle, servicePackages } = config;
   const category = selectedVehicle.category?.id || null;
   const model = selectedVehicle.model;

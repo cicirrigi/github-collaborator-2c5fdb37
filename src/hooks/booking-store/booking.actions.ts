@@ -60,11 +60,20 @@ export const createBookingActions = (
         return store.validateStep1Complete();
 
       case 3:
+        // Fleet bookings use different validation path
+        if (store.bookingType === 'fleet') {
+          return store.validateStep1Complete() && store.validateFleetSelection();
+        }
+        // Normal bookings (oneway, return, hourly, daily) use selectedVehicle
         return (
           store.validateStep1Complete() && store.tripConfiguration.selectedVehicle.category !== null
         );
 
       case 4:
+        // Fleet bookings use different validation path
+        if (store.bookingType === 'fleet') {
+          return store.validateStep1Complete() && store.validateFleetSelection();
+        }
         return (
           store.validateStep1Complete() && store.tripConfiguration.selectedVehicle.category !== null
         );
