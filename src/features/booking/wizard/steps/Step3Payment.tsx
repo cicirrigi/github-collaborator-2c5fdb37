@@ -34,7 +34,7 @@ export function Step3Payment() {
     <div className='vl-grid-premium'>
       {/* LEFT COLUMN - Unified Summary */}
       <div>
-        <BookingSummaryCard />
+        <BookingSummaryCard readonly={true} />
       </div>
 
       {/* RIGHT COLUMN - Payment */}

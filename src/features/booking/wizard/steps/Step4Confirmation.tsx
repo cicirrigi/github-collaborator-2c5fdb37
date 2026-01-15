@@ -172,7 +172,7 @@ export function Step4Confirmation() {
 
         {/* RIGHT COLUMN - Booking Summary */}
         <div>
-          <BookingSummaryCard />
+          <BookingSummaryCard readonly={true} />
         </div>
       </div>
     </div>

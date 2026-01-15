@@ -25,7 +25,7 @@ export function PaymentCard() {
   const totalCost = baseFare + upgradesCost;
 
   return (
-    <div className='vl-card-flex'>
+    <div className='vl-card'>
       {/* Header */}
       <div className='flex items-center gap-3 mb-5'>
         <div className='flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-600/20 backdrop-blur-sm border border-green-500/20'>

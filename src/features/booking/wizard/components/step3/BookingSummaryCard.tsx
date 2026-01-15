@@ -14,6 +14,10 @@ import { Car, Crown, Flower, Gift, MapPin, ShieldCheck, Users, Wine } from 'luci
  * ZERO logic/design changes - only extracted repetitive patterns
  */
 
+interface BookingSummaryCardProps {
+  readonly?: boolean; // Disable hover effects for Step 4 confirmation
+}
+
 const CATEGORY_ICONS = {
   executive: Car,
   luxury: Crown,
@@ -71,7 +75,7 @@ const SubsectionTitle = ({
   </div>
 );
 
-export default function BookingSummaryCard() {
+export default function BookingSummaryCard({ readonly = false }: BookingSummaryCardProps = {}) {
   const { bookingType, tripConfiguration, calculateUpgradesCost } = useBookingState();
 
   const {
@@ -132,7 +136,7 @@ export default function BookingSummaryCard() {
     .filter(Boolean);
 
   return (
-    <div className='vl-card-flex'>
+    <div className={readonly ? 'vl-card' : 'vl-card-flex'}>
       {/* Header */}
       <div className='flex items-center gap-3 mb-6'>
         <div className='flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-500/20'>
