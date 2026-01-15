@@ -23,7 +23,13 @@ export function CardHeader({
 
         <div>
           <div className='text-white text-sm font-medium tracking-wide'>{title}</div>
-          {subtitle && <div className='text-amber-200/50 text-xs font-light'>{subtitle}</div>}
+          {subtitle && (
+            <div className='mt-1'>
+              <span className='inline-flex items-center px-2.5 py-1 rounded-md bg-amber-400/20 border border-amber-400/30 text-amber-200 text-xs font-semibold tracking-wider uppercase'>
+                {subtitle}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 

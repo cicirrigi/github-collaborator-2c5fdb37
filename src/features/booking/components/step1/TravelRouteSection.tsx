@@ -1,5 +1,6 @@
 'use client';
 
+import { GlassmorphismCard } from '@/components/ui/GlassmorphismCard';
 import { useBookingState } from '@/hooks/useBookingState';
 import { getBookingRule } from '@/lib/booking/booking-rules';
 import { MapPin, Route } from 'lucide-react';
@@ -16,10 +17,10 @@ export function TravelRouteSection() {
     : 'DROP-OFF LOCATION';
 
   return (
-    <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10'>
+    <GlassmorphismCard>
       <div className='flex items-center gap-2 mb-4'>
         <Route className='w-4 h-4 text-amber-200/60' />
-        <span className='text-white font-medium text-sm'>Travel Route</span>
+        <span className='text-white font-medium text-sm'>Select Your Journey Details</span>
       </div>
 
       <div className='space-y-6'>
@@ -35,7 +36,7 @@ export function TravelRouteSection() {
               </div>
             </div>
             <div className='flex-1'>
-              <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
+              <div className='text-white text-xs font-medium tracking-wider mb-2'>
                 PICK-UP LOCATION
               </div>
               <PickupSection />
@@ -50,7 +51,7 @@ export function TravelRouteSection() {
               </div>
             </div>
             <div className='flex-1'>
-              <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
+              <div className='text-white text-xs font-medium tracking-wider mb-2'>
                 {dropoffTitle}
               </div>
               <DropoffSection />
@@ -125,7 +126,7 @@ export function TravelRouteSection() {
                       </div>
                     </div>
                     <div className='flex-1'>
-                      <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
+                      <div className='text-white text-xs font-medium tracking-wider mb-2'>
                         RETURN PICK-UP LOCATION
                       </div>
                       <div className='relative'>
@@ -149,7 +150,7 @@ export function TravelRouteSection() {
                       </div>
                     </div>
                     <div className='flex-1'>
-                      <div className='text-amber-200/80 text-xs font-medium tracking-wider mb-2'>
+                      <div className='text-white text-xs font-medium tracking-wider mb-2'>
                         RETURN DROP-OFF LOCATION
                       </div>
                       <div className='relative'>
@@ -170,6 +171,6 @@ export function TravelRouteSection() {
           )}
         </div>
       </div>
-    </div>
+    </GlassmorphismCard>
   );
 }

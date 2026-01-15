@@ -1,5 +1,6 @@
 'use client';
 
+import { GlassmorphismCard } from '@/components/ui/GlassmorphismCard';
 import { useBookingState } from '@/hooks/useBookingState';
 import { LocationData } from '@/hooks/useBookingState/booking.types';
 import { Plus, Route, X } from 'lucide-react';
@@ -37,13 +38,11 @@ export function AdditionalStopsInline() {
   };
 
   return (
-    <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10'>
+    <GlassmorphismCard className='p-4'>
       <div className='flex items-center justify-between mb-4'>
         <div className='flex items-center gap-2'>
           <Route className='w-4 h-4 text-amber-200/60' />
-          <span className='text-amber-100/80 text-sm font-light tracking-wider'>
-            Additional Stops
-          </span>
+          <span className='text-white text-sm font-light tracking-wider'>Additional Stops</span>
         </div>
         <span className='text-amber-200/60 text-xs'>Optional</span>
       </div>
@@ -87,6 +86,6 @@ export function AdditionalStopsInline() {
         <Plus className='w-4 h-4' />
         Add Stop
       </button>
-    </div>
+    </GlassmorphismCard>
   );
 }

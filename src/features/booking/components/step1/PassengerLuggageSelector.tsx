@@ -1,5 +1,6 @@
 'use client';
 
+import { GlassmorphismCard } from '@/components/ui/GlassmorphismCard';
 import { useBookingState } from '@/hooks/useBookingState';
 import { Luggage, Users } from 'lucide-react';
 
@@ -8,11 +9,11 @@ export function PassengerLuggageSelector() {
 
   return (
     <div className='grid grid-cols-2 gap-8'>
-      <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10'>
+      <GlassmorphismCard className='p-4'>
         <div className='flex items-center justify-between mb-4'>
           <div className='flex items-center gap-2'>
             <Users className='w-4 h-4 text-amber-200/60' />
-            <span className='text-amber-100/80 text-sm font-light tracking-wider'>Passengers</span>
+            <span className='text-white text-sm font-light tracking-wider'>Passengers</span>
           </div>
         </div>
         <div className='flex items-center justify-between'>
@@ -32,13 +33,13 @@ export function PassengerLuggageSelector() {
             +
           </button>
         </div>
-      </div>
+      </GlassmorphismCard>
 
-      <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10'>
+      <GlassmorphismCard className='p-4'>
         <div className='flex items-center justify-between mb-4'>
           <div className='flex items-center gap-2'>
             <Luggage className='w-4 h-4 text-amber-200/60' />
-            <span className='text-amber-100/80 text-sm font-light tracking-wider'>Luggage</span>
+            <span className='text-white text-sm font-light tracking-wider'>Luggage</span>
           </div>
         </div>
         <div className='flex items-center justify-between'>
@@ -58,7 +59,7 @@ export function PassengerLuggageSelector() {
             +
           </button>
         </div>
-      </div>
+      </GlassmorphismCard>
     </div>
   );
 }

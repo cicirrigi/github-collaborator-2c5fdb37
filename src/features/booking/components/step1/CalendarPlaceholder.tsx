@@ -5,6 +5,7 @@ import { DesktopCalendarModal } from '@/components/calendar/variants/modals/Desk
 import { MobileCalendarModal } from '@/components/calendar/variants/modals/MobileCalendarModal';
 import { StatefulTimePicker } from '@/components/time/StatefulTimePicker';
 import type { TimeValue } from '@/components/time/core/time-types';
+import { GlassmorphismCard } from '@/components/ui/GlassmorphismCard';
 import { useBookingState } from '@/hooks/useBookingState';
 import { CalendarDays } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -96,7 +97,7 @@ export function CalendarPlaceholder() {
   // Return trip professional fields - using FlightInformationSection model
   if (bookingType === 'return') {
     return (
-      <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10'>
+      <GlassmorphismCard>
         <div className='flex items-center gap-2 mb-3'>
           <CalendarDays className='w-4 h-4 text-amber-200/60' />
           <span className='text-white font-medium text-sm'>Journey Dates</span>
@@ -141,7 +142,7 @@ export function CalendarPlaceholder() {
 
           {/* Departure Time Field */}
           <div>
-            <label className='text-amber-200/80 text-xs font-medium tracking-wider mb-1 block'>
+            <label className='text-white text-xs font-medium tracking-wider mb-1 block'>
               DEPARTURE TIME
             </label>
             <div className='bg-transparent border border-amber-200/20 rounded-md px-3 py-2'>
@@ -156,7 +157,7 @@ export function CalendarPlaceholder() {
 
           {/* Return Time Field */}
           <div>
-            <label className='text-amber-200/80 text-xs font-medium tracking-wider mb-1 block'>
+            <label className='text-white text-xs font-medium tracking-wider mb-1 block'>
               RETURN TIME
             </label>
             <div className='bg-transparent border border-amber-200/20 rounded-md px-3 py-2'>
@@ -224,7 +225,7 @@ export function CalendarPlaceholder() {
             timezone='Europe/London'
           />
         )}
-      </div>
+      </GlassmorphismCard>
     );
   }
 
@@ -234,7 +235,7 @@ export function CalendarPlaceholder() {
   return (
     <div className='space-y-6'>
       {/* Inline Calendar */}
-      <div className='bg-black/20 rounded-xl p-4 border border-amber-200/10'>
+      <GlassmorphismCard className='p-4'>
         <Calendar
           value={selectedDate}
           onChange={date => {
@@ -246,12 +247,12 @@ export function CalendarPlaceholder() {
           timezone='Europe/London'
           className='mx-auto max-w-sm'
         />
-      </div>
+      </GlassmorphismCard>
 
       {/* Time Picker */}
-      <div className='bg-black/20 rounded-xl p-4 border border-amber-200/10'>
+      <GlassmorphismCard className='p-4'>
         <div className='mb-3'>
-          <label className='block text-sm font-medium text-amber-300 mb-2'>Departure Time</label>
+          <label className='block text-sm font-medium text-white mb-2'>Departure Time</label>
         </div>
         <StatefulTimePicker
           date={selectedDate}
@@ -259,14 +260,21 @@ export function CalendarPlaceholder() {
           onChange={handleOnewayTimeChange}
           interval={15}
         />
-      </div>
+      </GlassmorphismCard>
 
       {/* Selection Summary */}
       {selectedDate && selectedTime && (
-        <div className='bg-amber-900/20 rounded-lg p-3 border border-amber-500/20'>
+        <div
+          className='bg-white/5 backdrop-blur-sm rounded-lg p-3 border border-amber-300/30 shadow-lg'
+          style={{
+            background: 'rgba(255, 255, 255, 0.08)',
+            backdropFilter: 'blur(12px)',
+            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 20px rgba(0, 0, 0, 0.2)',
+          }}
+        >
           <div className='flex items-center justify-between text-sm'>
-            <span className='text-amber-200/70'>Selected:</span>
-            <span className='text-amber-300 font-medium'>
+            <span className='text-amber-100/80'>Selected:</span>
+            <span className='text-amber-200 font-medium'>
               {selectedDate.toLocaleDateString('en-GB', {
                 weekday: 'short',
                 day: 'numeric',

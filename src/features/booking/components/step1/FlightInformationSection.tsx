@@ -1,5 +1,6 @@
 'use client';
 
+import { GlassmorphismCard } from '@/components/ui/GlassmorphismCard';
 import { useBookingState } from '@/hooks/useBookingState';
 import { Plane } from 'lucide-react';
 
@@ -11,7 +12,7 @@ export function FlightInformationSection() {
     <>
       {/* Flight Numbers - EXACT STYLING FROM COMMIT */}
       {bookingType === 'return' && (
-        <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10'>
+        <GlassmorphismCard className='p-4'>
           <div className='flex items-center gap-2 mb-3'>
             <Plane className='w-4 h-4 text-amber-200/60' />
             <span className='text-white font-medium text-sm'>Flight Numbers</span>
@@ -44,12 +45,12 @@ export function FlightInformationSection() {
               />
             </div>
           </div>
-        </div>
+        </GlassmorphismCard>
       )}
 
       {/* Flight Number - doar pentru non-return trips */}
       {bookingType !== 'return' && (
-        <div className='bg-white/3 rounded-lg p-4 border border-amber-200/10'>
+        <GlassmorphismCard className='p-4'>
           <div className='flex items-center gap-2 mb-3'>
             <Plane className='w-4 h-4 text-amber-200/60' />
             <span className='text-white font-medium text-sm'>Flight Number</span>
@@ -61,7 +62,7 @@ export function FlightInformationSection() {
             placeholder='Optional flight number'
             className='w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-2 text-amber-50 text-sm font-light placeholder:text-amber-200/40 focus:border-amber-200/40 focus:outline-none transition-colors'
           />
-        </div>
+        </GlassmorphismCard>
       )}
     </>
   );

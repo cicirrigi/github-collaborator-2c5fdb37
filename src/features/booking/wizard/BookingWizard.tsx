@@ -92,7 +92,7 @@ export function BookingWizard() {
             </div>
           </div>
 
-          {currentStep === 1 && <Step1BookingDetails />}
+          {currentStep === 1 && <Step1BookingDetails onNext={nextStep} />}
           {currentStep === 2 && <Step2Services />}
           {currentStep === 3 && <Step3Summary />}
           {currentStep === 4 && <Step4Confirmation />}

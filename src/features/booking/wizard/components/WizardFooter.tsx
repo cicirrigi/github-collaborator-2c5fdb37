@@ -34,14 +34,16 @@ export function WizardFooter({ currentStep, totalSteps, onNext, onPrev }: Wizard
         <div /> // Empty spacer
       )}
 
-      {/* Next/Complete/Start New Button */}
-      {!isLastStep ? (
+      {/* Next/Complete/Start New Button - Hidden on Step 1 since Next is integrated in form */}
+      {!isLastStep && !isFirstStep ? (
         <button
           onClick={onNext}
           className='px-6 py-3 rounded-xl bg-yellow-500 text-black font-semibold hover:bg-yellow-400 transition-all duration-200'
         >
           Next →
         </button>
+      ) : isFirstStep ? (
+        <div /> // Empty spacer for Step 1 - Next button is integrated in form
       ) : isConfirmationStep ? (
         <button
           onClick={handleStartNewBooking}
