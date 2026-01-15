@@ -72,8 +72,7 @@ const SubsectionTitle = ({
 );
 
 export default function BookingSummaryCard() {
-  const { bookingType, tripConfiguration, calculateUpgradesCost, getFleetSummary } =
-    useBookingState();
+  const { bookingType, tripConfiguration, calculateUpgradesCost } = useBookingState();
 
   const {
     pickup,
@@ -82,7 +81,6 @@ export default function BookingSummaryCard() {
     returnDateTime,
     dailyRange,
     additionalStops,
-    returnAdditionalStops,
     passengers,
     luggage,
     flightNumberPickup,

@@ -56,7 +56,7 @@ export const createValidationActions = (
         );
 
       case 'fleet':
-        return !!(t.pickup && t.pickupDateTime && t.passengers >= 5); // Fleet minimum
+        return !!(t.pickup && t.pickupDateTime); // Fleet available for any passenger count
 
       case 'bespoke':
         return !!(t.pickup && t.customRequirements && t.customRequirements.trim().length > 0);
