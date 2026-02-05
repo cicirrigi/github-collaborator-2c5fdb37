@@ -6,7 +6,7 @@ import { useBookingState } from '@/hooks/useBookingState';
 import { stripePromise } from '@/lib/stripe/stripe';
 import { Elements } from '@stripe/react-stripe-js';
 import { AlertCircle, CreditCard, DollarSign } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 interface PaymentData {
   paymentIntentId: string;
@@ -45,8 +45,8 @@ export function PaymentCard() {
     bookingId,
   } = useBookingPayment();
 
-  // Initialize payment intent when component mounts
-  useEffect(() => {
+  // 📚 OFFICIAL STRIPE PATTERN: Initialize payment intent once with useMemo
+  useMemo(() => {
     if (paymentMethod === 'card' && totalCost > 0 && !clientSecret && !isCreatingPayment) {
       initializePayment(totalCost, 'customer@example.com');
     }
@@ -144,10 +144,9 @@ export function PaymentCard() {
                 </div>
               )}
 
-              {/* Stripe Payment Form */}
+              {/* Stripe Payment Form - Official Stripe Pattern */}
               {clientSecret && !isCreatingPayment && !paymentError && (
                 <Elements
-                  key={clientSecret} // 🔧 Force remount when clientSecret changes
                   stripe={stripePromise}
                   options={{
                     clientSecret,
@@ -155,7 +154,7 @@ export function PaymentCard() {
                       theme: 'night',
                       variables: {
                         colorPrimary: '#f59e0b',
-                        colorBackground: 'rgba(255, 255, 255, 0.03)',
+                        colorBackground: '#ffffff0a',
                         colorText: '#f3f4f6',
                       },
                     },
@@ -171,9 +170,8 @@ export function PaymentCard() {
                       // Payment successful - advance to Step 4 confirmation
                       nextStep();
                     }}
-                    onError={(error: string) => {
+                    onError={(_error: string) => {
                       // Error handling is managed by enterprise hook
-                      console.error('Payment error:', error);
                     }}
                   />
                 </Elements>

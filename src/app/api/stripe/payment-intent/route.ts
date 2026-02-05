@@ -17,8 +17,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create payment intent
-    const paymentIntent = await stripe.paymentIntents.create({
+    // Get idempotency key from headers to prevent duplicate payment intents
+    const idempotencyKey = request.headers.get('Idempotency-Key');
+
+    // Create payment intent with explicit idempotency key
+    const paymentIntentOptions = {
       amount: Math.round(amount * 100), // Convert to pence/cents
       currency: 'gbp',
       metadata: {
@@ -28,7 +31,11 @@ export async function POST(request: NextRequest) {
       automatic_payment_methods: {
         enabled: true,
       },
-    });
+    };
+
+    // Only pass idempotency key if we have one to prevent Stripe SDK auto-retry duplicates
+    const requestOptions = idempotencyKey ? { idempotencyKey } : {};
+    const paymentIntent = await stripe.paymentIntents.create(paymentIntentOptions, requestOptions);
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
