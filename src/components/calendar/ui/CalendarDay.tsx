@@ -30,13 +30,26 @@ export function CalendarDay({ date, onSelect, className = '' }: CalendarDayProps
     <button
       type='button'
       disabled={isDisabled}
-      onClick={() => !isDisabled && onSelect(raw)}
+      onClick={e => {
+        e.stopPropagation();
+        if (!isDisabled) {
+          onSelect(raw);
+        }
+      }}
+      onTouchEnd={e => {
+        e.stopPropagation();
+        if (!isDisabled) {
+          onSelect(raw);
+        }
+      }}
       className={`
         w-full h-full flex items-center justify-center
         rounded-md text-sm transition
+        touch-manipulation cursor-pointer
         ${classes}
         ${className}
       `}
+      style={{ pointerEvents: 'auto' }}
     >
       {dayNumber}
     </button>

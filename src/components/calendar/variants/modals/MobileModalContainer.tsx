@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface MobileModalContainerProps {
   visible: boolean;
@@ -19,16 +20,31 @@ export function MobileModalContainer({ visible, children }: MobileModalContainer
 
   if (!visible) return null; // ✅ important: nu ține "papirusul" în DOM
 
-  return (
+  // SSR safety check
+  if (typeof document === 'undefined') {
+    return (
+      <div
+        className={[
+          'fixed inset-0 z-50',
+          'bg-[#0c0c0c] text-white',
+          'flex flex-col min-h-0', // ✅ min-h-0 pentru flex + overflow corect
+        ].join(' ')}
+      >
+        {children}
+      </div>
+    );
+  }
+
+  return createPortal(
     <div
       className={[
-        'fixed inset-x-0 bottom-0 z-50',
-        'h-[100dvh]', // ✅ fix pentru mobile viewport
+        'fixed inset-0 z-50',
         'bg-[#0c0c0c] text-white',
         'flex flex-col min-h-0', // ✅ min-h-0 pentru flex + overflow corect
       ].join(' ')}
     >
       {children}
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ModalContainerProps {
   isOpen: boolean;
@@ -19,7 +20,7 @@ export function ModalContainer({ isOpen, children, onClose }: ModalContainerProp
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -53,6 +54,7 @@ export function ModalContainer({ isOpen, children, onClose }: ModalContainerProp
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

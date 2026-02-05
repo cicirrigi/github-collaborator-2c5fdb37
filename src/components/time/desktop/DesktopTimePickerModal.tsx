@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { TimePicker } from '../TimePicker';
 import type { TimeValue } from '../core/time-types';
 
@@ -43,11 +44,11 @@ export function DesktopTimePickerModal({
     onClose();
   };
 
-  return (
+  return createPortal(
     <>
-      <div onClick={cancel} className='fixed inset-0 z-40 bg-black/60 backdrop-blur-sm' />
+      <div onClick={cancel} className='fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm' />
 
-      <div className='fixed inset-0 z-50 flex items-center justify-center p-4'>
+      <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4'>
         <div
           className='
             bg-[#0B0B0B] rounded-2xl w-full max-w-md p-6
@@ -95,6 +96,7 @@ export function DesktopTimePickerModal({
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }

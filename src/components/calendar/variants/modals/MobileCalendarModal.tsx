@@ -22,7 +22,7 @@ export function MobileCalendarModal({
 }: MobileCalendarModalProps) {
   const handleSelect = (date: Date | [Date, Date] | null) => {
     onChange(date);
-    onClose();
+    // Don't auto-close - let user click Confirm button
   };
 
   return (
@@ -31,7 +31,7 @@ export function MobileCalendarModal({
 
       <MobileModalContainer visible={open}>
         {/* HEADER */}
-        <div className='sticky top-0 z-50 bg-[#0c0c0c] px-4 py-4 flex items-center justify-between border-b border-white/10'>
+        <div className='sticky top-0 z-[60] bg-[#0c0c0c] px-4 py-4 flex items-center justify-between border-b border-white/10'>
           <button className='text-amber-300' onClick={onClose}>
             Cancel
           </button>
@@ -42,19 +42,21 @@ export function MobileCalendarModal({
         </div>
 
         {/* BODY */}
-        <div className='flex-1 min-h-0 overflow-y-auto px-4 py-2 overscroll-contain'>
-          <Calendar
-            value={value}
-            onChange={handleSelect}
-            timezone={timezone}
-            minDate={minDate}
-            maxDate={maxDate}
-            mode={mode}
-          />
+        <div className='flex-1 min-h-0 overflow-y-auto px-4 py-4 overscroll-contain'>
+          <div className='w-full min-w-[300px] touch-manipulation'>
+            <Calendar
+              value={value}
+              onChange={handleSelect}
+              timezone={timezone}
+              minDate={minDate}
+              maxDate={maxDate}
+              mode={mode}
+            />
+          </div>
         </div>
 
         {/* FOOTER */}
-        <div className='sticky bottom-0 z-50 bg-[#0c0c0c] px-4 py-4 border-t border-white/10'>
+        <div className='sticky bottom-0 z-[60] bg-[#0c0c0c] px-4 py-4 border-t border-white/10'>
           <button
             className='
               w-full py-3 rounded-xl

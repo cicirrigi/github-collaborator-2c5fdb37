@@ -1,8 +1,19 @@
 'use client';
 
+import { StripePaymentForm } from '@/features/booking/components/step3/StripePaymentForm';
+import { useBookingPayment } from '@/hooks/useBookingPayment';
 import { useBookingState } from '@/hooks/useBookingState';
-import { CreditCard, DollarSign, Lock } from 'lucide-react';
-import { useState } from 'react';
+import { stripePromise } from '@/lib/stripe/stripe';
+import { Elements } from '@stripe/react-stripe-js';
+import { AlertCircle, CreditCard, DollarSign } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+interface PaymentData {
+  paymentIntentId: string;
+  transactionId: string;
+  amount: number;
+  currency: string;
+}
 
 /**
  * 💳 PAYMENT CARD - Step 3 Component
@@ -17,12 +28,29 @@ import { useState } from 'react';
  * Stripe integration placeholder
  */
 export function PaymentCard() {
-  const { calculateUpgradesCost } = useBookingState();
+  const { nextStep } = useBookingState();
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'applepay'>('card');
 
-  const upgradesCost = calculateUpgradesCost();
+  const upgradesCost = 0; // Simplified for now
   const baseFare = 245; // TODO: Calculate from distance/time
   const totalCost = baseFare + upgradesCost;
+
+  // 🏭 ENTERPRISE PAYMENT MANAGEMENT - Zero incomplete transactions
+  const {
+    clientSecret,
+    isCreating: isCreatingPayment,
+    error: paymentError,
+    initializePayment,
+    markAsSucceeded,
+    bookingId,
+  } = useBookingPayment();
+
+  // Initialize payment intent when component mounts
+  useEffect(() => {
+    if (paymentMethod === 'card' && totalCost > 0 && !clientSecret && !isCreatingPayment) {
+      initializePayment(totalCost, 'customer@example.com');
+    }
+  }, [paymentMethod, totalCost, clientSecret, isCreatingPayment, initializePayment]);
 
   return (
     <div className='vl-card'>
@@ -97,52 +125,80 @@ export function PaymentCard() {
             </div>
           </div>
 
-          {/* Card Form */}
+          {/* Stripe Payment Form - Card Method */}
           {paymentMethod === 'card' && (
             <div className='space-y-4'>
-              <h4 className='text-sm font-medium text-neutral-300'>Card Details</h4>
-              <div className='space-y-3'>
-                <div>
-                  <label className='block text-xs text-neutral-400 mb-2'>Card Number</label>
-                  <input
-                    type='text'
-                    placeholder='1234 5678 9012 3456'
-                    className='w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-neutral-500 focus:border-amber-500/30 focus:bg-white/10 transition-colors'
+              {/* Loading State */}
+              {isCreatingPayment && (
+                <div className='text-center py-8'>
+                  <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mx-auto mb-4'></div>
+                  <p className='text-neutral-400 text-sm'>Initializing secure payment...</p>
+                </div>
+              )}
+
+              {/* Error State */}
+              {paymentError && (
+                <div className='flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20'>
+                  <AlertCircle className='w-5 h-5 text-red-400 flex-shrink-0' />
+                  <span className='text-red-300 text-sm'>{paymentError}</span>
+                </div>
+              )}
+
+              {/* Stripe Payment Form */}
+              {clientSecret && !isCreatingPayment && !paymentError && (
+                <Elements
+                  key={clientSecret} // 🔧 Force remount when clientSecret changes
+                  stripe={stripePromise}
+                  options={{
+                    clientSecret,
+                    appearance: {
+                      theme: 'night',
+                      variables: {
+                        colorPrimary: '#f59e0b',
+                        colorBackground: 'rgba(255, 255, 255, 0.03)',
+                        colorText: '#f3f4f6',
+                      },
+                    },
+                  }}
+                >
+                  <StripePaymentForm
+                    totalAmount={totalCost}
+                    _bookingId={bookingId || `booking_${Date.now()}`}
+                    _clientSecret={clientSecret}
+                    onSuccess={(_paymentData: PaymentData) => {
+                      // 🏭 ENTERPRISE: Mark payment as succeeded and cleanup session
+                      markAsSucceeded();
+                      // Payment successful - advance to Step 4 confirmation
+                      nextStep();
+                    }}
+                    onError={(error: string) => {
+                      // Error handling is managed by enterprise hook
+                      console.error('Payment error:', error);
+                    }}
                   />
-                </div>
-                <div className='grid grid-cols-2 gap-3'>
-                  <div>
-                    <label className='block text-xs text-neutral-400 mb-2'>Expiry</label>
-                    <input
-                      type='text'
-                      placeholder='MM/YY'
-                      className='w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-neutral-500 focus:border-amber-500/30 focus:bg-white/10 transition-colors'
-                    />
-                  </div>
-                  <div>
-                    <label className='block text-xs text-neutral-400 mb-2'>CVV</label>
-                    <input
-                      type='text'
-                      placeholder='123'
-                      className='w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-neutral-500 focus:border-amber-500/30 focus:bg-white/10 transition-colors'
-                    />
-                  </div>
-                </div>
-              </div>
+                </Elements>
+              )}
             </div>
           )}
 
-          {/* Payment Button */}
-          <button className='w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-semibold text-base transition-all duration-300 hover:from-amber-400 hover:to-yellow-400 hover:shadow-lg hover:shadow-amber-500/25'>
-            <Lock className='w-5 h-5' />
-            Confirm & Pay £{totalCost}
-          </button>
-
-          {/* Security Notice */}
-          <div className='flex items-center justify-center gap-2 text-xs text-neutral-500'>
-            <Lock className='w-3 h-3' />
-            <span>Secured by 256-bit SSL encryption</span>
-          </div>
+          {/* Other Payment Methods - Placeholder */}
+          {paymentMethod !== 'card' && (
+            <div className='text-center py-8 space-y-4'>
+              <div className='w-16 h-16 rounded-full bg-neutral-800 flex items-center justify-center mx-auto'>
+                <CreditCard className='w-8 h-8 text-neutral-500' />
+              </div>
+              <h4 className='text-lg font-semibold text-white'>
+                {paymentMethod === 'paypal' ? 'PayPal' : 'Apple Pay'} Integration
+              </h4>
+              <p className='text-neutral-400 text-sm'>Coming soon! Use card payment for now.</p>
+              <button
+                onClick={() => setPaymentMethod('card')}
+                className='px-6 py-2 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-300 text-sm hover:bg-amber-500/30 transition-colors'
+              >
+                Switch to Card Payment
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

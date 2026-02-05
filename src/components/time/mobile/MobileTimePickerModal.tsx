@@ -52,21 +52,16 @@ export function MobileTimePickerModal({
     };
   }, [open]);
 
-  console.log('🔍 MobileTimePickerModal props:', { open });
-
   if (!open) {
-    console.log('❌ MobileTimePickerModal NOT rendering - open is false');
     return null;
   }
-
-  console.log('✅ MobileTimePickerModal rendering - open is true');
 
   return (
     <>
       <MobileTimeModalOverlay open={open} onClose={onClose} />
 
       <MobileTimeModalContainer visible={open}>
-        <div className='sticky top-0 z-50 bg-[#0c0c0c] px-4 py-4 flex items-center justify-between border-b border-white/10'>
+        <div className='sticky top-0 z-[60] bg-[#0c0c0c] px-4 py-4 flex items-center justify-between border-b border-white/10'>
           <button onClick={onClose} className='text-amber-300'>
             Cancel
           </button>
@@ -76,7 +71,7 @@ export function MobileTimePickerModal({
           <div className='w-10' />
         </div>
 
-        <div className='flex-1 overflow-y-auto px-4 py-2'>
+        <div className='flex-1 min-h-0 overflow-y-auto px-4 py-2'>
           <TimePicker
             date={date}
             value={tempTime}
@@ -105,7 +100,6 @@ export function MobileTimePickerModal({
               touch-manipulation
             '
             onClick={() => {
-              console.log('🔍 CONFIRM CLICKED - tempTime:', tempTime);
               onConfirm(tempTime);
               onClose(); // Close modal after confirming
             }}
