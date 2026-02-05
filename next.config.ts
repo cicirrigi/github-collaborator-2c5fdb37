@@ -62,11 +62,11 @@ const nextConfig: NextConfig = {
             key: 'X-DNS-Prefetch-Control',
             value: 'on',
           },
-          // 🔒 Privacy
-          {
-            key: 'Cross-Origin-Embedder-Policy',
-            value: 'credentialless',
-          },
+          // 🔒 Privacy - COEP DISABLED for Stripe Elements compatibility
+          // ⚠️ OFFICIAL: Stripe doesn't support Cross-origin isolated sites
+          // Reference: https://docs.stripe.com/security/guide#cross-origin-isolation-support
+          // "Currently, we don't support Cross-origin isolated sites"
+          // This is STANDARD practice for enterprise payment systems
           {
             key: 'Cross-Origin-Opener-Policy',
             value: 'same-origin',
