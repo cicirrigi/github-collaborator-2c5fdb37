@@ -7,7 +7,7 @@
 /* 📐 Main Grid Container */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 90vw), 1fr));
   gap: 1rem;
   width: 100%;
   max-width: 1200px;
@@ -67,7 +67,7 @@
 /* 💻 Desktop Responsive (1025px+) */
 @media (min-width: 1025px) {
   .grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 90vw), 1fr));
     gap: 1rem;
     padding: 0 2rem;
   }

@@ -23,7 +23,7 @@ export function useWeather(): UseWeatherReturn {
   // Auto detect IP on first mount only - use ref to prevent dependency issues
   useEffect(() => {
     if (!location && !locLoading) {
-      console.log('🔍 useEffect triggering autoDetect');
+      // Auto-detecting location based on IP
       autoDetect();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

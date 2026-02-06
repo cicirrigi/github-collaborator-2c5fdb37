@@ -36,10 +36,10 @@ export const stepVariants = cva(
         ],
       },
       size: {
-        xs: 'w-6 h-6 text-xs',
-        sm: 'w-8 h-8 text-xs',
-        md: 'w-12 h-12 text-sm',
-        lg: 'w-16 h-16 text-base',
+        xs: 'w-8 h-8 sm:w-6 sm:h-6 text-sm sm:text-xs', // Larger on mobile, smaller on desktop
+        sm: 'w-10 h-10 sm:w-8 sm:h-8 text-sm sm:text-xs',
+        md: 'w-14 h-14 sm:w-12 sm:h-12 text-base sm:text-sm',
+        lg: 'w-18 h-18 sm:w-16 sm:h-16 text-lg sm:text-base',
       },
       interactive: {
         true: 'hover:scale-105 active:scale-95',
@@ -82,7 +82,7 @@ export const connectorVariants = cva(
 export const stepperContainerVariants = cva('flex items-center w-full', {
   variants: {
     orientation: {
-      horizontal: 'flex-row justify-center items-center w-full space-x-2',
+      horizontal: 'flex-row justify-center items-center w-full space-x-1 sm:space-x-2',
       vertical: 'flex-col space-y-8 items-center',
     },
     spacing: {

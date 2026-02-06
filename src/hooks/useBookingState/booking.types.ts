@@ -1,8 +1,16 @@
 // 🎯 BOOKING TYPES - All type definitions for the unified booking system
 
 // Import and re-export vehicle types for easy access
+import type { FleetActions, FleetSelection, FleetSummary } from './fleet.types';
 import type { VehicleCategory, VehicleModel, VehicleSelection } from './vehicle.types';
-export type { VehicleCategory, VehicleModel, VehicleSelection };
+export type {
+  FleetActions,
+  FleetSelection,
+  FleetSummary,
+  VehicleCategory,
+  VehicleModel,
+  VehicleSelection,
+};
 
 export type Coordinates = [number, number];
 
@@ -64,8 +72,17 @@ export interface TripConfiguration {
   // Bespoke bookings
   customRequirements: string;
 
-  // 🚗 Step 2: Vehicle Selection
+  // 🚗 Step 2: Vehicle Selection (single vehicle)
   selectedVehicle: VehicleSelection;
+
+  // 🚛 Step 2: Fleet Selection (multiple vehicles)
+  fleetSelection: FleetSelection;
+
+  // 🎁 Step 2: Service Packages
+  servicePackages: ServicePackages;
+
+  // 🔮 Future Features (hidden from UI)
+  futureFeatures: FutureFeatures;
 }
 
 export interface BookingState {
@@ -106,11 +123,44 @@ export interface BookingState {
   setDaysRequested: (value: number | null) => void;
   setCustomRequirements: (value: string) => void;
 
-  // 🚗 VEHICLE SELECTION ACTIONS
+  // 🚗 VEHICLE SELECTION ACTIONS (single vehicle)
   selectVehicleCategory: (category: VehicleCategory) => void;
-  selectVehicleModel: (model: VehicleModel) => void;
+  selectVehicleModel: (model: VehicleModel | null) => void;
   clearVehicleSelection: () => void;
   getAvailableVehicleCategories: () => VehicleCategory[];
+
+  // 🚛 FLEET SELECTION ACTIONS (multiple vehicles)
+  addFleetVehicle: (category: VehicleCategory, model: VehicleModel, quantity?: number) => void;
+  removeFleetVehicle: (itemId: string) => void;
+  updateFleetVehicleQuantity: (itemId: string, quantity: number) => void;
+  clearFleetSelection: () => void;
+
+  // Fleet Mode Actions
+  setFleetMode: (mode: 'standard' | 'hourly' | 'daily') => void;
+  setFleetHours: (hours: number) => void;
+  setFleetDays: (days: number) => void;
+
+  getFleetSummary: () => FleetSummary;
+  getFleetTotalPrice: () => number;
+  validateFleetSelection: () => boolean;
+
+  // 🎁 STEP 2 SERVICE ACTIONS
+  setMusicPreference: (music: ServicePackages['tripPreferences']['music']) => void;
+  setTemperaturePreference: (
+    temperature: ServicePackages['tripPreferences']['temperature']
+  ) => void;
+  setCommunicationStyle: (
+    communication: ServicePackages['tripPreferences']['communication']
+  ) => void;
+  resetTripPreferences: () => void;
+  togglePremiumFeature: (feature: keyof ServicePackages['premiumFeatures']) => void;
+
+  // 💰 PAID UPGRADES ACTIONS
+  setFlowersUpgrade: (flowers: ServicePackages['paidUpgrades']['flowers']) => void;
+  setChampagneUpgrade: (champagne: ServicePackages['paidUpgrades']['champagne']) => void;
+  toggleSecurityEscort: () => void;
+  calculateUpgradesCost: () => number;
+  clearAllUpgrades: () => void;
 
   // WIZARD ACTIONS
   setCurrentStep: (step: number) => void;
@@ -120,6 +170,14 @@ export interface BookingState {
   canProceedToStep: (step: number) => boolean;
   validateCurrentStep: () => boolean;
   validateStep1Complete: () => boolean;
+  validateStep2Complete: () => { isValid: boolean; errors: string[]; warnings: string[] };
+  validateCrossStep: () => {
+    isValid: boolean;
+    recommendations: string[];
+    warnings: string[];
+    errors: string[];
+  };
+  getSmartRecommendations: () => string[];
   resetTrip: () => void;
 
   // UTILITY ACTIONS
@@ -141,6 +199,39 @@ export interface SingleBooking {
   flightNumber?: string;
   specialRequirements?: string;
   estimatedPrice?: number;
+}
+
+// 🎁 STEP 2 SERVICE PACKAGES TYPES
+export interface ServicePackages {
+  // A. Included Services (ALL classes)
+  includedServices: string[]; // Always all 9 services
+
+  // B. Free Premium Options (Luxury, SUV, MPV only)
+  premiumFeatures: {
+    paparazziSafeMode: boolean;
+    frontSeatRequest: boolean;
+    comfortRideMode: boolean;
+    personalLuggagePrivacy: boolean;
+  };
+
+  // C. Universal Trip Preferences (ALL classes)
+  tripPreferences: {
+    music: 'no-preference' | 'classical' | 'jazz' | 'pop' | 'rock' | 'silence';
+    temperature: 'no-preference' | 'cool' | 'comfortable' | 'warm';
+    communication: 'no-preference' | 'friendly' | 'professional' | 'minimal';
+  };
+
+  // D. Paid Premium Upgrades (ALL classes)
+  paidUpgrades: {
+    flowers: null | 'standard' | 'exclusive';
+    champagne: null | 'moet' | 'dom-perignon';
+    securityEscort: boolean;
+  };
+}
+
+// 🔮 FUTURE FEATURES (hidden from UI)
+export interface FutureFeatures {
+  oshiboriTowels: boolean;
 }
 
 // 🔧 UTILITY TYPE EXPORTS

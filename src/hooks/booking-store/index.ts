@@ -6,10 +6,15 @@ import { createInitialTripConfiguration, initialWizardState } from './initialSta
 // Import individual action creators
 import { createBookingActions } from './booking.actions';
 import { createDateTimeActions } from './datetime.actions';
+import { createFleetActions } from './fleet.actions';
 import { createLocationActions } from './location.actions';
 import { createPassengerActions } from './passenger.actions';
 import { createValidationActions } from './validation';
 import { createVehicleActions } from './vehicle.actions';
+// Step 2 Service Package Actions
+import { createPreferencesActions } from './preferences.actions';
+import { createServicesActions } from './services.actions';
+import { createUpgradesActions } from './upgrades.actions';
 
 /**
  * 🚀 MODULAR BOOKING STORE - Enterprise Architecture
@@ -35,8 +40,16 @@ export const useBookingState = create<BookingState>((set, get) => ({
   // 👥 PASSENGER & LOGISTICS ACTIONS
   ...createPassengerActions(set, get),
 
-  // 🚗 VEHICLE SELECTION ACTIONS
+  // 🚗 VEHICLE SELECTION ACTIONS (single vehicle)
   ...createVehicleActions(set, get),
+
+  // 🚛 FLEET SELECTION ACTIONS (multiple vehicles)
+  ...createFleetActions(set, get),
+
+  // 🎁 STEP 2: SERVICE PACKAGE ACTIONS
+  ...createServicesActions(set, get),
+  ...createPreferencesActions(set, get),
+  ...createUpgradesActions(set, get),
 
   // ✅ VALIDATION & UTILITY ACTIONS
   ...createValidationActions(set, get),

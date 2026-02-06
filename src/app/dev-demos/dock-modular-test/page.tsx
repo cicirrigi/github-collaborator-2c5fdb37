@@ -11,22 +11,22 @@ export default function DockModularTestPage() {
     {
       title: 'Instant',
       icon: <ArrowRight className='h-full w-full' />,
-      onClick: () => console.log('Instant clicked'),
+      onClick: () => {}, // Demo: Instant booking
     },
     {
       title: 'Scheduled',
       icon: <RefreshCw className='h-full w-full' />,
-      onClick: () => console.log('Scheduled clicked'),
+      onClick: () => {}, // Demo: Scheduled booking
     },
     {
       title: 'By Hour',
       icon: <Clock className='h-full w-full' />,
-      onClick: () => console.log('Hourly clicked'),
+      onClick: () => {}, // Demo: Hourly booking
     },
     {
       title: 'Fleet',
       icon: <Car className='h-full w-full' />,
-      onClick: () => console.log('Fleet clicked'),
+      onClick: () => {}, // Demo: Fleet booking
     },
   ];
 

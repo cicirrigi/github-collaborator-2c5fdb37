@@ -6,24 +6,22 @@ export const createVehicleActions = (
   set: (partial: Partial<BookingState> | ((state: BookingState) => Partial<BookingState>)) => void,
   get: () => BookingState
 ) => ({
-  // 🎯 VEHICLE CATEGORY SELECTION (with auto-model selection)
+  // 🎯 VEHICLE CATEGORY SELECTION (without auto-model selection)
   selectVehicleCategory: (category: VehicleCategory) => {
-    const defaultModel = category.models[0] || null; // Auto-select first model (recommended)
-
     set(state => ({
       tripConfiguration: {
         ...state.tripConfiguration,
         selectedVehicle: {
           category,
-          model: defaultModel,
+          model: null, // Nu auto-selectez modelul - user trebuie să aleagă manual
           selectedAt: new Date(),
         },
       },
     }));
   },
 
-  // 🚙 SPECIFIC MODEL SELECTION
-  selectVehicleModel: (model: VehicleModel) => {
+  // 🚙 SPECIFIC MODEL SELECTION (null pentru deselection)
+  selectVehicleModel: (model: VehicleModel | null) => {
     set(state => ({
       tripConfiguration: {
         ...state.tripConfiguration,
@@ -60,7 +58,7 @@ export const createVehicleActions = (
 // 🔧 TYPE DEFINITION
 export interface VehicleActions {
   selectVehicleCategory: (category: VehicleCategory) => void;
-  selectVehicleModel: (model: VehicleModel) => void;
+  selectVehicleModel: (model: VehicleModel | null) => void;
   clearVehicleSelection: () => void;
   getAvailableVehicleCategories: () => VehicleCategory[];
 }

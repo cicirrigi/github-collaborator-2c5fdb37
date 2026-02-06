@@ -1,4 +1,9 @@
 // ✅ VALIDATION ACTIONS - Enterprise Step Validation & Return Trip Logic
+import {
+  getSmartRecommendations,
+  validateCrossStep,
+} from '../../lib/booking/validation/cross-step.validation';
+import { validateStep2Complete } from '../../lib/booking/validation/step2.validation';
 import type { BookingState, SingleBooking } from '../useBookingState/booking.types';
 
 export const createValidationActions = (
@@ -12,8 +17,12 @@ export const createValidationActions = (
     switch (currentStep) {
       case 1:
         return get().validateStep1Complete();
-      case 2:
-        return tripConfiguration.selectedVehicle.category !== null;
+      case 2: {
+        // ENTERPRISE STEP 2 VALIDATION - validare completă per booking type
+        const { bookingType } = get();
+        const result = validateStep2Complete(bookingType, tripConfiguration);
+        return result.isValid;
+      }
       case 3:
         return true; // Payment step
       case 4:
@@ -47,7 +56,7 @@ export const createValidationActions = (
         );
 
       case 'fleet':
-        return !!(t.pickup && t.pickupDateTime && t.passengers >= 5); // Fleet minimum
+        return !!(t.pickup && t.pickupDateTime); // Fleet available for any passenger count
 
       case 'bespoke':
         return !!(t.pickup && t.customRequirements && t.customRequirements.trim().length > 0);
@@ -102,6 +111,38 @@ export const createValidationActions = (
     };
   },
 
+  // 🚗 ENTERPRISE STEP 2 VALIDATION (separate action for direct access)
+  validateStep2Complete: () => {
+    const { bookingType, tripConfiguration } = get();
+    const result = validateStep2Complete(bookingType, tripConfiguration);
+
+    // Return detailed result for UI to show errors/warnings
+    return {
+      isValid: result.isValid,
+      errors: result.missingFields,
+      warnings: result.warnings,
+    };
+  },
+
+  // 🔗 CROSS-STEP VALIDATION (Step 1 ↔ Step 2 compatibility)
+  validateCrossStep: () => {
+    const { bookingType, tripConfiguration } = get();
+    const result = validateCrossStep(bookingType, tripConfiguration);
+
+    return {
+      isValid: result.isValid,
+      recommendations: result.recommendations,
+      warnings: result.warnings,
+      errors: result.errors,
+    };
+  },
+
+  // 🎯 SMART RECOMMENDATIONS ENGINE
+  getSmartRecommendations: () => {
+    const { bookingType, tripConfiguration } = get();
+    return getSmartRecommendations(bookingType, tripConfiguration);
+  },
+
   // 🧮 UTILITY: Distance & Time Calculation
   calculateEstimatedDistanceAndTime: () => {
     const { tripConfiguration } = get();
@@ -125,6 +166,14 @@ export const createValidationActions = (
 export interface ValidationActions {
   validateCurrentStep: () => boolean;
   validateStep1Complete: () => boolean;
+  validateStep2Complete: () => { isValid: boolean; errors: string[]; warnings: string[] };
+  validateCrossStep: () => {
+    isValid: boolean;
+    recommendations: string[];
+    warnings: string[];
+    errors: string[];
+  };
+  getSmartRecommendations: () => string[];
   prepareReturnTripBookings: () => { outbound: SingleBooking; inbound: SingleBooking } | null;
   calculateEstimatedDistanceAndTime: () => { distanceKm: number; durationMinutes: number };
 }

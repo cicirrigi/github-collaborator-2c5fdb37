@@ -52,16 +52,17 @@ export const debugBookingMapping = (
   bookingType: BookingType,
   record: BookingRecord
 ): void => {
-  console.group('🔄 Booking Mapping Debug');
-  console.log('Input TripConfiguration:', tripConfig);
-  console.log('Booking Type:', bookingType);
-  console.log('Output BookingRecord:', record);
+  // Debug function - console statements available for development
+  // console.group('🔄 Booking Mapping Debug');
+  // console.log('Input TripConfiguration:', tripConfig);
+  // console.log('Booking Type:', bookingType);
+  // console.log('Output BookingRecord:', record);
 
   const errors = validateBookingRecord(record);
   if (errors.length > 0) {
-    console.error('❌ Validation errors:', errors);
+    // console.error('❌ Validation errors:', errors);
   } else {
-    console.log('✅ Booking record is valid');
+    // console.log('✅ Booking record is valid');
   }
-  console.groupEnd();
+  // console.groupEnd();
 };

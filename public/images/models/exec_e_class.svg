@@ -1,4 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="160" height="48" viewBox="0 0 160 48">
-  <rect width="160" height="48" rx="6" fill="#111827"/>
-  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#E5E7EB" font-family="Arial, sans-serif" font-size="12">E‑Class (Exec)</text>
-</svg>
+<svg height="48" viewBox="0 0 160 48" width="160" xmlns="http://www.w3.org/2000/svg"><rect fill="#111827" height="48" rx="6" width="160"/><text dominant-baseline="middle" fill="#e5e7eb" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" x="50%" y="50%">E‑Class (Exec)</text></svg>
