@@ -8,31 +8,34 @@ import { Calendar } from './Calendar';
 import { MobileCalendarModal } from './variants/modals/MobileCalendarModal';
 
 /* ---------------------------------------------------------
-   📱 DEVICE DETECTION (simple & stable)
+   📱 DEVICE DETECTION (SSR-safe hydration fix)
    --------------------------------------------------------- */
 function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
     const check = () => {
       setIsMobile(window.innerWidth <= 768);
     };
 
-    check(); // On first load
+    check(); // Set initial value after hydration
     window.addEventListener('resize', check);
 
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  return isMobile;
+  // Return false during SSR and initial hydration to match server HTML
+  return isMobile ?? false;
 }
 
 /* ---------------------------------------------------------
    📅 MAIN DATE PICKER COMPONENT
    --------------------------------------------------------- */
 
-interface DatePickerProps
-  extends Omit<CalendarProps, 'className' | 'variant' | 'onOpen' | 'onClose'> {
+interface DatePickerProps extends Omit<
+  CalendarProps,
+  'className' | 'variant' | 'onOpen' | 'onClose'
+> {
   placeholder?: string;
   className?: string;
 }
