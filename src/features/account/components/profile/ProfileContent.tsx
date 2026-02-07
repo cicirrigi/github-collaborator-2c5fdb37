@@ -10,19 +10,10 @@
 import { useProfile } from '../../hooks/useProfile';
 import type { ProfileFormData } from '../../types/profile.types';
 import { AvatarUpload } from './AvatarUpload';
-import { ProfileAccountSecurity } from './ProfileAccountSecurity';
 import { ProfileBasicInfo } from './ProfileBasicInfo';
 
 export function ProfileContent() {
-  const {
-    profileData,
-    fullProfileData,
-    isLoading,
-    error,
-    updateProfile,
-    uploadAvatar,
-    removeAvatar,
-  } = useProfile();
+  const { profileData, isLoading, error, updateProfile, uploadAvatar, removeAvatar } = useProfile();
 
   const handleProfileSave = async (formData: ProfileFormData): Promise<void> => {
     await updateProfile({
@@ -113,15 +104,11 @@ export function ProfileContent() {
       {/* Basic Information Form */}
       <ProfileBasicInfo initialData={profileData} onSave={handleProfileSave} isLoading={false} />
 
-      {/* Account Security Section */}
-      {fullProfileData?.auth_user && (
-        <ProfileAccountSecurity authUser={fullProfileData.auth_user} isLoading={isLoading} />
-      )}
-
       {/* Additional sections placeholder */}
       <div className='bg-neutral-50 dark:bg-neutral-800/50 rounded-xl border border-neutral-200 dark:border-neutral-700 p-8 text-center'>
         <p className='text-neutral-500 dark:text-neutral-400'>
           Additional profile sections (emergency contacts, preferences) will be implemented next.
+          Account security settings are now available in the Settings page.
         </p>
       </div>
     </div>

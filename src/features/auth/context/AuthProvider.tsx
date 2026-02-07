@@ -9,10 +9,10 @@
 
 'use client';
 
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import type { Session, User } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createClient } from '../../../lib/supabase/client';
 
 /* --------------------------------------------------
  * 🧩 Types
@@ -26,6 +26,7 @@ interface AuthContextValue {
   signOut: () => Promise<void>;
   refresh: () => Promise<void>;
   hasRole: (roles: string | string[]) => boolean;
+  supabase: ReturnType<typeof createClient> | null;
 }
 
 interface AuthProviderProps {
@@ -43,8 +44,13 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
  * -------------------------------------------------- */
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const supabase = createClientComponentClient();
   const router = useRouter();
+
+  // Direct client initialization - no delays for JWT attachment
+  const supabase = useMemo(() => {
+    if (typeof window === 'undefined') return null;
+    return createClient();
+  }, []);
 
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -59,44 +65,108 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     let mounted = true;
 
+    const clearCorruptedCookies = () => {
+      try {
+        // Clear all Supabase-related cookies that might be corrupted
+        const cookiesToClear = [
+          'sb-access-token',
+          'sb-refresh-token',
+          `sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0]}-auth-token`,
+        ];
+
+        cookiesToClear.forEach(cookieName => {
+          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+        });
+
+        // Clear localStorage Supabase keys
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('sb-') || key.includes('supabase')) {
+            localStorage.removeItem(key);
+          }
+        });
+      } catch (err) {
+        console.warn('[AuthProvider] Cookie cleanup failed:', err);
+      }
+    };
+
     const init = async () => {
+      if (!supabase) return; // Wait for client to be initialized
+
       setIsLoading(true);
       try {
         const { data, error } = await supabase.auth.getSession();
-        if (error) console.warn('[AuthProvider] init error:', error.message);
+        if (error) {
+          console.warn('[AuthProvider] init error:', error.message);
+          // If error contains "Failed to parse cookie", clear corrupted cookies
+          if (
+            error.message.includes('Failed to parse cookie') ||
+            error.message.includes('Invalid JWT')
+          ) {
+            clearCorruptedCookies();
+            // Retry after cleanup
+            const { data: retryData, error: retryError } = await supabase.auth.getSession();
+            if (retryError) {
+              console.warn('[AuthProvider] retry after cleanup failed:', retryError.message);
+            } else {
+              setSession(retryData.session);
+              setUser(retryData.session?.user ?? null);
+            }
+            return;
+          }
+        }
         if (!mounted) return;
 
         setSession(data.session);
         setUser(data.session?.user ?? null);
       } catch (err) {
         console.error('[AuthProvider] init failed:', err);
+        // If catch block triggered, likely corrupted cookies
+        if (
+          err instanceof Error &&
+          (err.message.includes('JSON') || err.message.includes('parse'))
+        ) {
+          clearCorruptedCookies();
+          window.location.reload(); // Force clean reload after cookie cleanup
+        }
       } finally {
         if (mounted) setIsLoading(false);
       }
     };
 
-    init();
+    if (supabase) {
+      init();
+    }
 
-    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log(`[Auth] event: ${event}`);
-      setSession(session);
-      setUser(session?.user ?? null);
+    let listener: { subscription: { unsubscribe: () => void } } | null = null;
 
-      switch (event) {
-        case 'SIGNED_IN':
-        case 'TOKEN_REFRESHED':
-          router.refresh(); // revalidare SSR state
-          break;
-        case 'SIGNED_OUT':
-          router.push('/'); // redirect home
-          router.refresh();
-          break;
-      }
-    });
+    if (supabase) {
+      const { data } = supabase.auth.onAuthStateChange((event: string, session: Session | null) => {
+        console.log(`[Auth] event: ${event}`);
+        setSession(session);
+        setUser(session?.user ?? null);
+
+        switch (event) {
+          case 'SIGNED_IN':
+            router.refresh(); // revalidare SSR state only on sign in
+            break;
+          case 'TOKEN_REFRESHED':
+            // Don't refresh on token refresh - causes unnecessary refetches
+            break;
+          case 'SIGNED_OUT':
+            router.push('/'); // redirect home
+            router.refresh();
+            break;
+        }
+      });
+
+      listener = data;
+    }
 
     return () => {
       mounted = false;
-      listener.subscription.unsubscribe();
+      if (listener) {
+        listener.subscription.unsubscribe();
+      }
     };
   }, [supabase, router]);
 
@@ -108,6 +178,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
    * 🚪 Sign Out
    * -------------------------------------------------- */
   const signOut = useCallback(async () => {
+    if (!supabase) return; // Null safety check
+
     try {
       setIsLoading(true);
       const { error } = await supabase.auth.signOut();
@@ -124,6 +196,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
    * 🔁 Manual Refresh
    * -------------------------------------------------- */
   const refresh = useCallback(async () => {
+    if (!supabase) return; // Null safety check
+
     try {
       const { data, error } = await supabase.auth.getSession();
       if (error) throw error;
@@ -167,6 +241,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     signOut,
     refresh,
     hasRole,
+    supabase,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

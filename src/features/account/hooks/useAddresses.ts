@@ -6,9 +6,9 @@
  * Clean, fără UI logic, proper error handling
  */
 
-import { useState, useCallback } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import type { FavoriteAddress, CreateAddressData, UpdateAddressData } from '../types/profile.types';
+import { useAuth } from '@/features/auth/context/AuthProvider';
+import { useCallback, useState } from 'react';
+import type { CreateAddressData, FavoriteAddress, UpdateAddressData } from '../types/profile.types';
 
 interface UseAddressesReturn {
   readonly addresses: FavoriteAddress[];
@@ -26,24 +26,26 @@ export function useAddresses(): UseAddressesReturn {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const supabase = createClient();
+  const { user, supabase } = useAuth(); // Get both user and authenticated supabase client from context
+
+  if (!supabase) {
+    throw new Error('Supabase client not available from AuthProvider');
+  }
 
   const fetchAddresses = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
-      if (authError || !user) {
+      if (!user) {
         throw new Error('User not authenticated');
       }
 
       const { data, error: fetchError } = await supabase
         .from('favorite_addresses')
-        .select('*')
+        .select(
+          'id,label,full_address,street_name,street_number,county,country,additional_info,is_default,created_at,updated_at'
+        )
         .eq('auth_user_id', user.id)
         .order('is_default', { ascending: false })
         .order('label');
@@ -56,11 +58,10 @@ export function useAddresses(): UseAddressesReturn {
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to fetch addresses';
       setError(errorMsg);
-      console.error('Error fetching addresses:', err);
     } finally {
       setIsLoading(false);
     }
-  }, [supabase]);
+  }, [supabase, user]);
 
   const createAddress = useCallback(
     async (data: CreateAddressData) => {
@@ -68,11 +69,7 @@ export function useAddresses(): UseAddressesReturn {
         setIsLoading(true);
         setError(null);
 
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
-        if (authError || !user) {
+        if (!user) {
           throw new Error('User not authenticated');
         }
 
@@ -104,7 +101,7 @@ export function useAddresses(): UseAddressesReturn {
         setIsLoading(false);
       }
     },
-    [supabase, fetchAddresses]
+    [supabase, fetchAddresses, user]
   );
 
   const updateAddress = useCallback(
@@ -113,11 +110,7 @@ export function useAddresses(): UseAddressesReturn {
         setIsLoading(true);
         setError(null);
 
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
-        if (authError || !user) {
+        if (!user) {
           throw new Error('User not authenticated');
         }
 
@@ -152,7 +145,7 @@ export function useAddresses(): UseAddressesReturn {
         setIsLoading(false);
       }
     },
-    [supabase, fetchAddresses]
+    [supabase, fetchAddresses, user]
   );
 
   const deleteAddress = useCallback(
@@ -161,11 +154,7 @@ export function useAddresses(): UseAddressesReturn {
         setIsLoading(true);
         setError(null);
 
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
-        if (authError || !user) {
+        if (!user) {
           throw new Error('User not authenticated');
         }
 
@@ -188,7 +177,7 @@ export function useAddresses(): UseAddressesReturn {
         setIsLoading(false);
       }
     },
-    [supabase, fetchAddresses]
+    [supabase, fetchAddresses, user]
   );
 
   const setDefaultAddress = useCallback(
@@ -197,11 +186,7 @@ export function useAddresses(): UseAddressesReturn {
         setIsLoading(true);
         setError(null);
 
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
-        if (authError || !user) {
+        if (!user) {
           throw new Error('User not authenticated');
         }
 

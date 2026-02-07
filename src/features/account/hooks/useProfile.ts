@@ -43,46 +43,27 @@ export function useProfile(): UseProfileReturn {
         throw new Error('User not authenticated');
       }
 
-      // Get customer record
-      const { data: customerData, error: customerError } = await supabase
+      // OPTIMIZED: Single query with JOIN to get customer + metadata + preferences
+      const { data: combinedData, error: fetchError } = await supabase
         .from('customers')
-        .select('*')
+        .select(
+          `
+          *,
+          customer_metadata(*),
+          customer_preferences(*)
+        `
+        )
         .eq('auth_user_id', authUser.id)
         .single();
 
-      if (customerError && customerError.code !== 'PGRST116') {
-        throw new Error(`Failed to fetch customer: ${customerError.message}`);
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        throw new Error(`Failed to fetch profile: ${fetchError.message}`);
       }
 
-      // Get customer metadata
-      let metadataData = null;
-      if (customerData) {
-        const { data: metadata, error: metadataError } = await supabase
-          .from('customer_metadata')
-          .select('*')
-          .eq('customer_id', customerData.id)
-          .single();
-
-        if (metadataError && metadataError.code !== 'PGRST116') {
-          throw new Error(`Failed to fetch customer metadata: ${metadataError.message}`);
-        }
-        metadataData = metadata;
-      }
-
-      // Get customer preferences
-      let preferencesData = null;
-      if (customerData) {
-        const { data: preferences, error: preferencesError } = await supabase
-          .from('customer_preferences')
-          .select('*')
-          .eq('customer_id', customerData.id)
-          .single();
-
-        if (preferencesError && preferencesError.code !== 'PGRST116') {
-          throw new Error(`Failed to fetch customer preferences: ${preferencesError.message}`);
-        }
-        preferencesData = preferences;
-      }
+      // Extract data from combined result
+      const customerData = combinedData;
+      const metadataData = combinedData?.customer_metadata?.[0] || null;
+      const preferencesData = combinedData?.customer_preferences?.[0] || null;
 
       // Construct profile form data
       const userData = authUser.user_metadata || authUser.raw_user_meta_data || {};
@@ -129,11 +110,14 @@ export function useProfile(): UseProfileReturn {
         }
 
         // Get or create customer record
-        let { data: customerData, error: customerError } = await supabase
+        const customerResult = await supabase
           .from('customers')
           .select('*')
           .eq('auth_user_id', authUser.id)
           .single();
+
+        let customerData = customerResult.data;
+        const customerError = customerResult.error;
 
         if (customerError && customerError.code === 'PGRST116') {
           // Create customer record if it doesn't exist

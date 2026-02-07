@@ -46,10 +46,7 @@ const ProfileBasicInfoComponent = ({
     setSaveSuccess(false);
 
     try {
-      console.log('🚀 Saving profile data:', formData);
       await onSave(formData);
-      console.log('✅ Profile saved successfully');
-      console.log('🔔 Setting saveSuccess to true');
       setIsEditing(false);
       setSaveSuccess(true);
 
@@ -60,12 +57,10 @@ const ProfileBasicInfoComponent = ({
 
       // Set new timeout with ref
       timeoutRef.current = setTimeout(() => {
-        console.log('🔔 Clearing saveSuccess notification');
         setSaveSuccess(false);
         timeoutRef.current = null;
       }, 5000);
     } catch (error) {
-      console.error('❌ Profile save error:', error);
       setSaveError(error instanceof Error ? error.message : 'Failed to save profile');
     } finally {
       setIsSaving(false);
@@ -136,27 +131,30 @@ const ProfileBasicInfoComponent = ({
 
       {/* Form Fields */}
       <div className='space-y-6'>
-        {/* First Name */}
-        <FormField
-          icon={User}
-          label='First Name'
-          value={formData.first_name}
-          placeholder='Enter your first name'
-          isEditing={isEditing}
-          onChange={value => updateField('first_name', value)}
-        />
+        {/* Name Fields - 2 Columns on Desktop */}
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+          {/* First Name */}
+          <FormField
+            icon={User}
+            label='First Name'
+            value={formData.first_name}
+            placeholder='Enter your first name'
+            isEditing={isEditing}
+            onChange={value => updateField('first_name', value)}
+          />
 
-        {/* Last Name */}
-        <FormField
-          icon={User}
-          label='Last Name'
-          value={formData.last_name}
-          placeholder='Enter your last name'
-          isEditing={isEditing}
-          onChange={value => updateField('last_name', value)}
-        />
+          {/* Last Name */}
+          <FormField
+            icon={User}
+            label='Last Name'
+            value={formData.last_name}
+            placeholder='Enter your last name'
+            isEditing={isEditing}
+            onChange={value => updateField('last_name', value)}
+          />
+        </div>
 
-        {/* Email */}
+        {/* Email - Full Width (readonly with helper text) */}
         <FormField
           icon={Mail}
           label='Email Address'
@@ -168,25 +166,28 @@ const ProfileBasicInfoComponent = ({
           helperText='To change your email, use the security settings'
         />
 
-        {/* Phone */}
-        <PhoneInputField
-          label='Phone Number'
-          value={formData.phone}
-          placeholder='Enter your phone number'
-          isEditing={isEditing}
-          onChange={(value: string) => updateField('phone', value)}
-        />
+        {/* Contact Fields - 2 Columns on Desktop */}
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+          {/* Phone */}
+          <PhoneInputField
+            label='Phone Number'
+            value={formData.phone}
+            placeholder='Enter your phone number'
+            isEditing={isEditing}
+            onChange={(value: string) => updateField('phone', value)}
+          />
 
-        {/* Date of Birth */}
-        <FormField
-          icon={Calendar}
-          label='Date of Birth'
-          value={formData.date_of_birth}
-          placeholder='Select your date of birth'
-          type='date'
-          isEditing={isEditing}
-          onChange={value => updateField('date_of_birth', value)}
-        />
+          {/* Date of Birth */}
+          <FormField
+            icon={Calendar}
+            label='Date of Birth'
+            value={formData.date_of_birth}
+            placeholder='Select your date of birth'
+            type='date'
+            isEditing={isEditing}
+            onChange={value => updateField('date_of_birth', value)}
+          />
+        </div>
       </div>
 
       {/* Action Buttons */}

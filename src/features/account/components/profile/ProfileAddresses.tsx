@@ -8,7 +8,7 @@
 
 'use client';
 
-import { Building2, Edit3, Home, MapPin, Plus, Star, StarOff, Trash2 } from 'lucide-react';
+import { Building2, Edit3, Home, MapPin, Plus, Save, Star, StarOff, Trash2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAddresses } from '../../hooks/useAddresses';
 import type { CreateAddressData, FavoriteAddress } from '../../types/profile.types';
@@ -61,8 +61,8 @@ export function ProfileAddresses({ isLoading = false }: ProfileAddressesProps) {
         setIsAddingNew(false);
       }
       resetForm();
-    } catch (err) {
-      console.error('Failed to save address:', err);
+    } catch {
+      // Silent fail - errors handled by hooks
     }
   };
 
@@ -89,8 +89,8 @@ export function ProfileAddresses({ isLoading = false }: ProfileAddressesProps) {
     if (window.confirm('Are you sure you want to delete this address?')) {
       try {
         await deleteAddress(id);
-      } catch (err) {
-        console.error('Failed to delete address:', err);
+      } catch {
+        // Silent fail - errors handled by hooks
       }
     }
   };
@@ -98,8 +98,8 @@ export function ProfileAddresses({ isLoading = false }: ProfileAddressesProps) {
   const handleSetDefault = async (id: string) => {
     try {
       await setDefaultAddress(id);
-    } catch (err) {
-      console.error('Failed to set default address:', err);
+    } catch {
+      // Silent fail - errors handled by hooks
     }
   };
 
@@ -243,102 +243,130 @@ export function ProfileAddresses({ isLoading = false }: ProfileAddressesProps) {
 
       {/* Add/Edit Form */}
       {(isAddingNew || editingId) && (
-        <div className='mt-6 p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg bg-neutral-50 dark:bg-neutral-800/50'>
-          <h4 className='font-medium text-neutral-900 dark:text-white mb-4'>
-            {editingId ? 'Edit Address' : 'Add New Address'}
-          </h4>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <div>
-              <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
-                Label
-              </label>
-              <select
-                value={formData.label}
-                onChange={e => setFormData(prev => ({ ...prev, label: e.target.value }))}
-                className='w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-              >
-                {ADDRESS_LABELS.map(label => (
-                  <option key={label.value} value={label.value}>
-                    {label.value}
-                  </option>
-                ))}
-              </select>
+        <div className='mt-6 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 p-6'>
+          <div className='flex items-center gap-3 mb-6'>
+            <div className='w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-full flex items-center justify-center'>
+              <MapPin className='w-5 h-5 text-amber-600' />
             </div>
             <div>
-              <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
-                County
-              </label>
-              <input
-                type='text'
-                value={formData.county}
-                onChange={e => setFormData(prev => ({ ...prev, county: e.target.value }))}
-                placeholder='County'
-                className='w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-              />
-            </div>
-            <div>
-              <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
-                Country
-              </label>
-              <input
-                type='text'
-                value={formData.country}
-                onChange={e => setFormData(prev => ({ ...prev, country: e.target.value }))}
-                placeholder='Country'
-                className='w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-              />
-            </div>
-            <div>
-              <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
-                Street Name *
-              </label>
-              <input
-                type='text'
-                value={formData.street_name}
-                onChange={e => setFormData(prev => ({ ...prev, street_name: e.target.value }))}
-                placeholder='Street name'
-                className='w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-                required
-              />
-            </div>
-            <div>
-              <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
-                Street Number *
-              </label>
-              <input
-                type='text'
-                value={formData.street_number}
-                onChange={e => setFormData(prev => ({ ...prev, street_number: e.target.value }))}
-                placeholder='Number'
-                className='w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-                required
-              />
-            </div>
-            <div className='md:col-span-2'>
-              <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
-                Additional Info
-              </label>
-              <input
-                type='text'
-                value={formData.additional_info}
-                onChange={e => setFormData(prev => ({ ...prev, additional_info: e.target.value }))}
-                placeholder='Apartment, floor, etc.'
-                className='w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-              />
+              <h3 className='text-lg font-semibold text-neutral-900 dark:text-white'>
+                {editingId ? 'Edit Address' : 'Add New Address'}
+              </h3>
+              <p className='text-sm text-neutral-500 dark:text-neutral-400'>
+                {editingId ? 'Update your address information' : 'Add a new saved address'}
+              </p>
             </div>
           </div>
-          <div className='flex gap-3 mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-700'>
+          <div className='space-y-6'>
+            {/* Basic Address Info - 2 Columns on Desktop */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              <div>
+                <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
+                  Label
+                </label>
+                <select
+                  value={formData.label}
+                  onChange={e => setFormData(prev => ({ ...prev, label: e.target.value }))}
+                  className='w-full px-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:border-amber-500 dark:focus:border-amber-400 focus:ring-1 focus:ring-amber-500 dark:focus:ring-amber-400 transition-colors'
+                >
+                  {ADDRESS_LABELS.map(label => (
+                    <option key={label.value} value={label.value}>
+                      {label.value}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
+                  Country
+                </label>
+                <input
+                  type='text'
+                  value={formData.country}
+                  onChange={e => setFormData(prev => ({ ...prev, country: e.target.value }))}
+                  placeholder='Romania'
+                  className='w-full px-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:border-amber-500 dark:focus:border-amber-400 focus:ring-1 focus:ring-amber-500 dark:focus:ring-amber-400 transition-colors'
+                />
+              </div>
+            </div>
+
+            {/* Street Details - 2 Columns on Desktop */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              <div>
+                <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
+                  Street Name *
+                </label>
+                <input
+                  type='text'
+                  value={formData.street_name}
+                  onChange={e => setFormData(prev => ({ ...prev, street_name: e.target.value }))}
+                  placeholder='Enter street name'
+                  className='w-full px-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:border-amber-500 dark:focus:border-amber-400 focus:ring-1 focus:ring-amber-500 dark:focus:ring-amber-400 transition-colors'
+                  required
+                />
+              </div>
+
+              <div>
+                <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
+                  Street Number *
+                </label>
+                <input
+                  type='text'
+                  value={formData.street_number}
+                  onChange={e => setFormData(prev => ({ ...prev, street_number: e.target.value }))}
+                  placeholder='Enter number'
+                  className='w-full px-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:border-amber-500 dark:focus:border-amber-400 focus:ring-1 focus:ring-amber-500 dark:focus:ring-amber-400 transition-colors'
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Location Details - 2 Columns on Desktop */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              <div>
+                <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
+                  County
+                </label>
+                <input
+                  type='text'
+                  value={formData.county}
+                  onChange={e => setFormData(prev => ({ ...prev, county: e.target.value }))}
+                  placeholder='Enter county'
+                  className='w-full px-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:border-amber-500 dark:focus:border-amber-400 focus:ring-1 focus:ring-amber-500 dark:focus:ring-amber-400 transition-colors'
+                />
+              </div>
+
+              <div>
+                <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
+                  Additional Info
+                </label>
+                <input
+                  type='text'
+                  value={formData.additional_info}
+                  onChange={e =>
+                    setFormData(prev => ({ ...prev, additional_info: e.target.value }))
+                  }
+                  placeholder='Apartment, floor, etc.'
+                  className='w-full px-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:border-amber-500 dark:focus:border-amber-400 focus:ring-1 focus:ring-amber-500 dark:focus:ring-amber-400 transition-colors'
+                />
+              </div>
+            </div>
+          </div>
+          <div className='flex items-center gap-3 mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-800'>
             <button
               onClick={handleSave}
               disabled={!formData.street_name?.trim() || !formData.street_number?.trim()}
-              className='px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-neutral-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm font-medium'
+              className='inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 disabled:bg-amber-400 text-black font-medium rounded-lg transition-colors text-sm'
             >
+              <Save className='w-4 h-4' />
               {editingId ? 'Update Address' : 'Save Address'}
             </button>
             <button
               onClick={handleCancel}
-              className='px-4 py-2 text-neutral-600 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300 border border-neutral-300 dark:border-neutral-600 rounded-lg transition-colors text-sm'
+              className='inline-flex items-center gap-2 px-4 py-2 text-neutral-600 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300 disabled:opacity-50 transition-colors text-sm'
             >
+              <X className='w-4 h-4' />
               Cancel
             </button>
           </div>

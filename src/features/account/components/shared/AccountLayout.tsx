@@ -7,17 +7,11 @@
 
 'use client';
 
-import { getCurrentUser } from '@/features/auth/services/supabaseAuth';
+import { useAuth } from '@/features/auth/context/AuthProvider';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AccountSidebarDesktop } from '../desktop/AccountSidebarDesktop';
 import { AccountSidebarMobile } from '../mobile/AccountSidebarMobile';
-
-interface User {
-  email?: string;
-  id?: string;
-  user_metadata?: Record<string, unknown>;
-}
 
 interface AccountLayoutProps {
   readonly children: React.ReactNode;
@@ -27,29 +21,15 @@ interface AccountLayoutProps {
 
 export function AccountLayout({ children, title, description }: AccountLayoutProps) {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, isLoading, isAuthenticated } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Check auth status (same approach as dashboard)
-  const checkAuth = useCallback(async () => {
-    try {
-      const { user, error } = await getCurrentUser();
-      if (error || !user) {
-        router.push('/auth/signin');
-        return;
-      }
-      setUser(user);
-    } catch {
-      router.push('/auth/signin');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [router]);
-
+  // Redirect to sign in if not authenticated (after loading complete)
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    if (!isLoading && !isAuthenticated) {
+      router.push('/auth/signin');
+    }
+  }, [isLoading, isAuthenticated, router]);
 
   // Loading state
   if (isLoading) {

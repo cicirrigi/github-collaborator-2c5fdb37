@@ -3,9 +3,8 @@
 import { LogOut, User } from 'lucide-react';
 import Link from 'next/link';
 import type React from 'react';
-import { useEffect, useState } from 'react';
 
-import { getCurrentUser, signOut } from '@/features/auth/services/supabaseAuth';
+import { useAuth } from '@/features/auth/context/AuthProvider';
 import { cn } from '@/lib/utils/cn';
 
 /**
@@ -26,34 +25,16 @@ export interface UserMenuProps {
 /**
  * 🔐 User authentication menu
  */
+
 export function UserMenu({ className }: UserMenuProps): React.JSX.Element {
-  const [user, setUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Check authentication state
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const { user } = await getCurrentUser();
-        setUser(user);
-      } catch (error) {
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, []);
+  const { user, isLoading, signOut } = useAuth();
 
   // Handle logout
   const handleLogout = async () => {
     try {
-      await signOut();
-      setUser(null);
-      window.location.href = '/';
-    } catch (error) {
-      console.error('Logout error:', error);
+      await signOut(); // SignOut from AuthProvider handles everything
+    } catch {
+      // Silent fail - logout redirect will happen anyway
     }
   };
 
