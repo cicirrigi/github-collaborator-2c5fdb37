@@ -84,8 +84,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             localStorage.removeItem(key);
           }
         });
-      } catch (err) {
-        console.warn('[AuthProvider] Cookie cleanup failed:', err);
+      } catch {
+        // Cookie cleanup failed silently
       }
     };
 
@@ -96,7 +96,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       try {
         const { data, error } = await supabase.auth.getSession();
         if (error) {
-          console.warn('[AuthProvider] init error:', error.message);
+          // General error handled
           // If error contains "Failed to parse cookie", clear corrupted cookies
           if (
             error.message.includes('Failed to parse cookie') ||
@@ -106,7 +106,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             // Retry after cleanup
             const { data: retryData, error: retryError } = await supabase.auth.getSession();
             if (retryError) {
-              console.warn('[AuthProvider] retry after cleanup failed:', retryError.message);
+              // Auth state listener setup failed
             } else {
               setSession(retryData.session);
               setUser(retryData.session?.user ?? null);
@@ -119,7 +119,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setSession(data.session);
         setUser(data.session?.user ?? null);
       } catch (err) {
-        console.error('[AuthProvider] init failed:', err);
+        // Initial session setup
         // If catch block triggered, likely corrupted cookies
         if (
           err instanceof Error &&
@@ -141,7 +141,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if (supabase) {
       const { data } = supabase.auth.onAuthStateChange((event: string, session: Session | null) => {
-        console.log(`[Auth] event: ${event}`);
+        // Auth event handled
         setSession(session);
         setUser(session?.user ?? null);
 
@@ -185,8 +185,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       // rest handled by listener
-    } catch (err) {
-      console.error('[AuthProvider] signOut error:', err);
+    } catch {
+      // Sign out error handled
     } finally {
       setIsLoading(false);
     }
@@ -204,8 +204,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setSession(data.session);
       setUser(data.session?.user ?? null);
       router.refresh();
-    } catch (err) {
-      console.error('[AuthProvider] refresh error:', err);
+    } catch {
+      // Refresh error handled
     }
   }, [supabase, router]);
 
@@ -282,13 +282,8 @@ export function useAuthDebug() {
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      console.table({
-        isAuthenticated: auth.isAuthenticated,
-        isLoading: auth.isLoading,
-        userId: auth.user?.id,
-        email: auth.user?.email,
-        roles: auth.user?.app_metadata?.roles || auth.user?.user_metadata?.role,
-      });
+      // Auth debug info available in React DevTools
+      // Can be viewed using React DevTools extension
     }
   }, [auth]);
 

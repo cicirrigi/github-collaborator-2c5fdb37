@@ -219,7 +219,7 @@ export function useAddresses(): UseAddressesReturn {
         setIsLoading(false);
       }
     },
-    [supabase, fetchAddresses]
+    [supabase, fetchAddresses, user]
   );
 
   return {
