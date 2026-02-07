@@ -7,9 +7,9 @@
 
 'use client';
 
-import { AccountSidebarItem } from '../shared/AccountSidebarItem';
 import { ACCOUNT_NAVIGATION } from '../../constants/account.constants';
 import type { AccountSection } from '../../types/account.types';
+import { AccountSidebarItem } from '../shared/AccountSidebarItem';
 
 interface AccountSidebarDesktopProps {
   readonly className?: string;
@@ -18,7 +18,7 @@ interface AccountSidebarDesktopProps {
 export function AccountSidebarDesktop({ className = '' }: AccountSidebarDesktopProps) {
   return (
     <aside className={`w-80 flex-shrink-0 ${className}`}>
-      <div className='sticky top-6 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 p-6 shadow-sm'>
+      <div className='sticky top-0 mt-[6.9rem] bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 p-6 shadow-sm'>
         {/* Header */}
         <div className='mb-6'>
           <h2 className='text-lg font-semibold text-neutral-900 dark:text-white'>My Account</h2>
