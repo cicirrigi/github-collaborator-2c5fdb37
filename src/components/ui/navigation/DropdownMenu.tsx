@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 import { designTokens } from '@/config/theme.config';
 import { uiSurfaces } from '@/design-system/tokens/ui-surfaces';
+import { useAuth } from '@/features/auth/context/AuthProvider';
 import { cn } from '@/lib/utils/cn';
 
 import type { MenuItem } from './menu.config';
@@ -39,6 +40,12 @@ export function DropdownMenu({
   alignment = 'left',
 }: DropdownMenuProps): React.JSX.Element | null {
   const [open, setOpen] = useState(false);
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // Hide dropdown if authentication required but user not authenticated
+  if (item.requiresAuth && !isAuthenticated && !isLoading) {
+    return null;
+  }
 
   // No dropdown if no children
   if (!item.children?.length) {
@@ -79,15 +86,20 @@ export function DropdownMenu({
               ease: designTokens.animations.easing.framer.ease,
             }}
             className={cn(
-              // Desktop: absolute dropdown
+              // Desktop: absolute dropdown with right alignment for navbar items
               'md:absolute md:top-full md:mt-2 md:rounded-xl md:border md:shadow-2xl',
               'md:backdrop-blur-2xl md:saturate-150 md:z-50 md:overflow-hidden',
-              alignment === 'right' ? 'md:right-0' : 'md:left-0',
+              // Force right alignment for My Account to prevent off-screen
+              item.label === 'My Account'
+                ? 'md:right-0'
+                : alignment === 'right'
+                  ? 'md:right-0'
+                  : 'md:left-0',
               // Mobile: accordion-style block
               'block mt-2 rounded-lg border-0 shadow-none',
               'bg-[var(--background-elevated)] overflow-hidden',
-              // Dynamic width based on number of items (desktop only)
-              item.children.length > 6 ? 'md:min-w-96' : 'md:min-w-56'
+              // Dynamic width based on number of items (desktop only) - smaller for My Account
+              item.children.length > 6 ? 'md:min-w-80 md:max-w-96' : 'md:min-w-56 md:max-w-72'
             )}
             style={{
               ...uiSurfaces.dropdown,

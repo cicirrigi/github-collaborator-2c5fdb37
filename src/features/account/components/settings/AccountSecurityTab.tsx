@@ -10,15 +10,15 @@
 'use client';
 
 import {
-  Shield,
-  Clock,
-  Calendar,
-  Mail,
-  Phone,
-  CheckCircle,
   AlertCircle,
+  Calendar,
+  CheckCircle,
+  Clock,
   Key,
   Lock,
+  Mail,
+  Phone,
+  Shield,
 } from 'lucide-react';
 import { useProfile } from '../../hooks/useProfile';
 
@@ -71,8 +71,6 @@ export function AccountSecurityTab() {
 
   return (
     <div className='space-y-6'>
-      <h2 className='text-lg font-semibold text-neutral-900 dark:text-white'>Account Security</h2>
-
       {/* Login Activity Section */}
       <div className='bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-6'>
         <h3 className='text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-4 flex items-center gap-2'>

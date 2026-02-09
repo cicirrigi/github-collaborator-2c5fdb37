@@ -84,7 +84,7 @@ export function ProfileContent() {
   return (
     <div className='space-y-8'>
       {/* Page Header */}
-      <div>
+      <div className='p-6'>
         <h1 className='text-2xl font-bold text-neutral-900 dark:text-white mb-2'>Profile</h1>
         <p className='text-neutral-600 dark:text-neutral-400'>
           Manage your personal information and account settings
@@ -103,14 +103,6 @@ export function ProfileContent() {
 
       {/* Basic Information Form */}
       <ProfileBasicInfo initialData={profileData} onSave={handleProfileSave} isLoading={false} />
-
-      {/* Additional sections placeholder */}
-      <div className='bg-neutral-50 dark:bg-neutral-800/50 rounded-xl border border-neutral-200 dark:border-neutral-700 p-8 text-center'>
-        <p className='text-neutral-500 dark:text-neutral-400'>
-          Additional profile sections (emergency contacts, preferences) will be implemented next.
-          Account security settings are now available in the Settings page.
-        </p>
-      </div>
     </div>
   );
 }

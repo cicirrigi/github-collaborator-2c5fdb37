@@ -7,9 +7,9 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Shield, Bell, Globe, Sliders } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { Bell, Globe, Shield, Sliders } from 'lucide-react';
+import { useState } from 'react';
 import { AccountSecurityTab } from './AccountSecurityTab';
 
 type SettingsTab = 'security' | 'notifications' | 'preferences' | 'privacy';
@@ -65,11 +65,8 @@ export function SettingsContent() {
   return (
     <div className='space-y-8'>
       {/* Page Header */}
-      <div>
-        <h1 className='text-2xl font-bold text-neutral-900 dark:text-white mb-2'>Settings</h1>
-        <p className='text-neutral-600 dark:text-neutral-400'>
-          Manage your account settings, privacy, and preferences
-        </p>
+      <div className='p-6'>
+        <h1 className='text-2xl font-bold text-neutral-900 dark:text-white'>Settings</h1>
       </div>
 
       {/* Tabs Navigation */}
@@ -115,13 +112,10 @@ export function SettingsContent() {
 function NotificationsTab() {
   return (
     <div className='space-y-6'>
-      <h2 className='text-lg font-semibold text-neutral-900 dark:text-white'>
-        Notification Settings
-      </h2>
-      <div className='bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-6'>
-        <p className='text-neutral-600 dark:text-neutral-400'>
-          Notification preferences will be implemented here.
-        </p>
+      <div className='p-6'>
+        <h2 className='text-lg font-semibold text-neutral-900 dark:text-white'>
+          Notification Settings
+        </h2>
       </div>
     </div>
   );
@@ -130,11 +124,8 @@ function NotificationsTab() {
 function PreferencesTab() {
   return (
     <div className='space-y-6'>
-      <h2 className='text-lg font-semibold text-neutral-900 dark:text-white'>Preferences</h2>
-      <div className='bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-6'>
-        <p className='text-neutral-600 dark:text-neutral-400'>
-          Language, timezone, and other preferences will be implemented here.
-        </p>
+      <div className='p-6'>
+        <h2 className='text-lg font-semibold text-neutral-900 dark:text-white'>Preferences</h2>
       </div>
     </div>
   );
@@ -143,11 +134,8 @@ function PreferencesTab() {
 function PrivacyTab() {
   return (
     <div className='space-y-6'>
-      <h2 className='text-lg font-semibold text-neutral-900 dark:text-white'>Privacy Settings</h2>
-      <div className='bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-6'>
-        <p className='text-neutral-600 dark:text-neutral-400'>
-          Privacy and data management settings will be implemented here.
-        </p>
+      <div className='p-6'>
+        <h2 className='text-lg font-semibold text-neutral-900 dark:text-white'>Privacy Settings</h2>
       </div>
     </div>
   );

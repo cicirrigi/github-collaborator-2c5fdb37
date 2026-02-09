@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOut, User } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import Link from 'next/link';
 import type React from 'react';
 
@@ -29,6 +29,11 @@ export interface UserMenuProps {
 export function UserMenu({ className }: UserMenuProps): React.JSX.Element {
   const { user, isLoading, signOut } = useAuth();
 
+  // Debug auth state in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('UserMenu Debug:', { user: !!user, isLoading, userEmail: user?.email });
+  }
+
   // Handle logout
   const handleLogout = async () => {
     try {
@@ -50,18 +55,7 @@ export function UserMenu({ className }: UserMenuProps): React.JSX.Element {
   if (user) {
     return (
       <div className={cn('flex items-center gap-3', className)}>
-        {/* User Account Button */}
-        <Link
-          href='/account/profile'
-          className={cn(
-            'flex items-center gap-2 text-sm font-medium transition-colors duration-300',
-            'text-[var(--text-primary)] hover:text-[var(--brand-primary)]',
-            'rounded-sm px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]/50'
-          )}
-        >
-          <User className='w-4 h-4' />
-          <span className='hidden sm:inline'>Account</span>
-        </Link>
+        {/* User Account Button removed - handled by My Account dropdown in main menu */}
 
         {/* Logout Button */}
         <button

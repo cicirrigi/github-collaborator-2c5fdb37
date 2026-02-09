@@ -17,13 +17,13 @@ export async function signOut(): Promise<{ error: Error | null }> {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      // Sign out error handled
+      console.error('[signOut] Error:', error);
       return { error };
     }
 
     return { error: null };
   } catch (error) {
-    // Unexpected sign out error handled
+    console.error('[signOut] Unexpected error:', error);
     return {
       error: error instanceof Error ? error : new Error('Failed to sign out'),
     };
@@ -40,12 +40,12 @@ export async function getCurrentSession() {
     const { data, error } = await supabase.auth.getSession();
 
     if (error) {
-      // Get session error handled
+      console.error('[getCurrentSession] Error:', error);
     }
 
     return { session: data.session, error };
   } catch (error) {
-    // Unexpected get session error handled
+    console.error('[getCurrentSession] Unexpected error:', error);
     return {
       session: null,
       error: error instanceof Error ? error : new Error('Failed to get session'),
@@ -64,7 +64,7 @@ export async function getCurrentUser() {
 
     // Only log actual errors, not "no session" which is normal when not logged in
     if (error && error.message !== 'Auth session missing!') {
-      // Session refresh error handled
+      console.error('[getCurrentUser] Error:', error);
     }
 
     return { user: data.user, error };
@@ -72,7 +72,7 @@ export async function getCurrentUser() {
     // Only log unexpected errors, not auth session missing
     const errorMessage = error instanceof Error ? error.message : 'Failed to get user';
     if (errorMessage !== 'Auth session missing!') {
-      // Unexpected session refresh error handled
+      console.error('[getCurrentUser] Unexpected error:', error);
     }
     return {
       user: null,

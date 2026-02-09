@@ -157,7 +157,7 @@ export function ProfileAddresses({ isLoading = false }: ProfileAddressesProps) {
         </div>
         <button
           onClick={() => setIsAddingNew(true)}
-          className='inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium'
+          className='inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-black rounded-lg transition-colors text-sm font-medium'
         >
           <Plus className='w-4 h-4' />
           Add Address
@@ -178,7 +178,7 @@ export function ProfileAddresses({ isLoading = false }: ProfileAddressesProps) {
           <p className='text-neutral-500 dark:text-neutral-400 mb-4'>No addresses saved yet</p>
           <button
             onClick={() => setIsAddingNew(true)}
-            className='inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm'
+            className='inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-black rounded-lg transition-colors text-sm font-medium'
           >
             <Plus className='w-4 h-4' />
             Add Your First Address
@@ -203,7 +203,8 @@ export function ProfileAddresses({ isLoading = false }: ProfileAddressesProps) {
                   )}
                 </div>
                 <p className='text-sm text-neutral-600 dark:text-neutral-400 mb-1'>
-                  {address.full_address}
+                  {address.full_address ||
+                    `${address.street_name} ${address.street_number}${address.county ? `, ${address.county}` : ''}${address.country ? `, ${address.country}` : ''}`}
                 </p>
                 {address.additional_info && (
                   <p className='text-xs text-neutral-500 dark:text-neutral-500'>

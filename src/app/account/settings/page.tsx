@@ -10,10 +10,7 @@ import { AccountLayout } from '@/features/account/components/shared/AccountLayou
 
 export default function SettingsPage() {
   return (
-    <AccountLayout
-      title='Settings'
-      description='Manage your account settings, privacy, and preferences'
-    >
+    <AccountLayout>
       <SettingsContent />
     </AccountLayout>
   );

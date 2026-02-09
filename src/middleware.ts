@@ -4,8 +4,8 @@
  * Sincronizare stabilă cookie/session între browser & server
  */
 
-import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
@@ -44,10 +44,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // ✅ Already logged in → redirect to dashboard
+  // ✅ Already logged in → redirect to account
   if (isAuthPage && session) {
     const homeUrl = req.nextUrl.clone();
-    homeUrl.pathname = '/dashboard';
+    homeUrl.pathname = '/account';
     return NextResponse.redirect(homeUrl);
   }
 

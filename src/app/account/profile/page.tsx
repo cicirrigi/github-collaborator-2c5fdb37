@@ -10,7 +10,7 @@ import { AccountLayout } from '@/features/account/components/shared/AccountLayou
 
 export default function ProfilePage() {
   return (
-    <AccountLayout title='Profile' description='Manage your personal information'>
+    <AccountLayout>
       <ProfileContent />
     </AccountLayout>
   );

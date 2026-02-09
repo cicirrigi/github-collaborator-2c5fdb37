@@ -18,7 +18,7 @@ function AddressesContent() {
 
 export default function AddressesPage() {
   return (
-    <AccountLayout title='Saved Addresses' description='Manage your favorite locations'>
+    <AccountLayout>
       <AddressesContent />
     </AccountLayout>
   );
