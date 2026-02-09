@@ -2,8 +2,8 @@
 
 import type React from 'react';
 
-import { cn } from '@/lib/utils/cn';
 import { DropdownMenu, MenuItemComponent, mainMenu } from '@/components/ui/navigation';
+import { cn } from '@/lib/utils/cn';
 
 export interface NavbarDesktopProps {
   /** Custom menu override */
@@ -34,13 +34,15 @@ export function NavbarDesktop({
     <div className={cn('hidden items-center gap-6 md:flex', className)}>
       {/* Orchestrated Navigation - Auto dropdown/link detection */}
       <nav className='flex items-center gap-6' role='navigation'>
-        {menuItems.map(item =>
-          item.children ? (
-            <DropdownMenu key={item.label} item={item} />
-          ) : (
-            <MenuItemComponent key={item.label} item={item} />
-          )
-        )}
+        {menuItems
+          .filter(item => item.label !== 'My Account') // Hide My Account from desktop main menu
+          .map(item =>
+            item.children ? (
+              <DropdownMenu key={item.label} item={item} />
+            ) : (
+              <MenuItemComponent key={item.label} item={item} />
+            )
+          )}
       </nav>
 
       {/* Custom Menu Items */}

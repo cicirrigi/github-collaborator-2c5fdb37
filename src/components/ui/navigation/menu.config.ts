@@ -130,6 +130,53 @@ export const mainMenu: MenuItem[] = [
     href: '/blog',
     icon: BookOpen,
   },
+  {
+    label: 'My Account',
+    icon: User,
+    requiresAuth: true,
+    children: [
+      {
+        label: 'Dashboard',
+        href: '/account',
+        icon: Home,
+      },
+      {
+        label: 'Profile',
+        href: '/account/profile',
+        icon: User,
+      },
+      {
+        label: 'Addresses',
+        href: '/account/addresses',
+        icon: MapPin,
+      },
+      {
+        label: 'Booking History',
+        href: '/account/bookings',
+        icon: Calendar,
+      },
+      {
+        label: 'Emergency Contacts',
+        href: '/account/emergency-contacts',
+        icon: Shield,
+      },
+      {
+        label: 'Billing & Payments',
+        href: '/account/billing',
+        icon: CreditCard,
+      },
+      {
+        label: 'Settings',
+        href: '/account/settings',
+        icon: Settings,
+      },
+      {
+        label: 'Help & Support',
+        href: '/account/support',
+        icon: HelpCircle,
+      },
+    ],
+  },
 ];
 
 export const userMenu: MenuItem[] = [

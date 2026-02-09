@@ -22,6 +22,8 @@ export interface DropdownMenuProps {
   readonly clickToOpen?: boolean;
   /** Dropdown alignment */
   readonly alignment?: 'left' | 'right';
+  /** Mobile menu close handler */
+  readonly onMobileClose?: () => void;
 }
 
 /**
@@ -38,6 +40,7 @@ export function DropdownMenu({
   className,
   clickToOpen = false,
   alignment = 'left',
+  onMobileClose,
 }: DropdownMenuProps): React.JSX.Element | null {
   const [open, setOpen] = useState(false);
   const { isAuthenticated, isLoading } = useAuth();
@@ -98,8 +101,8 @@ export function DropdownMenu({
               // Mobile: accordion-style block
               'block mt-2 rounded-lg border-0 shadow-none',
               'bg-[var(--background-elevated)] overflow-hidden',
-              // Dynamic width based on number of items (desktop only) - smaller for My Account
-              item.children.length > 6 ? 'md:min-w-80 md:max-w-96' : 'md:min-w-56 md:max-w-72'
+              // Consistent width for all dropdowns (desktop only)
+              'md:min-w-64 md:max-w-80'
             )}
             style={{
               ...uiSurfaces.dropdown,
@@ -139,7 +142,7 @@ export function DropdownMenu({
                   href={subItem.href || '#'}
                   role='menuitem'
                   className={cn(
-                    'group flex items-center gap-3 px-4 py-3 text-sm',
+                    'group flex items-center gap-3 px-4 py-3 text-base md:text-sm',
                     'transition-all duration-200',
                     'text-[var(--text-primary)] hover:text-[var(--brand-primary)]',
                     'hover:bg-[var(--brand-primary)]/10',
@@ -147,7 +150,11 @@ export function DropdownMenu({
                     'focus-visible:ring-[var(--brand-primary)]/40',
                     'focus-visible:bg-[var(--brand-primary)]/10'
                   )}
-                  onClick={handleClose}
+                  onClick={() => {
+                    handleClose();
+                    // Close mobile menu if we're on mobile
+                    if (onMobileClose) onMobileClose();
+                  }}
                   {...(subItem.external && {
                     target: '_blank',
                     rel: 'noopener noreferrer',
