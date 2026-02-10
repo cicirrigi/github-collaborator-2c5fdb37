@@ -11,6 +11,9 @@ import { cn } from '@/lib/utils/cn';
 import { Bell, Globe, Shield, Sliders } from 'lucide-react';
 import { useState } from 'react';
 import { AccountSecurityTab } from './AccountSecurityTab';
+import { NotificationsTab } from './NotificationsTab';
+import { PreferencesTab } from './PreferencesTab';
+import { PrivacyTab } from './PrivacyTab';
 
 type SettingsTab = 'security' | 'notifications' | 'preferences' | 'privacy';
 
@@ -112,34 +115,3 @@ export function SettingsContent() {
 }
 
 // Placeholder components for other tabs
-function NotificationsTab() {
-  return (
-    <div className='space-y-6'>
-      <div className='p-6'>
-        <h2 className='text-lg font-semibold text-neutral-900 dark:text-white'>
-          Notification Settings
-        </h2>
-      </div>
-    </div>
-  );
-}
-
-function PreferencesTab() {
-  return (
-    <div className='space-y-6'>
-      <div className='p-6'>
-        <h2 className='text-lg font-semibold text-neutral-900 dark:text-white'>Preferences</h2>
-      </div>
-    </div>
-  );
-}
-
-function PrivacyTab() {
-  return (
-    <div className='space-y-6'>
-      <div className='p-6'>
-        <h2 className='text-lg font-semibold text-neutral-900 dark:text-white'>Privacy Settings</h2>
-      </div>
-    </div>
-  );
-}
