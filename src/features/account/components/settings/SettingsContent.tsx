@@ -72,32 +72,35 @@ export function SettingsContent() {
       {/* Tabs Navigation */}
       <div className='bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800'>
         <div className='border-b border-neutral-200 dark:border-neutral-800'>
-          <nav className='flex space-x-8 px-6'>
-            {TABS.map(tab => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
+          <nav className='flex space-x-8 px-6 overflow-x-auto scrollbar-hide'>
+            {/* Mobile scroll container */}
+            <div className='flex space-x-8 min-w-max md:min-w-0'>
+              {TABS.map(tab => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
 
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    'flex items-center gap-2 py-4 px-2 border-b-2 font-medium text-sm transition-colors',
-                    isActive
-                      ? 'border-[var(--brand-primary)] text-[var(--brand-primary)]'
-                      : 'border-transparent text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300'
-                  )}
-                >
-                  <Icon className='w-4 h-4' />
-                  {tab.label}
-                  {tab.badge && (
-                    <span className='ml-2 px-2 py-0.5 text-xs bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-full'>
-                      {tab.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={cn(
+                      'flex items-center gap-2 py-4 px-2 border-b-2 font-medium text-sm transition-colors',
+                      isActive
+                        ? 'border-[var(--brand-primary)] text-[var(--brand-primary)]'
+                        : 'border-transparent text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300'
+                    )}
+                  >
+                    <Icon className='w-4 h-4' />
+                    {tab.label}
+                    {tab.badge && (
+                      <span className='ml-2 px-2 py-0.5 text-xs bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-full'>
+                        {tab.badge}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </nav>
         </div>
 

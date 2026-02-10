@@ -101,8 +101,8 @@ export function DropdownMenu({
               // Mobile: accordion-style block
               'block mt-2 rounded-lg border-0 shadow-none',
               'bg-[var(--background-elevated)] overflow-hidden',
-              // Consistent width for all dropdowns (desktop only)
-              'md:min-w-64 md:max-w-80'
+              // Even wider dropdowns for more square appearance
+              'md:min-w-80 md:max-w-[26rem]'
             )}
             style={{
               ...uiSurfaces.dropdown,
@@ -162,7 +162,7 @@ export function DropdownMenu({
                 >
                   {/* Sub-item icon */}
                   {subItem.icon && (
-                    <subItem.icon className='h-4 w-4 transition-transform duration-200 group-hover:scale-110' />
+                    <subItem.icon className='h-4 w-4 md:h-5 md:w-5 transition-transform duration-200 group-hover:scale-110' />
                   )}
 
                   {/* Sub-item label */}
