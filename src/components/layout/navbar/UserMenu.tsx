@@ -29,10 +29,10 @@ export interface UserMenuProps {
 export function UserMenu({ className }: UserMenuProps): React.JSX.Element {
   const { user, isLoading, signOut } = useAuth();
 
-  // Debug auth state in development
-  if (process.env.NODE_ENV === 'development') {
-    console.log('UserMenu Debug:', { user: !!user, isLoading, userEmail: user?.email });
-  }
+  // Debug auth state in development (removed excessive logging)
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log('UserMenu Debug:', { user: !!user, isLoading, userEmail: user?.email });
+  // }
 
   // Handle logout
   const handleLogout = async () => {

@@ -37,12 +37,44 @@ class BookingSessionManager {
   private static instance: BookingSessionManager;
   private readonly SESSION_KEY = 'vantage_lane_booking_session';
   private readonly SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+  private tabId: string | null = null;
 
   static getInstance(): BookingSessionManager {
     if (!BookingSessionManager.instance) {
       BookingSessionManager.instance = new BookingSessionManager();
     }
     return BookingSessionManager.instance;
+  }
+
+  /**
+   * Get or create tab-specific identifier for session isolation
+   */
+  private getTabId(): string {
+    if (this.tabId) return this.tabId;
+
+    // Try to get existing tab ID from sessionStorage (tab-specific)
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      let tabId = sessionStorage.getItem('vantage_lane_tab_id');
+      if (!tabId) {
+        tabId = `tab_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        sessionStorage.setItem('vantage_lane_tab_id', tabId);
+      }
+      this.tabId = tabId;
+      return tabId;
+    }
+
+    // Fallback for SSR/no sessionStorage
+    if (!this.tabId) {
+      this.tabId = `tab_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    }
+    return this.tabId;
+  }
+
+  /**
+   * Get tab-specific session key for storage isolation
+   */
+  private getTabSessionKey(): string {
+    return `${this.SESSION_KEY}_${this.getTabId()}`;
   }
 
   /**
@@ -121,11 +153,11 @@ class BookingSessionManager {
   }
 
   /**
-   * Load session from storage
+   * Load session from storage (tab-specific)
    */
   private loadSession(): BookingSession | null {
     try {
-      const stored = localStorage.getItem(this.SESSION_KEY);
+      const stored = localStorage.getItem(this.getTabSessionKey());
       if (!stored) return null;
 
       const session = JSON.parse(stored) as BookingSession;
@@ -136,11 +168,11 @@ class BookingSessionManager {
   }
 
   /**
-   * Save session to storage
+   * Save session to storage (tab-specific)
    */
   private saveSession(session: BookingSession): void {
     try {
-      localStorage.setItem(this.SESSION_KEY, JSON.stringify(session));
+      localStorage.setItem(this.getTabSessionKey(), JSON.stringify(session));
     } catch (error) {
       console.warn('Failed to save booking session:', error);
     }
