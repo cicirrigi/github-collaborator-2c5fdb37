@@ -6,7 +6,7 @@ import { useBookingState } from '@/hooks/useBookingState';
 import { stripePromise } from '@/lib/stripe/stripe';
 import { Elements } from '@stripe/react-stripe-js';
 import { AlertCircle, CreditCard, DollarSign } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface PaymentData {
   paymentIntentId: string;
@@ -45,12 +45,24 @@ export function PaymentCard() {
     bookingId,
   } = useBookingPayment();
 
-  // 📚 OFFICIAL STRIPE PATTERN: Initialize payment intent once with useMemo
-  useMemo(() => {
+  // � FIXED: Manual Payment Intent trigger (prevents auto-creation on page load)
+  const [shouldCreatePayment, setShouldCreatePayment] = useState(false);
+
+  // 📚 SAFE PATTERN: Create Payment Intent when card method selected (not on page load)
+  useEffect(() => {
     if (paymentMethod === 'card' && totalCost > 0 && !clientSecret && !isCreatingPayment) {
-      initializePayment(totalCost, 'customer@example.com');
+      // Trigger payment intent creation when card method is actively selected
+      setShouldCreatePayment(true);
     }
-  }, [paymentMethod, totalCost, clientSecret, isCreatingPayment, initializePayment]);
+  }, [paymentMethod, totalCost, clientSecret, isCreatingPayment]);
+
+  // Separate effect for actually creating the payment intent
+  useEffect(() => {
+    if (shouldCreatePayment && !clientSecret && !isCreatingPayment) {
+      initializePayment(totalCost, 'customer@example.com');
+      setShouldCreatePayment(false); // Reset trigger
+    }
+  }, [shouldCreatePayment, clientSecret, isCreatingPayment, initializePayment, totalCost]);
 
   return (
     <div className='vl-card'>
@@ -164,6 +176,7 @@ export function PaymentCard() {
                     totalAmount={totalCost}
                     _bookingId={bookingId || `booking_${Date.now()}`}
                     _clientSecret={clientSecret}
+                    onCreatePaymentIntent={() => setShouldCreatePayment(true)} // 🔧 NEW: Trigger Payment Intent creation
                     onSuccess={(_paymentData: PaymentData) => {
                       // 🏭 ENTERPRISE: Mark payment as succeeded and cleanup session
                       markAsSucceeded();
