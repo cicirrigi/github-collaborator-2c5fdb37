@@ -29,10 +29,13 @@ interface BookingFormCardProps {
 }
 
 export function BookingFormCard({ onNext }: BookingFormCardProps = {}) {
-  const { bookingType } = useBookingState();
+  const { bookingType, validateStep1Complete } = useBookingState();
   const bookingTypeLabel = BOOKING_TYPE_LABELS[bookingType] || 'BOOKING';
   const isHourlyBooking = bookingType === 'hourly';
   const isDailyBooking = bookingType === 'daily';
+
+  // Check if Step 1 is complete for validation
+  const isStep1Valid = validateStep1Complete();
 
   return (
     <div className='vl-card-flex col-span-1 lg:col-span-2'>
@@ -72,9 +75,16 @@ export function BookingFormCard({ onNext }: BookingFormCardProps = {}) {
             {onNext && (
               <button
                 onClick={onNext}
-                className='w-full bg-amber-400/15 hover:bg-amber-400/25 backdrop-filter backdrop-blur-md border border-amber-300/30 text-amber-50 font-semibold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-4 shadow-lg hover:shadow-amber-400/20'
+                disabled={!isStep1Valid}
+                className={`w-full backdrop-filter backdrop-blur-md font-semibold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-4 shadow-lg ${
+                  isStep1Valid
+                    ? 'bg-amber-400/15 hover:bg-amber-400/25 border border-amber-300/30 text-amber-50 hover:shadow-amber-400/20 cursor-pointer'
+                    : 'bg-neutral-500/10 border border-neutral-600/30 text-neutral-400 cursor-not-allowed opacity-50'
+                }`}
               >
-                <span>Continue to Vehicle Selection</span>
+                <span>
+                  {isStep1Valid ? 'Continue to Vehicle Selection' : 'Complete Required Fields'}
+                </span>
                 <ArrowRight className='w-5 h-5' />
               </button>
             )}

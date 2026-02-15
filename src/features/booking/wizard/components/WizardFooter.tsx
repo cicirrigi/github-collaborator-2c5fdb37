@@ -9,11 +9,14 @@ interface WizardFooterProps {
 }
 
 export function WizardFooter({ currentStep, totalSteps, onNext, onPrev }: WizardFooterProps) {
-  const { resetTrip, setCurrentStep } = useBookingState();
+  const { resetTrip, setCurrentStep, validateStep2Complete } = useBookingState();
 
   const isFirstStep = currentStep === 1;
   const isLastStep = currentStep === totalSteps;
   const isConfirmationStep = currentStep === 4; // Step 4 is confirmation
+
+  // Check if current step is valid before allowing proceed
+  const isCurrentStepValid = currentStep === 2 ? validateStep2Complete().isValid : true;
 
   const handleStartNewBooking = () => {
     resetTrip();
@@ -38,9 +41,14 @@ export function WizardFooter({ currentStep, totalSteps, onNext, onPrev }: Wizard
       {!isLastStep && !isFirstStep ? (
         <button
           onClick={onNext}
-          className='px-6 py-3 rounded-xl bg-yellow-500 text-black font-semibold hover:bg-yellow-400 transition-all duration-200'
+          disabled={!isCurrentStepValid}
+          className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
+            isCurrentStepValid
+              ? 'bg-yellow-500 text-black hover:bg-yellow-400 cursor-pointer'
+              : 'bg-neutral-500/20 text-neutral-400 cursor-not-allowed opacity-50'
+          }`}
         >
-          Next →
+          {currentStep === 2 && !isCurrentStepValid ? 'Select Vehicle to Continue' : 'Next →'}
         </button>
       ) : isFirstStep ? (
         <div /> // Empty spacer for Step 1 - Next button is integrated in form
