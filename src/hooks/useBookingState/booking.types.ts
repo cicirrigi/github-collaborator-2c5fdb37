@@ -93,6 +93,9 @@ export interface BookingState {
   // TRIP CONFIGURATION
   tripConfiguration: TripConfiguration;
 
+  // PRICING STATE
+  pricingState: PricingState;
+
   // WIZARD STATE
   currentStep: number;
   completedSteps: number[];
@@ -180,6 +183,16 @@ export interface BookingState {
   getSmartRecommendations: () => string[];
   resetTrip: () => void;
 
+  // 💰 PRICING ACTIONS
+  setRouteData: (distance: number, duration: number) => void;
+  clearRouteData: () => void;
+  calculatePricing: () => Promise<void>;
+  setPriceForVehicle: (vehicleType: string, price: number) => void;
+  clearAllPrices: () => void;
+  getPriceForVehicle: (vehicleType: string) => number | null;
+  hasPricingData: () => boolean;
+  shouldRecalculatePricing: () => boolean;
+
   // UTILITY ACTIONS
   calculateEstimatedDistanceAndTime: () => { distanceKm: number; durationMinutes: number };
 
@@ -229,7 +242,41 @@ export interface ServicePackages {
   };
 }
 
-// 🔮 FUTURE FEATURES (hidden from UI)
+// � PRICING STATE
+export interface PricingState {
+  // Distance and duration from Google Maps
+  routeData: {
+    distance: number | null; // miles
+    duration: number | null; // minutes
+    isCalculated: boolean;
+  };
+
+  // Calculated prices per vehicle type
+  vehiclePrices: Record<string, number | null>; // vehicleType -> price in GBP
+
+  // Pricing calculation status
+  isLoadingPrices: boolean;
+  pricingError: string | null;
+  lastPricingUpdate: Date | null;
+}
+
+export interface PricingActions {
+  // Route data actions
+  setRouteData: (distance: number, duration: number) => void;
+  clearRouteData: () => void;
+
+  // Pricing calculation actions
+  calculatePricing: () => Promise<void>;
+  setPriceForVehicle: (vehicleType: string, price: number) => void;
+  clearAllPrices: () => void;
+
+  // Utility actions
+  getPriceForVehicle: (vehicleType: string) => number | null;
+  hasPricingData: () => boolean;
+  shouldRecalculatePricing: () => boolean;
+}
+
+// �� FUTURE FEATURES (hidden from UI)
 export interface FutureFeatures {
   oshiboriTowels: boolean;
 }

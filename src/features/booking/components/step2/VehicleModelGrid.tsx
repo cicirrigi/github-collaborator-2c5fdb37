@@ -74,7 +74,22 @@ interface VehicleModelCardProps {
 }
 
 function VehicleModelCard({ model, category, isSelected, onSelect, index }: VehicleModelCardProps) {
-  const price = Math.round(category.basePrice * model.priceMultiplier);
+  const { pricingState, getPriceForVehicle } = useBookingState();
+
+  // Get real price from Render API or fallback to hardcoded
+  const renderPrice = getPriceForVehicle ? getPriceForVehicle(category.id) : null;
+  const fallbackPrice = Math.round(category.basePrice * model.priceMultiplier);
+  const price = renderPrice || fallbackPrice;
+
+  // Debug logging
+  console.log('🚗 VehicleCard Debug:', {
+    categoryId: category.id,
+    renderPrice,
+    fallbackPrice,
+    finalPrice: price,
+    pricingState: pricingState?.vehiclePrices,
+    hasGetPriceForVehicle: !!getPriceForVehicle,
+  });
 
   // Get category icon
   const getCategoryIcon = () => {
