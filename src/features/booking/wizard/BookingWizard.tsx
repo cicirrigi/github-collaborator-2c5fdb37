@@ -4,6 +4,7 @@ import { ZustandBookingTypeDock } from '@/components/booking/ZustandBookingTypeD
 import { Container } from '@/components/layout/Container';
 import { BookingStepper } from '@/components/ui/booking-stepper/BookingStepper';
 import { useBookingState } from '@/hooks/useBookingState';
+import { bookingSessionManager, PaymentState } from '@/lib/booking/session/BookingSessionManager';
 import { useEffect, useRef } from 'react';
 
 import { WizardFooter } from './components/WizardFooter';
@@ -12,17 +13,28 @@ import { Step2Services } from './steps/Step2Services';
 import { Step3Summary } from './steps/Step3Summary';
 import { Step4Confirmation } from './steps/Step4Confirmation';
 
-// STEPS PENTRU STEPPER
-const BOOKING_STEPS = [
-  { id: 1, label: 'Trip Info', description: '', clickable: true },
-  { id: 2, label: 'Services', description: '', clickable: true },
-  { id: 3, label: 'Payment', description: '', clickable: true },
-  { id: 4, label: 'Confirmation', description: '', clickable: false },
-];
-
 export function BookingWizard() {
   const { currentStep, completedSteps, setCurrentStep, canProceedToStep, nextStep, prevStep } =
     useBookingState();
+
+  // Helper to check if payment is completed
+  const isPaymentCompleted = () => {
+    const sessionStats = bookingSessionManager.getSessionStats();
+    return sessionStats.hasActiveSession && sessionStats.paymentState === PaymentState.SUCCEEDED;
+  };
+
+  // STEPS PENTRU STEPPER - Dynamic based on payment state
+  const BOOKING_STEPS = [
+    { id: 1, label: 'Trip Info', description: '', clickable: true },
+    { id: 2, label: 'Services', description: '', clickable: true },
+    {
+      id: 3,
+      label: 'Payment',
+      description: '',
+      clickable: !isPaymentCompleted() || currentStep < 4,
+    },
+    { id: 4, label: 'Confirmation', description: '', clickable: false },
+  ];
 
   // Ref pentru containerul principal al wizard-ului
   const wizardContainerRef = useRef<HTMLDivElement>(null);
