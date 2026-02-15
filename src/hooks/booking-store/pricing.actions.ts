@@ -79,7 +79,7 @@ export const createPricingActions = (set: any, get: any) => ({
         bookingType: renderPricingService.mapBookingTypeToRenderType(bookingType) || 'one_way',
         dateTime: tripConfiguration.pickupDateTime?.toISOString() || new Date().toISOString(),
         distance: pricingState.routeData.distance,
-        duration: Math.round(pricingState.routeData.duration * 60), // Convert minutes to seconds
+        duration: Math.round(pricingState.routeData.duration), // Duration in minutes (API expects minutes)
         coordinates: {
           pickup: {
             lat: tripConfiguration.pickup.coordinates[1],
