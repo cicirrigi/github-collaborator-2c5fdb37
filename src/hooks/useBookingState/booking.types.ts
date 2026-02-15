@@ -1,9 +1,12 @@
 // 🎯 BOOKING TYPES - All type definitions for the unified booking system
 
 // Import and re-export vehicle types for easy access
+import type { BookingConfirmation, ConfirmationActions } from './confirmation.types';
 import type { FleetActions, FleetSelection, FleetSummary } from './fleet.types';
 import type { VehicleCategory, VehicleModel, VehicleSelection } from './vehicle.types';
 export type {
+  BookingConfirmation,
+  ConfirmationActions,
   FleetActions,
   FleetSelection,
   FleetSummary,
@@ -95,6 +98,9 @@ export interface BookingState {
 
   // PRICING STATE
   pricingState: PricingState;
+
+  // CONFIRMATION STATE
+  confirmation: BookingConfirmation | null;
 
   // WIZARD STATE
   currentStep: number;
