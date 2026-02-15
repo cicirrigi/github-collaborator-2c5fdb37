@@ -1,4 +1,5 @@
 // 🎯 BOOKING ACTIONS - Booking Type & Stepper Logic
+import { PaymentState, bookingSessionManager } from '@/lib/booking/session/BookingSessionManager';
 import type { BookingState, BookingType } from '../useBookingState/booking.types';
 import { createInitialTripConfiguration } from './initialState';
 
@@ -65,7 +66,17 @@ export const createBookingActions = (
     const { currentStep, completedSteps } = get();
     const store = get();
 
-    // Can always go backwards
+    // Check if payment has been completed - if so, prevent going back to payment step
+    const sessionStats = bookingSessionManager.getSessionStats();
+    const isPaymentCompleted =
+      sessionStats.hasActiveSession && sessionStats.paymentState === PaymentState.SUCCEEDED;
+
+    // Prevent going back to Step 3 (payment) if payment is already completed
+    if (step === 3 && isPaymentCompleted && currentStep === 4) {
+      return false;
+    }
+
+    // Can always go backwards (except payment step after completion)
     if (step <= currentStep) return true;
 
     // Can only proceed if previous step is completed
