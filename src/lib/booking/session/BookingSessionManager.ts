@@ -22,7 +22,7 @@ export interface BookingSession {
   paymentState: PaymentState;
   paymentIntentId?: string;
   clientSecret?: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export enum PaymentState {
@@ -94,7 +94,7 @@ class BookingSessionManager {
   /**
    * Create new booking session
    */
-  createSession(totalAmount: number, metadata: Record<string, any> = {}): BookingSession {
+  createSession(totalAmount: number, metadata: Record<string, unknown> = {}): BookingSession {
     const now = Date.now();
     const session: BookingSession = {
       sessionId: this.generateSessionId(),
@@ -113,7 +113,7 @@ class BookingSessionManager {
   /**
    * Get current active session or create new one
    */
-  getCurrentSession(totalAmount: number, metadata: Record<string, any> = {}): BookingSession {
+  getCurrentSession(totalAmount: number, metadata: Record<string, unknown> = {}): BookingSession {
     const existing = this.loadSession();
 
     // If no session or session expired, create new
@@ -174,6 +174,7 @@ class BookingSessionManager {
     try {
       localStorage.setItem(this.getTabSessionKey(), JSON.stringify(session));
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.warn('Failed to save booking session:', error);
     }
   }

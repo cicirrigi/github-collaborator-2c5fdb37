@@ -18,16 +18,6 @@ export function JourneyEstimateDisplay() {
   const pickupAddress = tripConfiguration.pickup?.address;
   const dropoffAddress = tripConfiguration.dropoff?.address;
 
-  // Debug address truncation issue
-  if (process.env.NODE_ENV === 'development' && pickupAddress && dropoffAddress) {
-    console.log('🗺️ JourneyEstimate Addresses:', {
-      pickup: pickupAddress,
-      dropoff: dropoffAddress,
-      pickupLength: pickupAddress.length,
-      dropoffLength: dropoffAddress.length,
-    });
-  }
-
   // Calculate distance when both addresses are available
   useEffect(() => {
     if (!pickupAddress || !dropoffAddress) {
