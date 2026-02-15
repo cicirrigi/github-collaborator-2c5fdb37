@@ -80,7 +80,7 @@ export function AutocompleteInput({
           }
           setIsLoading(false);
         }
-      } catch (error) {
+      } catch {
         if (!newAbortController.signal.aborted) {
           setSuggestions([]);
           setShowDropdown(false);
@@ -94,7 +94,7 @@ export function AutocompleteInput({
       clearTimeout(timeoutId);
       newAbortController.abort();
     };
-  }, [value]); // Simple dependency on value only
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Click outside to close dropdown
   useEffect(() => {

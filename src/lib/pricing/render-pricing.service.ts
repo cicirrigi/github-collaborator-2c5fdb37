@@ -168,7 +168,7 @@ class RenderPricingService {
 
       const response = await this.calculatePrice(testRequest);
       return { success: response.success || false };
-    } catch (error) {
+    } catch {
       return { success: false };
     }
   }

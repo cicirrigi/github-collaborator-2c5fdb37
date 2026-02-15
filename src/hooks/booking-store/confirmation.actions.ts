@@ -16,7 +16,7 @@ import type {
 
 export const createConfirmationActions: StateCreator<BookingState, [], [], ConfirmationActions> = (
   set,
-  get
+  _get
 ) => ({
   // 👥 PASSENGER NAME MANAGEMENT
   updatePassengerName: (passengerId: string, name: string) => {
