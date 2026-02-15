@@ -1,7 +1,7 @@
 'use client';
 
 import { useBookingState } from '@/hooks/useBookingState';
-import { BookingSummaryCard, PaymentCard } from '../components/step3';
+import { AuthAwarePayment, BookingSummaryCard } from '../components/step3';
 
 /**
  * 🎯 STEP 3 - PAYMENT & SUMMARY
@@ -39,7 +39,7 @@ export function Step3Payment() {
 
       {/* RIGHT COLUMN - Payment */}
       <div>
-        <PaymentCard />
+        <AuthAwarePayment />
       </div>
     </div>
   );
