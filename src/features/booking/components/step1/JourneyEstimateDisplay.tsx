@@ -25,6 +25,18 @@ export function JourneyEstimateDisplay() {
       return;
     }
 
+    // Validate address quality to prevent API calls with incomplete addresses
+    const isValidAddress = (address: string): boolean => {
+      if (!address || address.length < 4) return false;
+      // Reject common incomplete patterns that cause DIRECTIONS_ROUTE errors
+      const invalidPatterns = /^(m|ma|may|h|he|hea|l|lo|lon|g|ga|gat|ai|air|ter|bri|har)$/i;
+      return !invalidPatterns.test(address.trim());
+    };
+
+    if (!isValidAddress(pickupAddress) || !isValidAddress(dropoffAddress)) {
+      return;
+    }
+
     let isCancelled = false;
     setIsLoading(true);
 
@@ -33,8 +45,6 @@ export function JourneyEstimateDisplay() {
         const result = await googleServices.getDirections(pickupAddress, dropoffAddress);
 
         if (!isCancelled && result) {
-          console.log('🗺️ Google Maps Result:', result);
-
           setDistanceData({
             distance: result.distance,
             duration: result.duration,
@@ -44,20 +54,11 @@ export function JourneyEstimateDisplay() {
           const distanceInMiles = result.distanceValue / 1609.34; // Convert meters to miles
           const durationInMinutes = result.durationValue / 60; // Convert seconds to minutes
 
-          console.log('💰 Triggering setRouteData:', {
-            distanceInMiles,
-            durationInMinutes,
-            hasSetRouteData: !!setRouteData,
-          });
-
           if (setRouteData) {
             setRouteData(distanceInMiles, durationInMinutes);
-            console.log('💰 setRouteData called successfully');
-          } else {
-            console.error('❌ setRouteData function not available!');
           }
         }
-      } catch (error) {
+      } catch {
         // Silent fallback - don't break the UI
         if (!isCancelled) {
           setDistanceData(null);
