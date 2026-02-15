@@ -190,7 +190,7 @@ class BookingSessionManager {
    * Clear current session (on successful payment or abandonment)
    */
   clearSession(): void {
-    localStorage.removeItem(this.SESSION_KEY);
+    localStorage.removeItem(this.getTabSessionKey());
   }
 
   /**
