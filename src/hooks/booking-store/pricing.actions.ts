@@ -1,12 +1,16 @@
 // 💰 PRICING ACTIONS - Render API Integration
 import { renderPricingService } from '@/lib/pricing/render-pricing.service';
+import type { BookingState } from '../useBookingState/booking.types';
 
-export const createPricingActions = (set: any, get: any) => ({
+export const createPricingActions = (
+  set: (partial: Partial<BookingState> | ((state: BookingState) => Partial<BookingState>)) => void,
+  get: () => BookingState
+) => ({
   // Route data actions
   setRouteData: (distance: number, duration: number) => {
     console.log('💰 setRouteData called:', { distance, duration });
 
-    set(state => ({
+    set((state: BookingState) => ({
       pricingState: {
         ...state.pricingState,
         routeData: {
@@ -23,7 +27,7 @@ export const createPricingActions = (set: any, get: any) => ({
   },
 
   clearRouteData: () => {
-    set(state => ({
+    set((state: BookingState) => ({
       pricingState: {
         ...state.pricingState,
         routeData: {
@@ -63,7 +67,7 @@ export const createPricingActions = (set: any, get: any) => ({
     console.log('✅ Validation passed - proceeding with pricing calculation');
 
     // Set loading state
-    set(state => ({
+    set((state: BookingState) => ({
       pricingState: {
         ...state.pricingState,
         isLoadingPrices: true,
@@ -99,8 +103,11 @@ export const createPricingActions = (set: any, get: any) => ({
       console.log('📍 Dropoff address property:', tripConfiguration.dropoff?.address);
       console.log('📍 Pickup address property:', tripConfiguration.pickup?.address);
 
-      // Add conditional parameters (cast to any to avoid TypeScript errors)
-      const requestWithExtras = baseRequest as any;
+      // Add conditional parameters with proper typing
+      const requestWithExtras: typeof baseRequest & {
+        hours?: number;
+        days?: number;
+      } = { ...baseRequest };
 
       if (bookingType === 'hourly' && tripConfiguration.hoursRequested) {
         requestWithExtras.hours = tripConfiguration.hoursRequested;
@@ -117,7 +124,7 @@ export const createPricingActions = (set: any, get: any) => ({
       console.log('🔥 API Response received:', pricesResponse);
 
       // Update state with calculated prices
-      set(state => {
+      set((state: BookingState) => {
         const newVehiclePrices: Record<string, number | null> = {};
 
         Object.entries(pricesResponse).forEach(([vehicleType, response]) => {
@@ -126,10 +133,10 @@ export const createPricingActions = (set: any, get: any) => ({
             newVehiclePrices[vehicleType] = response.finalPrice;
           } else {
             newVehiclePrices[vehicleType] = null;
-            console.error(`❌ Pricing failed for ${vehicleType}:`, response.error);
+            console.error(`❌ Pricing failed for ${vehicleType}:`, response);
             console.error(
               `❌ Validation details for ${vehicleType}:`,
-              JSON.stringify(response.details, null, 2)
+              JSON.stringify(response, null, 2)
             );
           }
         });
@@ -145,7 +152,7 @@ export const createPricingActions = (set: any, get: any) => ({
         };
       });
     } catch (error) {
-      set(state => ({
+      set((state: BookingState) => ({
         pricingState: {
           ...state.pricingState,
           isLoadingPrices: false,
@@ -156,7 +163,7 @@ export const createPricingActions = (set: any, get: any) => ({
   },
 
   setPriceForVehicle: (vehicleType: string, price: number) => {
-    set(state => ({
+    set((state: BookingState) => ({
       pricingState: {
         ...state.pricingState,
         vehiclePrices: {
@@ -168,7 +175,7 @@ export const createPricingActions = (set: any, get: any) => ({
   },
 
   clearAllPrices: () => {
-    set(state => ({
+    set((state: BookingState) => ({
       pricingState: {
         ...state.pricingState,
         vehiclePrices: {},
