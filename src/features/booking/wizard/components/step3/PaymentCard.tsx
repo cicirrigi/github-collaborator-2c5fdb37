@@ -16,8 +16,14 @@ interface PaymentData {
 }
 
 export function PaymentCard() {
-  const { nextStep, tripConfiguration, bookingType, pricingState, getPriceForVehicle } =
-    useBookingState();
+  const {
+    nextStep,
+    tripConfiguration,
+    bookingType,
+    pricingState,
+    getPriceForVehicle,
+    getFleetTotalPrice,
+  } = useBookingState();
 
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'applepay'>('card');
   const [isCreatingBooking, setIsCreatingBooking] = useState(false);
@@ -48,6 +54,14 @@ export function PaymentCard() {
       setIsCreatingBooking(true);
       bookingCreateStartedRef.current = true;
 
+      // 🔍 DEBUG: Log fleet booking payload structure
+      console.log('🚛 FLEET BOOKING PAYLOAD DEBUG:', {
+        bookingType,
+        tripConfiguration: JSON.stringify(tripConfiguration, null, 2),
+        fleetSelection: tripConfiguration.fleetSelection,
+        selectedVehicle: tripConfiguration.selectedVehicle,
+      });
+
       const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -56,6 +70,13 @@ export function PaymentCard() {
           bookingType,
           pricingSnapshot: {
             finalPricePence: (() => {
+              // Fleet bookings use different pricing logic
+              if (bookingType === 'fleet') {
+                const fleetPriceGBP = getFleetTotalPrice();
+                return fleetPriceGBP ? Math.round(fleetPriceGBP * 100) : 0;
+              }
+
+              // Single vehicle bookings use selectedVehicle
               const categoryId = tripConfiguration?.selectedVehicle?.category?.id;
               if (!categoryId) return 0;
 

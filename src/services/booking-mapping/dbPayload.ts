@@ -43,12 +43,22 @@ export function buildBookingPayload(params: {
 }) {
   const { customerId, organizationId, bookingType, tripConfiguration, currency } = params;
 
+  // Fleet mode mapping for proper DB storage
+  const fleetMode = tripConfiguration.fleetSelection?.fleetMode; // 'standard' | 'hourly' | 'daily'
+  const isFleet = bookingType === 'fleet' && !!tripConfiguration.fleetSelection;
+
   return {
     customer_id: customerId,
     organization_id: organizationId || null,
 
     booking_type: bookingType,
-    fleet_mode: bookingType === 'fleet' ? null : null, // TODO: add fleetMode to TripConfiguration if needed
+    fleet_mode: isFleet
+      ? fleetMode === 'hourly'
+        ? 'hour'
+        : fleetMode === 'daily'
+          ? 'day'
+          : null
+      : null,
 
     status: BookingStatus.NEW,
     currency: (currency ?? 'GBP').toUpperCase(),
@@ -57,8 +67,16 @@ export function buildBookingPayload(params: {
     start_at: toIso(tripConfiguration.pickupDateTime),
     end_at: toIso(tripConfiguration.returnDateTime) ?? null, // optional; for return/daily you can set if you want
 
-    hours_requested: tripConfiguration.hoursRequested ?? null,
-    days_requested: tripConfiguration.daysRequested ?? null,
+    hours_requested: isFleet
+      ? fleetMode === 'hourly'
+        ? (tripConfiguration.fleetSelection?.fleetHours ?? null)
+        : null
+      : (tripConfiguration.hoursRequested ?? null),
+    days_requested: isFleet
+      ? fleetMode === 'daily'
+        ? (tripConfiguration.fleetSelection?.fleetDays ?? null)
+        : null
+      : (tripConfiguration.daysRequested ?? null),
 
     passenger_count: tripConfiguration.passengers ?? null,
     bag_count: tripConfiguration.luggage ?? null,
@@ -99,8 +117,18 @@ export function buildLegsPayload(params: {
   // minimal hard validation
   if (!tripConfiguration.pickup?.address) throw new Error('pickup.address missing');
   if (!tripConfiguration.pickupDateTime) throw new Error('pickupDateTime missing');
-  if (!tripConfiguration.selectedVehicle?.category?.id)
-    throw new Error('selectedVehicle.category.id missing');
+
+  // Safe vehicle category validation for fleet vs single vehicle
+  const vehicleCategoryCode =
+    bookingType === 'fleet'
+      ? tripConfiguration.fleetSelection?.vehicles?.[0]?.category?.id
+      : tripConfiguration.selectedVehicle?.category?.id;
+
+  if (!vehicleCategoryCode) {
+    throw new Error(
+      'vehicleCategoryCode missing (selectedVehicle.category.id or fleetSelection.vehicles[0].category.id)'
+    );
+  }
 
   const scheduledAt = toIso(tripConfiguration.pickupDateTime);
   if (!scheduledAt) throw new Error('pickupDateTime invalid');
@@ -144,8 +172,11 @@ export function buildLegsPayload(params: {
 
     flight_number: tripConfiguration.flightNumberPickup ?? null,
 
-    vehicle_category_id: tripConfiguration.selectedVehicle.category.id,
-    vehicle_model_id: tripConfiguration.selectedVehicle.model?.id ?? null,
+    vehicle_category_id: vehicleCategoryCode,
+    vehicle_model_id:
+      bookingType === 'fleet'
+        ? (tripConfiguration.fleetSelection?.vehicles?.[0]?.model?.id ?? null)
+        : (tripConfiguration.selectedVehicle?.model?.id ?? null),
 
     preferences: null, // TODO: add preferences to TripConfiguration if needed
     addons: null, // TODO: add addons to TripConfiguration if needed

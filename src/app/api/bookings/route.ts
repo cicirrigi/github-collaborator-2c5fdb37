@@ -111,16 +111,108 @@ export async function POST(req: Request) {
     }
 
     // ===========================
+    // FLEET VEHICLE REQUESTS & JOBS
+    // ===========================
+
+    if (bookingType === 'fleet') {
+      const fleetVehicles = tripConfiguration.fleetSelection?.vehicles ?? [];
+
+      if (fleetVehicles.length === 0) {
+        return NextResponse.json(
+          { success: false, error: 'Fleet vehicles missing' },
+          { status: 400 }
+        );
+      }
+
+      // Insert requests
+      const requestsPayload = fleetVehicles.map((v: any) => ({
+        booking_id: bookingId,
+        vehicle_category_id: v?.category?.id,
+        vehicle_model_id: v?.model?.id ?? null,
+        quantity: Number(v?.quantity ?? 0),
+      }));
+
+      if (requestsPayload.some(r => !r.vehicle_category_id || !r.quantity || r.quantity <= 0)) {
+        return NextResponse.json(
+          { success: false, error: 'Invalid fleet vehicles payload' },
+          { status: 400 }
+        );
+      }
+
+      const { data: insertedRequests, error: reqErr } = await supabaseAdmin
+        .from('booking_vehicle_requests')
+        .insert(requestsPayload)
+        .select('id, quantity');
+
+      if (reqErr || !insertedRequests) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Failed to create fleet vehicle requests',
+            details: reqErr?.message,
+          },
+          { status: 500 }
+        );
+      }
+
+      // Find leg #1
+      const { data: leg1, error: legErr } = await supabaseAdmin
+        .from('booking_legs')
+        .select('id')
+        .eq('booking_id', bookingId)
+        .eq('leg_number', 1)
+        .maybeSingle();
+
+      if (legErr || !leg1?.id) {
+        return NextResponse.json(
+          { success: false, error: 'Failed to load leg #1', details: legErr?.message },
+          { status: 500 }
+        );
+      }
+
+      // Create jobs (explode quantity)
+      let jobNumber = 1;
+      const jobsPayload: any[] = [];
+
+      for (const r of insertedRequests) {
+        for (let i = 0; i < (r.quantity ?? 0); i++) {
+          jobsPayload.push({
+            booking_id: bookingId,
+            booking_leg_id: leg1.id,
+            vehicle_request_id: r.id,
+            job_number: jobNumber++,
+            status: 'NEW',
+          });
+        }
+      }
+
+      const { error: jobsErr } = await supabaseAdmin.from('booking_jobs').insert(jobsPayload);
+
+      if (jobsErr) {
+        return NextResponse.json(
+          { success: false, error: 'Failed to create fleet jobs', details: jobsErr.message },
+          { status: 500 }
+        );
+      }
+    }
+
+    // ===========================
     // PRICING + QUOTE SNAPSHOT
     // ===========================
 
     let finalAmountPence = pricingSnapshot?.finalPricePence ?? 0;
 
-    if (tripConfiguration.servicePackages && tripConfiguration.selectedVehicle?.category?.id) {
+    // Safe vehicle category code for service packages (fleet vs single vehicle)
+    const vehicleCategoryCode =
+      bookingType === 'fleet'
+        ? tripConfiguration.fleetSelection?.vehicles?.[0]?.category?.id
+        : tripConfiguration.selectedVehicle?.category?.id;
+
+    if (tripConfiguration.servicePackages && vehicleCategoryCode) {
       try {
         const resolved = resolveBookingServices({
           servicePackages: tripConfiguration.servicePackages,
-          vehicleCategoryCode: tripConfiguration.selectedVehicle.category.id,
+          vehicleCategoryCode,
         });
 
         if (resolved.ok && resolved.services.length > 0) {
