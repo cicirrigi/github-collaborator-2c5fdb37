@@ -1,8 +1,13 @@
+import { resolveBookingServices } from '@/domain/services/resolveBookingServices';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { buildBookingPayload, buildLegsPayload } from '@/services/booking-mapping/dbPayload';
+import { buildQuoteLineItems, calculateQuoteTotal } from '@/services/pricing/serviceItems';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { createCustomerWithOrganization } from '../../../services/organization/organizationResolver';
+
+export const runtime = 'nodejs';
 
 const createBookingSchema = z.object({
   tripConfiguration: z.any(),
@@ -25,7 +30,6 @@ const createBookingSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    // 1) Session (normal server client)
     const supabase = await createSupabaseServerClient();
     const {
       data: { session },
@@ -36,7 +40,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    // 2) Validate body
     const body = await req.json();
     const parsed = createBookingSchema.safeParse(body);
     if (!parsed.success) {
@@ -48,10 +51,6 @@ export async function POST(req: Request) {
 
     const { tripConfiguration, bookingType, pricingSnapshot } = parsed.data;
 
-    // DEBUG: Check if routeData is coming from frontend
-    console.log('BOOKING_CREATE routeData', pricingSnapshot?.routeData);
-
-    // 3) Admin client (service role)
     const supabaseAdmin = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -60,33 +59,27 @@ export async function POST(req: Request) {
 
     const user = session.user;
 
-    // 4) Upsert customer (schema ta)
-    const { data: customer, error: customerErr } = await supabaseAdmin
-      .from('customers')
-      .upsert(
-        {
-          auth_user_id: user.id,
-          email: user.email ?? 'unknown@example.com',
-          // defaults exist in DB but we can still send:
-          first_name: 'Guest',
-          last_name: '',
-          is_active: true,
-        },
-        { onConflict: 'auth_user_id' }
-      )
-      .select('id')
-      .single();
-
-    if (customerErr || !customer) {
+    // CUSTOMER WITH ORGANIZATION
+    let customer, organizationId;
+    try {
+      const result = await createCustomerWithOrganization(user.id, {
+        email: user.email ?? 'unknown@example.com',
+        first_name: 'Guest',
+        last_name: '',
+      });
+      customer = result.customer;
+      organizationId = result.organizationId;
+    } catch (customerErr) {
+      const errorMessage = customerErr instanceof Error ? customerErr.message : String(customerErr);
       return NextResponse.json(
-        { success: false, error: 'Failed to upsert customer', details: customerErr?.message },
+        { success: false, error: 'Failed to upsert customer', details: errorMessage },
         { status: 500 }
       );
     }
 
-    // 5) Build payloads (exact schema)
     const p_booking = buildBookingPayload({
       customerId: customer.id,
+      organizationId: organizationId, // ✅ USAR ORGANIZATION_ID REAL
       bookingType,
       tripConfiguration,
       currency: pricingSnapshot?.currency ?? 'GBP',
@@ -105,13 +98,6 @@ export async function POST(req: Request) {
           }
     );
 
-    // DEBUG: Check if distance/duration made it into p_legs
-    console.log('BOOKING_CREATE p_legs[0] distance/duration', {
-      distance_miles: p_legs?.[0]?.distance_miles,
-      duration_min: p_legs?.[0]?.duration_min,
-    });
-
-    // 6) RPC atomic create
     const { data: bookingId, error: rpcErr } = await supabaseAdmin.rpc('create_booking_with_legs', {
       p_booking,
       p_legs,
@@ -124,30 +110,75 @@ export async function POST(req: Request) {
       );
     }
 
-    // 7) Read reference for UI
-    const { data: created, error: readErr } = await supabaseAdmin
+    // ===========================
+    // PRICING + QUOTE SNAPSHOT
+    // ===========================
+
+    let finalAmountPence = pricingSnapshot?.finalPricePence ?? 0;
+
+    if (tripConfiguration.servicePackages && tripConfiguration.selectedVehicle?.category?.id) {
+      try {
+        const resolved = resolveBookingServices({
+          servicePackages: tripConfiguration.servicePackages,
+          vehicleCategoryCode: tripConfiguration.selectedVehicle.category.id,
+        });
+
+        if (resolved.ok && resolved.services.length > 0) {
+          const allCodes = resolved.services.map(s => s.code);
+          const complimentarySet = new Set(
+            resolved.services.filter(s => s.isComplimentary).map(s => s.code)
+          );
+          const configurations = new Map(
+            resolved.services.filter(s => s.configuration).map(s => [s.code, s.configuration!])
+          );
+
+          const quoteLineItems = await buildQuoteLineItems(
+            allCodes,
+            complimentarySet,
+            configurations
+          );
+
+          const servicesSubtotal = calculateQuoteTotal(quoteLineItems);
+
+          const vatRate = 0.2;
+          const vatPence = Math.round(servicesSubtotal * vatRate);
+          const totalPence = servicesSubtotal + vatPence;
+
+          await supabaseAdmin.from('client_leg_quotes').insert({
+            booking_id: bookingId,
+            booking_leg_id: null, // TEMP – next step: bind per leg
+            version: 1,
+            currency: 'GBP',
+            subtotal_pence: servicesSubtotal,
+            discount_pence: 0,
+            vat_rate: vatRate,
+            vat_pence: vatPence,
+            total_pence: totalPence,
+            line_items: quoteLineItems,
+            calc_source: 'server',
+            calc_version: 'pricing_v1',
+            calculated_at: new Date().toISOString(),
+          });
+
+          finalAmountPence += totalPence;
+        }
+      } catch (err) {
+        console.error('[BOOKING_CREATE] Pricing failed:', err);
+      }
+    }
+
+    const { data: created } = await supabaseAdmin
       .from('bookings')
       .select('id, reference, currency')
       .eq('id', bookingId)
       .single();
 
-    if (readErr) {
-      // booking exists; return minimal
-      return NextResponse.json({
-        success: true,
-        bookingId,
-        reference: null,
-        amount_total_pence: pricingSnapshot?.finalPricePence ?? 0,
-        currency: (pricingSnapshot?.currency ?? 'GBP').toUpperCase(),
-      });
-    }
-
     return NextResponse.json({
       success: true,
-      bookingId: created.id,
-      reference: created.reference,
-      amount_total_pence: pricingSnapshot?.finalPricePence ?? 0,
-      currency: created.currency,
+      bookingId,
+      reference: created?.reference ?? null,
+      amount_total_pence: finalAmountPence,
+      currency: created?.currency ?? 'GBP',
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);

@@ -36,15 +36,16 @@ function toIso(value: Date | string | null | undefined): string | null {
  */
 export function buildBookingPayload(params: {
   customerId: string;
+  organizationId?: string; // Optional for backward compatibility
   bookingType: BookingType;
   tripConfiguration: TripConfiguration;
   currency?: string;
 }) {
-  const { customerId, bookingType, tripConfiguration, currency } = params;
+  const { customerId, organizationId, bookingType, tripConfiguration, currency } = params;
 
   return {
     customer_id: customerId,
-    organization_id: null,
+    organization_id: organizationId || null,
 
     booking_type: bookingType,
     fleet_mode: bookingType === 'fleet' ? null : null, // TODO: add fleetMode to TripConfiguration if needed
