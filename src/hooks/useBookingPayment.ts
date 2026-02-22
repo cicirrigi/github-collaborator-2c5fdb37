@@ -7,77 +7,91 @@ import {
 } from '@/lib/booking/session/PaymentIntentManager';
 import { useCallback, useEffect, useState } from 'react';
 
-/**
- * 🏭 ENTERPRISE BOOKING PAYMENT HOOK
- *
- * Industry-standard React integration for payment intent management.
- * Eliminates incomplete transactions through intelligent session management.
- *
- * Features:
- * - Session-based payment intent reuse
- * - Lazy creation (only when needed)
- * - Automatic cleanup on success
- * - Zero abandoned intents in Stripe
- * - Recovery after browser refresh
- */
-
 export interface UseBookingPaymentReturn {
-  // Payment intent data
   paymentIntent: PaymentIntentData | null;
   clientSecret: string | null;
   isCreating: boolean;
   error: string | null;
 
-  // Session management
   sessionId: string | null;
   bookingId: string | null;
   paymentState: PaymentState | null;
 
-  // Actions
-  initializePayment: (amount: number, customerEmail?: string) => Promise<PaymentIntentData | null>;
+  initializePayment: (params: {
+    bookingId: string;
+    amount?: number;
+  }) => Promise<PaymentIntentData | null>;
   markAsProcessing: () => void;
   markAsSucceeded: () => void;
   abandonPayment: () => void;
 
-  // Debugging
   getPaymentStats: () => any;
   getSessionStats: () => any;
 }
 
 /**
  * Enterprise payment hook with session persistence
+ *
+ * NOTE:
+ * - We keep your session managers intact.
+ * - We create PaymentIntent via API using bookingId (amount comes from DB).
  */
 export function useBookingPayment(): UseBookingPaymentReturn {
   const [paymentIntent, setPaymentIntent] = useState<PaymentIntentData | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  /**
-   * Initialize or reuse payment intent for given amount
-   */
   const initializePayment = useCallback(
-    async (amount: number, customerEmail?: string): Promise<PaymentIntentData | null> => {
-      if (isCreating) {
-        return paymentIntent; // Don't create multiple times
-      }
+    async (params: { bookingId: string }): Promise<PaymentIntentData | null> => {
+      if (isCreating) return paymentIntent;
 
       setIsCreating(true);
       setError(null);
 
       try {
-        // Use PaymentIntentManager for smart creation/reuse
-        const intent = await paymentIntentManager.getOrCreatePaymentIntent(amount, customerEmail);
+        const response = await fetch('/api/stripe/payment-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Idempotency-Key': `pi_${params.bookingId}`,
+          },
+          body: JSON.stringify(params),
+        });
 
-        if (intent) {
-          setPaymentIntent(intent);
-          return intent;
-        } else {
-          setError('Failed to initialize payment intent');
-          return null;
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data?.error || data?.details || 'Failed to create payment intent');
         }
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'Unknown error occurred';
-        setError(errorMsg);
+
+        const intent: PaymentIntentData = {
+          id: data.paymentIntentId,
+          clientSecret: data.clientSecret,
+          amount: data.amount ?? 0, // optional if API returns it
+          currency: data.currency ?? 'gbp',
+          status: data.status ?? 'requires_payment_method',
+        };
+
+        // Keep session manager state in sync (optional but good)
+        const session = bookingSessionManager.getCurrentSession(0);
+        if (session) {
+          // If your manager has a method to store intent in session, call it.
+          // Otherwise, you can rely on your existing restore logic.
+          try {
+            (paymentIntentManager as any).markIntentCreated?.(session.sessionId, {
+              paymentIntentId: intent.id,
+              clientSecret: intent.clientSecret,
+            });
+          } catch (e) {
+            // Ignore if method doesn't exist
+          }
+        }
+
+        setPaymentIntent(intent);
+        return intent;
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : 'Unknown error occurred';
+        setError(msg);
         return null;
       } finally {
         setIsCreating(false);

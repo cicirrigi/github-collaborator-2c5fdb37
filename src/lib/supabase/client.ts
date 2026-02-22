@@ -1,8 +1,7 @@
 /**
- * 🔐 Supabase Browser Client – Vantage Lane 2.1 (FIXED)
+ * 🔐 Supabase Browser Client – SSR with Forced JWT Attachment
  *
- * Singleton pattern + session persistence
- * Sincronizare completă între browser și SSR
+ * SSR client with explicit session management for JWT token attachment
  */
 
 import { createBrowserClient } from '@supabase/ssr';
@@ -30,3 +29,6 @@ export function createClient() {
 
   return browserClient;
 }
+
+// Export singleton instance directly for guaranteed session sharing
+export const supabaseClient = typeof window !== 'undefined' ? createClient() : null;

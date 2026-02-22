@@ -9,8 +9,11 @@
  * mobile friendly and uses design tokens
  */
 
+export { AuthAwarePayment } from './AuthAwarePayment';
 export { default as BookingSummaryCard } from './BookingSummaryCard';
 export { PaymentCard } from './PaymentCard';
+export { Step3AuthPrompt } from './Step3AuthPrompt';
+export { Step3InlineAuthForm } from './Step3InlineAuthForm';
 
 // Legacy exports (deprecated - use BookingSummaryCard instead)
 export { ServicesSummaryCard } from './ServicesSummaryCard';

@@ -62,13 +62,18 @@ export async function getCurrentUser() {
 
     const { data, error } = await supabase.auth.getUser();
 
-    if (error) {
+    // Only log actual errors, not "no session" which is normal when not logged in
+    if (error && error.message !== 'Auth session missing!') {
       console.error('[getCurrentUser] Error:', error);
     }
 
     return { user: data.user, error };
   } catch (error) {
-    console.error('[getCurrentUser] Unexpected error:', error);
+    // Only log unexpected errors, not auth session missing
+    const errorMessage = error instanceof Error ? error.message : 'Failed to get user';
+    if (errorMessage !== 'Auth session missing!') {
+      console.error('[getCurrentUser] Unexpected error:', error);
+    }
     return {
       user: null,
       error: error instanceof Error ? error : new Error('Failed to get user'),

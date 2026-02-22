@@ -1,5 +1,5 @@
 // 🏗️ INITIAL STATE - Booking Store Configuration Factory
-import type { TripConfiguration } from '../useBookingState/booking.types';
+import type { PricingState, TripConfiguration } from '../useBookingState/booking.types';
 
 /**
  * 🎯 Factory function pentru configurația inițială - IMMUTABLE
@@ -34,7 +34,7 @@ export const createInitialTripConfiguration = (): TripConfiguration => ({
 
   // Booking Type Specific
   hoursRequested: null,
-  daysRequested: null,
+  daysRequested: 1, // Default to 1 day for daily bookings
   customRequirements: '',
 
   // 🚗 Step 2: Vehicle Selection (single vehicle)
@@ -97,6 +97,21 @@ export const createInitialTripConfiguration = (): TripConfiguration => ({
   futureFeatures: {
     oshiboriTowels: false,
   },
+});
+
+/**
+ * 💰 Initial Pricing State
+ */
+export const createInitialPricingState = (): PricingState => ({
+  routeData: {
+    distance: null,
+    duration: null,
+    isCalculated: false,
+  },
+  vehiclePrices: {},
+  isLoadingPrices: false,
+  pricingError: null,
+  lastPricingUpdate: null,
 });
 
 /**

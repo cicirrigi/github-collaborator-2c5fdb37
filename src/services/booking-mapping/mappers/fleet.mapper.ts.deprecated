@@ -1,0 +1,19 @@
+/**
+ * 🚐 FLEET Booking Mapper
+ */
+
+import { createBaseBookingRecord } from '../base-mapping';
+import type { BookingRecord, TripConfiguration } from '../types';
+
+/**
+ * Maps TripConfiguration to BookingRecord for FLEET bookings
+ * FLEET bookings use separate columns for each vehicle type
+ */
+export const mapFleetBooking = (tripConfig: TripConfiguration, customerId: string): BookingRecord => {
+  const baseRecord = createBaseBookingRecord(tripConfig, 'fleet', customerId);
+
+  return {
+    ...baseRecord,
+    // Fleet-specific fields - will be handled by fleetSelection in trip_configuration_raw
+  };
+};

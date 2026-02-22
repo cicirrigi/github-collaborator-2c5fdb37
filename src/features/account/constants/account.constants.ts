@@ -5,6 +5,7 @@
  * Centralizate, reutilizabile, type-safe
  */
 
+import { Calendar, CreditCard, HelpCircle, MapPin, Phone, Settings, User } from 'lucide-react';
 import type { AccountSection } from '../types/account.types';
 
 export const ACCOUNT_ROUTES = {
@@ -23,17 +24,24 @@ export const ACCOUNT_NAVIGATION: readonly AccountSection[] = [
     title: 'My Account',
     items: [
       {
+        id: 'dashboard',
+        label: 'Dashboard',
+        path: ACCOUNT_ROUTES.ROOT,
+        icon: User,
+        description: 'Account overview and summary',
+      },
+      {
         id: 'profile',
         label: 'Profile',
         path: ACCOUNT_ROUTES.PROFILE,
-        icon: 'User',
+        icon: User,
         description: 'Personal information and avatar',
       },
       {
         id: 'settings',
         label: 'Settings',
         path: ACCOUNT_ROUTES.SETTINGS,
-        icon: 'Settings',
+        icon: Settings,
         description: 'Preferences and notifications',
       },
     ],
@@ -45,14 +53,14 @@ export const ACCOUNT_NAVIGATION: readonly AccountSection[] = [
         id: 'bookings',
         label: 'Booking History',
         path: ACCOUNT_ROUTES.BOOKINGS,
-        icon: 'Calendar',
+        icon: Calendar,
         description: 'View past and upcoming trips',
       },
       {
         id: 'addresses',
         label: 'Saved Addresses',
         path: ACCOUNT_ROUTES.ADDRESSES,
-        icon: 'MapPin',
+        icon: MapPin,
         description: 'Manage favorite locations',
       },
     ],
@@ -64,21 +72,21 @@ export const ACCOUNT_NAVIGATION: readonly AccountSection[] = [
         id: 'emergency-contacts',
         label: 'Emergency Contacts',
         path: ACCOUNT_ROUTES.EMERGENCY_CONTACTS,
-        icon: 'Phone',
+        icon: Phone,
         description: 'Emergency contact information',
       },
       {
         id: 'billing',
         label: 'Billing & Payments',
         path: ACCOUNT_ROUTES.BILLING,
-        icon: 'CreditCard',
+        icon: CreditCard,
         description: 'Payment methods and invoices',
       },
       {
         id: 'support',
         label: 'Help & Support',
         path: ACCOUNT_ROUTES.SUPPORT,
-        icon: 'HelpCircle',
+        icon: HelpCircle,
         description: 'Contact support and FAQs',
       },
     ],

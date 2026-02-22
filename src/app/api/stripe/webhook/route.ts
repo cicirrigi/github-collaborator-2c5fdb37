@@ -1,0 +1,206 @@
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2024-06-20',
+});
+
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.text();
+    const signature = request.headers.get('stripe-signature');
+
+    if (!signature) {
+      console.error('❌ Missing Stripe signature');
+      return NextResponse.json({ error: 'Missing signature' }, { status: 400 });
+    }
+
+    // Verify webhook signature
+    let event: Stripe.Event;
+    try {
+      event = stripe.webhooks.constructEvent(body, signature, endpointSecret);
+    } catch (err) {
+      console.error('❌ Webhook signature verification failed:', err);
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+    }
+
+    // Create service role client for database operations (bypasses RLS)
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    // Idempotency: Insert event into stripe_events (prevents double processing)
+    const { error: eventInsertError } = await supabase.from('stripe_events').insert({
+      stripe_event_id: event.id,
+      event_type: event.type,
+      livemode: event.livemode,
+      api_version: event.api_version,
+      payload: event,
+      booking_id: (event.data?.object as any)?.metadata?.bookingId || null,
+      booking_payment_id: null,
+      organization_id: null,
+    });
+
+    // If event already exists, we've processed it before
+    if (eventInsertError?.code === '23505') {
+      console.log('🔄 Event already processed:', event.id);
+      return NextResponse.json({ received: true });
+    }
+
+    if (eventInsertError) {
+      console.error('❌ Failed to insert stripe_event:', eventInsertError);
+      return NextResponse.json({ error: 'Failed to log event' }, { status: 500 });
+    }
+
+    // Handle different event types
+    switch (event.type) {
+      case 'payment_intent.succeeded': {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        console.log('💰 Payment succeeded:', paymentIntent.id);
+
+        // Extract booking info from metadata
+        const bookingId = paymentIntent.metadata.bookingId;
+        if (!bookingId) {
+          console.error('❌ Missing bookingId in payment metadata');
+          break;
+        }
+
+        // Update booking status to CONFIRMED
+        const { error: bookingUpdateError } = await supabase
+          .from('bookings')
+          .update({
+            status: 'CONFIRMED',
+          })
+          .eq('id', bookingId);
+
+        if (bookingUpdateError) {
+          console.error('❌ Failed to update booking status:', bookingUpdateError);
+        } else {
+          console.log('✅ Booking confirmed:', bookingId);
+        }
+
+        // Extract charge ID for audit trail
+        const chargeId =
+          typeof paymentIntent.latest_charge === 'string' ? paymentIntent.latest_charge : null;
+
+        // Update booking_payments table with success details
+        const { error: paymentUpdateError } = await supabase
+          .from('booking_payments')
+          .update({
+            status: 'succeeded',
+            captured_at: new Date().toISOString(),
+            livemode: paymentIntent.livemode,
+            stripe_charge_id: chargeId,
+          })
+          .eq('stripe_payment_intent_id', paymentIntent.id);
+
+        if (paymentUpdateError) {
+          console.error('❌ Failed to update booking_payments:', paymentUpdateError);
+        }
+
+        break;
+      }
+
+      case 'payment_intent.payment_failed': {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        console.log('💥 Payment failed:', paymentIntent.id);
+
+        const bookingId = paymentIntent.metadata.bookingId;
+        if (!bookingId) {
+          console.error('❌ Missing bookingId in payment metadata');
+          break;
+        }
+
+        // Update booking status to PAYMENT_FAILED
+        const { error: bookingUpdateError } = await supabase
+          .from('bookings')
+          .update({
+            status: 'PAYMENT_FAILED',
+          })
+          .eq('id', bookingId);
+
+        if (bookingUpdateError) {
+          console.error('❌ Failed to update booking status:', bookingUpdateError);
+        } else {
+          console.log('✅ Booking marked as payment failed:', bookingId);
+        }
+
+        // Update booking_payments table with failure details
+        const { error: paymentUpdateError } = await supabase
+          .from('booking_payments')
+          .update({
+            status: 'failed',
+            failed_at: new Date().toISOString(),
+            last_error: paymentIntent.last_payment_error?.message ?? null,
+            livemode: paymentIntent.livemode,
+          })
+          .eq('stripe_payment_intent_id', paymentIntent.id);
+
+        if (paymentUpdateError) {
+          console.error('❌ Failed to update booking_payments:', paymentUpdateError);
+        }
+
+        break;
+      }
+
+      case 'payment_intent.canceled': {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        console.log('❌ Payment canceled:', paymentIntent.id);
+
+        const bookingId = paymentIntent.metadata.bookingId;
+        if (!bookingId) {
+          console.error('❌ Missing bookingId in payment metadata');
+          break;
+        }
+
+        // Update booking status back to NEW (user can retry payment)
+        const { error: bookingUpdateError } = await supabase
+          .from('bookings')
+          .update({
+            status: 'NEW',
+          })
+          .eq('id', bookingId);
+
+        if (bookingUpdateError) {
+          console.error('❌ Failed to update booking status:', bookingUpdateError);
+        } else {
+          console.log('✅ Booking marked as payment canceled:', bookingId);
+        }
+
+        // Update booking_payments table with cancellation details
+        const { error: paymentUpdateError } = await supabase
+          .from('booking_payments')
+          .update({
+            status: 'canceled',
+            canceled_at: new Date().toISOString(),
+            livemode: paymentIntent.livemode,
+          })
+          .eq('stripe_payment_intent_id', paymentIntent.id);
+
+        if (paymentUpdateError) {
+          console.error('❌ Failed to update booking_payments:', paymentUpdateError);
+        }
+
+        break;
+      }
+
+      default:
+        console.log('ℹ️ Unhandled event type:', event.type);
+    }
+
+    // Mark event as processed
+    await supabase
+      .from('stripe_events')
+      .update({ processed_at: new Date().toISOString() })
+      .eq('stripe_event_id', event.id);
+
+    return NextResponse.json({ received: true });
+  } catch (error) {
+    console.error('🚨 Webhook processing error:', error);
+    return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
+  }
+}

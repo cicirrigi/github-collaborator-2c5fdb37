@@ -27,7 +27,7 @@ export function AccountSidebarItem({
   const isActive = pathname === item.path;
 
   const baseClasses = [
-    'flex items-center gap-3 p-3 rounded-lg transition-all duration-200',
+    'flex items-center gap-3 py-3 pl-2 pr-3 rounded-lg transition-all duration-200',
     'text-sm font-medium select-none',
   ].join(' ');
 
@@ -60,10 +60,8 @@ export function AccountSidebarItem({
 
   return (
     <Link {...linkProps}>
-      {/* Icon placeholder - будет заменен на реальные иконки */}
-      <div className={iconClasses} aria-hidden='true'>
-        📄
-      </div>
+      {/* Lucide React Icon */}
+      <item.icon className={iconClasses} aria-hidden='true' />
 
       <div className='flex-1 min-w-0'>
         <div className='font-medium truncate'>{item.label}</div>

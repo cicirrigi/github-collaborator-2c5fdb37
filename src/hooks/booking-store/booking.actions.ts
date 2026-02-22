@@ -25,6 +25,20 @@ export const createBookingActions = (
         customRequirements: type === 'bespoke' ? currentConfig.customRequirements : '',
       },
     });
+
+    // 🔄 Trigger pricing recalculation if we have route data (industry standard pattern)
+    const state = get();
+    const { pricingState, tripConfiguration } = state;
+
+    if (
+      pricingState.routeData.isCalculated &&
+      pricingState.routeData.distance &&
+      pricingState.routeData.duration &&
+      tripConfiguration.pickup &&
+      tripConfiguration.dropoff
+    ) {
+      state.calculatePricing();
+    }
   },
 
   // 🪄 STEPPER NAVIGATION

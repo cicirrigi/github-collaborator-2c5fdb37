@@ -1,0 +1,19 @@
+/**
+ * 📅 DAILY Booking Mapper
+ */
+
+import { createBaseBookingRecord } from '../base-mapping';
+import type { BookingRecord, TripConfiguration } from '../types';
+
+/**
+ * Maps TripConfiguration to BookingRecord for DAILY bookings
+ * DAILY bookings use dedicated days field (not converted to hours)
+ */
+export const mapDailyBooking = (tripConfig: TripConfiguration, customerId: string): BookingRecord => {
+  const baseRecord = createBaseBookingRecord(tripConfig, 'daily', customerId);
+
+  return {
+    ...baseRecord,
+    days_requested: tripConfig.daysRequested || 1, // Use NEW DB field name
+  };
+};

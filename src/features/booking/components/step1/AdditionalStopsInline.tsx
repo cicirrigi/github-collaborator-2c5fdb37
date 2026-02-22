@@ -1,9 +1,11 @@
 'use client';
 
+import { AutocompleteInput } from '@/components/ui/AutocompleteInput';
 import { GlassmorphismCard } from '@/components/ui/GlassmorphismCard';
 import { useBookingState } from '@/hooks/useBookingState';
 import { LocationData } from '@/hooks/useBookingState/booking.types';
-import { Plus, Route, X } from 'lucide-react';
+import type { GooglePlaceResult } from '@/lib/google/google-services';
+import { MapPin, Plus, Route, X } from 'lucide-react';
 
 export function AdditionalStopsInline() {
   const { bookingType, tripConfiguration, setAdditionalStops } = useBookingState();
@@ -37,6 +39,21 @@ export function AdditionalStopsInline() {
     setAdditionalStops(updatedStops);
   };
 
+  const handleStopPlaceSelect = (index: number, place: GooglePlaceResult) => {
+    const updatedStops = additionalStops.map((stop, i) =>
+      i === index
+        ? {
+            placeId: place.placeId,
+            address: place.address,
+            coordinates: place.coordinates,
+            type: place.type,
+            components: place.components,
+          }
+        : stop
+    );
+    setAdditionalStops(updatedStops);
+  };
+
   return (
     <GlassmorphismCard className='p-4'>
       <div className='flex items-center justify-between mb-4'>
@@ -65,12 +82,13 @@ export function AdditionalStopsInline() {
                   <X className='w-3 h-3' />
                 </button>
               </div>
-              <input
-                type='text'
+              <AutocompleteInput
                 value={stop.address}
-                onChange={e => handleStopChange(index, e.target.value)}
+                onChange={address => handleStopChange(index, address)}
+                onPlaceSelect={place => handleStopPlaceSelect(index, place)}
                 placeholder='Enter stop address...'
-                className='w-full bg-transparent text-xs text-amber-100/90 placeholder:text-amber-200/40 border-none outline-none resize-none'
+                icon={<MapPin className='w-3 h-3 text-amber-200/60' />}
+                className='text-xs'
               />
             </div>
           ))}

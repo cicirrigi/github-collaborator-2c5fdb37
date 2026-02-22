@@ -1,58 +1,142 @@
+import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' });
 
 export async function POST(request: NextRequest) {
   try {
-    const { amount, bookingId, customerEmail } = await request.json();
+    const body = await request.json().catch(() => null);
+    const bookingId: string | undefined = body?.bookingId;
 
-    // Validate required fields
-    if (!amount || !bookingId) {
-      return NextResponse.json(
-        { error: 'Missing required fields: amount and bookingId' },
-        { status: 400 }
-      );
+    if (!bookingId) {
+      return NextResponse.json({ error: 'Missing required field: bookingId' }, { status: 400 });
     }
 
-    // Get idempotency key from headers to prevent duplicate payment intents
-    const idempotencyKey = request.headers.get('Idempotency-Key');
+    // 1) Auth check (normal session-aware client)
+    const supabase = await createSupabaseServerClient();
+    const {
+      data: { session },
+      error: authError,
+    } = await supabase.auth.getSession();
 
-    // Create payment intent with explicit idempotency key
-    const paymentIntentOptions = {
-      amount: Math.round(amount * 100), // Convert to pence/cents
-      currency: 'gbp',
-      metadata: {
-        bookingId,
-        customerEmail: customerEmail || '',
-      },
-      automatic_payment_methods: {
-        enabled: true,
-      },
-    };
+    if (authError || !session?.user) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
 
-    // Only pass idempotency key if we have one to prevent Stripe SDK auto-retry duplicates
-    const requestOptions = idempotencyKey ? { idempotencyKey } : {};
-    const paymentIntent = await stripe.paymentIntents.create(paymentIntentOptions, requestOptions);
+    const userId = session.user.id;
+    const receiptEmail = session.user.email ?? null;
+
+    // 2) Admin client
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { persistSession: false } }
+    );
+
+    // 3) Fetch booking (1) – keep it simple + robust
+    const { data: booking, error: bookingError } = await supabaseAdmin
+      .from('bookings')
+      .select('id, customer_id, organization_id, currency, reference, status')
+      .eq('id', bookingId)
+      .single();
+
+    if (bookingError || !booking) {
+      return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    // 4) Ownership check (2)
+    const { data: customer, error: customerError } = await supabaseAdmin
+      .from('customers')
+      .select('id')
+      .eq('id', booking.customer_id)
+      .eq('auth_user_id', userId)
+      .single();
+
+    if (customerError || !customer) {
+      return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    // Get amount from frontend (booking doesn't store amount in current schema)
+    const amount = body?.amount ?? body?.amount_total_pence;
+    if (!Number.isInteger(amount) || amount <= 0) {
+      return NextResponse.json({ error: 'Invalid booking amount' }, { status: 400 });
+    }
+
+    // Stripe expects lowercase ISO currency
+    const currency = String(booking.currency || 'GBP').toLowerCase();
+
+    // 5) Stable idempotency key
+    const headerKey = request.headers.get('Idempotency-Key');
+    const idempotencyKey = headerKey || `pi_${bookingId}_${amount}`;
+
+    // 6) Create PI (idempotent)
+    const paymentIntent = await stripe.paymentIntents.create(
+      {
+        amount,
+        currency,
+        ...(receiptEmail ? { receipt_email: receiptEmail } : {}),
+        metadata: {
+          bookingId,
+          reference: booking.reference ?? '',
+          userId,
+        },
+        automatic_payment_methods: { enabled: true },
+      },
+      { idempotencyKey }
+    );
+
+    // 7) Upsert booking_payments (SAFE on retries)
+    const { error: paymentUpsertError } = await supabaseAdmin.from('booking_payments').upsert(
+      {
+        booking_id: bookingId,
+        stripe_payment_intent_id: paymentIntent.id,
+        organization_id: booking.organization_id,
+        amount_pence: amount,
+        currency,
+        status: 'pending',
+        receipt_email: receiptEmail,
+        idempotency_key: idempotencyKey,
+        attempt_no: 1,
+        livemode: paymentIntent.livemode,
+        metadata: {
+          paymentIntentId: paymentIntent.id,
+          reference: booking.reference,
+          idempotencyKey,
+        },
+      },
+      { onConflict: 'stripe_payment_intent_id' }
+    );
+
+    if (paymentUpsertError) {
+      console.error('❌ Failed to upsert booking_payments:', paymentUpsertError);
+      return NextResponse.json({ error: 'Failed to save payment record' }, { status: 500 });
+    }
+
+    // 8) Update booking status from 'NEW' to 'PENDING_PAYMENT' (ACTUAL DB SCHEMA)
+    if (booking.status === 'NEW') {
+      const { error: statusUpdateError } = await supabaseAdmin
+        .from('bookings')
+        .update({ status: 'PENDING_PAYMENT' })
+        .eq('id', bookingId);
+
+      if (statusUpdateError) {
+        console.error('❌ Failed to update booking status:', statusUpdateError);
+      }
+    }
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
+      currency,
+      amount,
     });
   } catch (error) {
     console.error('Stripe Payment Intent Error:', error);
-
-    // Return more detailed error information for debugging
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
+    const msg = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      {
-        error: 'Failed to create payment intent',
-        details: errorMessage,
-        debug: process.env.NODE_ENV === 'development' ? error : undefined,
-      },
+      { error: 'Failed to create payment intent', details: msg },
       { status: 500 }
     );
   }

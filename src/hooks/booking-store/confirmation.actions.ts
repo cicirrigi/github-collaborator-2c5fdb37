@@ -1,4 +1,5 @@
 import { StateCreator } from 'zustand';
+import type { BookingState } from '../useBookingState/booking.types';
 import type {
   BookingConfirmation,
   ConfirmationActions,
@@ -15,42 +16,42 @@ import type {
 
 export const createConfirmationActions: StateCreator<BookingState, [], [], ConfirmationActions> = (
   set,
-  get
+  _get
 ) => ({
   // 👥 PASSENGER NAME MANAGEMENT
   updatePassengerName: (passengerId: string, name: string) => {
-    set(state => ({
+    set((state: BookingState) => ({
       confirmation: state.confirmation
         ? {
             ...state.confirmation,
-            passengerNames: state.confirmation.passengerNames.map(p =>
+            passengerNames: state.confirmation.passengerNames.map((p: PassengerName) =>
               p.id === passengerId ? { ...p, name } : p
             ),
           }
-        : undefined,
+        : null,
     }));
   },
 
   setPassengerNames: (names: PassengerName[]) => {
-    set(state => ({
+    set((state: BookingState) => ({
       confirmation: state.confirmation
         ? {
             ...state.confirmation,
             passengerNames: names,
           }
-        : undefined,
+        : null,
     }));
   },
 
   // 🚗 DRIVER ASSIGNMENT MANAGEMENT
   updateDriverAssignment: (assignment: DriverAssignment) => {
-    set(state => ({
+    set((state: BookingState) => ({
       confirmation: state.confirmation
         ? {
             ...state.confirmation,
             driverAssignments: [assignment], // Single driver for normal bookings
           }
-        : undefined,
+        : null,
     }));
   },
 
@@ -78,7 +79,7 @@ export const createConfirmationActions: StateCreator<BookingState, [], [], Confi
   },
 
   clearConfirmation: () => {
-    set({ confirmation: undefined });
+    set({ confirmation: null });
   },
 
   // 🔧 HELPER FUNCTIONS
@@ -95,13 +96,12 @@ export const createConfirmationActions: StateCreator<BookingState, [], [], Confi
   },
 
   initializePassengerNames: (passengerCount: number) => {
-    const { user } = get();
     const names: PassengerName[] = [];
 
     // Primary passenger (account holder)
     names.push({
       id: 'primary',
-      name: user?.name || 'Account Holder',
+      name: 'Account Holder', // User data should come from auth context, not BookingState
       isPrimary: true,
     });
 

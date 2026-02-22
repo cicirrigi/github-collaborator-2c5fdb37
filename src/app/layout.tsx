@@ -3,6 +3,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
+import { GoogleMapsLoader } from '@/components/GoogleMapsLoader';
 import { ConditionalLayout } from '@/components/layout/ConditionalLayout';
 import { siteMetadata } from '@/config/site.config';
 import { AuthProvider } from '@/features/auth/context/AuthProvider';
@@ -129,7 +130,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <ThemeProvider attribute='class' defaultTheme='dark' disableTransitionOnChange={true}>
           <AuthProvider>
-            <ConditionalLayout>{children}</ConditionalLayout>
+            <GoogleMapsLoader>
+              <ConditionalLayout>{children}</ConditionalLayout>
+            </GoogleMapsLoader>
           </AuthProvider>
         </ThemeProvider>
 

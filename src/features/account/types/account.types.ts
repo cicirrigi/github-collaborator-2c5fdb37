@@ -75,11 +75,13 @@ export interface EmergencyContact {
 export type LoyaltyTier = 'bronze' | 'silver' | 'gold' | 'platinum';
 export type UserStatus = 'active' | 'suspended' | 'pending' | 'inactive';
 
+import type { LucideIcon } from 'lucide-react';
+
 export interface AccountMenuItem {
   readonly id: string;
   readonly label: string;
   readonly path: string;
-  readonly icon: string;
+  readonly icon: LucideIcon;
   readonly description: string;
   readonly isActive?: boolean;
 }

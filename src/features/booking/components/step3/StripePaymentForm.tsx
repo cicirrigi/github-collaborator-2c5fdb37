@@ -17,6 +17,7 @@ interface StripePaymentFormProps {
   _clientSecret: string;
   onSuccess?: (paymentData: PaymentData) => void;
   onError?: (error: string) => void;
+  onCreatePaymentIntent?: () => void; // 🔧 NEW: Trigger Payment Intent creation
 }
 
 export function StripePaymentForm({
@@ -25,6 +26,7 @@ export function StripePaymentForm({
   _clientSecret,
   onSuccess,
   onError,
+  onCreatePaymentIntent,
 }: StripePaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
@@ -37,6 +39,13 @@ export function StripePaymentForm({
     event.preventDefault();
 
     if (!stripe || !elements) {
+      return;
+    }
+
+    // 🔧 NEW: Check if Payment Intent needs to be created first
+    if (!_clientSecret) {
+      setPaymentError('Payment is being initialized. Please try again in a moment.');
+      onCreatePaymentIntent?.(); // Trigger Payment Intent creation
       return;
     }
 
@@ -68,7 +77,7 @@ export function StripePaymentForm({
           });
         }, 2000);
       }
-    } catch (_err) {
+    } catch {
       setPaymentError('An unexpected error occurred');
       onError?.('An unexpected error occurred');
     } finally {

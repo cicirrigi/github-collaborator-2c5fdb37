@@ -10,7 +10,7 @@ const Divider = () => <div className='border-t border-white/10'></div>;
 export function ReturnHintSection() {
   const { bookingType } = usePickupDropoffLogic();
   const { calculateEstimatedDistanceAndTime, tripConfiguration } = useBookingState();
-  const { distanceKm, durationMinutes } = calculateEstimatedDistanceAndTime();
+  const { distanceKm, durationMinutes, error } = calculateEstimatedDistanceAndTime();
 
   const { pickup, dropoff, returnDateTime } = tripConfiguration;
 
@@ -59,8 +59,8 @@ export function ReturnHintSection() {
       <Divider />
       <div className='vl-hint-row'>
         <span>Journey:</span>
-        <span className='vl-hint-value'>
-          {distanceKm} km • {durationMinutes} min
+        <span className={`vl-hint-value ${error ? 'text-red-400' : ''}`}>
+          {error || `${distanceKm} km • ${durationMinutes} min`}
         </span>
       </div>
     </>

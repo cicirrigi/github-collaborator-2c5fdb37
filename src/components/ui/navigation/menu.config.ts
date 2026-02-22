@@ -10,25 +10,25 @@
 
 import {
   type LucideIcon,
-  Home,
-  Car,
-  User,
-  Settings,
-  MapPin,
-  Clock,
-  Shield,
-  Star,
+  BookOpen,
+  Building2,
   Calendar,
+  Camera,
+  Car,
+  Clock,
   CreditCard,
   FileText,
-  HelpCircle,
-  Navigation,
-  Users,
-  Building2,
   Handshake,
-  BookOpen,
   Heart,
-  Camera,
+  HelpCircle,
+  Home,
+  MapPin,
+  Navigation,
+  Settings,
+  Shield,
+  Star,
+  User,
+  Users,
 } from 'lucide-react';
 
 export interface MenuItem {
@@ -129,6 +129,53 @@ export const mainMenu: MenuItem[] = [
     label: 'Blog',
     href: '/blog',
     icon: BookOpen,
+  },
+  {
+    label: 'My Account',
+    icon: User,
+    requiresAuth: true,
+    children: [
+      {
+        label: 'Dashboard',
+        href: '/account',
+        icon: Home,
+      },
+      {
+        label: 'Profile',
+        href: '/account/profile',
+        icon: User,
+      },
+      {
+        label: 'Addresses',
+        href: '/account/addresses',
+        icon: MapPin,
+      },
+      {
+        label: 'Booking History',
+        href: '/account/bookings',
+        icon: Calendar,
+      },
+      {
+        label: 'Emergency Contacts',
+        href: '/account/emergency-contacts',
+        icon: Shield,
+      },
+      {
+        label: 'Billing & Payments',
+        href: '/account/billing',
+        icon: CreditCard,
+      },
+      {
+        label: 'Settings',
+        href: '/account/settings',
+        icon: Settings,
+      },
+      {
+        label: 'Help & Support',
+        href: '/account/support',
+        icon: HelpCircle,
+      },
+    ],
   },
 ];
 

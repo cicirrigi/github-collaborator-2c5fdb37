@@ -6,7 +6,7 @@ import { useBookingState } from '@/hooks/useBookingState';
 import { stripePromise } from '@/lib/stripe/stripe';
 import { Elements } from '@stripe/react-stripe-js';
 import { AlertCircle, CreditCard, DollarSign } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface PaymentData {
   paymentIntentId: string;
@@ -15,42 +15,155 @@ interface PaymentData {
   currency: string;
 }
 
-/**
- * 💳 PAYMENT CARD - Step 3 Component
- *
- * Payment form and pricing breakdown:
- * - Payment method selection
- * - Credit card form (Stripe integration ready)
- * - Price breakdown with upgrades
- * - Secure payment button
- *
- * Uses design tokens, modular architecture
- * Stripe integration placeholder
- */
 export function PaymentCard() {
-  const { nextStep } = useBookingState();
+  const {
+    nextStep,
+    tripConfiguration,
+    bookingType,
+    pricingState,
+    getPriceForVehicle,
+    getFleetTotalPrice,
+  } = useBookingState();
+
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'applepay'>('card');
+  const [isCreatingBooking, setIsCreatingBooking] = useState(false);
+  const [bookingData, setBookingData] = useState<{
+    bookingId: string;
+    reference: string;
+    amount_total_pence: number;
+    currency: string;
+  } | null>(null);
 
-  const upgradesCost = 0; // Simplified for now
-  const baseFare = 245; // TODO: Calculate from distance/time
-  const totalCost = baseFare + upgradesCost;
+  // Anti-duplicate guards (important in React strict mode)
+  const bookingCreateStartedRef = useRef(false);
+  const paymentInitStartedRef = useRef(false);
 
-  // 🏭 ENTERPRISE PAYMENT MANAGEMENT - Zero incomplete transactions
   const {
     clientSecret,
     isCreating: isCreatingPayment,
     error: paymentError,
     initializePayment,
     markAsSucceeded,
-    bookingId,
   } = useBookingPayment();
 
-  // 📚 OFFICIAL STRIPE PATTERN: Initialize payment intent once with useMemo
-  useMemo(() => {
-    if (paymentMethod === 'card' && totalCost > 0 && !clientSecret && !isCreatingPayment) {
-      initializePayment(totalCost, 'customer@example.com');
+  const createBooking = async () => {
+    if (bookingCreateStartedRef.current) return;
+    if (isCreatingBooking || bookingData) return;
+
+    try {
+      setIsCreatingBooking(true);
+      bookingCreateStartedRef.current = true;
+
+      // 🔍 DEBUG: Log fleet booking payload structure
+      console.log('🚛 FLEET BOOKING PAYLOAD DEBUG:', {
+        bookingType,
+        tripConfiguration: JSON.stringify(tripConfiguration, null, 2),
+        fleetSelection: tripConfiguration.fleetSelection,
+        selectedVehicle: tripConfiguration.selectedVehicle,
+      });
+
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tripConfiguration,
+          bookingType,
+          pricingSnapshot: {
+            finalPricePence: (() => {
+              // Fleet bookings use different pricing logic
+              if (bookingType === 'fleet') {
+                const fleetPriceGBP = getFleetTotalPrice();
+                return fleetPriceGBP ? Math.round(fleetPriceGBP * 100) : 0;
+              }
+
+              // Single vehicle bookings use selectedVehicle
+              const categoryId = tripConfiguration?.selectedVehicle?.category?.id;
+              if (!categoryId) return 0;
+
+              const priceGBP = getPriceForVehicle(categoryId);
+              return priceGBP ? Math.round(priceGBP * 100) : 0;
+            })(),
+            currency: 'GBP',
+            routeData: pricingState?.routeData
+              ? {
+                  distance: pricingState.routeData.distance ?? null,
+                  duration: pricingState.routeData.duration ?? null,
+                  isCalculated: !!pricingState.routeData.isCalculated,
+                }
+              : undefined,
+          },
+        }),
+      });
+
+      const contentType = response.headers.get('content-type') || '';
+      const rawText = await response.text();
+
+      let data: any = null;
+      try {
+        data = contentType.includes('application/json') ? JSON.parse(rawText) : rawText;
+      } catch {
+        data = { parseError: true, rawText };
+      }
+
+      console.log('🧾 BOOKING RESPONSE', {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        data,
+      });
+
+      if (!response.ok) {
+        bookingCreateStartedRef.current = false; // allow retry
+        throw new Error(typeof data === 'string' ? data : JSON.stringify(data));
+      }
+
+      if (data.success) {
+        setBookingData({
+          bookingId: data.bookingId,
+          reference: data.reference,
+          amount_total_pence: data.amount_total_pence,
+          currency: data.currency || 'GBP',
+        });
+      } else {
+        bookingCreateStartedRef.current = false; // allow retry
+        console.error('Booking create failed:', data);
+      }
+    } catch (e) {
+      bookingCreateStartedRef.current = false; // allow retry
+      console.error('Booking create failed FULL:', e);
+    } finally {
+      setIsCreatingBooking(false);
     }
-  }, [paymentMethod, totalCost, clientSecret, isCreatingPayment, initializePayment]);
+  };
+
+  // Create booking + payment intent when user clicks "Continue to Payment"
+  const handleContinueToPayment = async () => {
+    if (isCreatingBooking || bookingData) return;
+
+    // First create booking
+    await createBooking();
+
+    // Payment intent creation will be handled after booking is created
+  };
+
+  // Create payment intent AFTER booking is created (automatic)
+  useEffect(() => {
+    if (!bookingData) return;
+    if (clientSecret) return;
+    if (isCreatingPayment) return;
+    if (paymentInitStartedRef.current) return;
+
+    paymentInitStartedRef.current = true;
+
+    initializePayment({
+      bookingId: bookingData.bookingId,
+      amount: bookingData.amount_total_pence, // Pass amount to Stripe endpoint
+    }).catch(() => {
+      paymentInitStartedRef.current = false; // allow retry
+    });
+  }, [bookingData, clientSecret, isCreatingPayment, initializePayment]);
+
+  const totalPounds = bookingData ? bookingData.amount_total_pence / 100 : 0;
 
   return (
     <div className='vl-card'>
@@ -68,33 +181,41 @@ export function PaymentCard() {
       {/* Content */}
       <div className='vl-card-inner'>
         <div className='space-y-6'>
-          {/* Price Breakdown */}
+          {/* Price breakdown */}
           <div className='space-y-3'>
             <h4 className='text-sm font-medium text-neutral-300 flex items-center gap-2'>
               <DollarSign className='w-4 h-4' />
               Price Breakdown
             </h4>
+
             <div className='space-y-2'>
-              <div className='flex items-center justify-between text-sm'>
-                <span className='text-neutral-400'>Base fare</span>
-                <span className='text-white'>£{baseFare}</span>
-              </div>
-              {upgradesCost > 0 && (
-                <div className='flex items-center justify-between text-sm'>
-                  <span className='text-neutral-400'>Premium upgrades</span>
-                  <span className='text-amber-400'>+£{upgradesCost}</span>
+              {bookingData ? (
+                <>
+                  <div className='flex items-center justify-between text-sm'>
+                    <span className='text-neutral-400'>Journey fare</span>
+                    <span className='text-white'>£{totalPounds.toFixed(2)}</span>
+                  </div>
+                  <div className='border-t border-white/10 pt-2'>
+                    <div className='flex items-center justify-between'>
+                      <span className='text-white font-semibold'>Total</span>
+                      <span className='text-amber-400 font-bold text-lg'>
+                        £{totalPounds.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className='text-center py-4'>
+                  <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-amber-400 mx-auto mb-2' />
+                  <p className='text-neutral-400 text-sm'>
+                    {isCreatingBooking ? 'Creating booking...' : 'Calculating fare...'}
+                  </p>
                 </div>
               )}
-              <div className='border-t border-white/10 pt-2'>
-                <div className='flex items-center justify-between'>
-                  <span className='text-white font-semibold'>Total</span>
-                  <span className='text-amber-400 font-bold text-lg'>£{totalCost}</span>
-                </div>
-              </div>
             </div>
           </div>
 
-          {/* Payment Method Selection */}
+          {/* Payment method */}
           <div className='space-y-3'>
             <h4 className='text-sm font-medium text-neutral-300'>Payment Method</h4>
             <div className='grid grid-cols-3 gap-2'>
@@ -104,18 +225,17 @@ export function PaymentCard() {
                 { id: 'applepay' as const, name: 'Apple Pay', icon: CreditCard },
               ].map(method => {
                 const IconComponent = method.icon;
+                const active = paymentMethod === method.id;
                 return (
                   <button
                     key={method.id}
                     onClick={() => setPaymentMethod(method.id)}
-                    className={`
-                      flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-200
-                      ${
-                        paymentMethod === method.id
-                          ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-                          : 'bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10'
-                      }
-                    `}
+                    className={[
+                      'flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-200',
+                      active
+                        ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+                        : 'bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10',
+                    ].join(' ')}
                   >
                     <IconComponent className='w-5 h-5' />
                     <span className='text-xs font-medium'>{method.name}</span>
@@ -125,18 +245,37 @@ export function PaymentCard() {
             </div>
           </div>
 
-          {/* Stripe Payment Form - Card Method */}
+          {/* Card payment */}
           {paymentMethod === 'card' && (
             <div className='space-y-4'>
-              {/* Loading State */}
+              {!bookingData && !isCreatingBooking && (
+                <div className='text-center py-6'>
+                  <button
+                    onClick={handleContinueToPayment}
+                    className='px-8 py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold transition-colors'
+                  >
+                    Continue to Payment
+                  </button>
+                  <p className='text-neutral-400 text-xs mt-2'>
+                    Click to create your booking and initialize secure payment
+                  </p>
+                </div>
+              )}
+
+              {isCreatingBooking && (
+                <div className='text-center py-8'>
+                  <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mx-auto mb-4' />
+                  <p className='text-neutral-400 text-sm'>Creating your booking...</p>
+                </div>
+              )}
+
               {isCreatingPayment && (
                 <div className='text-center py-8'>
-                  <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mx-auto mb-4'></div>
+                  <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mx-auto mb-4' />
                   <p className='text-neutral-400 text-sm'>Initializing secure payment...</p>
                 </div>
               )}
 
-              {/* Error State */}
               {paymentError && (
                 <div className='flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20'>
                   <AlertCircle className='w-5 h-5 text-red-400 flex-shrink-0' />
@@ -144,8 +283,7 @@ export function PaymentCard() {
                 </div>
               )}
 
-              {/* Stripe Payment Form - Official Stripe Pattern */}
-              {clientSecret && !isCreatingPayment && !paymentError && (
+              {clientSecret && bookingData && !isCreatingPayment && !paymentError && (
                 <Elements
                   stripe={stripePromise}
                   options={{
@@ -161,17 +299,16 @@ export function PaymentCard() {
                   }}
                 >
                   <StripePaymentForm
-                    totalAmount={totalCost}
-                    _bookingId={bookingId || `booking_${Date.now()}`}
+                    totalAmount={totalPounds}
+                    _bookingId={bookingData.bookingId}
                     _clientSecret={clientSecret}
-                    onSuccess={(_paymentData: PaymentData) => {
-                      // 🏭 ENTERPRISE: Mark payment as succeeded and cleanup session
+                    onSuccess={async (_paymentData: PaymentData) => {
+                      // Booking already exists; webhook should update statuses server-side.
                       markAsSucceeded();
-                      // Payment successful - advance to Step 4 confirmation
                       nextStep();
                     }}
-                    onError={(_error: string) => {
-                      // Error handling is managed by enterprise hook
+                    onError={() => {
+                      console.error('Payment failed for booking:', bookingData.bookingId);
                     }}
                   />
                 </Elements>
@@ -179,7 +316,7 @@ export function PaymentCard() {
             </div>
           )}
 
-          {/* Other Payment Methods - Placeholder */}
+          {/* placeholders */}
           {paymentMethod !== 'card' && (
             <div className='text-center py-8 space-y-4'>
               <div className='w-16 h-16 rounded-full bg-neutral-800 flex items-center justify-center mx-auto'>

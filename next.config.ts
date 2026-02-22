@@ -55,7 +55,7 @@ const nextConfig: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' *.vercel-scripts.com js.stripe.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: blob: *.supabase.co images.unsplash.com; frame-src 'self' *.stripe.com *.stripe.network; connect-src 'self' *.supabase.co *.stripe.com vitals.vercel-insights.com *.sentry.io *.ingest.sentry.io;",
+              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' *.vercel-scripts.com js.stripe.com maps.googleapis.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: blob: *.supabase.co images.unsplash.com; frame-src 'self' *.stripe.com *.stripe.network; connect-src 'self' *.supabase.co *.stripe.com maps.googleapis.com vitals.vercel-insights.com *.sentry.io *.ingest.sentry.io;",
           },
           // 🎯 Performance & Caching
           {

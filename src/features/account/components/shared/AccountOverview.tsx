@@ -8,11 +8,19 @@
 'use client';
 
 import { getCurrentUser } from '@/features/auth/services/supabaseAuth';
+import {
+  Calendar,
+  Car,
+  PoundSterling,
+  Star,
+  User as UserIcon,
+  type LucideIcon,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { LOYALTY_TIERS } from '../../constants/account.constants';
 import type { LoyaltyTier } from '../../types/account.types';
 
-interface User {
+interface UserData {
   email?: string;
   id?: string;
   user_metadata?: Record<string, unknown>;
@@ -20,15 +28,15 @@ interface User {
 }
 
 export function AccountOverview() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserData | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const { user } = await getCurrentUser();
         setUser(user);
-      } catch (error) {
-        console.error('Failed to fetch user:', error);
+      } catch {
+        // Silently handle error
       }
     };
 
@@ -105,8 +113,8 @@ function WelcomeSection({ profile }: WelcomeSectionProps) {
         </div>
 
         <div className='text-right'>
-          <div className='w-16 h-16 bg-amber-100 dark:bg-amber-900/40 rounded-full flex items-center justify-center text-2xl'>
-            👤
+          <div className='w-16 h-16 bg-amber-100 dark:bg-amber-900/40 rounded-full flex items-center justify-center'>
+            <UserIcon className='w-8 h-8 text-amber-600' />
           </div>
         </div>
       </div>
@@ -123,19 +131,19 @@ function QuickStats({ profile }: QuickStatsProps) {
     {
       label: 'Total Rides',
       value: profile.totalRides.toString(),
-      icon: '🚗',
+      icon: Car,
       description: 'Completed trips',
     },
     {
       label: 'Total Spent',
       value: `£${profile.totalSpent.toFixed(2)}`,
-      icon: '💷',
+      icon: PoundSterling,
       description: 'Lifetime spending',
     },
     {
       label: 'Loyalty Tier',
       value: LOYALTY_TIERS[profile.loyaltyTier].name,
-      icon: '⭐',
+      icon: Star,
       description: 'Current membership level',
     },
   ];
@@ -157,7 +165,7 @@ interface StatCardProps {
   readonly stat: {
     readonly label: string;
     readonly value: string;
-    readonly icon: string;
+    readonly icon: LucideIcon;
     readonly description: string;
   };
 }
@@ -166,7 +174,7 @@ function StatCard({ stat }: StatCardProps) {
   return (
     <div className='bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-4 border border-neutral-200 dark:border-neutral-700'>
       <div className='flex items-center gap-3'>
-        <div className='text-2xl'>{stat.icon}</div>
+        <stat.icon className='w-6 h-6 text-amber-500' />
         <div>
           <div className='text-2xl font-bold text-neutral-900 dark:text-white'>{stat.value}</div>
           <div className='text-sm font-medium text-neutral-700 dark:text-neutral-300'>
@@ -187,7 +195,9 @@ function RecentActivity() {
       </h3>
 
       <div className='bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-6 border border-neutral-200 dark:border-neutral-700 text-center'>
-        <div className='text-4xl mb-3'>📋</div>
+        <div className='mb-3'>
+          <Calendar className='w-12 h-12 text-amber-500 mx-auto' />
+        </div>
         <h4 className='font-medium text-neutral-900 dark:text-white mb-2'>No recent activity</h4>
         <p className='text-sm text-neutral-500 dark:text-neutral-400 mb-4'>
           Your booking history will appear here once you make your first trip.

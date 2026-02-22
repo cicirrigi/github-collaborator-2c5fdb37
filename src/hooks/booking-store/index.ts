@@ -1,7 +1,11 @@
 // 🎛️ MODULAR BOOKING STORE - Enterprise Split Architecture
 import { create } from 'zustand';
 import type { BookingState } from '../useBookingState/booking.types';
-import { createInitialTripConfiguration, initialWizardState } from './initialState';
+import {
+  createInitialPricingState,
+  createInitialTripConfiguration,
+  initialWizardState,
+} from './initialState';
 
 // Import individual action creators
 import { createBookingActions } from './booking.actions';
@@ -15,6 +19,8 @@ import { createVehicleActions } from './vehicle.actions';
 import { createPreferencesActions } from './preferences.actions';
 import { createServicesActions } from './services.actions';
 import { createUpgradesActions } from './upgrades.actions';
+// Pricing Actions
+import { createPricingActions } from './pricing.actions';
 
 /**
  * 🚀 MODULAR BOOKING STORE - Enterprise Architecture
@@ -26,6 +32,7 @@ export const useBookingState = create<BookingState>((set, get) => ({
   // 🏗️ INITIAL STATE
   bookingType: 'oneway',
   tripConfiguration: createInitialTripConfiguration(),
+  pricingState: createInitialPricingState(),
   ...initialWizardState,
 
   // 🎯 BOOKING & STEPPER ACTIONS
@@ -50,6 +57,9 @@ export const useBookingState = create<BookingState>((set, get) => ({
   ...createServicesActions(set, get),
   ...createPreferencesActions(set, get),
   ...createUpgradesActions(set, get),
+
+  // 💰 PRICING ACTIONS
+  ...createPricingActions(set, get),
 
   // ✅ VALIDATION & UTILITY ACTIONS
   ...createValidationActions(set, get),

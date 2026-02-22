@@ -10,7 +10,7 @@ import { AccountOverview } from '@/features/account/components/shared/AccountOve
 
 export default function AccountPage() {
   return (
-    <AccountLayout title='Dashboard' description='Overview of your account and recent activity'>
+    <AccountLayout>
       <AccountOverview />
     </AccountLayout>
   );

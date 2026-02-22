@@ -17,6 +17,10 @@ import {
   subMonths,
 } from 'date-fns';
 
+// Import time picker logic for availability checking
+import { DEFAULT_LEAD_TIME_MINUTES } from '../../time/core/time-constants';
+import { generateTimeSlots, isTimeDisabled } from '../../time/core/time-utils';
+
 // Manual implementation of eachDayOfInterval to avoid import issues
 function eachDayOfInterval(interval: { start: Date; end: Date }): Date[] {
   const days: Date[] = [];
@@ -51,6 +55,28 @@ export function getNowLocal(): Date {
 }
 
 /* -----------------------------------------------------
+   ⏰ TIME SLOT AVAILABILITY CHECK
+----------------------------------------------------- */
+export function checkIfDateHasAvailableTimeSlots(
+  date: Date,
+  leadMinutes: number = DEFAULT_LEAD_TIME_MINUTES
+): boolean {
+  const slots = generateTimeSlots(15); // 15-minute intervals
+
+  // Check if any slot is available for this date
+  return slots.some(
+    slot =>
+      !isTimeDisabled({
+        slot,
+        date,
+        lead: leadMinutes,
+        minTime: undefined,
+        maxTime: undefined,
+      })
+  );
+}
+
+/* -----------------------------------------------------
    🚫 DISABLED DATE LOGIC
 ----------------------------------------------------- */
 
@@ -58,6 +84,13 @@ export function isDateInPast(date: Date, minDate?: Date, maxDate?: Date): boolea
   const today = startOfDay(getNowLocal());
 
   if (date < today) return true;
+
+  // NEW: Check if today has any available time slots
+  if (isSameDay(date, today)) {
+    const hasAvailableSlots = checkIfDateHasAvailableTimeSlots(date);
+    if (!hasAvailableSlots) return true; // Disable today if no slots available
+  }
+
   if (minDate && date < startOfDay(minDate)) return true;
   if (maxDate && date > startOfDay(maxDate)) return true;
 

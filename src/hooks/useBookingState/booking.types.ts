@@ -1,9 +1,12 @@
 // 🎯 BOOKING TYPES - All type definitions for the unified booking system
 
 // Import and re-export vehicle types for easy access
+import type { BookingConfirmation, ConfirmationActions } from './confirmation.types';
 import type { FleetActions, FleetSelection, FleetSummary } from './fleet.types';
 import type { VehicleCategory, VehicleModel, VehicleSelection } from './vehicle.types';
 export type {
+  BookingConfirmation,
+  ConfirmationActions,
   FleetActions,
   FleetSelection,
   FleetSummary,
@@ -71,6 +74,11 @@ export interface TripConfiguration {
 
   // Bespoke bookings
   customRequirements: string;
+  bespoke?: {
+    budgetMinGBP?: string;
+    budgetMaxGBP?: string;
+    currency?: string;
+  };
 
   // 🚗 Step 2: Vehicle Selection (single vehicle)
   selectedVehicle: VehicleSelection;
@@ -92,6 +100,12 @@ export interface BookingState {
 
   // TRIP CONFIGURATION
   tripConfiguration: TripConfiguration;
+
+  // PRICING STATE
+  pricingState: PricingState;
+
+  // CONFIRMATION STATE
+  confirmation: BookingConfirmation | null;
 
   // WIZARD STATE
   currentStep: number;
@@ -122,6 +136,7 @@ export interface BookingState {
   setHoursRequested: (value: number | null) => void;
   setDaysRequested: (value: number | null) => void;
   setCustomRequirements: (value: string) => void;
+  setBudgetRange: (budgetMin: string, budgetMax: string) => void;
 
   // 🚗 VEHICLE SELECTION ACTIONS (single vehicle)
   selectVehicleCategory: (category: VehicleCategory) => void;
@@ -180,8 +195,22 @@ export interface BookingState {
   getSmartRecommendations: () => string[];
   resetTrip: () => void;
 
+  // 💰 PRICING ACTIONS
+  setRouteData: (distance: number, duration: number) => void;
+  clearRouteData: () => void;
+  calculatePricing: () => Promise<void>;
+  setPriceForVehicle: (vehicleType: string, price: number) => void;
+  clearAllPrices: () => void;
+  getPriceForVehicle: (vehicleType: string) => number | null;
+  hasPricingData: () => boolean;
+  shouldRecalculatePricing: () => boolean;
+
   // UTILITY ACTIONS
-  calculateEstimatedDistanceAndTime: () => { distanceKm: number; durationMinutes: number };
+  calculateEstimatedDistanceAndTime: () => {
+    distanceKm: number;
+    durationMinutes: number;
+    error: string | null;
+  };
 
   // 🚗 RETURN TRIP ENTERPRISE LOGIC
   prepareReturnTripBookings: () => { outbound: SingleBooking; inbound: SingleBooking } | null;
@@ -229,7 +258,41 @@ export interface ServicePackages {
   };
 }
 
-// 🔮 FUTURE FEATURES (hidden from UI)
+// � PRICING STATE
+export interface PricingState {
+  // Distance and duration from Google Maps
+  routeData: {
+    distance: number | null; // miles
+    duration: number | null; // minutes
+    isCalculated: boolean;
+  };
+
+  // Calculated prices per vehicle type
+  vehiclePrices: Record<string, number | null>; // vehicleType -> price in GBP
+
+  // Pricing calculation status
+  isLoadingPrices: boolean;
+  pricingError: string | null;
+  lastPricingUpdate: Date | null;
+}
+
+export interface PricingActions {
+  // Route data actions
+  setRouteData: (distance: number, duration: number) => void;
+  clearRouteData: () => void;
+
+  // Pricing calculation actions
+  calculatePricing: () => Promise<void>;
+  setPriceForVehicle: (vehicleType: string, price: number) => void;
+  clearAllPrices: () => void;
+
+  // Utility actions
+  getPriceForVehicle: (vehicleType: string) => number | null;
+  hasPricingData: () => boolean;
+  shouldRecalculatePricing: () => boolean;
+}
+
+// �� FUTURE FEATURES (hidden from UI)
 export interface FutureFeatures {
   oshiboriTowels: boolean;
 }

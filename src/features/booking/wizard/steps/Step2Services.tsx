@@ -2,6 +2,7 @@
 
 import { useBookingState } from '@/hooks/useBookingState';
 import { Car } from 'lucide-react';
+import { BespokeConfirmation } from '../../components/step2/BespokeConfirmation';
 import { FleetModeSelector } from '../../components/step2/FleetModeSelector';
 import { FleetSummaryCard } from '../../components/step2/FleetSummaryCard';
 import { FleetVehicleSelector } from '../../components/step2/FleetVehicleSelector';
@@ -41,8 +42,8 @@ export function Step2Services() {
       mx-auto
     '
     >
-      {/* STANDARD BOOKING ONLY */}
-      {bookingType !== 'fleet' && (
+      {/* STANDARD BOOKING ONLY - Exclude fleet and bespoke */}
+      {bookingType !== 'fleet' && bookingType !== 'bespoke' && (
         <div className='space-y-8'>
           {/* VEHICLE CATEGORIES - CENTERED */}
           <div className='w-full max-w-4xl mx-auto'>
@@ -58,11 +59,23 @@ export function Step2Services() {
 
             {/* SERVICES - responsive layout */}
             <div className='flex flex-col gap-6 mt-0 lg:mt-10'>
-              {/* ✅ CONDITIONAL SERVICES - Apar doar după vehicle selection */}
+              {/* CONDITIONAL SERVICES - Apar doar după vehicle selection */}
               {hasSelectedVehicle ? (
                 <div className='animate-slideIn'>
                   {/* SERVICES GRID: 1 col mobile, 2 cols desktop */}
-                  <div className='grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-4 lg:gap-6 items-start'>
+                  <div
+                    className='relative grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-4 lg:gap-6 items-start p-4 lg:p-6 rounded-2xl'
+                    style={{
+                      background: `
+                        radial-gradient(ellipse 800px 200px at 50% 20%, rgba(203,178,106,0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at top, rgba(203,178,106,0.06) 0%, rgba(25,25,25,0.3) 40%, transparent 70%),
+                        radial-gradient(ellipse at bottom right, rgba(203,178,106,0.04) 0%, transparent 50%),
+                        rgba(0,0,0,0.2)
+                      `,
+                      backdropFilter: 'blur(12px)',
+                      border: '1px solid rgba(255,255,255,0.05)',
+                    }}
+                  >
                     {/* Coloana 1 - Included Services + Premium Features + Trip Preferences */}
                     <div className='space-y-4'>
                       {/* Included Services */}
@@ -154,6 +167,9 @@ export function Step2Services() {
           <FleetSummaryCard />
         </div>
       )}
+
+      {/* BESPOKE BOOKING CONFIRMATION */}
+      {bookingType === 'bespoke' && <BespokeConfirmation />}
     </div>
   );
 }

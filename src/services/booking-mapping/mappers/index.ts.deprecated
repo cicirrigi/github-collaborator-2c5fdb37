@@ -1,0 +1,15 @@
+/**
+ * 🎯 Booking Mappers - Export all mappers
+ */
+
+// Oneway mapper exports
+export { mapOnewayBooking, mapOnewayLegs } from './oneway.mapper';
+
+// Return mapper exports  
+export { mapReturnBooking, mapReturnBookingMetadata, mapReturnLegs } from './return.mapper';
+
+// TODO: Add other booking type mappers
+// export { mapHourlyBooking, mapHourlyLegs } from './hourly.mapper';
+// export { mapDailyBooking, mapDailyLegs } from './daily.mapper';
+// export { mapFleetBooking, mapFleetLegs } from './fleet.mapper';
+// export { mapBespokeBooking, mapBespokeLegs } from './bespoke.mapper';

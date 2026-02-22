@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 import { designTokens } from '@/config/theme.config';
 import { uiSurfaces } from '@/design-system/tokens/ui-surfaces';
+import { useAuth } from '@/features/auth/context/AuthProvider';
 import { cn } from '@/lib/utils/cn';
 
 import type { MenuItem } from './menu.config';
@@ -21,6 +22,8 @@ export interface DropdownMenuProps {
   readonly clickToOpen?: boolean;
   /** Dropdown alignment */
   readonly alignment?: 'left' | 'right';
+  /** Mobile menu close handler */
+  readonly onMobileClose?: () => void;
 }
 
 /**
@@ -37,8 +40,15 @@ export function DropdownMenu({
   className,
   clickToOpen = false,
   alignment = 'left',
+  onMobileClose,
 }: DropdownMenuProps): React.JSX.Element | null {
   const [open, setOpen] = useState(false);
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // Hide dropdown if authentication required but user not authenticated
+  if (item.requiresAuth && !isAuthenticated && !isLoading) {
+    return null;
+  }
 
   // No dropdown if no children
   if (!item.children?.length) {
@@ -79,15 +89,20 @@ export function DropdownMenu({
               ease: designTokens.animations.easing.framer.ease,
             }}
             className={cn(
-              // Desktop: absolute dropdown
+              // Desktop: absolute dropdown with right alignment for navbar items
               'md:absolute md:top-full md:mt-2 md:rounded-xl md:border md:shadow-2xl',
               'md:backdrop-blur-2xl md:saturate-150 md:z-50 md:overflow-hidden',
-              alignment === 'right' ? 'md:right-0' : 'md:left-0',
+              // Force right alignment for My Account to prevent off-screen
+              item.label === 'My Account'
+                ? 'md:right-0'
+                : alignment === 'right'
+                  ? 'md:right-0'
+                  : 'md:left-0',
               // Mobile: accordion-style block
               'block mt-2 rounded-lg border-0 shadow-none',
               'bg-[var(--background-elevated)] overflow-hidden',
-              // Dynamic width based on number of items (desktop only)
-              item.children.length > 6 ? 'md:min-w-96' : 'md:min-w-56'
+              // Even wider dropdowns for more square appearance
+              'md:min-w-80 md:max-w-[26rem]'
             )}
             style={{
               ...uiSurfaces.dropdown,
@@ -127,7 +142,7 @@ export function DropdownMenu({
                   href={subItem.href || '#'}
                   role='menuitem'
                   className={cn(
-                    'group flex items-center gap-3 px-4 py-3 text-sm',
+                    'group flex items-center gap-3 px-4 py-3 text-base md:text-sm',
                     'transition-all duration-200',
                     'text-[var(--text-primary)] hover:text-[var(--brand-primary)]',
                     'hover:bg-[var(--brand-primary)]/10',
@@ -135,7 +150,11 @@ export function DropdownMenu({
                     'focus-visible:ring-[var(--brand-primary)]/40',
                     'focus-visible:bg-[var(--brand-primary)]/10'
                   )}
-                  onClick={handleClose}
+                  onClick={() => {
+                    handleClose();
+                    // Close mobile menu if we're on mobile
+                    if (onMobileClose) onMobileClose();
+                  }}
                   {...(subItem.external && {
                     target: '_blank',
                     rel: 'noopener noreferrer',
@@ -143,7 +162,7 @@ export function DropdownMenu({
                 >
                   {/* Sub-item icon */}
                   {subItem.icon && (
-                    <subItem.icon className='h-4 w-4 transition-transform duration-200 group-hover:scale-110' />
+                    <subItem.icon className='h-4 w-4 md:h-5 md:w-5 transition-transform duration-200 group-hover:scale-110' />
                   )}
 
                   {/* Sub-item label */}

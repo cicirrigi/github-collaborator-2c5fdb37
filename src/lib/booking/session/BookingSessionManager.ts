@@ -22,7 +22,7 @@ export interface BookingSession {
   paymentState: PaymentState;
   paymentIntentId?: string;
   clientSecret?: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export enum PaymentState {
@@ -37,12 +37,44 @@ class BookingSessionManager {
   private static instance: BookingSessionManager;
   private readonly SESSION_KEY = 'vantage_lane_booking_session';
   private readonly SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+  private tabId: string | null = null;
 
   static getInstance(): BookingSessionManager {
     if (!BookingSessionManager.instance) {
       BookingSessionManager.instance = new BookingSessionManager();
     }
     return BookingSessionManager.instance;
+  }
+
+  /**
+   * Get or create tab-specific identifier for session isolation
+   */
+  private getTabId(): string {
+    if (this.tabId) return this.tabId;
+
+    // Try to get existing tab ID from sessionStorage (tab-specific)
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      let tabId = sessionStorage.getItem('vantage_lane_tab_id');
+      if (!tabId) {
+        tabId = `tab_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        sessionStorage.setItem('vantage_lane_tab_id', tabId);
+      }
+      this.tabId = tabId;
+      return tabId;
+    }
+
+    // Fallback for SSR/no sessionStorage
+    if (!this.tabId) {
+      this.tabId = `tab_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    }
+    return this.tabId;
+  }
+
+  /**
+   * Get tab-specific session key for storage isolation
+   */
+  private getTabSessionKey(): string {
+    return `${this.SESSION_KEY}_${this.getTabId()}`;
   }
 
   /**
@@ -62,7 +94,7 @@ class BookingSessionManager {
   /**
    * Create new booking session
    */
-  createSession(totalAmount: number, metadata: Record<string, any> = {}): BookingSession {
+  createSession(totalAmount: number, metadata: Record<string, unknown> = {}): BookingSession {
     const now = Date.now();
     const session: BookingSession = {
       sessionId: this.generateSessionId(),
@@ -81,7 +113,7 @@ class BookingSessionManager {
   /**
    * Get current active session or create new one
    */
-  getCurrentSession(totalAmount: number, metadata: Record<string, any> = {}): BookingSession {
+  getCurrentSession(totalAmount: number, metadata: Record<string, unknown> = {}): BookingSession {
     const existing = this.loadSession();
 
     // If no session or session expired, create new
@@ -121,11 +153,11 @@ class BookingSessionManager {
   }
 
   /**
-   * Load session from storage
+   * Load session from storage (tab-specific)
    */
   private loadSession(): BookingSession | null {
     try {
-      const stored = localStorage.getItem(this.SESSION_KEY);
+      const stored = localStorage.getItem(this.getTabSessionKey());
       if (!stored) return null;
 
       const session = JSON.parse(stored) as BookingSession;
@@ -136,12 +168,13 @@ class BookingSessionManager {
   }
 
   /**
-   * Save session to storage
+   * Save session to storage (tab-specific)
    */
   private saveSession(session: BookingSession): void {
     try {
-      localStorage.setItem(this.SESSION_KEY, JSON.stringify(session));
+      localStorage.setItem(this.getTabSessionKey(), JSON.stringify(session));
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.warn('Failed to save booking session:', error);
     }
   }
@@ -158,7 +191,7 @@ class BookingSessionManager {
    * Clear current session (on successful payment or abandonment)
    */
   clearSession(): void {
-    localStorage.removeItem(this.SESSION_KEY);
+    localStorage.removeItem(this.getTabSessionKey());
   }
 
   /**

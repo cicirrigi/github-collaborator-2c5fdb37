@@ -7,52 +7,32 @@
 
 'use client';
 
-import { getCurrentUser } from '@/features/auth/services/supabaseAuth';
+import { useAuth } from '@/features/auth/context/AuthProvider';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AccountSidebarDesktop } from '../desktop/AccountSidebarDesktop';
 import { AccountSidebarMobile } from '../mobile/AccountSidebarMobile';
 
-interface User {
-  email?: string;
-  id?: string;
-  user_metadata?: Record<string, unknown>;
-}
-
 interface AccountLayoutProps {
   readonly children: React.ReactNode;
-  readonly title: string;
+  readonly title?: string;
   readonly description?: string;
 }
 
 export function AccountLayout({ children, title, description }: AccountLayoutProps) {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, isLoading, isAuthenticated } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Check auth status (same approach as dashboard)
-  const checkAuth = useCallback(async () => {
-    try {
-      const { user, error } = await getCurrentUser();
-      if (error || !user) {
-        router.push('/auth/signin');
-        return;
-      }
-      setUser(user);
-    } catch {
-      router.push('/auth/signin');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [router]);
-
+  // Redirect to sign in if not authenticated (after loading complete)
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    if (!isLoading && !isAuthenticated) {
+      router.push('/auth/signin');
+    }
+  }, [isLoading, isAuthenticated, router]);
 
-  // Loading state
-  if (isLoading) {
+  // Only show loading on initial page load, not during navigation
+  if (isLoading && !user) {
     return (
       <div className='min-h-screen flex items-center justify-center'>
         <div className='animate-pulse'>
@@ -95,18 +75,17 @@ export function AccountLayout({ children, title, description }: AccountLayoutPro
 
           {/* Main Content */}
           <main className='flex-1 min-w-0'>
-            {/* Mobile Header */}
-            <div className='lg:hidden mb-6'>
-              <AccountMobileHeader title={title} onMenuToggle={() => setIsMobileMenuOpen(true)} />
-            </div>
-
             {/* Page Header */}
-            <div className='hidden lg:block mb-8'>
-              <AccountPageHeader title={title} {...(description && { description })} />
-            </div>
+            {title && (
+              <div className='hidden lg:block mb-8'>
+                <AccountPageHeader title={title} {...(description && { description })} />
+              </div>
+            )}
 
             {/* Page Content */}
-            <div className='bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm'>
+            <div
+              className={`bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm ${!title ? 'mt-[6.9rem]' : ''}`}
+            >
               {children}
             </div>
           </main>
@@ -115,27 +94,6 @@ export function AccountLayout({ children, title, description }: AccountLayoutPro
 
       {/* Mobile Sidebar */}
       <AccountSidebarMobile isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
-    </div>
-  );
-}
-
-interface AccountMobileHeaderProps {
-  readonly title: string;
-  readonly onMenuToggle: () => void;
-}
-
-function AccountMobileHeader({ title, onMenuToggle }: AccountMobileHeaderProps) {
-  return (
-    <div className='flex items-center justify-between mb-4'>
-      <h1 className='text-2xl font-bold text-neutral-900 dark:text-white'>{title}</h1>
-
-      <button
-        onClick={onMenuToggle}
-        className='p-2 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors lg:hidden'
-        aria-label='Open navigation menu'
-      >
-        <div className='w-5 h-5 text-neutral-700 dark:text-neutral-300'>☰</div>
-      </button>
     </div>
   );
 }

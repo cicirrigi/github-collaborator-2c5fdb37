@@ -1,8 +1,10 @@
 'use client';
 
+import { LogOut } from 'lucide-react';
 import Link from 'next/link';
 import type React from 'react';
 
+import { useAuth } from '@/features/auth/context/AuthProvider';
 import { cn } from '@/lib/utils/cn';
 
 /**
@@ -23,7 +25,55 @@ export interface UserMenuProps {
 /**
  * 🔐 User authentication menu
  */
+
 export function UserMenu({ className }: UserMenuProps): React.JSX.Element {
+  const { user, isLoading, signOut } = useAuth();
+
+  // Debug auth state in development (removed excessive logging)
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log('UserMenu Debug:', { user: !!user, isLoading, userEmail: user?.email });
+  // }
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      await signOut(); // SignOut from AuthProvider handles everything
+    } catch {
+      // Silent fail - logout redirect will happen anyway
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className={cn('flex items-center gap-3', className)}>
+        <div className='h-6 w-16 bg-neutral-200 dark:bg-neutral-700 animate-pulse rounded' />
+      </div>
+    );
+  }
+
+  // Authenticated user UI
+  if (user) {
+    return (
+      <div className={cn('flex items-center gap-3', className)}>
+        {/* User Account Button removed - handled by My Account dropdown in main menu */}
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className={cn(
+            'flex items-center gap-2 text-sm font-medium transition-colors duration-300',
+            'text-[var(--text-secondary)] hover:text-red-500',
+            'rounded-sm px-2 py-1 focus:outline-none focus:ring-2 focus:ring-red-500/50'
+          )}
+        >
+          <LogOut className='w-4 h-4' />
+          <span className='hidden sm:inline'>Logout</span>
+        </button>
+      </div>
+    );
+  }
+
+  // Unauthenticated user UI (original)
   return (
     <div className={cn('flex items-center gap-3', className)}>
       {/* Login Button */}

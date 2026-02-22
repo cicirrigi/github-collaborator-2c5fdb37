@@ -1,9 +1,15 @@
 'use client';
 
 import { useBookingState } from '@/hooks/useBookingState';
+import type { GooglePlaceResult } from '@/lib/google/google-services';
+import { useRef } from 'react';
 
 export function usePickupDropoffLogic() {
   const { bookingType, tripConfiguration, setPickup, setDropoff } = useBookingState();
+
+  // Flags to prevent onChange from overriding onPlaceSelect
+  const pickupPlaceSelected = useRef(false);
+  const dropoffPlaceSelected = useRef(false);
 
   // Bridge values pentru compatibility
   const pickup = tripConfiguration.pickup?.address || '';
@@ -11,6 +17,14 @@ export function usePickupDropoffLogic() {
 
   // Bridge functions pentru string → LocationData conversion
   const handlePickupChange = (value: string) => {
+    console.log(' handlePickupChange called:', value);
+
+    // Skip if Google Places selection already occurred
+    if (pickupPlaceSelected.current) {
+      console.log(' Skipping handlePickupChange - Google Places already selected');
+      return;
+    }
+
     const locationData = value
       ? {
           placeId: `temp-${Date.now()}`,
@@ -21,9 +35,16 @@ export function usePickupDropoffLogic() {
         }
       : null;
     setPickup(locationData);
+    console.log(' handlePickupChange set locationData:', locationData);
   };
 
   const handleDropoffChange = (value: string) => {
+    // Skip if Google Places selection already occurred
+    if (dropoffPlaceSelected.current) {
+      console.log(' Skipping handleDropoffChange - Google Places already selected');
+      return;
+    }
+
     const locationData = value
       ? {
           placeId: `temp-${Date.now()}`,
@@ -36,11 +57,42 @@ export function usePickupDropoffLogic() {
     setDropoff(locationData);
   };
 
+  // NEW: Google Places API handlers - use REAL coordinates
+  const handlePickupPlaceSelect = (place: GooglePlaceResult) => {
+    console.log('✅ handlePickupPlaceSelect called:', place);
+    pickupPlaceSelected.current = true; // Prevent onChange override
+    const locationData = {
+      placeId: place.placeId,
+      address: place.address,
+      coordinates: place.coordinates,
+      type: place.type,
+      components: place.components,
+    };
+    console.log('✅ handlePickupPlaceSelect set locationData:', locationData);
+    setPickup(locationData);
+  };
+
+  const handleDropoffPlaceSelect = (place: GooglePlaceResult) => {
+    console.log('✅ handleDropoffPlaceSelect called:', place);
+    dropoffPlaceSelected.current = true; // Prevent onChange override
+    const locationData = {
+      placeId: place.placeId,
+      address: place.address,
+      coordinates: place.coordinates,
+      type: place.type,
+      components: place.components,
+    };
+    console.log('✅ handleDropoffPlaceSelect set locationData:', locationData);
+    setDropoff(locationData);
+  };
+
   return {
     bookingType,
     pickup,
     dropoff,
     handlePickupChange,
     handleDropoffChange,
+    handlePickupPlaceSelect,
+    handleDropoffPlaceSelect,
   };
 }

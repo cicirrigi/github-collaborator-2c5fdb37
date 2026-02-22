@@ -5,7 +5,6 @@ import type React from 'react';
 import { useEffect } from 'react';
 
 import { DropdownMenu, MenuItemComponent, mainMenu } from '@/components/ui/navigation';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { cn } from '@/lib/utils/cn';
 
 import { UserMenu } from './UserMenu';
@@ -90,26 +89,25 @@ export function NavbarMobile({
           >
             <nav className='flex flex-col space-y-2 p-4' aria-label='Mobile navigation'>
               {/* Orchestrated Navigation */}
-              {mainMenu.map(item =>
-                item.children ? (
-                  <DropdownMenu key={item.label} item={item} clickToOpen={true} />
-                ) : (
-                  <MenuItemComponent key={item.label} item={item} onClick={onClose} />
-                )
-              )}
+              {mainMenu.map(item => (
+                <div key={item.label}>
+                  {/* Add separator before My Account */}
+                  {item.label === 'My Account' && (
+                    <div className='border-t border-[var(--border-subtle)] my-3' />
+                  )}
+
+                  {item.children ? (
+                    <DropdownMenu item={item} clickToOpen={true} onMobileClose={onClose} />
+                  ) : (
+                    <MenuItemComponent item={item} onClick={onClose} />
+                  )}
+                </div>
+              ))}
 
               {/* All navigation now handled by mainMenu above */}
 
               {/* User Actions */}
               <div className='mt-2 border-t border-[var(--border-subtle)] pt-3 space-y-2'>
-                {/* Theme Toggle */}
-                <div className='flex items-center justify-between px-3 py-2'>
-                  <span className='text-sm font-medium' style={{ color: 'var(--text-primary)' }}>
-                    Theme
-                  </span>
-                  <ThemeToggle variant='minimal' size='sm' />
-                </div>
-
                 {/* User Menu */}
                 <UserMenu />
               </div>
