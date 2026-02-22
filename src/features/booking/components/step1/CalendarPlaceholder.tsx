@@ -45,7 +45,7 @@ function useIsMobile() {
 }
 
 export function CalendarPlaceholder() {
-  const { bookingType, tripConfiguration, setPickupDateTime, setReturnDateTime } =
+  const { bookingType, tripConfiguration, setPickupDateTime, setReturnDateTime, setDailyRange } =
     useBookingState();
   const isMobile = useIsMobile(); // Add device detection
 
@@ -89,6 +89,27 @@ export function CalendarPlaceholder() {
     const newDateTime = combineDateTime(returnDate, timeValue);
     setReturnDateTime(newDateTime);
   };
+
+  // Auto-calculate dailyRange for daily bookings (for validation)
+  useEffect(() => {
+    if (
+      bookingType === 'daily' &&
+      tripConfiguration.pickupDateTime &&
+      tripConfiguration.daysRequested &&
+      tripConfiguration.daysRequested > 0
+    ) {
+      const startDate = new Date(tripConfiguration.pickupDateTime);
+      const endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + tripConfiguration.daysRequested - 1);
+
+      setDailyRange([startDate, endDate]);
+    }
+  }, [
+    bookingType,
+    tripConfiguration.pickupDateTime,
+    tripConfiguration.daysRequested,
+    setDailyRange,
+  ]);
 
   // Modal states - using professional calendar modals
   const [isDepartureDateModalOpen, setIsDepartureDateModalOpen] = useState(false);

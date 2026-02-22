@@ -34,7 +34,7 @@ export const createInitialTripConfiguration = (): TripConfiguration => ({
 
   // Booking Type Specific
   hoursRequested: null,
-  daysRequested: null,
+  daysRequested: 1, // Default to 1 day for daily bookings
   customRequirements: '',
 
   // 🚗 Step 2: Vehicle Selection (single vehicle)
