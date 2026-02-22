@@ -2,6 +2,7 @@
 
 import { useBookingState } from '@/hooks/useBookingState';
 import { Car } from 'lucide-react';
+import { BespokeConfirmation } from '../../components/step2/BespokeConfirmation';
 import { FleetModeSelector } from '../../components/step2/FleetModeSelector';
 import { FleetSummaryCard } from '../../components/step2/FleetSummaryCard';
 import { FleetVehicleSelector } from '../../components/step2/FleetVehicleSelector';
@@ -41,8 +42,8 @@ export function Step2Services() {
       mx-auto
     '
     >
-      {/* STANDARD BOOKING ONLY */}
-      {bookingType !== 'fleet' && (
+      {/* STANDARD BOOKING ONLY - Exclude fleet and bespoke */}
+      {bookingType !== 'fleet' && bookingType !== 'bespoke' && (
         <div className='space-y-8'>
           {/* VEHICLE CATEGORIES - CENTERED */}
           <div className='w-full max-w-4xl mx-auto'>
@@ -166,6 +167,9 @@ export function Step2Services() {
           <FleetSummaryCard />
         </div>
       )}
+
+      {/* BESPOKE BOOKING CONFIRMATION */}
+      {bookingType === 'bespoke' && <BespokeConfirmation />}
     </div>
   );
 }

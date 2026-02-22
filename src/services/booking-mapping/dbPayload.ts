@@ -118,11 +118,13 @@ export function buildLegsPayload(params: {
   if (!tripConfiguration.pickup?.address) throw new Error('pickup.address missing');
   if (!tripConfiguration.pickupDateTime) throw new Error('pickupDateTime missing');
 
-  // Safe vehicle category validation for fleet vs single vehicle
+  // Safe vehicle category validation for fleet vs single vehicle vs bespoke
   const vehicleCategoryCode =
     bookingType === 'fleet'
       ? tripConfiguration.fleetSelection?.vehicles?.[0]?.category?.id
-      : tripConfiguration.selectedVehicle?.category?.id;
+      : bookingType === 'bespoke'
+        ? 'executive' // Default category for bespoke bookings
+        : tripConfiguration.selectedVehicle?.category?.id;
 
   if (!vehicleCategoryCode) {
     throw new Error(

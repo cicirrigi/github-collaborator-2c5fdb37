@@ -74,6 +74,11 @@ export interface TripConfiguration {
 
   // Bespoke bookings
   customRequirements: string;
+  bespoke?: {
+    budgetMinGBP?: string;
+    budgetMaxGBP?: string;
+    currency?: string;
+  };
 
   // 🚗 Step 2: Vehicle Selection (single vehicle)
   selectedVehicle: VehicleSelection;
@@ -131,6 +136,7 @@ export interface BookingState {
   setHoursRequested: (value: number | null) => void;
   setDaysRequested: (value: number | null) => void;
   setCustomRequirements: (value: string) => void;
+  setBudgetRange: (budgetMin: string, budgetMax: string) => void;
 
   // 🚗 VEHICLE SELECTION ACTIONS (single vehicle)
   selectVehicleCategory: (category: VehicleCategory) => void;

@@ -3,6 +3,7 @@
 import { useBookingState } from '@/hooks/useBookingState';
 import { ArrowRight, Route } from 'lucide-react';
 import { AdditionalStopsInline } from './AdditionalStopsInline';
+import { BespokeRequirements } from './BespokeRequirements';
 import { CalendarPlaceholder } from './CalendarPlaceholder';
 import { CardHeader } from './CardHeader';
 import { DaysDurationSelector } from './DaysDurationSelector';
@@ -33,6 +34,7 @@ export function BookingFormCard({ onNext }: BookingFormCardProps = {}) {
   const bookingTypeLabel = BOOKING_TYPE_LABELS[bookingType] || 'BOOKING';
   const isHourlyBooking = bookingType === 'hourly';
   const isDailyBooking = bookingType === 'daily';
+  const isBespokeBooking = bookingType === 'bespoke';
 
   // Check if Step 1 is complete for validation
   const isStep1Valid = validateStep1Complete();
@@ -54,7 +56,9 @@ export function BookingFormCard({ onNext }: BookingFormCardProps = {}) {
             <JourneyEstimateDisplay />
 
             {/* Conditional Components based on booking type */}
-            {isHourlyBooking ? (
+            {isBespokeBooking ? (
+              <BespokeRequirements />
+            ) : isHourlyBooking ? (
               <HoursDurationSelector />
             ) : isDailyBooking ? (
               <DaysDurationSelector />

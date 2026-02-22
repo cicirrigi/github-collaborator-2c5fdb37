@@ -66,6 +66,19 @@ export const createPassengerActions = (
         customRequirements: value,
       },
     })),
+
+  setBudgetRange: (budgetMin: string, budgetMax: string) =>
+    set(state => ({
+      tripConfiguration: {
+        ...state.tripConfiguration,
+        bespoke: {
+          ...state.tripConfiguration.bespoke,
+          budgetMinGBP: budgetMin,
+          budgetMaxGBP: budgetMax,
+          currency: 'GBP',
+        },
+      },
+    })),
 });
 
 // 🔧 TYPE DEFINITION
@@ -77,4 +90,5 @@ export interface PassengerActions {
   setHoursRequested: (value: number | null) => void;
   setDaysRequested: (value: number | null) => void;
   setCustomRequirements: (value: string) => void;
+  setBudgetRange: (budgetMin: string, budgetMax: string) => void;
 }
