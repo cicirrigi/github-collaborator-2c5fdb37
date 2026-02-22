@@ -51,7 +51,7 @@ export function JourneyEstimateDisplay() {
           });
 
           // Trigger pricing calculation with distance/duration values
-          const distanceInMiles = result.distanceValue / 1609.34; // Convert meters to miles
+          const distanceInMiles = result.distanceValue; // Already in miles from google-services.ts
           const durationInMinutes = result.durationValue / 60; // Convert seconds to minutes
 
           if (setRouteData) {

@@ -7,7 +7,7 @@ import { MapPin } from 'lucide-react';
 import { usePickupDropoffLogic } from '../hooks/usePickupDropoffLogic';
 
 export function DropoffSection() {
-  const { dropoff, handleDropoffChange } = usePickupDropoffLogic();
+  const { dropoff, handleDropoffChange, handleDropoffPlaceSelect } = usePickupDropoffLogic();
   const { bookingType } = useBookingState();
   const bookingRule = getBookingRule(bookingType);
 
@@ -20,6 +20,7 @@ export function DropoffSection() {
       <AutocompleteInput
         value={dropoff}
         onChange={handleDropoffChange}
+        onPlaceSelect={handleDropoffPlaceSelect}
         placeholder={placeholderText}
         icon={<MapPin className='w-4 h-4 text-amber-200/60' />}
       />

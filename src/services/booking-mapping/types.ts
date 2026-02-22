@@ -7,46 +7,57 @@ import type { BookingType, TripConfiguration } from '@/hooks/useBookingState/boo
 // Re-export for convenience
 export type { BookingType, TripConfiguration };
 
-// Database booking record interface (based on our DB schema analysis)
+// Database booking record interface - MATCHES NEW `bookings` TABLE
 export interface BookingRecord {
   // Required fields
-  operator_id: string;
-  category: string;
-  start_at: string; // timestamp
+  customer_id: string;
+  booking_type: 'oneway' | 'return' | 'hourly' | 'daily' | 'fleet' | 'bespoke';
+  trip_configuration_raw: object; // Full TripConfiguration as JSON
 
-  // Basic booking info
-  trip_type: BookingType;
-  passenger_count: number;
-  bag_count: number;
+  // Optional organization
+  organization_id?: string | null;
 
-  // Optional fields
-  vehicle_model?: string | null;
-  flight_number?: string | null;
-  notes?: string | null;
+  // Status fields with enum values
+  status?: 'NEW' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  payment_status?: 'unpaid' | 'pending' | 'succeeded' | 'failed' | 'refunded' | 'canceled';
+
+  // System fields
+  currency?: string; // defaults to 'GBP'
+  source?: string; // defaults to 'web'
+  reference?: string; // auto-generated
+
+  // Pricing
+  amount_total_pence?: number | null;
+
+  // Optional booking details
+  start_at?: string | null;
+  end_at?: string | null;
+  hours_requested?: number | null;
+  days_requested?: number | null;
+  passenger_count?: number | null;
+  bag_count?: number | null;
+  custom_requirements?: string | null;
+  billing_entity_id?: string | null;
+}
+
+// Booking metadata record - MATCHES ACTUAL `booking_metadata` TABLE
+export interface BookingMetadataRecord {
+  booking_id: string;
 
   // Return trip fields
   return_date?: string | null | undefined;
   return_time?: string | null | undefined;
   return_flight_number?: string | null | undefined;
 
-  // Hourly booking fields
-  hours?: number;
+  // Hourly/Daily fields
+  hours?: number | null | undefined;
+  days?: number | null | undefined;
 
-  // Daily booking fields
-  days?: number;
-
-  // Fleet booking fields
-  fleet_executive?: number | null;
-  fleet_s_class?: number | null;
-  fleet_v_class?: number | null;
-  fleet_suv?: number | null;
-
-  // System defaults
-  currency: string;
-  payment_method: string;
-  status: string;
-  booking_status: string;
-  extra_stops: number;
+  // System fields
+  operator_id?: string | null | undefined;
+  payment_method?: string | null | undefined;
+  vehicle_model?: string | null | undefined;
+  extra_stops?: number | null | undefined;
 }
 
 export interface AdditionalStopRecord {
@@ -59,55 +70,59 @@ export interface AdditionalStopRecord {
   stop_charge: number;
 }
 
+// Booking leg record - MATCHES NEW `booking_legs` TABLE
 export interface BookingLegRecord {
-  // Core booking info
-  parent_booking_id: string;
+  // Required fields
+  booking_id: string; // FK to bookings.id
   leg_number: number;
-  leg_type: 'outbound' | 'return' | 'fleet_vehicle';
-  internal_reference: string;
-  driver_reference: string;
+  leg_kind: 'main' | 'return' | 'fleet_item'; // enum, defaults to 'main'
+  status:
+    | 'PENDING'
+    | 'ASSIGNED'
+    | 'ACCEPTED'
+    | 'EN_ROUTE'
+    | 'ARRIVED'
+    | 'STARTED'
+    | 'COMPLETED'
+    | 'CANCELLED'; // defaults to 'PENDING'
+  pickup_address: string; // required
+  scheduled_at: string; // timestamptz, required
+  vehicle_category_id: string; // required FK
 
-  // Location info
-  pickup_location: string;
-  pickup_lat: number | null;
-  pickup_lng: number | null;
-  destination: string;
-  destination_lat: number | null;
-  destination_lng: number | null;
-
-  // Timing & logistics
-  scheduled_at: string; // timestamp with time zone
-  distance_miles: number | null;
-  duration_min: number | null;
+  // Optional location fields
+  dropoff_address?: string | null;
+  pickup_lat?: number | null;
+  pickup_lng?: number | null;
+  dropoff_lat?: number | null;
+  dropoff_lng?: number | null;
+  pickup_place_id?: string | null;
+  dropoff_place_id?: string | null;
 
   // Vehicle & assignment
-  vehicle_category: string | null;
-  vehicle_model: string | null;
-  vehicle_index: number | null;
-  assigned_driver_id: string | null;
-  assigned_vehicle_id: string | null;
-  assigned_at: string | null; // timestamp
-  assigned_by: string | null; // uuid
+  vehicle_model_id?: string | null;
+  assigned_driver_id?: string | null;
+  assigned_vehicle_id?: string | null;
 
-  // Status & lifecycle
-  status: string | null; // defaults to 'pending'
-  started_at: string | null; // timestamp
-  completed_at: string | null; // timestamp
-  cancelled_at: string | null; // timestamp
-  cancellation_reason: string | null;
+  // Journey data
+  stops_raw: object[]; // jsonb array, defaults to []
+  flight_number?: string | null;
+  passengers?: number | null;
+  luggage?: number | null;
+  route_input?: object | null;
 
-  // Pricing & payouts
-  leg_price: number;
-  driver_payout: number | null;
-  payout_status: string | null; // defaults to 'pending'
-  platform_fee: number | null;
-  operator_net: number | null;
-  paid_at: string | null; // timestamp
+  // Pricing & metrics
+  distance_miles?: number | null;
+  duration_min?: number | null;
+  leg_amount_pence?: number | null;
+  leg_pricing_breakdown?: object | null;
+  pricing_calculated_at?: string | null;
+  leg_price_pence?: number | null;
+  pricing_version?: string | null;
 
-  // Audit fields (auto-managed by DB)
-  created_at?: string | null; // timestamp - auto
-  updated_at?: string | null; // timestamp - auto
+  // Assignment tracking
+  assigned_at?: string | null;
 
-  // Optional metadata
-  notes: string | null;
+  // Optional fields
+  preferences?: object | null;
+  addons?: object | null;
 }

@@ -4,23 +4,38 @@
 
 import { createClient } from '@supabase/supabase-js';
 import {
-  mapAdditionalStops,
-  mapBespokeBookingToLegs,
-  mapDailyBookingToLegs,
-  mapFleetBookingToLegs,
-  mapHourlyBookingToLegs,
-  mapOnewayBookingToLegs,
-  mapReturnAdditionalStops,
-  mapReturnBookingToLegs,
-  mapTripConfigToBooking,
-  validateBookingRecord,
-} from './booking-mapping';
-import type { BookingRecord, BookingType, TripConfiguration } from './booking-mapping/types';
+  mapOnewayBooking,
+  mapOnewayLegs,
+  mapReturnBooking,
+  mapReturnBookingMetadata,
+  mapReturnLegs,
+} from './booking-mapping/mappers';
+import type {
+  BookingMetadataRecord,
+  BookingRecord,
+  BookingType,
+  TripConfiguration,
+} from './booking-mapping/types';
+import { validateBookingRecord } from './booking-mapping/validation';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+// Create browser-safe Supabase client
+const createSupabaseClient = () => {
+  if (typeof window === 'undefined') {
+    // Server-side: use basic client (should not be called)
+    throw new Error('Booking service should only be used in browser context');
+  }
+
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+    }
+  );
+};
 
 // Result interfaces
 export interface BookingSuccess {
@@ -46,128 +61,111 @@ const normalizeTimestamp = (iso: string) =>
     .replace('Z', '');
 
 /**
- * Create a booking
+ * Create a booking - UPDATED FOR NEW MAPPER STRUCTURE
  */
 export const saveBooking = async (
   tripConfig: TripConfiguration,
-  bookingType: BookingType
+  bookingType: BookingType,
+  customerId: string = '1a560433-c426-41d8-812c-01c44cb992d7' // Cristian Manolache (test customer)
 ): Promise<BookingResult> => {
   try {
-    // 1. Transform
-    const record = mapTripConfigToBooking(tripConfig, bookingType);
+    console.log(`🎯 Creating ${bookingType} booking...`);
 
-    // 2. Validate
-    const validationErrors = validateBookingRecord(record);
+    // Initialize browser-only Supabase client
+    const supabase = createSupabaseClient();
+
+    let bookingRecord: BookingRecord;
+    let metadataRecord: BookingMetadataRecord | null = null;
+
+    // 1. Map based on booking type
+    if (bookingType === 'oneway') {
+      bookingRecord = mapOnewayBooking(tripConfig, customerId);
+    } else if (bookingType === 'return') {
+      bookingRecord = mapReturnBooking(tripConfig, customerId);
+    } else {
+      return {
+        success: false,
+        error: `Booking type '${bookingType}' not yet implemented`,
+        details: ['Only oneway and return bookings are currently supported'],
+      };
+    }
+
+    // 2. Validate booking record
+    const validationErrors = validateBookingRecord(bookingRecord);
     if (validationErrors.length > 0) {
+      console.error('❌ Validation failed:', validationErrors);
       return { success: false, error: 'Validation failed', details: validationErrors };
     }
 
-    // 3. Normalize timestamp
+    // 3. Normalize timestamps
     const payload = {
-      ...record,
-      start_at: normalizeTimestamp(record.start_at),
-      return_date: record.return_date || null,
-      return_time: record.return_time || null,
+      ...bookingRecord,
+      start_at: normalizeTimestamp(bookingRecord.start_at),
     };
 
-    // 4. Insert main booking
-    const { data, error } = await supabase.from('bookings').insert(payload).select().single();
+    console.log('📝 Booking payload:', payload);
 
-    if (error) {
-      return { success: false, error: error.message, code: error.code };
+    // 4. Insert main booking record
+    const { data: bookingData, error: bookingError } = await supabase
+      .from('bookings')
+      .insert(payload)
+      .select()
+      .single();
+
+    if (bookingError) {
+      console.error('❌ Booking insertion error:', bookingError);
+      return { success: false, error: bookingError.message, code: bookingError.code };
     }
 
-    // 5. Insert additional stops (optional) - non-blocking
-    if (tripConfig.additionalStops?.length) {
-      const stops = mapAdditionalStops(data.id, tripConfig);
-      const { error: stopsError } = await supabase.from('booking_additional_stops').insert(stops);
-      if (stopsError) {
-        console.warn('Failed to insert additional stops:', stopsError.message);
-      }
-    }
+    console.log('✅ Main booking created:', bookingData.id);
 
-    // 5.1. Insert booking legs pentru ONE-WAY trips
-    if (bookingType === 'oneway') {
-      const legs = mapOnewayBookingToLegs(data.id, tripConfig);
-      const { error: legsError } = await supabase.from('booking_legs').insert(legs);
-      if (legsError) {
-        console.warn('Failed to insert ONE-WAY booking legs:', legsError.message);
-      }
-    }
-
-    // 5.2. Insert booking legs pentru RETURN trips
+    // 5. Insert booking metadata (for return bookings)
     if (bookingType === 'return') {
-      console.log('🚗 DEBUG: Creating booking legs for RETURN trip...');
-      const legs = mapReturnBookingToLegs(data.id, tripConfig);
-      console.log('🚗 DEBUG: Generated legs:', legs);
+      metadataRecord = mapReturnBookingMetadata(bookingData.id, tripConfig);
+      console.log('� Metadata payload:', metadataRecord);
 
-      const { error: legsError } = await supabase.from('booking_legs').insert(legs);
-      if (legsError) {
-        console.error('❌ ERROR inserting booking legs:', legsError);
+      const { error: metadataError } = await supabase
+        .from('booking_metadata')
+        .insert(metadataRecord);
+
+      if (metadataError) {
+        console.error('❌ Metadata insertion error:', metadataError);
+        // Non-blocking - booking still succeeds
       } else {
-        console.log('✅ Booking legs inserted successfully');
-      }
-
-      // 6.1. Insert return additional stops pentru RETURN trips
-      if (tripConfig.returnAdditionalStops?.length) {
-        console.log('🚏 DEBUG: Creating return additional stops...');
-        const returnStops = mapReturnAdditionalStops(data.id, tripConfig);
-        console.log('🚏 DEBUG: Generated return stops:', returnStops);
-
-        const { error: returnStopsError } = await supabase
-          .from('booking_additional_stops')
-          .insert(returnStops);
-        if (returnStopsError) {
-          console.error('❌ ERROR inserting return additional stops:', returnStopsError);
-        } else {
-          console.log('✅ Return additional stops inserted successfully');
-        }
+        console.log('✅ Booking metadata created');
       }
     }
 
-    // 5.3. Insert booking legs pentru HOURLY trips
-    if (bookingType === 'hourly') {
-      const legs = mapHourlyBookingToLegs(data.id, tripConfig);
-      const { error: legsError } = await supabase.from('booking_legs').insert(legs);
-      if (legsError) {
-        console.warn('Failed to insert HOURLY booking legs:', legsError.message);
-      }
+    // 6. Insert booking legs
+    let legs;
+    if (bookingType === 'oneway') {
+      legs = mapOnewayLegs(bookingData.id, tripConfig);
+    } else if (bookingType === 'return') {
+      legs = mapReturnLegs(bookingData.id, tripConfig);
     }
 
-    // 5.4. Insert booking legs pentru DAILY trips
-    if (bookingType === 'daily') {
-      const legs = mapDailyBookingToLegs(data.id, tripConfig);
-      const { error: legsError } = await supabase.from('booking_legs').insert(legs);
-      if (legsError) {
-        console.warn('Failed to insert DAILY booking legs:', legsError.message);
-      }
-    }
+    if (legs && legs.length > 0) {
+      console.log(`🛣️ Creating ${legs.length} legs:`, legs);
 
-    // 5.5. Insert booking legs pentru FLEET trips
-    if (bookingType === 'fleet') {
-      const legs = mapFleetBookingToLegs(data.id, tripConfig);
       const { error: legsError } = await supabase.from('booking_legs').insert(legs);
-      if (legsError) {
-        console.warn('Failed to insert FLEET booking legs:', legsError.message);
-      }
-    }
 
-    // 5.6. Insert booking legs pentru BESPOKE trips
-    if (bookingType === 'bespoke') {
-      const legs = mapBespokeBookingToLegs(data.id, tripConfig);
-      const { error: legsError } = await supabase.from('booking_legs').insert(legs);
       if (legsError) {
-        console.warn('Failed to insert BESPOKE booking legs:', legsError.message);
+        console.error('❌ Legs insertion error:', legsError);
+        // Non-blocking - booking still succeeds
+      } else {
+        console.log('✅ Booking legs created');
       }
     }
 
     // 7. Return success
+    console.log('🎉 Booking creation completed successfully!');
     return {
       success: true,
-      booking: data,
-      message: `${bookingType} booking created`,
+      booking: bookingData,
+      message: `${bookingType.toUpperCase()} booking created successfully`,
     };
   } catch (error) {
+    console.error('💥 Unexpected error:', error);
     return {
       success: false,
       error: 'Unexpected error occurred while saving booking',
@@ -181,6 +179,7 @@ export const saveBooking = async (
  * Fetch booking by ID
  */
 export const getBooking = async (id: string) => {
+  const supabase = createSupabaseClient();
   const { data, error } = await supabase.from('bookings').select('*').eq('id', id).single();
 
   if (error) return null;
@@ -191,6 +190,7 @@ export const getBooking = async (id: string) => {
  * List bookings (optional)
  */
 export const listBookings = async () => {
+  const supabase = createSupabaseClient();
   const { data } = await supabase
     .from('bookings')
     .select('*')

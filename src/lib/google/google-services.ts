@@ -34,10 +34,27 @@ interface PlacesCache {
   };
 }
 
+interface PlaceDetailsCache {
+  [placeId: string]: {
+    coordinates: [number, number];
+    timestamp: number;
+  };
+}
+
+// Small helper so TS doesn't complain about window.google typing
+type GoogleWindow = typeof window & {
+  google?: any;
+};
+
 class GoogleServicesManager {
   private directionsCache: DirectionsCache = {};
   private placesCache: PlacesCache = {};
+  private placeDetailsCache: PlaceDetailsCache = {};
+
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+  // NOTE: This API key isn't used directly here because we rely on the Google Maps JS API already loaded in the browser.
+  // Keeping it to avoid "deleting something important" in existing expectations.
   private readonly API_KEY: string;
 
   constructor() {
@@ -52,17 +69,23 @@ class GoogleServicesManager {
    * Uses caching to minimize API calls
    */
   async getDirections(origin: string, destination: string): Promise<GoogleDirectionsResult | null> {
-    if (!origin || !destination) {
-      return null;
-    }
+    const o = (origin || '').trim();
+    const d = (destination || '').trim();
+
+    if (!o || !d) return null;
+
+    const w = window as GoogleWindow;
 
     // Check if Google Maps API is loaded
-    if (!window.google || !window.google.maps) {
+    if (!w.google || !w.google.maps) {
       console.warn('Google Maps API not loaded yet');
       return null;
     }
 
-    const cacheKey = `${origin}_${destination}`;
+    // Clean expired cache occasionally
+    this.clearExpiredCache();
+
+    const cacheKey = `${o.toLowerCase()}__${d.toLowerCase()}`;
     const cached = this.directionsCache[cacheKey];
 
     // Return cached result if valid
@@ -72,35 +95,47 @@ class GoogleServicesManager {
 
     return new Promise(resolve => {
       try {
-        const service = new window.google.maps.DirectionsService();
+        const service = new w.google.maps.DirectionsService();
 
         const request = {
-          origin: origin,
-          destination: destination,
-          travelMode: window.google.maps.TravelMode.DRIVING,
-          unitSystem: window.google.maps.UnitSystem.IMPERIAL, // Changed to miles
+          origin: o,
+          destination: d,
+          travelMode: w.google.maps.TravelMode.DRIVING,
+          unitSystem: w.google.maps.UnitSystem.IMPERIAL, // affects text units
           avoidHighways: false,
           avoidTolls: false,
         };
 
         service.route(request, (result: any, status: any) => {
-          if (status === window.google.maps.DirectionsStatus.OK && result?.routes?.[0]?.legs?.[0]) {
-            const leg = result.routes[0].legs[0];
-            const directionsResult: GoogleDirectionsResult = {
-              distance: leg.distance.text,
-              duration: leg.duration.text,
-              distanceValue: leg.distance.value,
-              durationValue: leg.duration.value,
-            };
+          try {
+            if (status === w.google.maps.DirectionsStatus.OK && result?.routes?.[0]?.legs?.[0]) {
+              const leg = result.routes[0].legs[0];
 
-            // Cache the result
-            this.directionsCache[cacheKey] = {
-              result: directionsResult,
-              timestamp: Date.now(),
-            };
+              // IMPORTANT:
+              // leg.distance.value is in METERS (even if unitSystem is IMPERIAL).
+              // Convert meters -> miles for distanceValue to match the interface comment.
+              const meters = Number(leg.distance?.value ?? 0);
+              const miles = meters > 0 ? meters / 1609.344 : 0;
 
-            resolve(directionsResult);
-          } else {
+              const directionsResult: GoogleDirectionsResult = {
+                distance: String(leg.distance?.text ?? ''),
+                duration: String(leg.duration?.text ?? ''),
+                distanceValue: miles,
+                durationValue: Number(leg.duration?.value ?? 0),
+              };
+
+              this.directionsCache[cacheKey] = {
+                result: directionsResult,
+                timestamp: Date.now(),
+              };
+
+              resolve(directionsResult);
+              return;
+            }
+
+            resolve(null);
+          } catch (e) {
+            console.error('Google Directions parsing error:', e);
             resolve(null);
           }
         });
@@ -114,19 +149,29 @@ class GoogleServicesManager {
   /**
    * Get place suggestions using Google Maps JavaScript API
    * Uses caching to minimize API calls
+   *
+   * NOTE:
+   * This version returns coordinates for each suggestion (as your current code expects).
+   * If you later want it even lighter/faster, the clean pattern is:
+   * - suggestions return placeId/address only
+   * - coords fetched only on selection
    */
   async getPlaceSuggestions(input: string, signal?: AbortSignal): Promise<GooglePlaceResult[]> {
-    if (!input || input.length < 3) {
-      return [];
-    }
+    const q = (input || '').trim();
+    if (!q || q.length < 3) return [];
+
+    const w = window as GoogleWindow;
 
     // Check if Google Maps API is loaded
-    if (!window.google || !window.google.maps || !window.google.maps.places) {
+    if (!w.google || !w.google.maps || !w.google.maps.places) {
       console.warn('Google Maps API not loaded yet');
       return [];
     }
 
-    const cacheKey = input.toLowerCase().trim();
+    // Clean expired cache occasionally
+    this.clearExpiredCache();
+
+    const cacheKey = q.toLowerCase();
     const cached = this.placesCache[cacheKey];
 
     // Return cached result if valid
@@ -141,43 +186,151 @@ class GoogleServicesManager {
       }
 
       try {
-        const service = new window.google.maps.places.AutocompleteService();
+        const service = new w.google.maps.places.AutocompleteService();
 
         const request = {
-          input: input,
+          input: q,
           componentRestrictions: { country: 'gb' }, // UK only
-          types: ['geocode', 'establishment'], // Addresses and places (geocode includes addresses)
+          types: ['geocode', 'establishment'],
         };
 
         service.getPlacePredictions(request, (predictions: any[], status: any) => {
-          if (signal?.aborted) {
+          // Keep callback non-async (safer with typings), run async work inside.
+          (async () => {
+            if (signal?.aborted) {
+              resolve([]);
+              return;
+            }
+
+            if (
+              status === w.google.maps.places.PlacesServiceStatus.OK &&
+              Array.isArray(predictions)
+            ) {
+              // Fetch coords for predictions, but be defensive: if details fail, exclude entry.
+              const results = await Promise.all(
+                predictions.map(async (prediction: any) => {
+                  const placeId = prediction?.place_id;
+                  const description = prediction?.description;
+
+                  if (!placeId || !description) return null;
+                  if (signal?.aborted) return null;
+
+                  const coordinates = await this.getPlaceCoordinates(placeId, signal);
+                  if (!coordinates) return null;
+
+                  const mapped: GooglePlaceResult = {
+                    placeId,
+                    address: description,
+                    coordinates,
+                    type: this.determineLocationTypeFromPrediction(prediction),
+                    components: this.extractComponentsFromPrediction(prediction),
+                  };
+
+                  return mapped;
+                })
+              );
+
+              const filtered = results.filter(Boolean) as GooglePlaceResult[];
+
+              this.placesCache[cacheKey] = {
+                results: filtered,
+                timestamp: Date.now(),
+              };
+
+              resolve(filtered);
+              return;
+            }
+
             resolve([]);
-            return;
-          }
-
-          if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
-            const results: GooglePlaceResult[] = predictions.map((prediction: any) => ({
-              placeId: prediction.place_id,
-              address: prediction.description,
-              coordinates: [0, 0] as [number, number], // Will be filled by place details if needed
-              type: this.determineLocationTypeFromPrediction(prediction),
-              components: this.extractComponentsFromPrediction(prediction),
-            }));
-
-            // Cache the results
-            this.placesCache[cacheKey] = {
-              results,
-              timestamp: Date.now(),
-            };
-
-            resolve(results);
-          } else {
+          })().catch(err => {
+            console.error('Google Places prediction handling error:', err);
             resolve([]);
-          }
+          });
         });
       } catch (error) {
         console.error('Google Places API error:', error);
         resolve([]);
+      }
+    });
+  }
+
+  /**
+   * Get place coordinates using Places Details via Google Maps JavaScript API
+   * Cached to reduce repeated calls.
+   */
+  private async getPlaceCoordinates(
+    placeId: string,
+    signal?: AbortSignal
+  ): Promise<[number, number] | null> {
+    const id = (placeId || '').trim();
+    if (!id) return null;
+
+    const w = window as GoogleWindow;
+
+    if (!w.google || !w.google.maps || !w.google.maps.places) {
+      return null;
+    }
+
+    const cached = this.placeDetailsCache[id];
+    if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
+      return cached.coordinates;
+    }
+
+    if (signal?.aborted) return null;
+
+    return new Promise(resolve => {
+      try {
+        // PlacesService needs an HTMLElement; create a lightweight detached div.
+        const div = document.createElement('div');
+        const placesService = new w.google.maps.places.PlacesService(div);
+
+        const request = {
+          placeId: id,
+          fields: ['geometry.location'],
+        };
+
+        placesService.getDetails(request, (place: any, status: any) => {
+          try {
+            if (signal?.aborted) {
+              resolve(null);
+              return;
+            }
+
+            if (
+              status === w.google.maps.places.PlacesServiceStatus.OK &&
+              place?.geometry?.location
+            ) {
+              const loc = place.geometry.location;
+
+              // Google LatLng has methods lat() lng()
+              const lat = typeof loc.lat === 'function' ? Number(loc.lat()) : Number(loc.lat);
+              const lng = typeof loc.lng === 'function' ? Number(loc.lng()) : Number(loc.lng);
+
+              if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+                resolve(null);
+                return;
+              }
+
+              const coords: [number, number] = [lat, lng];
+
+              this.placeDetailsCache[id] = {
+                coordinates: coords,
+                timestamp: Date.now(),
+              };
+
+              resolve(coords);
+              return;
+            }
+
+            resolve(null);
+          } catch (e) {
+            console.error('Google Place Details parsing error:', e);
+            resolve(null);
+          }
+        });
+      } catch (error) {
+        console.error('Google Place Details API error:', error);
+        resolve(null);
       }
     });
   }
@@ -188,35 +341,29 @@ class GoogleServicesManager {
   private clearExpiredCache(): void {
     const now = Date.now();
 
-    // Clear directions cache
+    // Directions cache
     Object.keys(this.directionsCache).forEach(key => {
-      const cacheEntry = this.directionsCache[key];
-      if (cacheEntry && now - cacheEntry.timestamp > this.CACHE_DURATION) {
+      const entry = this.directionsCache[key];
+      if (entry && now - entry.timestamp > this.CACHE_DURATION) {
         delete this.directionsCache[key];
       }
     });
 
-    // Clear places cache
+    // Places predictions cache
     Object.keys(this.placesCache).forEach(key => {
-      const cacheEntry = this.placesCache[key];
-      if (cacheEntry && now - cacheEntry.timestamp > this.CACHE_DURATION) {
+      const entry = this.placesCache[key];
+      if (entry && now - entry.timestamp > this.CACHE_DURATION) {
         delete this.placesCache[key];
       }
     });
-  }
 
-  /**
-   * Determine location type from Google Places prediction
-   */
-  private determineLocationType(prediction: {
-    types?: string[];
-  }): 'address' | 'airport' | 'hotel' | 'poi' {
-    const types = prediction.types || [];
-
-    if (types.includes('airport')) return 'airport';
-    if (types.includes('lodging')) return 'hotel';
-    if (types.includes('establishment') || types.includes('point_of_interest')) return 'poi';
-    return 'address';
+    // Place details cache
+    Object.keys(this.placeDetailsCache).forEach(key => {
+      const entry = this.placeDetailsCache[key];
+      if (entry && now - entry.timestamp > this.CACHE_DURATION) {
+        delete this.placeDetailsCache[key];
+      }
+    });
   }
 
   /**
@@ -225,30 +372,12 @@ class GoogleServicesManager {
   private determineLocationTypeFromPrediction(prediction: {
     types?: string[];
   }): 'address' | 'airport' | 'hotel' | 'poi' {
-    const types = prediction.types || [];
+    const types = prediction?.types || [];
 
     if (types.includes('airport')) return 'airport';
     if (types.includes('lodging')) return 'hotel';
     if (types.includes('establishment') || types.includes('point_of_interest')) return 'poi';
     return 'address';
-  }
-
-  /**
-   * Extract address components from Google Places prediction
-   */
-  private extractComponents(prediction: {
-    terms?: Array<{ value: string }>;
-  }): Record<string, string> {
-    const components: Record<string, string> = {};
-
-    if (prediction.terms) {
-      prediction.terms.forEach((term: { value: string }, index: number) => {
-        if (index === 0) components.street = term.value;
-        if (index === (prediction.terms?.length ?? 0) - 1) components.country = term.value;
-      });
-    }
-
-    return components;
   }
 
   /**

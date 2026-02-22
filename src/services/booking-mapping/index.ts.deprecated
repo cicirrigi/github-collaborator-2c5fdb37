@@ -9,7 +9,7 @@ export type {
   BookingLegRecord,
   BookingRecord,
   BookingType,
-  TripConfiguration,
+  TripConfiguration
 } from './types';
 
 // Export individual mappers
@@ -17,8 +17,8 @@ export { mapBespokeBooking } from './mappers/bespoke.mapper';
 export { mapDailyBooking } from './mappers/daily.mapper';
 export { mapFleetBooking } from './mappers/fleet.mapper';
 export { mapHourlyBooking } from './mappers/hourly.mapper';
-export { mapOnewayBooking } from './mappers/oneway.mapper';
-export { mapReturnBooking } from './mappers/return.mapper';
+export { mapOnewayBooking, mapOnewayLegs } from './mappers/oneway.mapper';
+export { mapReturnBooking, mapReturnLegs } from './mappers/return.mapper';
 
 // Future implementation - placeholder mapper exports
 export { mapCorporateBooking } from './mappers/corporate.mapper';
@@ -34,7 +34,7 @@ export {
   mapFleetBookingToLegs,
   mapHourlyBookingToLegs,
   mapOnewayBookingToLegs,
-  mapReturnBookingToLegs,
+  mapReturnBookingToLegs
 } from './legs';
 export { debugBookingMapping, validateBookingRecord } from './validation';
 
@@ -53,26 +53,27 @@ import type { BookingRecord, BookingType, TripConfiguration } from './types';
  */
 export const mapTripConfigToBooking = (
   tripConfig: TripConfiguration,
-  bookingType: BookingType
+  bookingType: BookingType,
+  customerId: string
 ): BookingRecord => {
   switch (bookingType) {
     case 'oneway':
-      return mapOnewayBooking(tripConfig);
+      return mapOnewayBooking(tripConfig, customerId);
 
     case 'return':
-      return mapReturnBooking(tripConfig);
+      return mapReturnBooking(tripConfig, customerId);
 
     case 'hourly':
-      return mapHourlyBooking(tripConfig);
+      return mapHourlyBooking(tripConfig, customerId);
 
     case 'daily':
-      return mapDailyBooking(tripConfig);
+      return mapDailyBooking(tripConfig, customerId);
 
     case 'fleet':
-      return mapFleetBooking(tripConfig);
+      return mapFleetBooking(tripConfig, customerId);
 
     case 'bespoke':
     default:
-      return mapBespokeBooking(tripConfig);
+      return mapBespokeBooking(tripConfig, customerId);
   }
 };

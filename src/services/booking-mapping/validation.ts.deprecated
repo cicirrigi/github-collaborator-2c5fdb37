@@ -10,13 +10,13 @@ import type { BookingRecord, BookingType, TripConfiguration } from './types';
 export const validateBookingRecord = (record: BookingRecord): string[] => {
   const errors: string[] = [];
 
-  // Required field validation
-  if (!record.operator_id) {
-    errors.push('operator_id is required');
+  // Required field validation - MATCHES ACTUAL `bookings` TABLE
+  if (!record.customer_id) {
+    errors.push('customer_id is required');
   }
 
-  if (!record.category) {
-    errors.push('category is required');
+  if (!record.trip_type) {
+    errors.push('trip_type is required');
   }
 
   if (!record.start_at) {
@@ -29,17 +29,14 @@ export const validateBookingRecord = (record: BookingRecord): string[] => {
     errors.push(`trip_type must be one of: ${validTripTypes.join(', ')}`);
   }
 
-  // Passenger validation
-  if (record.passenger_count < 1 || record.passenger_count > 8) {
+  // Passenger validation (optional field)
+  if (record.passenger_count && (record.passenger_count < 1 || record.passenger_count > 8)) {
     errors.push('passenger_count must be between 1 and 8');
   }
 
-  // Return trip validation
-  if (record.trip_type === 'return') {
-    if (!record.return_date) {
-      errors.push('return_date is required for return trips');
-    }
-  }
+  // NOTE: operator_id is in booking_metadata table, not main bookings table
+  // NOTE: category is optional in main bookings table
+  // NOTE: return_date/return_time are in booking_metadata table, not main bookings table
 
   return errors;
 };

@@ -200,7 +200,11 @@ export interface BookingState {
   shouldRecalculatePricing: () => boolean;
 
   // UTILITY ACTIONS
-  calculateEstimatedDistanceAndTime: () => { distanceKm: number; durationMinutes: number };
+  calculateEstimatedDistanceAndTime: () => {
+    distanceKm: number;
+    durationMinutes: number;
+    error: string | null;
+  };
 
   // 🚗 RETURN TRIP ENTERPRISE LOGIC
   prepareReturnTripBookings: () => { outbound: SingleBooking; inbound: SingleBooking } | null;

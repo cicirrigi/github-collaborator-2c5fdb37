@@ -9,11 +9,11 @@ import type { BookingRecord, TripConfiguration } from '../types';
  * Maps TripConfiguration to BookingRecord for HOURLY bookings
  * HOURLY bookings need hours field from hoursRequested
  */
-export const mapHourlyBooking = (tripConfig: TripConfiguration): BookingRecord => {
-  const baseRecord = createBaseBookingRecord(tripConfig, 'hourly');
+export const mapHourlyBooking = (tripConfig: TripConfiguration, customerId: string): BookingRecord => {
+  const baseRecord = createBaseBookingRecord(tripConfig, 'hourly', customerId);
 
   return {
     ...baseRecord,
-    hours: tripConfig.hoursRequested || 1, // Default to 1 hour minimum
+    hours_requested: tripConfig.hoursRequested || 1, // Default to 1 hour minimum
   };
 };

@@ -57,7 +57,7 @@ export function GoogleMapsLoader({ children }: GoogleMapsLoaderProps) {
   return (
     <>
       <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initGoogleMaps`}
+        src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&loading=async&callback=initGoogleMaps`}
         strategy='lazyOnload'
         onLoad={() => {
           console.log('Google Maps script loaded');
