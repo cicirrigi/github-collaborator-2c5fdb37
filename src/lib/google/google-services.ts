@@ -147,6 +147,117 @@ class GoogleServicesManager {
   }
 
   /**
+   * Calculate distance and duration for route with multiple waypoints (stops)
+   * Supports [pickup, stop1, stop2, dropoff] route calculation
+   */
+  async getDirectionsWithWaypoints(locations: string[]): Promise<GoogleDirectionsResult | null> {
+    if (!locations || locations.length < 2) return null;
+
+    // Filter out empty locations
+    const validLocations = locations.filter(loc => (loc || '').trim());
+    if (validLocations.length < 2) return null;
+
+    // If only 2 locations, use regular getDirections
+    if (validLocations.length === 2) {
+      return this.getDirections(validLocations[0], validLocations[1]);
+    }
+
+    const w = window as GoogleWindow;
+
+    // Check if Google Maps API is loaded
+    if (!w.google || !w.google.maps) {
+      console.warn('Google Maps API not loaded yet');
+      return null;
+    }
+
+    // Clean expired cache occasionally
+    this.clearExpiredCache();
+
+    const cacheKey = validLocations.map(l => l.toLowerCase()).join('__waypoint__');
+    const cached = this.directionsCache[cacheKey];
+
+    // Return cached result if valid
+    if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
+      return cached.result;
+    }
+
+    return new Promise(resolve => {
+      try {
+        const service = new w.google.maps.DirectionsService();
+
+        const origin = validLocations[0];
+        const destination = validLocations[validLocations.length - 1];
+        const waypoints = validLocations.slice(1, -1).map(location => ({
+          location: location,
+          stopover: true,
+        }));
+
+        const request = {
+          origin: origin,
+          destination: destination,
+          waypoints: waypoints,
+          travelMode: w.google.maps.TravelMode.DRIVING,
+          unitSystem: w.google.maps.UnitSystem.IMPERIAL,
+          avoidHighways: false,
+          avoidTolls: false,
+        };
+
+        service.route(request, (result: any, status: any) => {
+          try {
+            if (status === w.google.maps.DirectionsStatus.OK && result?.routes?.[0]) {
+              const route = result.routes[0];
+
+              // Sum up all legs (pickup → stop1 → stop2 → dropoff)
+              let totalDistanceMeters = 0;
+              let totalDurationSeconds = 0;
+              let distanceText = '';
+              let durationText = '';
+
+              if (route.legs && route.legs.length > 0) {
+                for (const leg of route.legs) {
+                  totalDistanceMeters += Number(leg.distance?.value ?? 0);
+                  totalDurationSeconds += Number(leg.duration?.value ?? 0);
+                }
+
+                // Convert meters to miles
+                const totalMiles = totalDistanceMeters > 0 ? totalDistanceMeters / 1609.344 : 0;
+
+                // Format text display
+                distanceText = `${Math.round(totalMiles * 10) / 10} miles`;
+                const hours = Math.floor(totalDurationSeconds / 3600);
+                const minutes = Math.round((totalDurationSeconds % 3600) / 60);
+                durationText = hours > 0 ? `${hours}h ${minutes}m` : `${minutes} mins`;
+
+                const directionsResult: GoogleDirectionsResult = {
+                  distance: distanceText,
+                  duration: durationText,
+                  distanceValue: totalMiles,
+                  durationValue: totalDurationSeconds,
+                };
+
+                this.directionsCache[cacheKey] = {
+                  result: directionsResult,
+                  timestamp: Date.now(),
+                };
+
+                resolve(directionsResult);
+              } else {
+                resolve(null);
+              }
+            } else {
+              resolve(null);
+            }
+          } catch {
+            resolve(null);
+          }
+        });
+      } catch {
+        resolve(null);
+      }
+    });
+  }
+
+  /**
    * Get place suggestions using Google Maps JavaScript API
    * Uses caching to minimize API calls
    *

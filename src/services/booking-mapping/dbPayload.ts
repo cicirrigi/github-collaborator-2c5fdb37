@@ -184,22 +184,58 @@ export function buildLegsPayload(params: {
       leg_number: 2,
       leg_kind: LegKind.RETURN,
       scheduled_at: returnAt,
-      // reverse pickup/dropoff for return leg
-      pickup_place_id: tripConfiguration.dropoff?.placeId ?? null,
-      pickup_address: tripConfiguration.dropoff?.address ?? '',
-      ...(() => {
-        const { lat, lng } = getLatLng(tripConfiguration.dropoff?.coordinates as LatLngTuple);
-        return { pickup_lat: lat, pickup_lng: lng };
-      })(),
+      // Handle return leg based on isDifferentReturnLocation
+      ...(tripConfiguration.isDifferentReturnLocation &&
+      tripConfiguration.returnPickup &&
+      tripConfiguration.returnDropoff
+        ? {
+            // Use custom return locations when different return location is selected
+            pickup_place_id: tripConfiguration.returnPickup?.placeId ?? null,
+            pickup_address: tripConfiguration.returnPickup?.address ?? '',
+            ...(() => {
+              const { lat, lng } = getLatLng(
+                tripConfiguration.returnPickup?.coordinates as LatLngTuple
+              );
+              return { pickup_lat: lat, pickup_lng: lng };
+            })(),
 
-      dropoff_place_id: tripConfiguration.pickup?.placeId ?? null,
-      dropoff_address: tripConfiguration.pickup?.address ?? '',
-      ...(() => {
-        const { lat, lng } = getLatLng(tripConfiguration.pickup?.coordinates as LatLngTuple);
-        return { dropoff_lat: lat, dropoff_lng: lng };
-      })(),
+            dropoff_place_id: tripConfiguration.returnDropoff?.placeId ?? null,
+            dropoff_address: tripConfiguration.returnDropoff?.address ?? '',
+            ...(() => {
+              const { lat, lng } = getLatLng(
+                tripConfiguration.returnDropoff?.coordinates as LatLngTuple
+              );
+              return { dropoff_lat: lat, dropoff_lng: lng };
+            })(),
 
-      stops_raw: [],
+            stops_raw: (tripConfiguration.returnAdditionalStops ?? []).map(s => {
+              const { lat, lng } = getLatLng(s?.coordinates as LatLngTuple);
+              return {
+                place_id: s?.placeId ?? null,
+                address: s?.address ?? null,
+                lat,
+                lng,
+              };
+            }),
+          }
+        : {
+            // Use automatic reverse (dropoff → pickup) for normal return
+            pickup_place_id: tripConfiguration.dropoff?.placeId ?? null,
+            pickup_address: tripConfiguration.dropoff?.address ?? '',
+            ...(() => {
+              const { lat, lng } = getLatLng(tripConfiguration.dropoff?.coordinates as LatLngTuple);
+              return { pickup_lat: lat, pickup_lng: lng };
+            })(),
+
+            dropoff_place_id: tripConfiguration.pickup?.placeId ?? null,
+            dropoff_address: tripConfiguration.pickup?.address ?? '',
+            ...(() => {
+              const { lat, lng } = getLatLng(tripConfiguration.pickup?.coordinates as LatLngTuple);
+              return { dropoff_lat: lat, dropoff_lng: lng };
+            })(),
+
+            stops_raw: [],
+          }),
 
       flight_number: tripConfiguration.flightNumberReturn ?? null,
     };
