@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     // 3) Fetch booking (1) – keep it simple + robust
     const { data: booking, error: bookingError } = await supabaseAdmin
       .from('bookings')
-      .select('id, customer_id, currency, reference, status')
+      .select('id, customer_id, organization_id, currency, reference, status')
       .eq('id', bookingId)
       .single();
 
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get amount from frontend (booking doesn't store amount in current schema)
-    const amount = body?.amount || body?.amount_total_pence || 10000; // fallback to £100
+    const amount = body?.amount ?? body?.amount_total_pence;
     if (!Number.isInteger(amount) || amount <= 0) {
       return NextResponse.json({ error: 'Invalid booking amount' }, { status: 400 });
     }
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
 
     // 5) Stable idempotency key
     const headerKey = request.headers.get('Idempotency-Key');
-    const idempotencyKey = headerKey || `pi_${bookingId}`;
+    const idempotencyKey = headerKey || `pi_${bookingId}_${amount}`;
 
     // 6) Create PI (idempotent)
     const paymentIntent = await stripe.paymentIntents.create(
@@ -92,10 +92,14 @@ export async function POST(request: NextRequest) {
       {
         booking_id: bookingId,
         stripe_payment_intent_id: paymentIntent.id,
+        organization_id: booking.organization_id,
         amount_pence: amount,
         currency,
         status: 'pending',
         receipt_email: receiptEmail,
+        idempotency_key: idempotencyKey,
+        attempt_no: 1,
+        livemode: paymentIntent.livemode,
         metadata: {
           paymentIntentId: paymentIntent.id,
           reference: booking.reference,

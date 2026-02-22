@@ -33,6 +33,29 @@ export async function POST(request: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
+    // Idempotency: Insert event into stripe_events (prevents double processing)
+    const { error: eventInsertError } = await supabase.from('stripe_events').insert({
+      stripe_event_id: event.id,
+      event_type: event.type,
+      livemode: event.livemode,
+      api_version: event.api_version,
+      payload: event,
+      booking_id: (event.data?.object as any)?.metadata?.bookingId || null,
+      booking_payment_id: null,
+      organization_id: null,
+    });
+
+    // If event already exists, we've processed it before
+    if (eventInsertError?.code === '23505') {
+      console.log('🔄 Event already processed:', event.id);
+      return NextResponse.json({ received: true });
+    }
+
+    if (eventInsertError) {
+      console.error('❌ Failed to insert stripe_event:', eventInsertError);
+      return NextResponse.json({ error: 'Failed to log event' }, { status: 500 });
+    }
+
     // Handle different event types
     switch (event.type) {
       case 'payment_intent.succeeded': {
@@ -46,11 +69,10 @@ export async function POST(request: NextRequest) {
           break;
         }
 
-        // Update booking status to CONFIRMED and payment_status to succeeded
+        // Update booking status to CONFIRMED
         const { error: bookingUpdateError } = await supabase
           .from('bookings')
           .update({
-            payment_status: 'succeeded',
             status: 'CONFIRMED',
           })
           .eq('id', bookingId);
@@ -61,18 +83,22 @@ export async function POST(request: NextRequest) {
           console.log('✅ Booking confirmed:', bookingId);
         }
 
-        // Update booking_payments table if it exists
+        // Extract charge ID for audit trail
+        const chargeId =
+          typeof paymentIntent.latest_charge === 'string' ? paymentIntent.latest_charge : null;
+
+        // Update booking_payments table with success details
         const { error: paymentUpdateError } = await supabase
           .from('booking_payments')
           .update({
             status: 'succeeded',
+            captured_at: new Date().toISOString(),
+            livemode: paymentIntent.livemode,
+            stripe_charge_id: chargeId,
           })
           .eq('stripe_payment_intent_id', paymentIntent.id);
 
-        if (
-          paymentUpdateError &&
-          !paymentUpdateError.message.includes('relation "booking_payments" does not exist')
-        ) {
+        if (paymentUpdateError) {
           console.error('❌ Failed to update booking_payments:', paymentUpdateError);
         }
 
@@ -89,11 +115,11 @@ export async function POST(request: NextRequest) {
           break;
         }
 
-        // Update booking payment_status to failed
+        // Update booking status to PAYMENT_FAILED
         const { error: bookingUpdateError } = await supabase
           .from('bookings')
           .update({
-            payment_status: 'failed',
+            status: 'PAYMENT_FAILED',
           })
           .eq('id', bookingId);
 
@@ -103,18 +129,18 @@ export async function POST(request: NextRequest) {
           console.log('✅ Booking marked as payment failed:', bookingId);
         }
 
-        // Update booking_payments table if it exists
+        // Update booking_payments table with failure details
         const { error: paymentUpdateError } = await supabase
           .from('booking_payments')
           .update({
             status: 'failed',
+            failed_at: new Date().toISOString(),
+            last_error: paymentIntent.last_payment_error?.message ?? null,
+            livemode: paymentIntent.livemode,
           })
           .eq('stripe_payment_intent_id', paymentIntent.id);
 
-        if (
-          paymentUpdateError &&
-          !paymentUpdateError.message.includes('relation "booking_payments" does not exist')
-        ) {
+        if (paymentUpdateError) {
           console.error('❌ Failed to update booking_payments:', paymentUpdateError);
         }
 
@@ -131,11 +157,11 @@ export async function POST(request: NextRequest) {
           break;
         }
 
-        // Update booking payment_status to canceled
+        // Update booking status back to NEW (user can retry payment)
         const { error: bookingUpdateError } = await supabase
           .from('bookings')
           .update({
-            payment_status: 'canceled',
+            status: 'NEW',
           })
           .eq('id', bookingId);
 
@@ -145,18 +171,17 @@ export async function POST(request: NextRequest) {
           console.log('✅ Booking marked as payment canceled:', bookingId);
         }
 
-        // Update booking_payments table if it exists
+        // Update booking_payments table with cancellation details
         const { error: paymentUpdateError } = await supabase
           .from('booking_payments')
           .update({
             status: 'canceled',
+            canceled_at: new Date().toISOString(),
+            livemode: paymentIntent.livemode,
           })
           .eq('stripe_payment_intent_id', paymentIntent.id);
 
-        if (
-          paymentUpdateError &&
-          !paymentUpdateError.message.includes('relation "booking_payments" does not exist')
-        ) {
+        if (paymentUpdateError) {
           console.error('❌ Failed to update booking_payments:', paymentUpdateError);
         }
 
@@ -166,6 +191,12 @@ export async function POST(request: NextRequest) {
       default:
         console.log('ℹ️ Unhandled event type:', event.type);
     }
+
+    // Mark event as processed
+    await supabase
+      .from('stripe_events')
+      .update({ processed_at: new Date().toISOString() })
+      .eq('stripe_event_id', event.id);
 
     return NextResponse.json({ received: true });
   } catch (error) {
