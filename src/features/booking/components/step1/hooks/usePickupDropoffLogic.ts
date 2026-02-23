@@ -19,11 +19,8 @@ export function usePickupDropoffLogic() {
   const handlePickupChange = (value: string) => {
     console.log(' handlePickupChange called:', value);
 
-    // Skip if Google Places selection already occurred
-    if (pickupPlaceSelected.current) {
-      console.log(' Skipping handlePickupChange - Google Places already selected');
-      return;
-    }
+    // Reset flag when user starts typing manually
+    pickupPlaceSelected.current = false;
 
     const locationData = value
       ? {
@@ -39,11 +36,8 @@ export function usePickupDropoffLogic() {
   };
 
   const handleDropoffChange = (value: string) => {
-    // Skip if Google Places selection already occurred
-    if (dropoffPlaceSelected.current) {
-      console.log(' Skipping handleDropoffChange - Google Places already selected');
-      return;
-    }
+    // Reset flag when user starts typing manually
+    dropoffPlaceSelected.current = false;
 
     const locationData = value
       ? {

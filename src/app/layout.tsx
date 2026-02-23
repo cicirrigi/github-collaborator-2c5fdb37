@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   title: siteMetadata.title,
   description: siteMetadata.description,
   manifest: '/manifest.json',
+  viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
 
   // Open Graph for social sharing
   openGraph: {

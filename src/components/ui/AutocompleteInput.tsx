@@ -9,9 +9,10 @@
 
 import type { GooglePlaceResult } from '@/lib/google/google-services';
 import { googleServices } from '@/lib/google/google-services';
-import { Loader2 } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { Loader2, X } from 'lucide-react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { DesktopDropdown } from './DesktopDropdown';
+import { MobileDropdown } from './MobileDropdown';
 
 interface AutocompleteInputProps {
   value: string;
@@ -33,202 +34,333 @@ export function AutocompleteInput({
   const [suggestions, setSuggestions] = useState<GooglePlaceResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [abortController, setAbortController] = useState<AbortController | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
-  const [isSelecting, setIsSelecting] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Debounced autocomplete search
+  const abortRef = useRef<AbortController | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const debounceRef = useRef<number | null>(null);
+  const isSelectingRef = useRef(false);
+
+  const canSearch = useMemo(() => value.trim().length >= 3, [value]);
+
+  // SSR-safe mobile detection
   useEffect(() => {
-    // Skip API calls if we're in the middle of selecting a suggestion
-    if (isSelecting) {
-      return;
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const updateDropdownPosition = useCallback(() => {
+    if (!inputRef.current) return;
+
+    const rect = inputRef.current.getBoundingClientRect();
+    const isDesktop = window.innerWidth >= 768;
+
+    if (isDesktop) {
+      // Desktop: Fixed positioning with portal
+      setDropdownPosition({
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: Math.max(rect.width, 400),
+      });
+    } else {
+      // Mobile: Will use absolute positioning, no complex calculations needed
+      setDropdownPosition({
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: Math.max(rect.width, 320),
+      });
+    }
+  }, []);
+
+  const schedulePositionUpdate = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      updateDropdownPosition();
+    });
+  }, [updateDropdownPosition]);
+
+  // Debounced autocomplete fetch
+  useEffect(() => {
+    // Skip API calls if we're in selection process
+    if (isSelectingRef.current) return;
+
+    // clear pending debounce
+    if (debounceRef.current) {
+      window.clearTimeout(debounceRef.current);
+      debounceRef.current = null;
     }
 
-    // Cancel previous request
-    if (abortController) {
-      abortController.abort();
+    // abort in-flight request
+    if (abortRef.current) {
+      abortRef.current.abort();
+      abortRef.current = null;
     }
 
-    // Don't search for empty strings or very short queries
-    if (!value || value.length < 3) {
+    if (!canSearch) {
+      setIsLoading(false);
       setSuggestions([]);
       setShowDropdown(false);
-      setIsLoading(false);
       return;
     }
 
-    const newAbortController = new AbortController();
-    setAbortController(newAbortController);
+    debounceRef.current = window.setTimeout(async () => {
+      const controller = new AbortController();
+      abortRef.current = controller;
 
-    // Debounce the search with longer delay to reduce API calls
-    const timeoutId = setTimeout(async () => {
       setIsLoading(true);
 
       try {
-        const results = await googleServices.getPlaceSuggestions(value, newAbortController.signal);
+        const results = await googleServices.getPlaceSuggestions(value, controller.signal);
+        if (controller.signal.aborted) return;
 
-        if (!newAbortController.signal.aborted) {
-          setSuggestions(results);
-          if (results.length > 0) {
-            updateDropdownPosition();
-            setShowDropdown(true);
-          } else {
-            setShowDropdown(false);
-          }
-          setIsLoading(false);
+        setSuggestions(results);
+
+        if (results.length > 0) {
+          schedulePositionUpdate();
+          setShowDropdown(true);
+        } else {
+          setShowDropdown(false);
         }
       } catch {
-        if (!newAbortController.signal.aborted) {
+        if (!controller.signal.aborted) {
           setSuggestions([]);
           setShowDropdown(false);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
           setIsLoading(false);
         }
       }
-    }, 500); // Increased to 500ms debounce for better performance
+    }, 500);
 
-    // Cleanup
     return () => {
-      clearTimeout(timeoutId);
-      newAbortController.abort();
+      if (debounceRef.current) {
+        window.clearTimeout(debounceRef.current);
+        debounceRef.current = null;
+      }
+      if (abortRef.current) {
+        abortRef.current.abort();
+        abortRef.current = null;
+      }
     };
-  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [value, canSearch, schedulePositionUpdate]);
 
-  // Click outside to close dropdown
+  // Close on click/touch outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
-      ) {
+    const handler = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+
+      const inInput = inputRef.current?.contains(target);
+      const inDropdown = dropdownRef.current?.contains(target);
+
+      if (!inInput && !inDropdown) {
         setShowDropdown(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handler);
+    document.addEventListener('touchstart', handler, { passive: true });
+
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('touchstart', handler);
+    };
   }, []);
 
-  // Handle suggestion selection
-  const handleSuggestionSelect = (suggestion: GooglePlaceResult) => {
-    // Set flag to prevent useEffect from running during selection
-    setIsSelecting(true);
+  // Keep dropdown pinned on scroll/resize (including modal scroll containers)
+  useEffect(() => {
+    if (!showDropdown) return;
 
-    // First hide dropdown and clear suggestions to prevent re-triggering
+    const onMove = () => schedulePositionUpdate();
+
+    window.addEventListener('scroll', onMove, true);
+    window.addEventListener('resize', onMove);
+
+    const vv = window.visualViewport;
+    vv?.addEventListener('scroll', onMove);
+    vv?.addEventListener('resize', onMove);
+
+    // initial
+    onMove();
+
+    return () => {
+      window.removeEventListener('scroll', onMove, true);
+      window.removeEventListener('resize', onMove);
+      vv?.removeEventListener('scroll', onMove);
+      vv?.removeEventListener('resize', onMove);
+
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    };
+  }, [showDropdown, schedulePositionUpdate]);
+
+  const handleSuggestionSelect = useCallback(
+    (suggestion: GooglePlaceResult) => {
+      // Mark that we're selecting to prevent double-open
+      isSelectingRef.current = true;
+
+      // close first to avoid weird re-open behavior
+      setShowDropdown(false);
+      setSuggestions([]);
+
+      onChange(suggestion.address);
+      onPlaceSelect?.(suggestion);
+
+      requestAnimationFrame(() => {
+        const el = inputRef.current;
+        if (!el) return;
+        el.focus();
+        el.setSelectionRange(0, 0); // cursor la început
+
+        // Clear flag after focus is complete
+        setTimeout(() => {
+          isSelectingRef.current = false;
+        }, 50);
+      });
+    },
+    [onChange, onPlaceSelect]
+  );
+
+  const handleClearInput = useCallback(() => {
+    onChange('');
     setShowDropdown(false);
     setSuggestions([]);
+    inputRef.current?.focus();
+  }, [onChange]);
 
-    // Then update the input value
-    onChange(suggestion.address);
-    onPlaceSelect?.(suggestion);
-    inputRef.current?.blur();
-
-    // Reset flag after a brief delay to allow typing again
-    setTimeout(() => setIsSelecting(false), 100);
-  };
-
-  // Handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
-  };
+    const next = e.target.value;
+    onChange(next);
 
-  // Calculate dropdown position relative to input
-  const updateDropdownPosition = () => {
-    if (inputRef.current) {
-      const rect = inputRef.current.getBoundingClientRect();
-      const position = {
-        top: rect.bottom + 4, // +4 for small gap (no scrollY for fixed positioning)
-        left: rect.left, // no scrollX for fixed positioning
-        width: rect.width,
-      };
-      setDropdownPosition(position);
+    // Skip dropdown opening if we're in selection process
+    if (isSelectingRef.current) return;
+
+    // Keep dropdown behavior natural while typing
+    if (next.trim().length >= 3) {
+      setShowDropdown(true);
+      schedulePositionUpdate();
+    } else {
+      setShowDropdown(false);
     }
   };
 
-  // Handle input focus
   const handleInputFocus = () => {
-    if (suggestions.length > 0) {
-      updateDropdownPosition();
-      setShowDropdown(true);
+    // Skip if we're in the middle of programmatic selection focus
+    if (isSelectingRef.current) return;
+
+    // Re-open dropdown if value is long enough
+    if (value.trim().length >= 3) {
+      // If no suggestions but value exists, trigger new search
+      if (suggestions.length === 0) {
+        setIsLoading(true);
+        // Trigger API call by simulating input change
+        const searchValue = value.trim();
+
+        // Clear previous abort controller
+        if (abortRef.current) {
+          abortRef.current.abort();
+        }
+
+        // Create new search
+        abortRef.current = new AbortController();
+
+        setTimeout(async () => {
+          try {
+            const results = await googleServices.getPlaceSuggestions(
+              searchValue,
+              abortRef.current!.signal
+            );
+            if (!abortRef.current!.signal.aborted) {
+              setSuggestions(results);
+              if (results.length > 0) {
+                schedulePositionUpdate();
+                setShowDropdown(true);
+              }
+            }
+          } catch {
+            // Ignore errors on focus search
+          } finally {
+            setIsLoading(false);
+          }
+        }, 100);
+      } else {
+        // If we have suggestions, just reopen
+        schedulePositionUpdate();
+        setShowDropdown(true);
+      }
     }
   };
 
   return (
     <div className={`relative ${className}`}>
-      <div className='relative'>
-        {icon && <div className='absolute left-3 top-1/2 -translate-y-1/2 z-10'>{icon}</div>}
-        <input
-          ref={inputRef}
-          type='text'
-          value={value}
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-          placeholder={placeholder}
-          className={`w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-2 ${
-            icon ? 'pl-10' : 'pl-3'
-          } text-amber-50 text-sm font-light placeholder:text-amber-200/40 focus:border-amber-300/40 focus:outline-none transition-colors`}
-        />
+      <div className='flex items-center gap-2'>
+        <div className='relative flex-1'>
+          {icon && <div className='absolute left-3 top-1/2 -translate-y-1/2 z-10'>{icon}</div>}
+          <input
+            ref={inputRef}
+            type='text'
+            value={value}
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+            placeholder={placeholder}
+            className={`w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-2 ${
+              icon ? 'pl-10' : 'pl-3'
+            } text-amber-50 text-base md:text-sm font-light placeholder:text-amber-200/40 focus:border-amber-300/40 focus:outline-none transition-colors`}
+          />
 
-        {/* Loading indicator */}
-        {isLoading && (
-          <div className='absolute right-3 top-1/2 -translate-y-1/2'>
-            <Loader2 className='w-4 h-4 animate-spin text-amber-200/60' />
-          </div>
+          {isLoading && (
+            <div className='absolute right-3 top-1/2 -translate-y-1/2'>
+              <Loader2 className='w-4 h-4 animate-spin text-amber-200/60' />
+            </div>
+          )}
+        </div>
+
+        {/* Clear Button - adjacent to input */}
+        {value && (
+          <button
+            type='button'
+            onClick={handleClearInput}
+            className='p-2 hover:bg-amber-200/10 rounded-md transition-colors'
+            aria-label='Clear input'
+          >
+            <X className='w-4 h-4 text-amber-200/60 hover:text-amber-200' />
+          </button>
         )}
       </div>
 
-      {/* Portal-based suggestions dropdown - renders in document.body to escape stacking context */}
-      {showDropdown &&
-        suggestions.length > 0 &&
-        typeof document !== 'undefined' &&
-        createPortal(
-          <div
-            ref={dropdownRef}
-            className='fixed z-[20000] bg-neutral-900/95 backdrop-blur-sm border border-amber-200/20 rounded-lg shadow-xl max-h-60 overflow-y-auto'
-            style={{
-              top: `${dropdownPosition.top}px`,
-              left: `${dropdownPosition.left}px`,
-              width: `${dropdownPosition.width}px`,
-            }}
-          >
-            {suggestions.map((suggestion, _index) => (
-              <button
-                key={suggestion.placeId}
-                type='button'
-                className='w-full px-4 py-3 text-left hover:bg-amber-200/10 focus:bg-amber-200/10 focus:outline-none transition-colors duration-200 border-b border-amber-200/10 last:border-b-0 flex items-start gap-3'
-                onClick={() => handleSuggestionSelect(suggestion)}
-              >
-                <div className='flex-shrink-0 mt-1'>
-                  {suggestion.type === 'airport' ? (
-                    <div className='w-2 h-2 bg-blue-400 rounded-full' />
-                  ) : suggestion.type === 'hotel' ? (
-                    <div className='w-2 h-2 bg-green-400 rounded-full' />
-                  ) : (
-                    <div className='w-2 h-2 bg-amber-400 rounded-full' />
-                  )}
-                </div>
-                <div className='flex-1 min-w-0'>
-                  <div className='font-medium text-amber-50 text-sm truncate'>
-                    {suggestion.address}
-                  </div>
-                  {suggestion.components.country && (
-                    <div className='text-xs text-amber-200/60 mt-0.5'>
-                      {suggestion.components.country}
-                    </div>
-                  )}
-                </div>
-                <div className='flex-shrink-0 text-xs text-amber-200/40 capitalize mt-1'>
-                  {suggestion.type}
-                </div>
-              </button>
-            ))}
-          </div>,
-          document.body
-        )}
+      {/* Mobile Dropdown */}
+      {isMobile && (
+        <MobileDropdown
+          suggestions={suggestions}
+          showDropdown={showDropdown}
+          dropdownPosition={dropdownPosition}
+          onSuggestionSelect={handleSuggestionSelect}
+          isSelectingRef={isSelectingRef}
+          dropdownRef={dropdownRef}
+        />
+      )}
+
+      {/* Desktop Dropdown */}
+      {!isMobile && (
+        <DesktopDropdown
+          suggestions={suggestions}
+          showDropdown={showDropdown}
+          dropdownPosition={dropdownPosition}
+          onSuggestionSelect={handleSuggestionSelect}
+          isSelectingRef={isSelectingRef}
+          dropdownRef={dropdownRef}
+        />
+      )}
     </div>
   );
 }
