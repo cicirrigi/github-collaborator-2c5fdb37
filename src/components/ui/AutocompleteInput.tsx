@@ -44,6 +44,7 @@ export function AutocompleteInput({
   const rafRef = useRef<number | null>(null);
   const debounceRef = useRef<number | null>(null);
   const isSelectingRef = useRef(false);
+  const isFocusedRef = useRef(false);
 
   const canSearch = useMemo(() => value.trim().length >= 3, [value]);
 
@@ -124,7 +125,7 @@ export function AutocompleteInput({
 
         setSuggestions(results);
 
-        if (results.length > 0) {
+        if (results.length > 0 && isFocusedRef.current) {
           schedulePositionUpdate();
           setShowDropdown(true);
         } else {
@@ -255,50 +256,21 @@ export function AutocompleteInput({
   };
 
   const handleInputFocus = () => {
+    isFocusedRef.current = true;
     // Skip if we're in the middle of programmatic selection focus
     if (isSelectingRef.current) return;
 
     // Re-open dropdown if value is long enough
     if (value.trim().length >= 3) {
-      // If no suggestions but value exists, trigger new search
-      if (suggestions.length === 0) {
-        setIsLoading(true);
-        // Trigger API call by simulating input change
-        const searchValue = value.trim();
-
-        // Clear previous abort controller
-        if (abortRef.current) {
-          abortRef.current.abort();
-        }
-
-        // Create new search
-        abortRef.current = new AbortController();
-
-        setTimeout(async () => {
-          try {
-            const results = await googleServices.getPlaceSuggestions(
-              searchValue,
-              abortRef.current!.signal
-            );
-            if (!abortRef.current!.signal.aborted) {
-              setSuggestions(results);
-              if (results.length > 0) {
-                schedulePositionUpdate();
-                setShowDropdown(true);
-              }
-            }
-          } catch {
-            // Ignore errors on focus search
-          } finally {
-            setIsLoading(false);
-          }
-        }, 100);
-      } else {
-        // If we have suggestions, just reopen
-        schedulePositionUpdate();
-        setShowDropdown(true);
-      }
+      schedulePositionUpdate();
+      // Let the fetch effect handle opening the dropdown
     }
+  };
+
+  const handleInputBlur = () => {
+    isFocusedRef.current = false;
+    setShowDropdown(false);
+    setSuggestions([]);
   };
 
   return (
@@ -312,6 +284,7 @@ export function AutocompleteInput({
             value={value}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
             placeholder={placeholder}
             className={`w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-2 ${
               icon ? 'pl-10' : 'pl-3'

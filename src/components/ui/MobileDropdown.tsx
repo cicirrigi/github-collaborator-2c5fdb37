@@ -42,7 +42,7 @@ export function MobileDropdown({
           key={suggestion.placeId}
           type='button'
           className='w-full px-4 py-3 text-left hover:bg-amber-200/10 focus:bg-amber-200/10 focus:outline-none transition-colors duration-200 border-b border-amber-200/10 last:border-b-0 flex items-start gap-3'
-          onClick={e => {
+          onMouseDown={e => {
             e.preventDefault();
             e.stopPropagation();
             if (!isSelectingRef.current) {
