@@ -58,24 +58,53 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 
+    // 5) Booking status guardrail - prevent double-pay
+    if (booking.status === 'CONFIRMED') {
+      return NextResponse.json({ error: 'Booking already confirmed and paid' }, { status: 409 });
+    }
+    if (booking.status === 'CANCELLED' || booking.status === 'COMPLETED') {
+      return NextResponse.json(
+        { error: 'Cannot create payment for cancelled/completed booking' },
+        { status: 409 }
+      );
+    }
+    if (booking.status === 'IN_PROGRESS') {
+      return NextResponse.json(
+        { error: 'Booking is in progress, payment not allowed' },
+        { status: 409 }
+      );
+    }
+
     // Get amount from frontend (booking doesn't store amount in current schema)
     const amount = body?.amount ?? body?.amount_total_pence;
     if (!Number.isInteger(amount) || amount <= 0) {
       return NextResponse.json({ error: 'Invalid booking amount' }, { status: 400 });
     }
 
-    // Stripe expects lowercase ISO currency
-    const currency = String(booking.currency || 'GBP').toLowerCase();
+    // Separate currency handling: DB uppercase, Stripe lowercase
+    const dbCurrency = booking.currency || 'GBP'; // Keep DB currency uppercase
+    const stripeCurrency = dbCurrency.toLowerCase(); // Stripe needs lowercase
 
-    // 5) Stable idempotency key
-    const headerKey = request.headers.get('Idempotency-Key');
-    const idempotencyKey = headerKey || `pi_${bookingId}_${amount}`;
+    // 6) Calculate next attempt number for retry logic
+    const { data: existingAttempts } = await supabaseAdmin
+      .from('booking_payments')
+      .select('attempt_no')
+      .eq('booking_id', bookingId)
+      .order('attempt_no', { ascending: false })
+      .limit(1);
 
-    // 6) Create PI (idempotent)
+    const nextAttemptNo = existingAttempts?.[0]?.attempt_no
+      ? existingAttempts[0].attempt_no + 1
+      : 1;
+
+    // 7) Generate attempt-based idempotency key
+    const idempotencyKey = `pi_${bookingId}_${amount}_${nextAttemptNo}`;
+
+    // 8) Create PI (idempotent)
     const paymentIntent = await stripe.paymentIntents.create(
       {
         amount,
-        currency,
+        currency: stripeCurrency, // Use lowercase for Stripe
         ...(receiptEmail ? { receipt_email: receiptEmail } : {}),
         metadata: {
           bookingId,
@@ -87,26 +116,27 @@ export async function POST(request: NextRequest) {
       { idempotencyKey }
     );
 
-    // 7) Upsert booking_payments (SAFE on retries)
+    // 9) Insert booking_payments with attempt-based logic (SAFE on retries via idempotency_key)
     const { error: paymentUpsertError } = await supabaseAdmin.from('booking_payments').upsert(
       {
         booking_id: bookingId,
         stripe_payment_intent_id: paymentIntent.id,
         organization_id: booking.organization_id,
         amount_pence: amount,
-        currency,
+        currency: dbCurrency, // Save uppercase in DB
         status: 'pending',
         receipt_email: receiptEmail,
         idempotency_key: idempotencyKey,
-        attempt_no: 1,
+        attempt_no: nextAttemptNo,
         livemode: paymentIntent.livemode,
         metadata: {
           paymentIntentId: paymentIntent.id,
           reference: booking.reference,
           idempotencyKey,
+          attemptNo: nextAttemptNo,
         },
       },
-      { onConflict: 'stripe_payment_intent_id' }
+      { onConflict: 'idempotency_key' }
     );
 
     if (paymentUpsertError) {
@@ -114,8 +144,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to save payment record' }, { status: 500 });
     }
 
-    // 8) Update booking status from 'NEW' to 'PENDING_PAYMENT' (ACTUAL DB SCHEMA)
-    if (booking.status === 'NEW') {
+    // 10) Update booking status to PENDING_PAYMENT (for NEW or PAYMENT_FAILED bookings)
+    if (booking.status === 'NEW' || booking.status === 'PAYMENT_FAILED') {
       const { error: statusUpdateError } = await supabaseAdmin
         .from('bookings')
         .update({ status: 'PENDING_PAYMENT' })
@@ -129,7 +159,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
-      currency,
+      currency: dbCurrency, // Return uppercase currency to match DB
       amount,
     });
   } catch (error) {

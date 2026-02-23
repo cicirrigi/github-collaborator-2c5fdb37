@@ -6,7 +6,7 @@ import { useBookingState } from '@/hooks/useBookingState';
 import { stripePromise } from '@/lib/stripe/stripe';
 import { Elements } from '@stripe/react-stripe-js';
 import { AlertCircle, CreditCard, DollarSign } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface PaymentData {
   paymentIntentId: string;
@@ -33,6 +33,8 @@ export function PaymentCard() {
     amount_total_pence: number;
     currency: string;
   } | null>(null);
+  const [bookingStatus, setBookingStatus] = useState<string | null>(null);
+  const isCheckingStatusRef = useRef(false);
 
   // Anti-duplicate guards (important in React strict mode)
   const bookingCreateStartedRef = useRef(false);
@@ -44,6 +46,7 @@ export function PaymentCard() {
     error: paymentError,
     initializePayment,
     markAsSucceeded,
+    abandonPayment,
   } = useBookingPayment();
 
   const createBooking = async () => {
@@ -163,6 +166,87 @@ export function PaymentCard() {
     });
   }, [bookingData, clientSecret, isCreatingPayment, initializePayment]);
 
+  // Fetch booking status after booking is created
+  const fetchBookingStatus = useCallback(async (bookingId: string) => {
+    if (isCheckingStatusRef.current) return null;
+
+    isCheckingStatusRef.current = true;
+    try {
+      const response = await fetch(`/api/bookings/${bookingId}`);
+      if (!response.ok) return null;
+
+      const data = await response.json();
+      const status = data.booking?.status ?? null;
+      setBookingStatus(status);
+      return status; // Return fresh status for polling
+    } catch (error) {
+      console.error('Failed to fetch booking status:', error);
+      return null;
+    } finally {
+      isCheckingStatusRef.current = false;
+    }
+  }, []);
+
+  // Check booking status when bookingData is available
+  useEffect(() => {
+    if (bookingData?.bookingId && !bookingStatus) {
+      fetchBookingStatus(bookingData.bookingId);
+    }
+  }, [bookingData?.bookingId, bookingStatus, fetchBookingStatus]);
+
+  // Handle payment success - refresh booking status from webhook
+  const handlePaymentSuccess = async (_paymentData: PaymentData) => {
+    if (!bookingData) return;
+
+    // Mark payment as succeeded in session
+    markAsSucceeded();
+
+    // Poll booking status to catch webhook update (max 10 seconds)
+    let pollAttempts = 0;
+    const maxPollAttempts = 5;
+
+    const pollStatus = async (): Promise<void> => {
+      pollAttempts++;
+      const status = await fetchBookingStatus(bookingData.bookingId);
+
+      if (status === 'CONFIRMED') {
+        // Payment confirmed - proceed to receipt
+        nextStep();
+        return;
+      }
+
+      if (pollAttempts < maxPollAttempts) {
+        // Use shorter delay for null responses (network issues) vs real attempts
+        const delay = status === null ? 500 : 2000;
+        setTimeout(pollStatus, delay);
+      } else {
+        // Timeout - stop polling, don't advance
+        console.log('⏰ Payment processing timeout - webhook may be delayed or network issues');
+        // Could show UI message: "Processing payment, please wait or refresh..."
+        // Don't call nextStep() - safer to keep user on payment page
+      }
+    };
+
+    // Start polling for webhook updates
+    setTimeout(pollStatus, 1000); // Initial 1 second delay for webhook processing
+  };
+
+  // Handle retry payment for failed payments
+  const handleRetryPayment = async () => {
+    if (!bookingData) return;
+
+    // Reset payment state completely to allow clean retry
+    abandonPayment();
+    paymentInitStartedRef.current = false;
+    setBookingStatus(null); // Clear failed status for fresh UI state
+
+    // Initialize new payment attempt
+    await initializePayment({
+      bookingId: bookingData.bookingId,
+      amount: bookingData.amount_total_pence,
+    });
+  };
+
   const totalPounds = bookingData ? bookingData.amount_total_pence / 100 : 0;
 
   return (
@@ -245,76 +329,112 @@ export function PaymentCard() {
             </div>
           </div>
 
-          {/* Card payment */}
-          {paymentMethod === 'card' && (
-            <div className='space-y-4'>
-              {!bookingData && !isCreatingBooking && (
-                <div className='text-center py-6'>
-                  <button
-                    onClick={handleContinueToPayment}
-                    className='px-8 py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold transition-colors'
-                  >
-                    Continue to Payment
-                  </button>
-                  <p className='text-neutral-400 text-xs mt-2'>
-                    Click to create your booking and initialize secure payment
-                  </p>
-                </div>
-              )}
-
-              {isCreatingBooking && (
-                <div className='text-center py-8'>
-                  <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mx-auto mb-4' />
-                  <p className='text-neutral-400 text-sm'>Creating your booking...</p>
-                </div>
-              )}
-
-              {isCreatingPayment && (
-                <div className='text-center py-8'>
-                  <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mx-auto mb-4' />
-                  <p className='text-neutral-400 text-sm'>Initializing secure payment...</p>
-                </div>
-              )}
-
-              {paymentError && (
-                <div className='flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20'>
-                  <AlertCircle className='w-5 h-5 text-red-400 flex-shrink-0' />
-                  <span className='text-red-300 text-sm'>{paymentError}</span>
-                </div>
-              )}
-
-              {clientSecret && bookingData && !isCreatingPayment && !paymentError && (
-                <Elements
-                  stripe={stripePromise}
-                  options={{
-                    clientSecret,
-                    appearance: {
-                      theme: 'night',
-                      variables: {
-                        colorPrimary: '#f59e0b',
-                        colorBackground: '#ffffff0a',
-                        colorText: '#f3f4f6',
-                      },
-                    },
-                  }}
-                >
-                  <StripePaymentForm
-                    totalAmount={totalPounds}
-                    _bookingId={bookingData.bookingId}
-                    _clientSecret={clientSecret}
-                    onSuccess={async (_paymentData: PaymentData) => {
-                      // Booking already exists; webhook should update statuses server-side.
-                      markAsSucceeded();
-                      nextStep();
-                    }}
-                    onError={() => {
-                      console.error('Payment failed for booking:', bookingData.bookingId);
-                    }}
-                  />
-                </Elements>
-              )}
+          {/* Booking Status-Based UI */}
+          {bookingData && bookingStatus === 'CONFIRMED' && (
+            <div className='text-center py-8 space-y-4'>
+              <div className='w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto'>
+                <CreditCard className='w-8 h-8 text-green-400' />
+              </div>
+              <h4 className='text-lg font-semibold text-white'>Booking Confirmed & Paid</h4>
+              <p className='text-neutral-400 text-sm'>
+                Your booking is confirmed. You&apos;ll receive a confirmation email shortly.
+              </p>
+              <button
+                onClick={() => nextStep()}
+                className='px-8 py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold transition-colors'
+              >
+                Continue to Receipt
+              </button>
             </div>
           )}
+
+          {bookingData && bookingStatus === 'PAYMENT_FAILED' && (
+            <div className='text-center py-8 space-y-4'>
+              <div className='w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto'>
+                <AlertCircle className='w-8 h-8 text-red-400' />
+              </div>
+              <h4 className='text-lg font-semibold text-white'>Payment Failed</h4>
+              <p className='text-neutral-400 text-sm'>
+                Your payment could not be processed. Please try again with a different card or
+                payment method.
+              </p>
+              <button
+                onClick={handleRetryPayment}
+                className='px-8 py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold transition-colors'
+              >
+                Retry Payment
+              </button>
+            </div>
+          )}
+
+          {/* Card payment - only show if not confirmed or failed */}
+          {paymentMethod === 'card' &&
+            bookingStatus !== 'CONFIRMED' &&
+            bookingStatus !== 'PAYMENT_FAILED' && (
+              <div className='space-y-4'>
+                {!bookingData && !isCreatingBooking && (
+                  <div className='text-center py-6'>
+                    <button
+                      onClick={handleContinueToPayment}
+                      className='px-8 py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold transition-colors'
+                    >
+                      Continue to Payment
+                    </button>
+                    <p className='text-neutral-400 text-xs mt-2'>
+                      Click to create your booking and initialize secure payment
+                    </p>
+                  </div>
+                )}
+
+                {isCreatingBooking && (
+                  <div className='text-center py-8'>
+                    <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mx-auto mb-4' />
+                    <p className='text-neutral-400 text-sm'>Creating your booking...</p>
+                  </div>
+                )}
+
+                {isCreatingPayment && (
+                  <div className='text-center py-8'>
+                    <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mx-auto mb-4' />
+                    <p className='text-neutral-400 text-sm'>Initializing secure payment...</p>
+                  </div>
+                )}
+
+                {paymentError && (
+                  <div className='flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20'>
+                    <AlertCircle className='w-5 h-5 text-red-400 flex-shrink-0' />
+                    <span className='text-red-300 text-sm'>{paymentError}</span>
+                  </div>
+                )}
+
+                {clientSecret && bookingData && !isCreatingPayment && !paymentError && (
+                  <Elements
+                    stripe={stripePromise}
+                    options={{
+                      clientSecret,
+                      appearance: {
+                        theme: 'night',
+                        variables: {
+                          colorPrimary: '#f59e0b',
+                          colorBackground: '#ffffff0a',
+                          colorText: '#f3f4f6',
+                        },
+                      },
+                    }}
+                  >
+                    <StripePaymentForm
+                      totalAmount={totalPounds}
+                      _bookingId={bookingData.bookingId}
+                      _clientSecret={clientSecret}
+                      onSuccess={handlePaymentSuccess}
+                      onError={() => {
+                        console.error('Payment failed for booking:', bookingData.bookingId);
+                      }}
+                    />
+                  </Elements>
+                )}
+              </div>
+            )}
 
           {/* placeholders */}
           {paymentMethod !== 'card' && (

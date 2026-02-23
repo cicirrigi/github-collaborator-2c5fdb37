@@ -53,7 +53,6 @@ export function useBookingPayment(): UseBookingPaymentReturn {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Idempotency-Key': `pi_${params.bookingId}`,
           },
           body: JSON.stringify(params),
         });

@@ -2,6 +2,8 @@ import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
+export const runtime = 'nodejs';
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
 });
@@ -30,7 +32,8 @@ export async function POST(request: NextRequest) {
     // Create service role client for database operations (bypasses RLS)
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { persistSession: false } }
     );
 
     // Idempotency: Insert event into stripe_events (prevents double processing)
@@ -39,7 +42,7 @@ export async function POST(request: NextRequest) {
       event_type: event.type,
       livemode: event.livemode,
       api_version: event.api_version,
-      payload: event,
+      payload: JSON.parse(JSON.stringify(event)),
       booking_id: (event.data?.object as any)?.metadata?.bookingId || null,
       booking_payment_id: null,
       organization_id: null,
@@ -157,11 +160,11 @@ export async function POST(request: NextRequest) {
           break;
         }
 
-        // Update booking status back to NEW (user can retry payment)
+        // Update booking status to PAYMENT_FAILED (user can retry payment)
         const { error: bookingUpdateError } = await supabase
           .from('bookings')
           .update({
-            status: 'NEW',
+            status: 'PAYMENT_FAILED',
           })
           .eq('id', bookingId);
 
