@@ -121,12 +121,17 @@ export function PaymentCard() {
       }
 
       if (data.success) {
-        setBookingData({
+        const bookingData = {
           bookingId: data.bookingId,
           reference: data.reference,
           amount_total_pence: data.amount_total_pence,
           currency: data.currency || 'GBP',
-        });
+        };
+
+        setBookingData(bookingData);
+
+        // Save booking data for Step 4 confirmation
+        sessionStorage.setItem('vl-booking-data', JSON.stringify(bookingData));
       } else {
         bookingCreateStartedRef.current = false; // allow retry
         console.error('Booking create failed:', data);
@@ -195,8 +200,19 @@ export function PaymentCard() {
   }, [bookingData?.bookingId, bookingStatus, fetchBookingStatus]);
 
   // Handle payment success - refresh booking status from webhook
-  const handlePaymentSuccess = async (_paymentData: PaymentData) => {
+  const handlePaymentSuccess = async (paymentData: PaymentData) => {
     if (!bookingData) return;
+
+    // Save payment data for Step 4 confirmation
+    const paymentInfo = {
+      payment_method_summary: 'Card Payment', // Will be enhanced with real card details
+      transaction_id: paymentData.transactionId,
+      payment_intent_id: paymentData.paymentIntentId,
+      amount: paymentData.amount,
+      currency: paymentData.currency,
+      completed_at: new Date().toISOString(),
+    };
+    sessionStorage.setItem('vl-payment-data', JSON.stringify(paymentInfo));
 
     // Mark payment as succeeded in session
     markAsSucceeded();

@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from '@/features/auth/context/AuthProvider';
 import { useBookingState } from '@/hooks/useBookingState';
 import { AlertCircle, Car, CheckCircle, Clock, Mail, Phone, Receipt, Users } from 'lucide-react';
 import { useState } from 'react';
@@ -12,19 +13,55 @@ import BookingSummaryCard from '../components/step3/BookingSummaryCard';
  * No excessive scrolling, organized sections, consistent with Steps 1-3
  */
 export function Step4Confirmation() {
-  const { bookingType, tripConfiguration } = useBookingState();
+  const { bookingType, tripConfiguration, getPriceForVehicle, getFleetTotalPrice } =
+    useBookingState();
+  const { user } = useAuth();
 
   const [passengerNames, setPassengerNames] = useState<string[]>(
     Array(Math.max(0, tripConfiguration.passengers - 1)).fill('')
   );
 
-  // Mock confirmation data
+  // Try to get real booking data from sessionStorage (saved by Step 3)
+  const getBookingDataFromSession = () => {
+    try {
+      const bookingData = sessionStorage.getItem('vl-booking-data');
+      const paymentData = sessionStorage.getItem('vl-payment-data');
+      return {
+        booking: bookingData ? JSON.parse(bookingData) : null,
+        payment: paymentData ? JSON.parse(paymentData) : null,
+      };
+    } catch {
+      return { booking: null, payment: null };
+    }
+  };
+
+  const sessionData = getBookingDataFromSession();
+
+  // Calculate real amount from booking state
+  const calculateRealAmount = () => {
+    if (bookingType === 'fleet') {
+      const fleetPrice = getFleetTotalPrice();
+      return fleetPrice || 250.0; // fallback
+    }
+
+    const categoryId = tripConfiguration?.selectedVehicle?.category?.id;
+    if (categoryId) {
+      const vehiclePrice = getPriceForVehicle(categoryId);
+      return vehiclePrice || 250.0; // fallback
+    }
+
+    return 250.0; // fallback
+  };
+
+  // Safe confirmation data with real values + fallbacks
   const confirmation = {
-    referenceNumber: 'VL-2026-001234',
-    emailAddress: 'user@example.com',
-    amount: 250.0,
-    paymentMethod: 'Visa ****1234',
-    transactionId: 'txn_1A2B3C4D5E',
+    referenceNumber: sessionData.booking?.reference || 'VL-2026-001234',
+    emailAddress: user?.email || 'user@example.com',
+    amount: sessionData.booking?.amount_total_pence
+      ? sessionData.booking.amount_total_pence / 100
+      : calculateRealAmount(),
+    paymentMethod: sessionData.payment?.payment_method_summary || 'Visa ****1234',
+    transactionId: sessionData.payment?.transaction_id || 'txn_1A2B3C4D5E',
   };
 
   const isFleet = bookingType === 'fleet';

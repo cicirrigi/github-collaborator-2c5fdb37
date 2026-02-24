@@ -20,8 +20,8 @@ interface PaymentConfirmationCardProps {
 export function PaymentConfirmationCard({
   amount,
   currency = 'GBP',
-  paymentMethod = 'Visa ****1234',
-  transactionId = 'txn_1A2B3C4D5E',
+  paymentMethod = 'Card Payment',
+  transactionId = 'txn_processing',
   stripeReceiptUrl,
   completedAt = new Date(),
 }: PaymentConfirmationCardProps) {
