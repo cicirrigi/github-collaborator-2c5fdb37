@@ -38,7 +38,7 @@ export function Step2Services() {
       border border-white/10
       rounded-3xl
       shadow-[0_18px_60px_rgba(0,0,0,0.6)]
-      pt-4 pb-6 lg:pb-10 px-2 lg:px-4 space-y-8 lg:space-y-14
+      pt-4 pb-1 lg:pb-3 px-2 lg:px-4 space-y-8 lg:space-y-14
       mx-auto
     '
     >
@@ -134,10 +134,10 @@ export function Step2Services() {
                     </div>
 
                     <div className='space-y-2'>
-                      <h3 className='text-white font-semibold text-lg tracking-wide'>
+                      <h3 className='text-white font-semibold text-xl tracking-wide'>
                         Select Your Vehicle
                       </h3>
-                      <p className='text-amber-200/70 text-sm leading-relaxed'>
+                      <p className='text-amber-200/70 text-base leading-relaxed'>
                         Please choose your preferred vehicle model to unlock premium services and
                         customization options
                       </p>

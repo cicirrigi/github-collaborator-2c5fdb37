@@ -180,13 +180,18 @@ export function JourneyEstimateDisplay() {
   };
 
   return (
-    <GlassmorphismCard className='p-4'>
-      <div className='flex items-center justify-between'>
-        <div className='flex items-center gap-2'>
-          <Route className='w-4 h-4 text-amber-200/60' />
-          <span className='text-white text-sm font-light tracking-wider'>Journey</span>
+    <GlassmorphismCard className='p-5 border border-amber-300/20'>
+      <div className='flex items-center gap-3 md:justify-between'>
+        <div className='w-8 h-8 bg-gradient-to-br from-amber-400/20 to-amber-500/30 rounded-full border border-amber-400/40 flex items-center justify-center'>
+          <Route className='w-4 h-4 text-amber-300' />
         </div>
-        <div className='text-amber-50 font-light text-sm tabular-nums'>{getDisplayText()}</div>
+        <span className='text-white text-sm font-medium tracking-wider'>JOURNEY:</span>
+        <div className='bg-gradient-to-r from-amber-400/10 to-amber-500/10 border border-amber-300/30 rounded-lg px-3 py-1.5 md:px-4 md:py-2 relative overflow-hidden'>
+          <div className='text-amber-100 font-semibold text-sm md:text-base tabular-nums tracking-wide relative z-10'>
+            {getDisplayText()}
+          </div>
+          <div className='absolute inset-0 bg-gradient-to-r from-transparent via-amber-300/20 to-transparent -skew-x-12 animate-shimmer'></div>
+        </div>
       </div>
     </GlassmorphismCard>
   );

@@ -38,10 +38,10 @@ export const IconContainer = ({
 
   /**
    * ICON GROW — controlled and smooth
-   * From 57px → 92px - bigger icons without affecting dock size
+   * From 63px → 98px - bigger icons without affecting dock size
    */
-  const sizeRaw = useTransform(distance, [-150, 0, 150], [57, 92, 57]);
-  const iconSizeRaw = useTransform(distance, [-150, 0, 150], [26, 42, 26]);
+  const sizeRaw = useTransform(distance, [-150, 0, 150], [63, 98, 63]);
+  const iconSizeRaw = useTransform(distance, [-150, 0, 150], [30, 46, 30]);
 
   /**
    * PERFECT SMOOTH SPRINGS

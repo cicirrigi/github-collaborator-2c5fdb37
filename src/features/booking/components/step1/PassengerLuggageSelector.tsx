@@ -8,12 +8,12 @@ export function PassengerLuggageSelector() {
   const { tripConfiguration, setPassengers, setLuggage } = useBookingState();
 
   return (
-    <div className='grid grid-cols-2 gap-8'>
+    <div className='grid grid-cols-2 gap-4 md:gap-8'>
       <GlassmorphismCard className='p-4'>
-        <div className='flex items-center justify-between mb-4'>
+        <div className='flex items-center justify-center mb-4'>
           <div className='flex items-center gap-2'>
-            <Users className='w-4 h-4 text-amber-200/60' />
-            <span className='text-white text-sm font-light tracking-wider'>Passengers</span>
+            <Users className='w-5 h-5 text-amber-200/60' />
+            <span className='text-white text-base font-light tracking-wider'>Passengers</span>
           </div>
         </div>
         <div className='flex items-center justify-between'>
@@ -36,10 +36,10 @@ export function PassengerLuggageSelector() {
       </GlassmorphismCard>
 
       <GlassmorphismCard className='p-4'>
-        <div className='flex items-center justify-between mb-4'>
+        <div className='flex items-center justify-center mb-4'>
           <div className='flex items-center gap-2'>
-            <Luggage className='w-4 h-4 text-amber-200/60' />
-            <span className='text-white text-sm font-light tracking-wider'>Luggage</span>
+            <Luggage className='w-5 h-5 text-amber-200/60' />
+            <span className='text-white text-base font-light tracking-wider'>Luggage</span>
           </div>
         </div>
         <div className='flex items-center justify-between'>

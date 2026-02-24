@@ -110,14 +110,14 @@ function VehicleModelCard({ model, category, isSelected, onSelect, index }: Vehi
   return (
     <div
       className={`relative rounded-xl backdrop-blur-sm cursor-pointer transition-all duration-300 w-full hover:scale-[1.02] animate-slideIn ${
-        isSelected ? 'ring-2 ring-yellow-400/50' : ''
+        isSelected ? 'ring-2 ring-yellow-400/80' : ''
       }`}
       style={{
         animationDelay: `${index * 120}ms`,
         animationFillMode: 'both',
         backgroundColor: isSelected ? 'rgba(250, 204, 21, 0.08)' : 'rgba(255,255,255,0.04)',
         border: isSelected
-          ? '1px solid rgba(250, 204, 21, 0.15)'
+          ? '1px solid rgba(250, 204, 21, 0.4)'
           : '1px solid rgba(255,255,255,0.06)',
         backdropFilter: 'blur(16px)',
         boxShadow: isSelected
@@ -167,8 +167,8 @@ function VehicleModelCard({ model, category, isSelected, onSelect, index }: Vehi
           <div className='flex items-center justify-between'>
             <h4 className='text-white font-medium text-sm leading-tight'>{model.name}</h4>
             <div className='text-right'>
-              <div className='text-yellow-400 font-semibold text-sm'>£{price}</div>
-              <div className='text-white/50 text-xs'>per hour</div>
+              <div className='text-amber-200/70 text-xs font-medium'>Your Tailored Fare</div>
+              <div className='text-yellow-400 font-bold text-2xl'>£{price}</div>
             </div>
           </div>
 
@@ -206,16 +206,29 @@ function VehicleModelCard({ model, category, isSelected, onSelect, index }: Vehi
               {/* Select Button with Check */}
               <button
                 className={`
-                flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all duration-200
+                flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
                 ${
                   isSelected
                     ? 'bg-yellow-400/20 text-yellow-400 border border-yellow-400/40'
                     : 'bg-yellow-400/10 text-yellow-400/80 border border-yellow-400/20 hover:bg-yellow-400/15 hover:text-yellow-400'
                 }
               `}
+                style={{
+                  animation: !isSelected ? 'scalePulse 2s ease-in-out infinite' : undefined,
+                }}
               >
-                {isSelected && <Check className='w-3 h-3' />}
+                {isSelected && <Check className='w-4 h-4' />}
                 {isSelected ? 'Selected' : 'Select'}
+                <style
+                  dangerouslySetInnerHTML={{
+                    __html: `
+                    @keyframes scalePulse {
+                      0%, 100% { transform: scale(1); }
+                      50% { transform: scale(1.05); }
+                    }
+                  `,
+                  }}
+                />
               </button>
             </div>
           </div>

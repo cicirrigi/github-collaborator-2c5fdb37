@@ -286,7 +286,7 @@ export function AutocompleteInput({
             onFocus={handleInputFocus}
             onBlur={handleInputBlur}
             placeholder={placeholder}
-            className={`w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-2 ${
+            className={`w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-3 ${
               icon ? 'pl-10' : 'pl-3'
             } text-amber-50 text-base md:text-sm font-light placeholder:text-amber-200/40 focus:border-amber-300/40 focus:outline-none transition-colors`}
           />

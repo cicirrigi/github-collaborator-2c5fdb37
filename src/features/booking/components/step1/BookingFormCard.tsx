@@ -86,10 +86,44 @@ export function BookingFormCard({ onNext }: BookingFormCardProps = {}) {
                     : 'bg-neutral-500/10 border border-neutral-600/30 text-neutral-400 cursor-not-allowed opacity-50'
                 }`}
               >
-                <span>
-                  {isStep1Valid ? 'Continue to Vehicle Selection' : 'Complete Required Fields'}
+                <span className='flex'>
+                  {(isStep1Valid ? 'Continue to Vehicle Selection' : 'Complete Required Fields')
+                    .split('')
+                    .map((letter, index) => (
+                      <span
+                        key={index}
+                        className='inline-block'
+                        style={{
+                          animation: `shimmerWave 4s ease-in-out infinite`,
+                          animationDelay: `${index * 0.08}s`,
+                        }}
+                      >
+                        {letter === ' ' ? '\u00A0' : letter}
+                      </span>
+                    ))}
                 </span>
                 <ArrowRight className='w-5 h-5' />
+                <style
+                  dangerouslySetInnerHTML={{
+                    __html: `
+                    @keyframes shimmerWave {
+                      0% {
+                        color: #fef3c7;
+                      }
+                      25% {
+                        color: #ffffff;
+                        text-shadow: 0 0 8px rgba(255,255,255,0.6);
+                      }
+                      50% {
+                        color: #fef3c7;
+                      }
+                      100% {
+                        color: #fef3c7;
+                      }
+                    }
+                  `,
+                  }}
+                />
               </button>
             )}
           </div>

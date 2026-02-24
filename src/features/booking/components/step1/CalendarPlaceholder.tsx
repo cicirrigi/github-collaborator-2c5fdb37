@@ -285,27 +285,26 @@ export function CalendarPlaceholder() {
 
       {/* Selection Summary */}
       {selectedDate && selectedTime && (
-        <div
-          className='bg-white/5 backdrop-blur-sm rounded-lg p-3 border border-amber-300/30 shadow-lg'
-          style={{
-            background: 'rgba(255, 255, 255, 0.08)',
-            backdropFilter: 'blur(12px)',
-            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 20px rgba(0, 0, 0, 0.2)',
-          }}
-        >
-          <div className='flex items-center justify-between text-sm'>
-            <span className='text-amber-100/80'>Selected:</span>
-            <span className='text-amber-200 font-medium'>
-              {selectedDate.toLocaleDateString('en-GB', {
-                weekday: 'short',
-                day: 'numeric',
-                month: 'short',
-              })}{' '}
-              at {selectedTime.hours.toString().padStart(2, '0')}:
-              {selectedTime.minutes.toString().padStart(2, '0')}
-            </span>
+        <GlassmorphismCard className='p-3 border border-amber-300/30'>
+          <div className='flex items-center gap-3'>
+            <div className='w-6 h-6 bg-gradient-to-br from-amber-400/30 to-amber-500/40 rounded-full border border-amber-400/50 flex items-center justify-center'>
+              <div className='w-2 h-2 bg-amber-400 rounded-full'></div>
+            </div>
+            <span className='text-white text-sm font-medium tracking-wider'>SELECTED:</span>
+            <div className='bg-gradient-to-r from-amber-400/15 to-amber-500/15 border border-amber-300/40 rounded-lg px-2 py-1 md:px-4 md:py-2 shadow-lg relative overflow-hidden'>
+              <div className='text-amber-100 font-semibold text-sm md:text-base tabular-nums tracking-wide relative z-10'>
+                {selectedDate.toLocaleDateString('en-GB', {
+                  weekday: 'short',
+                  day: 'numeric',
+                  month: 'short',
+                })}{' '}
+                at {selectedTime.hours.toString().padStart(2, '0')}:
+                {selectedTime.minutes.toString().padStart(2, '0')}
+              </div>
+              <div className='absolute inset-0 bg-gradient-to-r from-transparent via-amber-300/20 to-transparent -skew-x-12 animate-shimmer'></div>
+            </div>
           </div>
-        </div>
+        </GlassmorphismCard>
       )}
     </div>
   );

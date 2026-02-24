@@ -42,13 +42,55 @@ export function WizardFooter({ currentStep, totalSteps, onNext, onPrev }: Wizard
         <button
           onClick={onNext}
           disabled={!isCurrentStepValid}
-          className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
+          className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 backdrop-filter backdrop-blur-md border shadow-lg ${
             isCurrentStepValid
-              ? 'bg-yellow-500 text-black hover:bg-yellow-400 cursor-pointer'
-              : 'bg-neutral-500/20 text-neutral-400 cursor-not-allowed opacity-50'
+              ? 'bg-amber-400/15 hover:bg-amber-400/25 border-amber-300/30 text-amber-50 hover:shadow-amber-400/20 cursor-pointer'
+              : 'bg-neutral-500/10 border-neutral-600/30 text-neutral-400 cursor-not-allowed opacity-50'
           }`}
         >
-          {currentStep === 2 && !isCurrentStepValid ? 'Select Vehicle to Continue' : 'Next →'}
+          {currentStep === 2 && !isCurrentStepValid ? (
+            'Select Vehicle to Continue'
+          ) : currentStep === 2 ? (
+            <>
+              <span className='flex'>
+                {'Continue To Payment'.split('').map((letter, index) => (
+                  <span
+                    key={index}
+                    className='inline-block'
+                    style={{
+                      animation: `shimmerWave 4s ease-in-out infinite`,
+                      animationDelay: `${index * 0.08}s`,
+                    }}
+                  >
+                    {letter === ' ' ? '\u00A0' : letter}
+                  </span>
+                ))}
+              </span>
+              <style
+                dangerouslySetInnerHTML={{
+                  __html: `
+                  @keyframes shimmerWave {
+                    0% {
+                      color: #fef3c7;
+                    }
+                    25% {
+                      color: #ffffff;
+                      text-shadow: 0 0 8px rgba(255,255,255,0.6);
+                    }
+                    50% {
+                      color: #fef3c7;
+                    }
+                    100% {
+                      color: #fef3c7;
+                    }
+                  }
+                `,
+                }}
+              />
+            </>
+          ) : (
+            'Next →'
+          )}
         </button>
       ) : isFirstStep ? (
         <div /> // Empty spacer for Step 1 - Next button is integrated in form
