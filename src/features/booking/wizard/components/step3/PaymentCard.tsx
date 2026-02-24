@@ -23,6 +23,7 @@ export function PaymentCard() {
     pricingState,
     getPriceForVehicle,
     getFleetTotalPrice,
+    calculateUpgradesCost,
   } = useBookingState();
 
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'applepay'>('card');
@@ -263,7 +264,31 @@ export function PaymentCard() {
     });
   };
 
-  const totalPounds = bookingData ? bookingData.amount_total_pence / 100 : 0;
+  // Calculate total price from available pricing data (BEFORE booking creation)
+  const calculateTotalPrice = (): number => {
+    if (bookingData) {
+      // If booking already created, use booking data
+      return bookingData.amount_total_pence / 100;
+    }
+
+    // Calculate from available pricing data
+    let basePrice = 0;
+
+    if (bookingType === 'fleet') {
+      basePrice = getFleetTotalPrice() || 0;
+    } else {
+      const categoryId = tripConfiguration?.selectedVehicle?.category?.id;
+      if (categoryId) {
+        basePrice = getPriceForVehicle(categoryId) || 0;
+      }
+    }
+
+    const upgradesPrice = calculateUpgradesCost();
+    return basePrice + upgradesPrice;
+  };
+
+  const totalPounds = calculateTotalPrice();
+  const hasValidPrice = totalPounds > 0;
 
   return (
     <div className='vl-card'>
@@ -289,7 +314,7 @@ export function PaymentCard() {
             </h4>
 
             <div className='space-y-2'>
-              {bookingData ? (
+              {hasValidPrice ? (
                 <>
                   <div className='flex items-center justify-between text-sm'>
                     <span className='text-neutral-400'>Journey fare</span>

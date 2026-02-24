@@ -48,22 +48,27 @@ export function FlightInformationSection() {
         </GlassmorphismCard>
       )}
 
-      {/* Flight Number - doar pentru non-return trips */}
-      {bookingType !== 'return' && (
-        <GlassmorphismCard className='p-4'>
-          <div className='flex items-center gap-2 mb-3'>
-            <Plane className='w-4 h-4 text-amber-200/60' />
-            <span className='text-white font-medium text-sm'>Flight Number</span>
-          </div>
-          <input
-            type='text'
-            value={tripConfiguration.flightNumberPickup}
-            onChange={e => setFlightNumberPickup(e.target.value)}
-            placeholder='Optional flight number'
-            className='w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-2 text-amber-50 text-sm font-light placeholder:text-amber-200/40 focus:border-amber-200/40 focus:outline-none transition-colors'
-          />
-        </GlassmorphismCard>
-      )}
+      {/* Flight Number - doar pentru non-return și fără parallel layout (exclude: oneway, daily, hourly, fleet, bespoke) */}
+      {bookingType !== 'return' &&
+        bookingType !== 'oneway' &&
+        bookingType !== 'daily' &&
+        bookingType !== 'hourly' &&
+        bookingType !== 'fleet' &&
+        bookingType !== 'bespoke' && (
+          <GlassmorphismCard className='p-4'>
+            <div className='flex items-center gap-2 mb-3'>
+              <Plane className='w-4 h-4 text-amber-200/60' />
+              <span className='text-white font-medium text-sm'>Flight Number</span>
+            </div>
+            <input
+              type='text'
+              value={tripConfiguration.flightNumberPickup}
+              onChange={e => setFlightNumberPickup(e.target.value)}
+              placeholder='Optional flight number'
+              className='w-full bg-transparent border border-amber-200/20 rounded-md px-3 py-2 text-amber-50 text-sm font-light placeholder:text-amber-200/40 focus:border-amber-200/40 focus:outline-none transition-colors'
+            />
+          </GlassmorphismCard>
+        )}
     </>
   );
 }

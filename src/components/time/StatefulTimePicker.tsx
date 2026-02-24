@@ -75,7 +75,7 @@ export function StatefulTimePicker({
         onClick={() => setOpen(true)}
         className='
           w-full p-3 text-left rounded-lg
-          bg-white/5 text-amber-200 border border-white/10
+          bg-white/5 text-white border border-white/10
           hover:bg-white/10 transition
         '
       >

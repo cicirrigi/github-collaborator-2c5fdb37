@@ -9,7 +9,7 @@ import { CardHeader } from './CardHeader';
 import { DaysDurationSelector } from './DaysDurationSelector';
 import { FlightInformationSection } from './FlightInformationSection';
 import { HoursDurationSelector } from './HoursDurationSelector';
-import { JourneyEstimateDisplay } from './JourneyEstimateDisplay';
+import { JourneySelectedSummary } from './JourneySelectedSummary';
 import { PassengerLuggageSelector } from './PassengerLuggageSelector';
 import { TravelRouteSection } from './TravelRouteSection';
 
@@ -52,8 +52,8 @@ export function BookingFormCard({ onNext }: BookingFormCardProps = {}) {
           {/* Left Side - Trip Details */}
           <div className='space-y-6'>
             <TravelRouteSection />
+            <JourneySelectedSummary />
             <PassengerLuggageSelector />
-            <JourneyEstimateDisplay />
 
             {/* Conditional Components based on booking type */}
             {isBespokeBooking ? (
