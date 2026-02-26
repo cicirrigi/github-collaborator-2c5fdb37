@@ -127,10 +127,29 @@ export function StripePaymentForm({
         {isLoading ? 'Processing...' : `Confirm & Pay £${totalAmount}`}
       </button>
 
-      {/* Security Notice */}
-      <div className='flex items-center justify-center gap-2 text-xs text-neutral-500'>
-        <Lock className='w-3 h-3' />
-        <span>Secured by Stripe & 256-bit SSL encryption</span>
+      {/* Security Trust Indicators - Compact Single Line */}
+      <div className='flex items-center justify-center gap-3 px-4 py-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-xs'>
+        <div className='flex items-center gap-1.5'>
+          <Lock className='w-3 h-3 text-emerald-400' />
+          <span className='text-emerald-200 font-medium'>Stripe</span>
+        </div>
+        <div className='w-px h-3 bg-neutral-600'></div>
+        <div className='flex items-center gap-1'>
+          <div className='w-1 h-1 rounded-full bg-emerald-400'></div>
+          <span className='text-neutral-400'>SSL</span>
+        </div>
+        <div className='flex items-center gap-1'>
+          <div className='w-1 h-1 rounded-full bg-emerald-400'></div>
+          <span className='text-neutral-400'>PCI</span>
+        </div>
+        <div className='flex items-center gap-1'>
+          <div className='w-1 h-1 rounded-full bg-emerald-400'></div>
+          <span className='text-neutral-400'>Bank-grade</span>
+        </div>
+        <div className='flex items-center gap-1'>
+          <div className='w-1 h-1 rounded-full bg-emerald-400'></div>
+          <span className='text-neutral-400'>Zero-storage</span>
+        </div>
       </div>
     </form>
   );

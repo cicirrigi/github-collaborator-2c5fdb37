@@ -26,7 +26,7 @@ export function PaymentCard() {
     calculateUpgradesCost,
   } = useBookingState();
 
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'applepay'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card'>('card');
   const [isCreatingBooking, setIsCreatingBooking] = useState(false);
   const [bookingData, setBookingData] = useState<{
     bookingId: string;
@@ -426,12 +426,8 @@ export function PaymentCard() {
           {/* Payment method */}
           <div className='space-y-3'>
             <h4 className='text-sm font-medium text-neutral-300'>Payment Method</h4>
-            <div className='grid grid-cols-3 gap-2'>
-              {[
-                { id: 'card' as const, name: 'Card', icon: CreditCard },
-                { id: 'paypal' as const, name: 'PayPal', icon: DollarSign },
-                { id: 'applepay' as const, name: 'Apple Pay', icon: CreditCard },
-              ].map(method => {
+            <div className='grid grid-cols-1 gap-2'>
+              {[{ id: 'card' as const, name: 'Card', icon: CreditCard }].map(method => {
                 const IconComponent = method.icon;
                 const active = paymentMethod === method.id;
                 return (
@@ -579,23 +575,6 @@ export function PaymentCard() {
             )}
 
           {/* placeholders */}
-          {paymentMethod !== 'card' && (
-            <div className='text-center py-8 space-y-4'>
-              <div className='w-16 h-16 rounded-full bg-neutral-800 flex items-center justify-center mx-auto'>
-                <CreditCard className='w-8 h-8 text-neutral-500' />
-              </div>
-              <h4 className='text-lg font-semibold text-white'>
-                {paymentMethod === 'paypal' ? 'PayPal' : 'Apple Pay'} Integration
-              </h4>
-              <p className='text-neutral-400 text-sm'>Coming soon! Use card payment for now.</p>
-              <button
-                onClick={() => setPaymentMethod('card')}
-                className='px-6 py-2 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-300 text-sm hover:bg-amber-500/30 transition-colors'
-              >
-                Switch to Card Payment
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>
