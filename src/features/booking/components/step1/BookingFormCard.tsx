@@ -1,11 +1,10 @@
 'use client';
 
 import { useBookingState } from '@/hooks/useBookingState';
-import { ArrowRight, Route } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { AdditionalStopsInline } from './AdditionalStopsInline';
 import { BespokeRequirements } from './BespokeRequirements';
 import { CalendarPlaceholder } from './CalendarPlaceholder';
-import { CardHeader } from './CardHeader';
 import { DaysDurationSelector } from './DaysDurationSelector';
 import { FlightInformationSection } from './FlightInformationSection';
 import { HoursDurationSelector } from './HoursDurationSelector';
@@ -40,13 +39,7 @@ export function BookingFormCard({ onNext }: BookingFormCardProps = {}) {
   const isStep1Valid = validateStep1Complete();
 
   return (
-    <div className='vl-card-flex col-span-1 lg:col-span-2'>
-      <CardHeader
-        icon={Route}
-        title='Selected Booking'
-        subtitle={bookingTypeLabel}
-        showWeather={true}
-      />
+    <div className='col-span-1 lg:col-span-2'>
       <div className='vl-card-inner'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 h-full relative'>
           {/* Left Side - Trip Details */}

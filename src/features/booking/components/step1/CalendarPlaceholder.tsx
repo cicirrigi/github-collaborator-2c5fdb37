@@ -262,7 +262,7 @@ export function CalendarPlaceholder() {
   return (
     <div className='space-y-6'>
       {/* Inline Calendar */}
-      <GlassmorphismCard className='p-4'>
+      <GlassmorphismCard className='pt-4 px-4 pb-2'>
         <Calendar
           value={selectedDate}
           onChange={date => {
@@ -272,7 +272,7 @@ export function CalendarPlaceholder() {
           }}
           mode='single'
           timezone='Europe/London'
-          className='mx-auto max-w-sm'
+          className='mx-auto max-w-md'
         />
       </GlassmorphismCard>
 

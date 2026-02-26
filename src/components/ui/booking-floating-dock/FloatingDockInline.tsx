@@ -49,6 +49,7 @@ export const FloatingDockInline = ({
           title={item.title}
           icon={item.icon}
           onClick={item.onClick}
+          isActive={item.isActive}
         />
       ))}
     </motion.div>

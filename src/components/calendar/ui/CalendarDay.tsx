@@ -44,7 +44,7 @@ export function CalendarDay({ date, onSelect, className = '' }: CalendarDayProps
       }}
       className={`
         w-full h-full flex items-center justify-center
-        rounded-md text-sm transition
+        rounded-md text-lg transition p-3
         touch-manipulation cursor-pointer
         ${classes}
         ${className}

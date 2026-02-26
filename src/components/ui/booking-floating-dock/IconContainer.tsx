@@ -9,12 +9,14 @@ export const IconContainer = ({
   title,
   onClick,
   isSeparator = false,
+  isActive = false,
 }: {
   mouseX: MotionValue<number>;
   icon: React.ReactNode;
   title?: string;
   onClick: () => void;
   isSeparator?: boolean;
+  isActive?: boolean;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const centerX = useMotionValue(0);
@@ -38,15 +40,21 @@ export const IconContainer = ({
 
   /**
    * ICON GROW — controlled and smooth
-   * From 63px → 98px - bigger icons without affecting dock size
+   * Rectangular design: wider than tall for better visual impact
    */
-  const sizeRaw = useTransform(distance, [-150, 0, 150], [63, 98, 63]);
+  const widthRaw = useTransform(distance, [-150, 0, 150], [80, 120, 80]);
+  const heightRaw = useTransform(distance, [-150, 0, 150], [63, 98, 63]);
   const iconSizeRaw = useTransform(distance, [-150, 0, 150], [30, 46, 30]);
 
   /**
    * PERFECT SMOOTH SPRINGS
    */
-  const size = useSpring(sizeRaw, {
+  const width = useSpring(widthRaw, {
+    mass: 0.2,
+    stiffness: 220,
+    damping: 18,
+  });
+  const height = useSpring(heightRaw, {
     mass: 0.2,
     stiffness: 220,
     damping: 18,
@@ -68,26 +76,28 @@ export const IconContainer = ({
         <motion.div
           ref={ref}
           style={{
-            width: size,
-            height: size,
+            width: width,
+            height: height,
             transform: 'translateZ(0)',
           }}
-          className='
+          className={`
             relative
             flex items-center justify-center
             rounded-2xl
             bg-gradient-to-br from-neutral-700/90 via-neutral-800/85 to-neutral-900/80
             dark:from-neutral-800/90 dark:via-neutral-900/85 dark:to-black/80
-            border border-neutral-600/50 dark:border-neutral-700/60
-            shadow-lg shadow-black/15
-            backdrop-blur-xl
+            border backdrop-blur-xl
             will-change-[width,height,transform]
-            aspect-square
             overflow-hidden
+            transition-[box-shadow,border-color] duration-150 ease-out
+            ${
+              isActive
+                ? 'border-yellow-300/40 dark:border-yellow-500/40 shadow-2xl shadow-yellow-400/20'
+                : 'border-neutral-600/50 dark:border-neutral-700/60 shadow-lg shadow-black/15'
+            }
             hover:shadow-2xl hover:shadow-yellow-400/20
             hover:border-yellow-300/40 dark:hover:border-yellow-500/40
-            transition-[box-shadow,border-color] duration-150 ease-out
-          '
+          `}
         >
           <motion.div
             style={{
@@ -104,7 +114,7 @@ export const IconContainer = ({
 
       {/* Label discret sub iconiță */}
       {title && (
-        <span className='text-xs text-amber-200/70 font-medium tracking-wide'>{title}</span>
+        <span className='text-sm text-amber-200/80 font-medium tracking-wide'>{title}</span>
       )}
     </div>
   );

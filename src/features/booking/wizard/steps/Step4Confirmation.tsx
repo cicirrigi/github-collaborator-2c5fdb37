@@ -4,10 +4,11 @@ import { useAuth } from '@/features/auth/context/AuthProvider';
 import { useBookingState } from '@/hooks/useBookingState';
 import { AlertCircle, Car, CheckCircle, Clock, Mail, Phone, Receipt, Users } from 'lucide-react';
 import { useState } from 'react';
+import { PricingBreakdownCard } from '../../components/PricingBreakdownCard';
 import BookingSummaryCard from '../components/step3/BookingSummaryCard';
 
 /**
- * 🎯 STEP 4 CONFIRMATION - COMPACT DESIGN
+ * STEP 4 CONFIRMATION - COMPACT DESIGN
  *
  * All-in-one compact confirmation page with visual dividers
  * No excessive scrolling, organized sections, consistent with Steps 1-3
@@ -24,13 +25,32 @@ export function Step4Confirmation() {
   // Try to get real booking data from sessionStorage (saved by Step 3)
   const getBookingDataFromSession = () => {
     try {
-      const bookingData = sessionStorage.getItem('vl-booking-data');
-      const paymentData = sessionStorage.getItem('vl-payment-data');
+      const bookingDataRaw = sessionStorage.getItem('vl-booking-data');
+      const paymentDataRaw = sessionStorage.getItem('vl-payment-data');
+
+      console.log('🔍 [STEP4] SessionStorage DEBUG:', {
+        bookingDataRaw,
+        paymentDataRaw,
+        bookingExists: !!bookingDataRaw,
+        paymentExists: !!paymentDataRaw,
+      });
+
+      const bookingData = bookingDataRaw ? JSON.parse(bookingDataRaw) : null;
+      const paymentData = paymentDataRaw ? JSON.parse(paymentDataRaw) : null;
+
+      console.log('🔍 [STEP4] Parsed SessionStorage:', {
+        booking: bookingData,
+        payment: paymentData,
+        bookingAmountPence: bookingData?.amount_total_pence,
+        bookingAmountType: typeof bookingData?.amount_total_pence,
+      });
+
       return {
-        booking: bookingData ? JSON.parse(bookingData) : null,
-        payment: paymentData ? JSON.parse(paymentData) : null,
+        booking: bookingData,
+        payment: paymentData,
       };
-    } catch {
+    } catch (error) {
+      console.error('❌ [STEP4] SessionStorage parse error:', error);
       return { booking: null, payment: null };
     }
   };
@@ -54,12 +74,23 @@ export function Step4Confirmation() {
   };
 
   // Safe confirmation data with real values + fallbacks
+  const calculatedAmount = calculateRealAmount();
+  const sessionAmount = sessionData.booking?.amount_total_pence
+    ? sessionData.booking.amount_total_pence / 100
+    : null;
+
+  console.log('🔍 [STEP4] Amount calculation DEBUG:', {
+    sessionAmountRaw: sessionData.booking?.amount_total_pence,
+    sessionAmount,
+    calculatedAmount,
+    willUseFallback: !sessionAmount,
+    finalAmount: sessionAmount || calculatedAmount,
+  });
+
   const confirmation = {
     referenceNumber: sessionData.booking?.reference || 'VL-2026-001234',
     emailAddress: user?.email || 'user@example.com',
-    amount: sessionData.booking?.amount_total_pence
-      ? sessionData.booking.amount_total_pence / 100
-      : calculateRealAmount(),
+    amount: sessionAmount || calculatedAmount,
     paymentMethod: sessionData.payment?.payment_method_summary || 'Visa ****1234',
     transactionId: sessionData.payment?.transaction_id || 'txn_1A2B3C4D5E',
   };
@@ -207,9 +238,18 @@ export function Step4Confirmation() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN - Booking Summary */}
-        <div>
+        {/* RIGHT COLUMN - Booking Summary + Pricing */}
+        <div className='space-y-6'>
+          {/* Trip Details Summary */}
           <BookingSummaryCard readonly={true} />
+
+          {/* VAT Breakdown - Consistent with Step 3 PaymentCard */}
+          <PricingBreakdownCard
+            totalAmount={confirmation.amount}
+            upgradesAmount={0} // TODO: Extract upgrades amount from sessionStorage or booking state
+            currency='GBP'
+            isLoading={false}
+          />
         </div>
       </div>
     </div>

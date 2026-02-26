@@ -77,15 +77,25 @@ export function PaymentCard() {
               // Fleet bookings use different pricing logic
               if (bookingType === 'fleet') {
                 const fleetPriceGBP = getFleetTotalPrice();
-                return fleetPriceGBP ? Math.round(fleetPriceGBP * 100) : 0;
+                const fleetBasePrice = fleetPriceGBP ? fleetPriceGBP : 0;
+                const upgradesPrice = calculateUpgradesCost();
+                const totalPrice = fleetBasePrice + upgradesPrice;
+                return Math.round(totalPrice * 100);
               }
 
               // Single vehicle bookings use selectedVehicle
               const categoryId = tripConfiguration?.selectedVehicle?.category?.id;
-              if (!categoryId) return 0;
+              if (!categoryId) {
+                // Even without vehicle, include upgrades cost
+                const upgradesPrice = calculateUpgradesCost();
+                return Math.round(upgradesPrice * 100);
+              }
 
-              const priceGBP = getPriceForVehicle(categoryId);
-              return priceGBP ? Math.round(priceGBP * 100) : 0;
+              const basePriceGBP = getPriceForVehicle(categoryId);
+              const basePrice = basePriceGBP ? basePriceGBP : 0;
+              const upgradesPrice = calculateUpgradesCost();
+              const totalPrice = basePrice + upgradesPrice;
+              return Math.round(totalPrice * 100);
             })(),
             currency: 'GBP',
             routeData: pricingState?.routeData
@@ -218,29 +228,52 @@ export function PaymentCard() {
     // Mark payment as succeeded in session
     markAsSucceeded();
 
-    // Poll booking status to catch webhook update (max 10 seconds)
+    // Poll booking status to catch webhook update (max 30 seconds)
     let pollAttempts = 0;
-    const maxPollAttempts = 5;
+    const maxPollAttempts = 15;
 
     const pollStatus = async (): Promise<void> => {
       pollAttempts++;
+      console.log(
+        `🔍 [POLL ${pollAttempts}/${maxPollAttempts}] Starting status check for booking:`,
+        bookingData.bookingId
+      );
+
       const status = await fetchBookingStatus(bookingData.bookingId);
+      console.log(`🔍 [POLL ${pollAttempts}/${maxPollAttempts}] Status received:`, {
+        status,
+        statusType: typeof status,
+        isConfirmed: status === 'CONFIRMED',
+        rawStatus: JSON.stringify(status),
+      });
 
       if (status === 'CONFIRMED') {
-        // Payment confirmed - proceed to receipt
-        nextStep();
-        return;
+        console.log('✅ [POLL] Payment CONFIRMED - calling nextStep()');
+        try {
+          nextStep();
+          console.log('✅ [POLL] nextStep() called successfully');
+          return;
+        } catch (error) {
+          console.error('❌ [POLL] nextStep() failed:', error);
+          return;
+        }
       }
 
       if (pollAttempts < maxPollAttempts) {
         // Use shorter delay for null responses (network issues) vs real attempts
         const delay = status === null ? 500 : 2000;
+        console.log(
+          `🔄 [POLL ${pollAttempts}/${maxPollAttempts}] Continuing polling in ${delay}ms, status was:`,
+          status
+        );
         setTimeout(pollStatus, delay);
       } else {
-        // Timeout - stop polling, don't advance
-        console.log('⏰ Payment processing timeout - webhook may be delayed or network issues');
-        // Could show UI message: "Processing payment, please wait or refresh..."
-        // Don't call nextStep() - safer to keep user on payment page
+        // Timeout - show success UI with manual next option
+        console.log(
+          '⏰ [POLL] Payment processing timeout - webhook may be delayed, showing manual next'
+        );
+        console.log('⏰ [POLL] Final status received:', status);
+        setBookingStatus('PAYMENT_PROCESSING'); // New status for manual next
       }
     };
 
@@ -264,31 +297,67 @@ export function PaymentCard() {
     });
   };
 
-  // Calculate total price from available pricing data (BEFORE booking creation)
-  const calculateTotalPrice = (): number => {
+  // Calculate pricing breakdown with VAT reverse calculation (prices come VAT-inclusive)
+  const calculatePricingBreakdown = (): {
+    baseNetPrice: number;
+    upgradesNetPrice: number;
+    subtotalNet: number;
+    vatAmount: number;
+    totalPrice: number;
+  } => {
     if (bookingData) {
-      // If booking already created, use booking data
-      return bookingData.amount_total_pence / 100;
+      // If booking already created, reverse calculate from VAT-inclusive total
+      const totalWithVat = bookingData.amount_total_pence / 100;
+      const currentUpgrades = calculateUpgradesCost();
+
+      // Reverse VAT calculation (UK VAT = 20%)
+      const subtotalNet = totalWithVat / 1.2; // Remove VAT to get net amount
+      const vatAmount = totalWithVat - subtotalNet;
+      const upgradesNetPrice = currentUpgrades / 1.2; // Upgrades are also VAT-inclusive
+      const baseNetPrice = Math.max(0, subtotalNet - upgradesNetPrice);
+
+      return {
+        baseNetPrice,
+        upgradesNetPrice,
+        subtotalNet,
+        vatAmount,
+        totalPrice: totalWithVat,
+      };
     }
 
-    // Calculate from available pricing data
-    let basePrice = 0;
+    // Calculate from available pricing data (VAT-inclusive from calculator)
+    let basePriceWithVat = 0;
 
     if (bookingType === 'fleet') {
-      basePrice = getFleetTotalPrice() || 0;
+      basePriceWithVat = getFleetTotalPrice() || 0;
     } else {
       const categoryId = tripConfiguration?.selectedVehicle?.category?.id;
       if (categoryId) {
-        basePrice = getPriceForVehicle(categoryId) || 0;
+        basePriceWithVat = getPriceForVehicle(categoryId) || 0;
       }
     }
 
-    const upgradesPrice = calculateUpgradesCost();
-    return basePrice + upgradesPrice;
+    const upgradesPriceWithVat = calculateUpgradesCost();
+    const totalWithVat = basePriceWithVat + upgradesPriceWithVat;
+
+    // Reverse VAT calculation (UK VAT = 20%)
+    const subtotalNet = totalWithVat / 1.2; // Remove VAT to get net amount
+    const vatAmount = totalWithVat - subtotalNet;
+    const baseNetPrice = basePriceWithVat / 1.2;
+    const upgradesNetPrice = upgradesPriceWithVat / 1.2;
+
+    return {
+      baseNetPrice,
+      upgradesNetPrice,
+      subtotalNet,
+      vatAmount,
+      totalPrice: totalWithVat,
+    };
   };
 
-  const totalPounds = calculateTotalPrice();
-  const hasValidPrice = totalPounds > 0;
+  const pricingBreakdown = calculatePricingBreakdown();
+  const { baseNetPrice, upgradesNetPrice, subtotalNet, vatAmount, totalPrice } = pricingBreakdown;
+  const hasValidPrice = totalPrice > 0;
 
   return (
     <div className='vl-card'>
@@ -317,14 +386,28 @@ export function PaymentCard() {
               {hasValidPrice ? (
                 <>
                   <div className='flex items-center justify-between text-sm'>
-                    <span className='text-neutral-400'>Journey fare</span>
-                    <span className='text-white'>£{totalPounds.toFixed(2)}</span>
+                    <span className='text-neutral-400'>Base trip fare</span>
+                    <span className='text-white'>£{baseNetPrice.toFixed(2)}</span>
+                  </div>
+                  {upgradesNetPrice > 0 && (
+                    <div className='flex items-center justify-between text-sm'>
+                      <span className='text-neutral-400'>Additional services</span>
+                      <span className='text-amber-300'>£{upgradesNetPrice.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className='flex items-center justify-between text-sm'>
+                    <span className='text-neutral-400'>Subtotal</span>
+                    <span className='text-white'>£{subtotalNet.toFixed(2)}</span>
+                  </div>
+                  <div className='flex items-center justify-between text-sm'>
+                    <span className='text-neutral-400'>VAT (20%)</span>
+                    <span className='text-neutral-400'>£{vatAmount.toFixed(2)}</span>
                   </div>
                   <div className='border-t border-white/10 pt-2'>
                     <div className='flex items-center justify-between'>
                       <span className='text-white font-semibold'>Total</span>
                       <span className='text-amber-400 font-bold text-lg'>
-                        £{totalPounds.toFixed(2)}
+                        £{totalPrice.toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -379,6 +462,24 @@ export function PaymentCard() {
               <h4 className='text-lg font-semibold text-white'>Booking Confirmed & Paid</h4>
               <p className='text-neutral-400 text-sm'>
                 Your booking is confirmed. You&apos;ll receive a confirmation email shortly.
+              </p>
+              <button
+                onClick={() => nextStep()}
+                className='px-8 py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold transition-colors'
+              >
+                Continue to Receipt
+              </button>
+            </div>
+          )}
+
+          {bookingData && bookingStatus === 'PAYMENT_PROCESSING' && (
+            <div className='text-center py-8 space-y-4'>
+              <div className='w-16 h-16 rounded-full bg-amber-500/20 flex items-center justify-center mx-auto'>
+                <CreditCard className='w-8 h-8 text-amber-400' />
+              </div>
+              <h4 className='text-lg font-semibold text-white'>Payment Successful!</h4>
+              <p className='text-neutral-400 text-sm'>
+                Your payment has been processed. The confirmation is being finalized.
               </p>
               <button
                 onClick={() => nextStep()}
@@ -464,7 +565,7 @@ export function PaymentCard() {
                     }}
                   >
                     <StripePaymentForm
-                      totalAmount={totalPounds}
+                      totalAmount={totalPrice}
                       _bookingId={bookingData.bookingId}
                       _clientSecret={clientSecret}
                       onSuccess={handlePaymentSuccess}
