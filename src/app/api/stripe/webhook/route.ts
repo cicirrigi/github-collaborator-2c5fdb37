@@ -237,6 +237,8 @@ export async function POST(request: NextRequest) {
           const updatedMetadata = {
             ...currentMetadata,
             stripe_fee_pence: stripeFee,
+            stripe_fee_source: 'stripe_api',
+            stripe_fee_retrieved_at: new Date().toISOString(),
           };
 
           // Update booking_payments with Stripe fee
