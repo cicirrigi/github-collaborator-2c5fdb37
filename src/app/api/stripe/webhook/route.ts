@@ -191,6 +191,74 @@ export async function POST(request: NextRequest) {
         break;
       }
 
+      case 'charge.updated': {
+        const charge = event.data.object as Stripe.Charge;
+        console.log('💳 Charge updated:', charge.id);
+
+        // Extract balance_transaction ID
+        const balanceTransactionId =
+          typeof charge.balance_transaction === 'string' ? charge.balance_transaction : null;
+
+        if (!balanceTransactionId) {
+          console.log('⚠️ No balance_transaction found in charge');
+          break;
+        }
+
+        // Get payment intent ID to find booking_payment
+        const paymentIntentId =
+          typeof charge.payment_intent === 'string' ? charge.payment_intent : null;
+
+        if (!paymentIntentId) {
+          console.log('⚠️ No payment_intent found in charge');
+          break;
+        }
+
+        // Check if fee already exists (idempotency)
+        const { data: existingPayment } = await supabase
+          .from('booking_payments')
+          .select('metadata')
+          .eq('stripe_payment_intent_id', paymentIntentId)
+          .single();
+
+        if (existingPayment?.metadata?.stripe_fee_pence) {
+          console.log('✓ Stripe fee already captured for payment:', paymentIntentId);
+          break;
+        }
+
+        try {
+          // Retrieve balance transaction from Stripe
+          const balanceTransaction =
+            await stripe.balanceTransactions.retrieve(balanceTransactionId);
+
+          const stripeFee = balanceTransaction.fee; // Already in pence for GBP
+
+          // Get current metadata and merge with fee
+          const currentMetadata = existingPayment?.metadata || {};
+          const updatedMetadata = {
+            ...currentMetadata,
+            stripe_fee_pence: stripeFee,
+          };
+
+          // Update booking_payments with Stripe fee
+          const { error: feeUpdateError } = await supabase
+            .from('booking_payments')
+            .update({
+              metadata: updatedMetadata,
+            })
+            .eq('stripe_payment_intent_id', paymentIntentId);
+
+          if (feeUpdateError) {
+            console.error('❌ Failed to update Stripe fee:', feeUpdateError);
+          } else {
+            console.log(`✅ Stripe fee captured: ${stripeFee} pence for ${paymentIntentId}`);
+          }
+        } catch (error) {
+          console.error('❌ Failed to retrieve balance transaction:', error);
+        }
+
+        break;
+      }
+
       default:
         console.log('ℹ️ Unhandled event type:', event.type);
     }
