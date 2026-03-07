@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+// Console logging intentional for payment intent creation debugging
 import { createPaymentIntentRecord } from '@/lib/supabase/rpc/payment.rpc';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createClient } from '@supabase/supabase-js';
@@ -151,7 +153,6 @@ export async function POST(request: NextRequest) {
       });
 
       if (!rpcResult.success) {
-        // eslint-disable-next-line no-console
         console.error('❌ RPC create_payment_intent_record failed:', rpcResult.error_message);
         return NextResponse.json(
           { error: 'Failed to save payment record', details: rpcResult.error_message },
@@ -188,7 +189,6 @@ export async function POST(request: NextRequest) {
       );
 
       if (paymentUpsertError) {
-        // eslint-disable-next-line no-console
         console.error('❌ Failed to upsert booking_payments:', paymentUpsertError);
         return NextResponse.json({ error: 'Failed to save payment record' }, { status: 500 });
       }
@@ -201,7 +201,6 @@ export async function POST(request: NextRequest) {
           .eq('id', bookingId);
 
         if (statusUpdateError) {
-          // eslint-disable-next-line no-console
           console.error('❌ Failed to update booking status:', statusUpdateError);
         }
       }

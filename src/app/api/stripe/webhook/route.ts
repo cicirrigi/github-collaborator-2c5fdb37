@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         livemode: event.livemode,
         api_version: event.api_version,
         payload: JSON.parse(JSON.stringify(event)),
-        booking_id: (event.data?.object as any)?.metadata?.bookingId || null,
+        booking_id: (event.data?.object as Stripe.PaymentIntent)?.metadata?.bookingId || null,
         booking_payment_id: null,
         organization_id: null,
       });

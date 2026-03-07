@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+// Console logging intentional for payment debugging and status polling
 'use client';
 
 import { StripePaymentForm } from '@/features/booking/components/step3/StripePaymentForm';
@@ -7,6 +9,15 @@ import { stripePromise } from '@/lib/stripe/stripe';
 import { Elements } from '@stripe/react-stripe-js';
 import { AlertCircle, CreditCard, DollarSign } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+
+type BookingApiResponse = {
+  success: boolean;
+  bookingId?: string;
+  reference?: string;
+  amount_total_pence?: number;
+  currency?: string;
+  error?: string;
+};
 
 interface PaymentData {
   paymentIntentId: string;
@@ -112,11 +123,13 @@ export function PaymentCard() {
       const contentType = response.headers.get('content-type') || '';
       const rawText = await response.text();
 
-      let data: any = null;
+      let data: BookingApiResponse;
       try {
-        data = contentType.includes('application/json') ? JSON.parse(rawText) : rawText;
+        data = contentType.includes('application/json')
+          ? (JSON.parse(rawText) as BookingApiResponse)
+          : ({ error: rawText, success: false } as BookingApiResponse);
       } catch {
-        data = { parseError: true, rawText };
+        data = { success: false, error: rawText };
       }
 
       console.log('🧾 BOOKING RESPONSE', {
@@ -128,10 +141,10 @@ export function PaymentCard() {
 
       if (!response.ok) {
         bookingCreateStartedRef.current = false; // allow retry
-        throw new Error(typeof data === 'string' ? data : JSON.stringify(data));
+        throw new Error(data.error || JSON.stringify(data));
       }
 
-      if (data.success) {
+      if (data.success && data.bookingId && data.reference && data.amount_total_pence) {
         const bookingData = {
           bookingId: data.bookingId,
           reference: data.reference,
