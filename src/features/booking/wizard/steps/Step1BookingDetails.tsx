@@ -9,14 +9,7 @@ interface Step1BookingDetailsProps {
 export function Step1BookingDetails({ onNext }: Step1BookingDetailsProps = {}) {
   return (
     <>
-      {/* PREMIUM GRID */}
-      <div className='vl-grid-premium'>
-        {/* LEFT COLUMN */}
-        <BookingFormCard {...(onNext && { onNext })} />
-
-        {/* RIGHT COLUMN - Empty for now, components integrated into BookingFormCard */}
-        <div className='space-y-3'>{/* Additional components can go here if needed */}</div>
-      </div>
+      <BookingFormCard {...(onNext && { onNext })} />
     </>
   );
 }

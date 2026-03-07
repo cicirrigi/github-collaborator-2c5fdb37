@@ -8,7 +8,9 @@
 // bookings.status enum values (actual DB enum)
 export const BookingStatus = {
   NEW: 'NEW',
+  PENDING_PAYMENT: 'PENDING_PAYMENT',
   CONFIRMED: 'CONFIRMED',
+  PAYMENT_FAILED: 'PAYMENT_FAILED',
   IN_PROGRESS: 'IN_PROGRESS',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED',

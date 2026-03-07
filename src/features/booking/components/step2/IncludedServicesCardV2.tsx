@@ -44,7 +44,7 @@ export function IncludedServicesCardV2({ className = '' }: IncludedServicesCardV
 
           <div>
             <h3 className='text-white font-semibold text-lg tracking-wide'>Included Services</h3>
-            <p className='text-amber-200/50 text-xs'>Included at no extra cost</p>
+            <p className='text-white text-xs'>Included at no extra cost</p>
           </div>
         </div>
 

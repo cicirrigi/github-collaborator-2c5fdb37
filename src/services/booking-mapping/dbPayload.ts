@@ -276,9 +276,35 @@ export function buildLegsPayload(params: {
     return [outbound, inbound];
   }
 
-  // For other types (hourly/daily/fleet/bespoke), you might model legs differently later.
-  // For now: 1 leg with pickup/dropoff (or pickup only) keeps DB happy.
-  if (bookingType !== 'oneway' && bookingType !== 'return') {
+  // Fleet booking: create N legs (one per vehicle)
+  if (bookingType === 'fleet') {
+    const fleetSelection = tripConfiguration.fleetSelection;
+    if (!fleetSelection?.vehicles?.length) {
+      throw new Error('Fleet booking requires vehicles selection');
+    }
+
+    const legs: (typeof baseLeg)[] = [];
+    let legNumber = 1;
+
+    // Create one leg per vehicle (based on quantity)
+    fleetSelection.vehicles.forEach(vehicleItem => {
+      for (let i = 0; i < vehicleItem.quantity; i++) {
+        legs.push({
+          ...baseLeg,
+          leg_number: legNumber++,
+          vehicle_category_id: vehicleItem.category.id,
+          vehicle_model_id: vehicleItem.model.id,
+          dropoff_address: tripConfiguration.dropoff?.address ?? null,
+          dropoff_place_id: tripConfiguration.dropoff?.placeId ?? null,
+        });
+      }
+    });
+
+    return legs;
+  }
+
+  // For other types (hourly/daily/bespoke), 1 leg with pickup/dropoff keeps DB happy.
+  if (bookingType === 'hourly' || bookingType === 'daily' || bookingType === 'bespoke') {
     return [
       {
         ...baseLeg,

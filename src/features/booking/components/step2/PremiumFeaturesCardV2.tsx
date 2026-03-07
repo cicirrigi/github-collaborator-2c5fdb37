@@ -47,8 +47,8 @@ export function PremiumFeaturesCardV2({ className = '' }: PremiumFeaturesCardV2P
           </div>
 
           <div>
-            <h3 className='text-white font-semibold text-lg tracking-wide'>Premium Features</h3>
-            <p className='text-yellow-200/50 text-xs'>FREE for {selectedCategory.name}</p>
+            <h3 className='text-white font-semibold text-lg tracking-wide'>Luxury Privileges</h3>
+            <p className='text-white text-xs'>Exclusive for Luxury Class</p>
           </div>
         </div>
 
@@ -61,8 +61,8 @@ export function PremiumFeaturesCardV2({ className = '' }: PremiumFeaturesCardV2P
 
         {/* Footer */}
         <div className='text-center mt-5 pt-4 border-t border-white/10'>
-          <p className='text-yellow-200/50 text-xs tracking-wide'>
-            Click to enable/disable premium features
+          <p className='text-white text-xs tracking-wide'>
+            Click to enable/disable your included privileges
           </p>
         </div>
       </div>
@@ -103,7 +103,7 @@ function PremiumFeatureIcon({ feature }: PremiumFeatureIconProps) {
         style={{
           backgroundColor: isSelected ? 'rgba(203,178,106,0.08)' : 'rgba(203,178,106,0.03)',
           border: isSelected
-            ? '1px solid rgba(203,178,106,0.15)'
+            ? '1px solid rgba(203,178,106,0.4)'
             : '1px solid rgba(255,255,255,0.1)',
           backdropFilter: 'blur(16px)',
           boxShadow: isSelected
@@ -167,7 +167,7 @@ function PremiumFeatureIcon({ feature }: PremiumFeatureIconProps) {
 
               <div className='flex items-center gap-1.5 pt-1'>
                 <Crown className='w-3 h-3 text-yellow-400' />
-                <span className='text-yellow-300 text-xs font-medium'>Premium Feature</span>
+                <span className='text-green-300 text-xs font-medium'>Included with Luxury</span>
               </div>
             </div>
           </div>

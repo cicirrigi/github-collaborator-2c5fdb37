@@ -72,8 +72,8 @@ export function TripPreferencesSlim({ className = '' }: TripPreferencesSlimProps
           </div>
 
           <div>
-            <h3 className='text-white font-semibold text-lg tracking-wide'>Trip Preferences</h3>
-            <p className='text-amber-200/50 text-xs'>Optional Included</p>
+            <h3 className='text-white font-semibold text-lg tracking-wide'>Comfort Preferences</h3>
+            <p className='text-white text-xs'>Select your personal ride setting</p>
           </div>
         </div>
 

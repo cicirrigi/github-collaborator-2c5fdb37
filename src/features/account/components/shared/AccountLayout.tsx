@@ -66,7 +66,7 @@ export function AccountLayout({ children, title, description }: AccountLayoutPro
 
   return (
     <div className='min-h-screen bg-neutral-50 dark:bg-neutral-950'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+      <div className='max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         <div className='flex gap-8'>
           {/* Desktop Sidebar */}
           <div className='hidden lg:block'>
@@ -74,7 +74,7 @@ export function AccountLayout({ children, title, description }: AccountLayoutPro
           </div>
 
           {/* Main Content */}
-          <main className='flex-1 min-w-0'>
+          <main className='flex-1'>
             {/* Page Header */}
             {title && (
               <div className='hidden lg:block mb-8'>
@@ -84,7 +84,7 @@ export function AccountLayout({ children, title, description }: AccountLayoutPro
 
             {/* Page Content */}
             <div
-              className={`bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm ${!title ? 'mt-[6.9rem]' : ''}`}
+              className={`bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden ${!title ? 'mt-[6.9rem]' : ''}`}
             >
               {children}
             </div>

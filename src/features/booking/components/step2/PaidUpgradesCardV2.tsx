@@ -46,8 +46,8 @@ export function PaidUpgradesCardV2({ className = '' }: PaidUpgradesCardV2Props) 
             </div>
 
             <div>
-              <h3 className='text-white font-semibold text-lg tracking-wide'>Premium Upgrades</h3>
-              <p className='text-amber-200/50 text-xs'>Optional add-ons</p>
+              <h3 className='text-white font-semibold text-lg tracking-wide'>Premium Add-Ons</h3>
+              <p className='text-white text-xs'>Enhance your journey</p>
             </div>
           </div>
 
@@ -68,9 +68,7 @@ export function PaidUpgradesCardV2({ className = '' }: PaidUpgradesCardV2Props) 
 
         {/* Footer */}
         <div className='text-center mt-5 pt-4 border-t border-white/10'>
-          <p className='text-purple-200/50 text-xs tracking-wide'>
-            Enhance your luxury experience with premium add-ons
-          </p>
+          <p className='text-white text-xs tracking-wide'>All add-ons are optional</p>
         </div>
       </div>
     </div>
@@ -133,7 +131,7 @@ function UpgradeItem({ upgrade }: UpgradeItemProps) {
         style={{
           backgroundColor: isSelected ? 'rgba(203,178,106,0.08)' : 'rgba(203,178,106,0.03)',
           border: isSelected
-            ? '1px solid rgba(203,178,106,0.15)'
+            ? '1px solid rgba(203,178,106,0.4)'
             : '1px solid rgba(255,255,255,0.1)',
           backdropFilter: 'blur(16px)',
           boxShadow: isSelected
@@ -171,13 +169,6 @@ function UpgradeItem({ upgrade }: UpgradeItemProps) {
               </span>
             </div>
           </div>
-
-          {/* Selected Indicator */}
-          {isSelected && (
-            <div className='w-4 h-4 bg-purple-400 rounded-full flex items-center justify-center'>
-              <Wine className='w-2.5 h-2.5 text-black' />
-            </div>
-          )}
         </div>
       </div>
 
@@ -214,8 +205,8 @@ function UpgradeItem({ upgrade }: UpgradeItemProps) {
 
               <div className='flex items-center justify-between pt-1'>
                 <div className='flex items-center gap-1.5'>
-                  <Wine className='w-3 h-3 text-purple-400' />
-                  <span className='text-purple-300 text-xs font-medium'>Premium Upgrade</span>
+                  <Wine className='w-3 h-3 text-yellow-400' />
+                  <span className='text-yellow-300 text-xs font-medium'>Optional Add-On</span>
                 </div>
                 <span className='text-yellow-400 text-xs font-medium'>
                   {currency}

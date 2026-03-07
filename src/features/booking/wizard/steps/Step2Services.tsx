@@ -34,12 +34,7 @@ export function Step2Services() {
       w-full
       max-w-[1440px]
       mx-auto
-      bg-black/40 backdrop-blur-xl
-      border border-white/10
-      rounded-3xl
-      shadow-[0_18px_60px_rgba(0,0,0,0.6)]
-      pt-4 pb-6 lg:pb-10 px-2 lg:px-4 space-y-8 lg:space-y-14
-      mx-auto
+      pt-4 pb-1 lg:pb-3 px-2 lg:px-4 space-y-8 lg:space-y-14
     '
     >
       {/* STANDARD BOOKING ONLY - Exclude fleet and bespoke */}
@@ -66,13 +61,7 @@ export function Step2Services() {
                   <div
                     className='relative grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-4 lg:gap-6 items-start p-4 lg:p-6 rounded-2xl'
                     style={{
-                      background: `
-                        radial-gradient(ellipse 800px 200px at 50% 20%, rgba(203,178,106,0.08) 0%, transparent 50%),
-                        radial-gradient(ellipse at top, rgba(203,178,106,0.06) 0%, rgba(25,25,25,0.3) 40%, transparent 70%),
-                        radial-gradient(ellipse at bottom right, rgba(203,178,106,0.04) 0%, transparent 50%),
-                        rgba(0,0,0,0.2)
-                      `,
-                      backdropFilter: 'blur(12px)',
+                      background: 'rgba(203,178,106,0.08)',
                       border: '1px solid rgba(255,255,255,0.05)',
                     }}
                   >
@@ -134,10 +123,10 @@ export function Step2Services() {
                     </div>
 
                     <div className='space-y-2'>
-                      <h3 className='text-white font-semibold text-lg tracking-wide'>
+                      <h3 className='text-white font-semibold text-xl tracking-wide'>
                         Select Your Vehicle
                       </h3>
-                      <p className='text-amber-200/70 text-sm leading-relaxed'>
+                      <p className='text-amber-200/70 text-base leading-relaxed'>
                         Please choose your preferred vehicle model to unlock premium services and
                         customization options
                       </p>

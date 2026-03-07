@@ -39,10 +39,10 @@ export function TripPreferencesCardV2({ className = '' }: TripPreferencesCardV2P
 
           <div>
             <h3 className='text-white font-semibold text-xl tracking-wide'>
-              Trip Preferences{' '}
+              Your Comfort Preferences{' '}
               <span className='text-amber-200/60 text-sm font-normal'>optional</span>
             </h3>
-            <p className='text-amber-200/50 text-xs'>Personal comfort settings</p>
+            <p className='text-white text-xs'>Personal ride settings</p>
           </div>
         </div>
 
@@ -60,7 +60,7 @@ export function TripPreferencesCardV2({ className = '' }: TripPreferencesCardV2P
 
         {/* Footer */}
         <div className='text-center mt-5 pt-4 border-t border-white/10'>
-          <p className='text-yellow-200/50 text-xs tracking-wide'>
+          <p className='text-white text-xs tracking-wide'>
             Customize your journey to your personal preferences
           </p>
         </div>

@@ -86,11 +86,7 @@ function CalendarGridBase({
                   height: isLandscape ? cellSize * 0.55 : cellSize,
                 }}
               >
-                <CalendarDay
-                  date={day}
-                  onSelect={onDateSelect}
-                  className={`${dayFont} w-full h-full`}
-                />
+                <CalendarDay date={day} onSelect={onDateSelect} className={`${dayFont}`} />
               </div>
             ))}
           </React.Fragment>

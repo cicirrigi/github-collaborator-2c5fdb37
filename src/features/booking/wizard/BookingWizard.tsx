@@ -1,8 +1,8 @@
 'use client';
 
 import { ZustandBookingTypeDock } from '@/components/booking/ZustandBookingTypeDock';
-import { Container } from '@/components/layout/Container';
 import { BookingStepper } from '@/components/ui/booking-stepper/BookingStepper';
+import { WeatherWidgetCompact } from '@/components/ui/WeatherWidgetCompact';
 import { useBookingState } from '@/hooks/useBookingState';
 import { bookingSessionManager, PaymentState } from '@/lib/booking/session/BookingSessionManager';
 import { useEffect, useRef } from 'react';
@@ -83,25 +83,38 @@ export function BookingWizard() {
       </div>
 
       {/* 2️⃣ BOOKING FORM — LUXURY BOX */}
-      <Container size='lg' className='flex justify-center !px-1 sm:!px-2'>
+      <div className='flex justify-center px-1 sm:px-2 relative'>
+        {/* 🌤️ WEATHER WIDGET - FLOATING ABOVE GREEN BORDER */}
+        <div className='absolute top-2 right-2 z-50'>
+          <WeatherWidgetCompact />
+        </div>
+
         <div
           ref={wizardContainerRef}
           className='
           w-full
           max-w-[1440px]
           mx-auto
-          bg-black/40 backdrop-blur-xl
+          backdrop-blur-md
           border border-white/10
           rounded-3xl
           shadow-[0_18px_60px_rgba(0,0,0,0.6)]
-          pt-4 pb-10 px-2 sm:px-4 space-y-14
+          pt-6 pb-12 px-3 sm:px-5 space-y-14
         '
+          style={{
+            background: `
+              radial-gradient(ellipse 500px 250px at 50% 30%, rgba(203,178,106,0.10) 0%, transparent 70%),
+              rgba(0,0,0,0.4)
+            `,
+            minHeight: '800px',
+          }}
         >
           {/* 🔹 BOOKING TYPE DOCK ÎNĂUNTRU */}
-          <div className='w-full flex justify-center pt-4 -mb-6'>
-            <div className='w-full max-w-4xl'>
-              <ZustandBookingTypeDock />
-            </div>
+          <div
+            className='w-full flex justify-center pt-4 -mb-6 max-w-2xl mx-auto rounded-3xl px-4 py-3'
+            style={{ border: '1px solid rgba(255, 193, 7, 0.15)' }}
+          >
+            <ZustandBookingTypeDock />
           </div>
 
           {currentStep === 1 && <Step1BookingDetails onNext={nextStep} />}
@@ -116,7 +129,7 @@ export function BookingWizard() {
             onPrev={prevStep}
           />
         </div>
-      </Container>
+      </div>
     </div>
   );
 }

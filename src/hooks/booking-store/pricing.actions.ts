@@ -52,7 +52,14 @@ export const createPricingActions = (
       bookingType,
     });
 
-    // Validate required data
+    // Validate required data - WITH DETAILED DEBUGGING
+    console.log('🔍 DETAILED VALIDATION CHECK:');
+    console.log('- routeData.isCalculated:', pricingState.routeData.isCalculated);
+    console.log('- routeData.distance:', pricingState.routeData.distance);
+    console.log('- routeData.duration:', pricingState.routeData.duration);
+    console.log('- tripConfiguration.pickup:', !!tripConfiguration.pickup);
+    console.log('- tripConfiguration.dropoff:', !!tripConfiguration.dropoff);
+
     if (
       !pricingState.routeData.isCalculated ||
       !pricingState.routeData.distance ||
@@ -60,7 +67,21 @@ export const createPricingActions = (
       !tripConfiguration.pickup ||
       !tripConfiguration.dropoff
     ) {
-      console.log('❌ Validation failed - missing required data');
+      console.log('❌ PRICING VALIDATION FAILED - missing required data:');
+      console.log('  - Route calculated:', pricingState.routeData.isCalculated);
+      console.log('  - Distance:', pricingState.routeData.distance);
+      console.log('  - Duration:', pricingState.routeData.duration);
+      console.log('  - Pickup:', !!tripConfiguration.pickup);
+      console.log('  - Dropoff:', !!tripConfiguration.dropoff);
+
+      // Set error state instead of silent failure
+      set((state: BookingState) => ({
+        pricingState: {
+          ...state.pricingState,
+          pricingError: 'Missing route data or locations for pricing calculation',
+          isLoadingPrices: false,
+        },
+      }));
       return;
     }
 

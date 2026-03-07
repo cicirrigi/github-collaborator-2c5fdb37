@@ -1,15 +1,14 @@
 'use client';
 
 import { useBookingState } from '@/hooks/useBookingState';
-import { ArrowRight, Route } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { AdditionalStopsInline } from './AdditionalStopsInline';
 import { BespokeRequirements } from './BespokeRequirements';
 import { CalendarPlaceholder } from './CalendarPlaceholder';
-import { CardHeader } from './CardHeader';
 import { DaysDurationSelector } from './DaysDurationSelector';
 import { FlightInformationSection } from './FlightInformationSection';
 import { HoursDurationSelector } from './HoursDurationSelector';
-import { JourneyEstimateDisplay } from './JourneyEstimateDisplay';
+import { JourneySelectedSummary } from './JourneySelectedSummary';
 import { PassengerLuggageSelector } from './PassengerLuggageSelector';
 import { TravelRouteSection } from './TravelRouteSection';
 
@@ -40,20 +39,14 @@ export function BookingFormCard({ onNext }: BookingFormCardProps = {}) {
   const isStep1Valid = validateStep1Complete();
 
   return (
-    <div className='vl-card-flex col-span-1 lg:col-span-2'>
-      <CardHeader
-        icon={Route}
-        title='Selected Booking'
-        subtitle={bookingTypeLabel}
-        showWeather={true}
-      />
+    <div className='col-span-1 lg:col-span-2'>
       <div className='vl-card-inner'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 h-full relative'>
           {/* Left Side - Trip Details */}
           <div className='space-y-6'>
             <TravelRouteSection />
+            <JourneySelectedSummary />
             <PassengerLuggageSelector />
-            <JourneyEstimateDisplay />
 
             {/* Conditional Components based on booking type */}
             {isBespokeBooking ? (
@@ -86,10 +79,44 @@ export function BookingFormCard({ onNext }: BookingFormCardProps = {}) {
                     : 'bg-neutral-500/10 border border-neutral-600/30 text-neutral-400 cursor-not-allowed opacity-50'
                 }`}
               >
-                <span>
-                  {isStep1Valid ? 'Continue to Vehicle Selection' : 'Complete Required Fields'}
+                <span className='flex'>
+                  {(isStep1Valid ? 'Continue to Vehicle Selection' : 'Complete Required Fields')
+                    .split('')
+                    .map((letter, index) => (
+                      <span
+                        key={index}
+                        className='inline-block'
+                        style={{
+                          animation: `shimmerWave 4s ease-in-out infinite`,
+                          animationDelay: `${index * 0.08}s`,
+                        }}
+                      >
+                        {letter === ' ' ? '\u00A0' : letter}
+                      </span>
+                    ))}
                 </span>
                 <ArrowRight className='w-5 h-5' />
+                <style
+                  dangerouslySetInnerHTML={{
+                    __html: `
+                    @keyframes shimmerWave {
+                      0% {
+                        color: #fef3c7;
+                      }
+                      25% {
+                        color: #ffffff;
+                        text-shadow: 0 0 8px rgba(255,255,255,0.6);
+                      }
+                      50% {
+                        color: #fef3c7;
+                      }
+                      100% {
+                        color: #fef3c7;
+                      }
+                    }
+                  `,
+                  }}
+                />
               </button>
             )}
           </div>

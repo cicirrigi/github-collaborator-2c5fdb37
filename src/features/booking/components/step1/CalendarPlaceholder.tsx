@@ -7,7 +7,7 @@ import { StatefulTimePicker } from '@/components/time/StatefulTimePicker';
 import type { TimeValue } from '@/components/time/core/time-types';
 import { GlassmorphismCard } from '@/components/ui/GlassmorphismCard';
 import { useBookingState } from '@/hooks/useBookingState';
-import { CalendarDays } from 'lucide-react';
+import { CalendarDays, Clock, Plane } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 // Helper functions to convert between Date and TimeValue for store integration
@@ -45,8 +45,14 @@ function useIsMobile() {
 }
 
 export function CalendarPlaceholder() {
-  const { bookingType, tripConfiguration, setPickupDateTime, setReturnDateTime, setDailyRange } =
-    useBookingState();
+  const {
+    bookingType,
+    tripConfiguration,
+    setPickupDateTime,
+    setReturnDateTime,
+    setDailyRange,
+    setFlightNumberPickup,
+  } = useBookingState();
   const isMobile = useIsMobile(); // Add device detection
 
   // One-way trip states - now using Zustand store
@@ -256,7 +262,7 @@ export function CalendarPlaceholder() {
   return (
     <div className='space-y-6'>
       {/* Inline Calendar */}
-      <GlassmorphismCard className='p-4'>
+      <GlassmorphismCard className='pt-4 px-4 pb-2'>
         <Calendar
           value={selectedDate}
           onChange={date => {
@@ -266,46 +272,61 @@ export function CalendarPlaceholder() {
           }}
           mode='single'
           timezone='Europe/London'
-          className='mx-auto max-w-sm'
+          className='mx-auto max-w-md'
         />
       </GlassmorphismCard>
 
-      {/* Time Picker */}
-      <GlassmorphismCard className='p-4'>
-        <div className='mb-3'>
-          <label className='block text-sm font-medium text-white mb-2'>Departure Time</label>
-        </div>
-        <StatefulTimePicker
-          date={selectedDate}
-          value={selectedTime}
-          onChange={handleOnewayTimeChange}
-          interval={15}
-        />
-      </GlassmorphismCard>
+      {/* Time + Flight Number - Parallel layout for ONEWAY, DAILY, HOURLY, FLEET, BESPOKE */}
+      {bookingType === 'oneway' ||
+      bookingType === 'daily' ||
+      bookingType === 'hourly' ||
+      bookingType === 'fleet' ||
+      bookingType === 'bespoke' ? (
+        <GlassmorphismCard className='p-4'>
+          <div className='grid grid-cols-2 gap-3'>
+            {/* Departure Time - Narrower */}
+            <div>
+              <div className='flex items-center gap-2 mb-2'>
+                <Clock className='w-4 h-4 text-amber-200/60' />
+                <span className='text-white font-medium text-sm'>Pickup Time</span>
+              </div>
+              <StatefulTimePicker
+                date={selectedDate}
+                value={selectedTime}
+                onChange={handleOnewayTimeChange}
+                interval={15}
+              />
+            </div>
 
-      {/* Selection Summary */}
-      {selectedDate && selectedTime && (
-        <div
-          className='bg-white/5 backdrop-blur-sm rounded-lg p-3 border border-amber-300/30 shadow-lg'
-          style={{
-            background: 'rgba(255, 255, 255, 0.08)',
-            backdropFilter: 'blur(12px)',
-            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 20px rgba(0, 0, 0, 0.2)',
-          }}
-        >
-          <div className='flex items-center justify-between text-sm'>
-            <span className='text-amber-100/80'>Selected:</span>
-            <span className='text-amber-200 font-medium'>
-              {selectedDate.toLocaleDateString('en-GB', {
-                weekday: 'short',
-                day: 'numeric',
-                month: 'short',
-              })}{' '}
-              at {selectedTime.hours.toString().padStart(2, '0')}:
-              {selectedTime.minutes.toString().padStart(2, '0')}
-            </span>
+            {/* Flight Number - Same height as time picker */}
+            <div>
+              <div className='flex items-center gap-2 mb-2'>
+                <Plane className='w-4 h-4 text-amber-200/60' />
+                <span className='text-white font-medium text-sm'>Flight Number</span>
+              </div>
+              <input
+                type='text'
+                value={tripConfiguration.flightNumberPickup}
+                onChange={e => setFlightNumberPickup(e.target.value)}
+                placeholder='Optional (e.g., BA123)'
+                className='w-full p-3 text-left rounded-lg bg-white/5 text-white border border-white/10 hover:bg-white/10 transition placeholder:text-amber-200/60 focus:outline-none'
+              />
+            </div>
           </div>
-        </div>
+        </GlassmorphismCard>
+      ) : (
+        /* Standard Time Picker for non-oneway bookings */
+        <GlassmorphismCard className='p-4'>
+          <div className='mb-3'>
+            <label className='block text-sm font-medium text-white mb-2'>Departure Time</label>
+          </div>
+          <StatefulTimePicker
+            date={selectedDate}
+            value={selectedTime}
+            onChange={handleOnewayTimeChange}
+            interval={15}
+          />
+        </GlassmorphismCard>
       )}
     </div>
   );
