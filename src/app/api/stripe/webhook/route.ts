@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+// Console logging is intentional for webhook debugging and production monitoring
 import { applyStripePaymentEvent } from '@/lib/supabase/rpc/payment.rpc';
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
