@@ -188,7 +188,7 @@ export function PaymentCard() {
 
     isCheckingStatusRef.current = true;
     try {
-      const response = await fetch(`/api/bookings/${bookingId}`);
+      const response = await fetch(`/api/bookings_v1/${bookingId}`);
       if (!response.ok) return null;
 
       const data = await response.json();

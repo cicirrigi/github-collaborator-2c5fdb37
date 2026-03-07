@@ -1,3 +1,4 @@
+import { createPaymentIntentRecord } from '@/lib/supabase/rpc/payment.rpc';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
@@ -76,14 +77,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Get amount from frontend (booking doesn't store amount in current schema)
-    const amount = body?.amount ?? body?.amount_total_pence;
+    const rawAmount = body?.amount ?? body?.amount_total_pence;
+    const amount = Number(rawAmount);
+
     if (!Number.isInteger(amount) || amount <= 0) {
       return NextResponse.json({ error: 'Invalid booking amount' }, { status: 400 });
     }
 
     // Separate currency handling: DB uppercase, Stripe lowercase
-    const dbCurrency = booking.currency || 'GBP'; // Keep DB currency uppercase
-    const stripeCurrency = dbCurrency.toLowerCase(); // Stripe needs lowercase
+    const dbCurrency = (booking.currency || 'GBP').toUpperCase();
+
+    // Validate currency format (3-letter uppercase)
+    if (!/^[A-Z]{3}$/.test(dbCurrency)) {
+      return NextResponse.json({ error: 'Invalid booking currency' }, { status: 400 });
+    }
+
+    const stripeCurrency = dbCurrency.toLowerCase();
 
     // 6) Calculate next attempt number for retry logic
     const { data: existingAttempts } = await supabaseAdmin
@@ -116,18 +125,22 @@ export async function POST(request: NextRequest) {
       { idempotencyKey }
     );
 
-    // 9) Insert booking_payments with attempt-based logic (SAFE on retries via idempotency_key)
-    const { error: paymentUpsertError } = await supabaseAdmin.from('booking_payments').upsert(
-      {
+    // 9) Insert booking_payments - Wave 1A: RPC vs Direct
+    const useRpc = process.env.USE_PAYMENT_INTENT_RPC === 'true';
+
+    if (useRpc) {
+      // ============================================
+      // NEW: Wave 1A RPC Flow (feature flagged)
+      // ============================================
+      const rpcResult = await createPaymentIntentRecord(supabaseAdmin, {
         booking_id: bookingId,
         stripe_payment_intent_id: paymentIntent.id,
-        organization_id: booking.organization_id,
         amount_pence: amount,
-        currency: dbCurrency, // Save uppercase in DB
-        status: 'pending',
+        currency: dbCurrency,
         receipt_email: receiptEmail,
         idempotency_key: idempotencyKey,
         attempt_no: nextAttemptNo,
+        organization_id: booking.organization_id,
         livemode: paymentIntent.livemode,
         metadata: {
           paymentIntentId: paymentIntent.id,
@@ -135,25 +148,68 @@ export async function POST(request: NextRequest) {
           idempotencyKey,
           attemptNo: nextAttemptNo,
         },
-      },
-      { onConflict: 'idempotency_key' }
-    );
+      });
 
-    if (paymentUpsertError) {
-      console.error('❌ Failed to upsert booking_payments:', paymentUpsertError);
-      return NextResponse.json({ error: 'Failed to save payment record' }, { status: 500 });
+      if (!rpcResult.success) {
+        // eslint-disable-next-line no-console
+        console.error('❌ RPC create_payment_intent_record failed:', rpcResult.error_message);
+        return NextResponse.json(
+          { error: 'Failed to save payment record', details: rpcResult.error_message },
+          { status: 500 }
+        );
+      }
+
+      // RPC handles both payment record creation AND booking status update
+      // No additional status update needed
+    } else {
+      // ============================================
+      // OLD: Direct DB operations (default)
+      // ============================================
+      const { error: paymentUpsertError } = await supabaseAdmin.from('booking_payments').upsert(
+        {
+          booking_id: bookingId,
+          stripe_payment_intent_id: paymentIntent.id,
+          organization_id: booking.organization_id,
+          amount_pence: amount,
+          currency: dbCurrency,
+          status: 'pending',
+          receipt_email: receiptEmail,
+          idempotency_key: idempotencyKey,
+          attempt_no: nextAttemptNo,
+          livemode: paymentIntent.livemode,
+          metadata: {
+            paymentIntentId: paymentIntent.id,
+            reference: booking.reference,
+            idempotencyKey,
+            attemptNo: nextAttemptNo,
+          },
+        },
+        { onConflict: 'idempotency_key' }
+      );
+
+      if (paymentUpsertError) {
+        // eslint-disable-next-line no-console
+        console.error('❌ Failed to upsert booking_payments:', paymentUpsertError);
+        return NextResponse.json({ error: 'Failed to save payment record' }, { status: 500 });
+      }
+
+      // Update booking status to PENDING_PAYMENT (for NEW or PAYMENT_FAILED bookings)
+      if (booking.status === 'NEW' || booking.status === 'PAYMENT_FAILED') {
+        const { error: statusUpdateError } = await supabaseAdmin
+          .from('bookings')
+          .update({ status: 'PENDING_PAYMENT' })
+          .eq('id', bookingId);
+
+        if (statusUpdateError) {
+          // eslint-disable-next-line no-console
+          console.error('❌ Failed to update booking status:', statusUpdateError);
+        }
+      }
     }
 
-    // 10) Update booking status to PENDING_PAYMENT (for NEW or PAYMENT_FAILED bookings)
-    if (booking.status === 'NEW' || booking.status === 'PAYMENT_FAILED') {
-      const { error: statusUpdateError } = await supabaseAdmin
-        .from('bookings')
-        .update({ status: 'PENDING_PAYMENT' })
-        .eq('id', bookingId);
-
-      if (statusUpdateError) {
-        console.error('❌ Failed to update booking status:', statusUpdateError);
-      }
+    // Safety check: Stripe should always provide client_secret
+    if (!paymentIntent.client_secret) {
+      return NextResponse.json({ error: 'Missing payment intent client secret' }, { status: 500 });
     }
 
     return NextResponse.json({
