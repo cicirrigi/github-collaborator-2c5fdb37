@@ -247,16 +247,6 @@ export function PaymentCard() {
 
     const pollStatus = async (): Promise<void> => {
       pollAttempts++;
-
-      // Skip polling if tab is hidden (user switched tabs)
-      if (document.visibilityState === 'hidden') {
-        console.log(`⏸️ [POLL ${pollAttempts}/${maxPollAttempts}] Tab hidden, skipping request`);
-        if (pollAttempts < maxPollAttempts) {
-          setTimeout(pollStatus, 2000);
-        }
-        return;
-      }
-
       console.log(
         `🔍 [POLL ${pollAttempts}/${maxPollAttempts}] Starting status check for booking:`,
         bookingData.bookingId

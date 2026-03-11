@@ -28,12 +28,13 @@ export async function GET(req: Request) {
     const limit = parseInt(searchParams.get('limit') || '20', 10);
     const offset = (page - 1) * limit;
 
-    // Get total count for pagination
+    // Get total count for pagination with explicit filter (defense in depth)
     const { count } = await supabase
       .from('client_bookings_list_v2')
-      .select('*', { count: 'exact', head: true });
+      .select('*', { count: 'exact', head: true })
+      .eq('auth_user_id', session.user.id);
 
-    // Query enhanced view with RLS protection (auth filtering handled by RLS)
+    // Query enhanced view with RLS protection + explicit filter (defense in depth)
     const { data: bookings, error: bookingsError } = await supabase
       .from('client_bookings_list_v2')
       .select(
@@ -48,10 +49,12 @@ export async function GET(req: Request) {
         dropoff_address,
         scheduled_at,
         vehicle_category_id,
+        vehicle_model_id,
         amount_pence,
         payment_status
       `
       )
+      .eq('auth_user_id', session.user.id) // Explicit filter - defense in depth
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -62,22 +65,49 @@ export async function GET(req: Request) {
       );
     }
 
-    // Map vehicle categories to friendly names
-    const getVehicleName = (category: string) => {
-      switch (category) {
-        case 'luxury':
-          return 'Luxury (S-Class)';
-        case 'business':
-          return 'Business (E-Class)';
-        case 'economy':
-          return 'Economy';
-        case 'suv':
-          return 'SUV';
-        case 'mpv':
-          return 'MPV';
-        default:
-          return category;
+    // Map vehicle model_id or category to friendly names
+    const getVehicleName = (modelId?: string | null, category?: string | null) => {
+      // Prefer specific model name if available
+      if (modelId) {
+        switch (modelId) {
+          case 'bmw-5-series':
+            return 'BMW 5 Series';
+          case 'mercedes-e-class':
+            return 'Mercedes E-Class';
+          case 'bmw-7-series':
+            return 'BMW 7 Series';
+          case 'mercedes-s-class':
+            return 'Mercedes S-Class';
+          case 'mercedes-v-class':
+            return 'Mercedes V-Class';
+          case 'range-rover':
+            return 'Range Rover';
+          default:
+            // If model_id exists but not recognized, use it as-is
+            return modelId
+              .split('-')
+              .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+              .join(' ');
+        }
       }
+
+      // Fallback to category-based names
+      if (category) {
+        switch (category) {
+          case 'executive':
+            return 'Executive';
+          case 'luxury':
+            return 'Luxury';
+          case 'suv':
+            return 'SUV';
+          case 'mpv':
+            return 'MPV';
+          default:
+            return category;
+        }
+      }
+
+      return 'Vehicle';
     };
 
     // Transform response with proper formatting
@@ -89,9 +119,7 @@ export async function GET(req: Request) {
       pickup: booking.pickup_address,
       dropoff: booking.dropoff_address,
       scheduled_at: booking.scheduled_at,
-      vehicle: booking.vehicle_category_id
-        ? getVehicleName(booking.vehicle_category_id)
-        : 'Vehicle',
+      vehicle: getVehicleName(booking.vehicle_model_id, booking.vehicle_category_id),
       amount: booking.amount_pence ? Number(booking.amount_pence) / 100 : 0,
       currency: booking.currency,
       payment_status: booking.payment_status,

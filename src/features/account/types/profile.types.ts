@@ -21,70 +21,31 @@ export interface Customer {
   readonly id: string;
   readonly auth_user_id: string;
   readonly email: string;
+  readonly first_name: string;
+  readonly last_name: string;
   readonly phone: string | null;
-  readonly status: string;
-  readonly customer_type: string;
+  readonly profile_photo_url: string | null;
+  readonly saved_address: Record<string, unknown> | null;
+  readonly is_active: boolean;
+  readonly organization_id: string | null;
   readonly created_at: string;
   readonly updated_at: string;
-}
-
-export interface CustomerAddress {
-  readonly id: string;
-  readonly label: string;
-  readonly address_line_1: string;
-  readonly address_line_2: string | null;
-  readonly city: string;
-  readonly county: string | null;
-  readonly postcode: string;
-  readonly country: string;
-  readonly is_default: boolean;
-  readonly type: 'home' | 'work' | 'other';
-}
-
-export interface EmergencyContact {
-  readonly id: string;
-  readonly name: string;
-  readonly relationship: string;
-  readonly phone: string;
-  readonly email: string | null;
-  readonly is_primary: boolean;
-}
-
-export interface CustomerMetadata {
-  readonly id: string;
-  readonly customer_id: string;
-  readonly name: string | null;
-  readonly avatar_url: string | null;
-  readonly date_of_birth: string | null;
-  readonly addresses: CustomerAddress[];
-  readonly emergency_contacts: EmergencyContact[];
-  readonly medical_info: Record<string, unknown> | null;
-  readonly loyalty_tier: string | null;
-  readonly member_since: string | null;
-  readonly total_rides: number;
-  readonly total_spent: number;
-  readonly created_at: string;
-  readonly updated_at: string;
+  readonly deleted_at: string | null;
 }
 
 export interface CustomerPreferences {
-  readonly id: string;
-  readonly customer_id: string;
-  readonly preferred_language: string;
-  readonly notification_settings: Record<string, unknown>;
-  readonly ride_preferences: Record<string, unknown>;
-  readonly accessibility_needs: Record<string, unknown>;
-  readonly two_factor_enabled: boolean;
-  readonly login_notifications: boolean;
-  readonly created_at: string;
-  readonly updated_at: string;
+  readonly temperature_preference: string | null;
+  readonly music_preference: string | null;
+  readonly communication_style: string | null;
+  readonly pet_friendly_default: boolean | null;
+  readonly created_at: string | null;
+  readonly updated_at: string | null;
 }
 
 export interface ProfileData {
   readonly auth_user: AuthUser;
-  readonly customer: Customer;
-  readonly metadata: CustomerMetadata;
-  readonly preferences: CustomerPreferences;
+  readonly customer: Customer | null;
+  readonly preferences: CustomerPreferences | null;
 }
 
 export interface ProfileFormData {

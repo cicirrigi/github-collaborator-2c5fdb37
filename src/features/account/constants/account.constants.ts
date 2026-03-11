@@ -21,7 +21,7 @@ export const ACCOUNT_ROUTES = {
 
 export const ACCOUNT_NAVIGATION: readonly AccountSection[] = [
   {
-    title: 'My Account',
+    title: 'Personal',
     items: [
       {
         id: 'dashboard',
@@ -159,4 +159,11 @@ export const VALIDATION_RULES = {
     LABEL_MAX_LENGTH: 30,
     MAX_ADDRESSES: 10,
   },
+} as const;
+
+export const SIDEBAR_CONFIG = {
+  WIDTH_EXPANDED: 280,
+  WIDTH_COLLAPSED: 80,
+  BREAKPOINT_MOBILE: 768,
+  TRANSITION_DURATION: 300,
 } as const;

@@ -13,8 +13,6 @@ import { useCallback, useEffect, useState } from 'react';
 import type { ProfileData, ProfileFormData, ProfileUpdateData } from '../types/profile.types';
 import { formatPhoneToE164 } from '../utils/phoneUtils';
 
-const supabase = createClient();
-
 interface UseProfileReturn {
   readonly profileData: ProfileFormData | null;
   readonly fullProfileData: ProfileData | null;
@@ -43,16 +41,12 @@ export function useProfile(): UseProfileReturn {
         throw new Error('User not authenticated');
       }
 
-      // OPTIMIZED: Single query with JOIN to get customer + metadata + preferences
-      const { data: combinedData, error: fetchError } = await supabase
-        .from('customers')
-        .select(
-          `
-          *,
-          customer_metadata(*),
-          customer_preferences(*)
-        `
-        )
+      const supabase = createClient();
+
+      // Fetch from customer_profiles_v1 view (consistent with bookings_v1 architecture)
+      const { data: profileView, error: fetchError } = await supabase
+        .from('customer_profiles_v1')
+        .select('*')
         .eq('auth_user_id', authUser.id)
         .single();
 
@@ -60,32 +54,51 @@ export function useProfile(): UseProfileReturn {
         throw new Error(`Failed to fetch profile: ${fetchError.message}`);
       }
 
-      // Extract data from combined result
-      const customerData = combinedData;
-      const metadataData = combinedData?.customer_metadata?.[0] || null;
-      const preferencesData = combinedData?.customer_preferences?.[0] || null;
+      // Extract data from view result (matches real schema structure)
+      const customerData = profileView
+        ? {
+            id: profileView.customer_id,
+            auth_user_id: profileView.auth_user_id,
+            email: profileView.email,
+            first_name: profileView.first_name,
+            last_name: profileView.last_name,
+            phone: profileView.phone,
+            date_of_birth: profileView.date_of_birth,
+            profile_photo_url: profileView.profile_photo_url,
+            saved_address: profileView.saved_address,
+            is_active: profileView.is_active,
+            organization_id: profileView.organization_id,
+            created_at: profileView.customer_created_at,
+            updated_at: profileView.customer_updated_at,
+            deleted_at: profileView.customer_deleted_at,
+          }
+        : null;
+
+      const preferencesData = profileView
+        ? {
+            temperature_preference: profileView.temperature_preference,
+            music_preference: profileView.music_preference,
+            communication_style: profileView.communication_style,
+            pet_friendly_default: profileView.pet_friendly_default,
+            created_at: profileView.preferences_created_at,
+            updated_at: profileView.preferences_updated_at,
+          }
+        : null;
 
       // Construct profile form data
-      const userData = authUser.user_metadata || authUser.raw_user_meta_data || {};
-      const rawPhone =
-        ((userData as Record<string, unknown>).phone as string) ||
-        authUser.phone ||
-        customerData?.phone ||
-        '';
       const formData: ProfileFormData = {
-        first_name: ((userData as Record<string, unknown>).first_name as string) || '',
-        last_name: ((userData as Record<string, unknown>).last_name as string) || '',
-        email: authUser.email || '',
-        phone: formatPhoneToE164(rawPhone),
-        date_of_birth: metadataData?.date_of_birth || '',
-        avatar_url: metadataData?.avatar_url || null,
+        first_name: customerData?.first_name || '',
+        last_name: customerData?.last_name || '',
+        email: customerData?.email || authUser.email || '',
+        phone: formatPhoneToE164(customerData?.phone || ''),
+        date_of_birth: customerData?.date_of_birth || '',
+        avatar_url: customerData?.profile_photo_url || null,
       };
 
       // Construct full profile data
       const fullData: ProfileData = {
         auth_user: authUser,
         customer: customerData,
-        metadata: metadataData,
         preferences: preferencesData,
       };
 
@@ -109,62 +122,71 @@ export function useProfile(): UseProfileReturn {
           throw new Error('User not authenticated');
         }
 
-        // Get or create customer record
-        const customerResult = await supabase
+        const supabase = createClient();
+
+        // Build update payload for customers table (real schema columns)
+        const customerPayload: Record<string, unknown> = {
+          updated_at: new Date().toISOString(),
+        };
+
+        if (updateData.first_name !== undefined) {
+          customerPayload.first_name = updateData.first_name;
+        }
+        if (updateData.last_name !== undefined) {
+          customerPayload.last_name = updateData.last_name;
+        }
+        if (updateData.phone !== undefined) {
+          customerPayload.phone = updateData.phone;
+        }
+        if (updateData.date_of_birth !== undefined) {
+          customerPayload.date_of_birth = updateData.date_of_birth || null;
+        }
+        if (updateData.avatar_url !== undefined) {
+          // Map avatar_url from form to profile_photo_url in DB
+          customerPayload.profile_photo_url = updateData.avatar_url;
+        }
+
+        // Update directly in customers table - no SELECT to avoid triggering complex SELECT policies
+        // Relies on simple customers_update_own policy: auth_user_id = auth.uid()
+        const { error: updateError } = await supabase
           .from('customers')
-          .select('*')
-          .eq('auth_user_id', authUser.id)
-          .single();
+          .update(customerPayload)
+          .eq('auth_user_id', authUser.id);
 
-        let customerData = customerResult.data;
-        const customerError = customerResult.error;
-
-        if (customerError && customerError.code === 'PGRST116') {
-          // Create customer record if it doesn't exist
-          const { data: newCustomer, error: createError } = await supabase
-            .from('customers')
-            .insert([
+        if (updateError) {
+          // If customer doesn't exist, create it
+          if (updateError.code === 'PGRST116') {
+            const { error: createError } = await supabase.from('customers').insert([
               {
                 auth_user_id: authUser.id,
                 email: authUser.email || '',
-                phone: updateData.phone || authUser.phone || '',
-                status: 'active',
+                first_name: updateData.first_name || '',
+                last_name: updateData.last_name || '',
+                phone: updateData.phone || '',
+                profile_photo_url: updateData.avatar_url || null,
               },
-            ])
-            .select()
-            .single();
+            ]);
 
-          if (createError) {
-            throw new Error(`Failed to create customer: ${createError.message}`);
-          }
-          customerData = newCustomer;
-        } else if (customerError) {
-          throw new Error(`Failed to fetch customer: ${customerError.message}`);
-        }
-
-        // Update phone in customer table if provided (store E.164 format)
-        if (updateData.phone && customerData) {
-          const { error: updateCustomerError } = await supabase
-            .from('customers')
-            .update({ phone: updateData.phone })
-            .eq('id', customerData.id);
-
-          if (updateCustomerError) {
-            throw new Error(`Failed to update customer phone: ${updateCustomerError.message}`);
+            if (createError) {
+              throw new Error(`Failed to create customer: ${createError.message}`);
+            }
+          } else {
+            throw new Error(`Failed to update customer: ${updateError.message}`);
           }
         }
 
-        // Update auth.users metadata with first_name, last_name, and phone
+        // Update auth.users metadata for consistency
         if (updateData.first_name || updateData.last_name || updateData.phone) {
           const currentMetadata = authUser.raw_user_meta_data || {};
           const updatedMetadata = {
             ...currentMetadata,
-            ...(updateData.first_name && { first_name: updateData.first_name }),
-            ...(updateData.last_name && { last_name: updateData.last_name }),
-            ...(updateData.phone && { phone: updateData.phone }),
+            ...(updateData.first_name !== undefined && { first_name: updateData.first_name }),
+            ...(updateData.last_name !== undefined && { last_name: updateData.last_name }),
+            ...(updateData.phone !== undefined && { phone: updateData.phone }),
           };
 
-          const { error: authMetadataError } = await supabase.auth.updateUser({
+          const supabaseAuth = createClient();
+          const { error: authMetadataError } = await supabaseAuth.auth.updateUser({
             data: updatedMetadata,
           });
 
@@ -173,31 +195,7 @@ export function useProfile(): UseProfileReturn {
           }
         }
 
-        // Upsert customer metadata
-        if (customerData) {
-          const metadataUpdate = {
-            customer_id: customerData.id,
-            ...(updateData.date_of_birth && { date_of_birth: updateData.date_of_birth }),
-            ...(updateData.avatar_url !== undefined && { avatar_url: updateData.avatar_url }),
-            updated_at: new Date().toISOString(),
-          };
-
-          const { error: metadataError } = await supabase
-            .from('customer_metadata')
-            .upsert(metadataUpdate, {
-              onConflict: 'customer_id',
-              ignoreDuplicates: false,
-            });
-
-          if (metadataError) {
-            throw new Error(`Failed to update metadata: ${metadataError.message}`);
-          }
-        }
-
-        // Skip auth.users phone update to avoid E.164 format requirement
-        // Phone is already stored in customers.phone and raw_user_meta_data.phone
-
-        // Refetch updated data
+        // Refetch updated data from view
         await fetchProfile();
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to update profile';
@@ -215,6 +213,8 @@ export function useProfile(): UseProfileReturn {
         if (!authUser) {
           throw new Error('User not authenticated');
         }
+
+        const supabase = createClient();
 
         // Upload to Supabase Storage
         const fileExt = file.name.split('.').pop();

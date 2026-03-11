@@ -3,7 +3,7 @@
  */
 
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
         // eslint-disable-next-line no-console
         console.log('[auth/callback] success for user:', data.user.email);
       }
-      return NextResponse.redirect(`${origin}/dashboard`);
+      return NextResponse.redirect(`${origin}/account/profile`);
     }
 
     return NextResponse.redirect(`${origin}/auth/signin?error=no_user`);

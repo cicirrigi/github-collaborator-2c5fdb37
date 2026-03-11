@@ -5,8 +5,8 @@
  * Respectă pattern-urile proiectului cu error handling complet
  */
 
-import type { SignInFormData, SignUpFormData, AuthResponse } from '../../types/auth.types';
-import { getSupabaseClient, getRedirectOrigin } from './utils';
+import type { AuthResponse, SignInFormData, SignUpFormData } from '../../types/auth.types';
+import { getRedirectOrigin, getSupabaseClient } from './utils';
 
 /**
  * 🔑 Sign In cu email și password
@@ -74,7 +74,17 @@ export async function signUpWithEmail(data: SignUpFormData): Promise<AuthRespons
       return { user: null, error };
     }
 
-    return { user: authData.user, error: null };
+    // Check if user already existed (email enumeration protection by Supabase)
+    // When email exists: user is returned but identities array is empty
+    const isExistingUser =
+      authData.user && (!authData.user.identities || authData.user.identities.length === 0);
+
+    return {
+      user: authData.user,
+      error: null,
+      // Pass metadata to differentiate existing vs new user
+      metadata: { isExistingUser },
+    };
   } catch (error) {
     console.error('[signUpWithEmail] Unexpected error:', error);
     return {

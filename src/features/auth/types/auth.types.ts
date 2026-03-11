@@ -98,6 +98,7 @@ export interface SocialAuthButtonsProps {
 export interface AuthResponse {
   readonly user: SupabaseUser | null;
   readonly error: Error | null;
+  readonly metadata?: { isExistingUser?: boolean };
 }
 
 /**
