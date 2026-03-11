@@ -64,8 +64,8 @@ export async function POST(req: Request) {
     try {
       const result = await createCustomerWithOrganization(user.id, {
         email: user.email ?? 'unknown@example.com',
-        first_name: 'Guest',
-        last_name: '',
+        first_name: user.user_metadata?.first_name || 'Guest',
+        last_name: user.user_metadata?.last_name || '',
       });
       customer = result.customer;
       organizationId = result.organizationId;
