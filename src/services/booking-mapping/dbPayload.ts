@@ -1,3 +1,4 @@
+import type { BillingSnapshot } from '../../types/billing/billing.types';
 import { BookingStatus, LegKind, LegStatus } from './dbEnums';
 import type { TripConfiguration } from './types';
 
@@ -32,16 +33,26 @@ function toIso(value: Date | string | null | undefined): string | null {
  * bookings table columns:
  * customer_id, organization_id, booking_type, fleet_mode, status, currency, source,
  * start_at, end_at, hours_requested, days_requested, passenger_count, bag_count,
- * custom_requirements, billing_entity_id, trip_configuration_raw
+ * custom_requirements, billing_entity_id, billing_snapshot, trip_configuration_raw
  */
 export function buildBookingPayload(params: {
   customerId: string;
   organizationId?: string; // Optional for backward compatibility
   bookingType: BookingType;
   tripConfiguration: TripConfiguration;
+  billingEntityId?: string | null;
+  billingSnapshot?: BillingSnapshot | null;
   currency?: string;
 }) {
-  const { customerId, organizationId, bookingType, tripConfiguration, currency } = params;
+  const {
+    customerId,
+    organizationId,
+    bookingType,
+    tripConfiguration,
+    billingEntityId,
+    billingSnapshot,
+    currency,
+  } = params;
 
   // Fleet mode mapping for proper DB storage
   const fleetMode = tripConfiguration.fleetSelection?.fleetMode; // 'standard' | 'hourly' | 'daily'
@@ -82,7 +93,8 @@ export function buildBookingPayload(params: {
     bag_count: tripConfiguration.luggage ?? null,
 
     custom_requirements: tripConfiguration.customRequirements ?? null,
-    billing_entity_id: null,
+    billing_entity_id: billingEntityId ?? null,
+    billing_snapshot: billingSnapshot ?? null,
 
     trip_configuration_raw: tripConfiguration, // NOT NULL
   };
