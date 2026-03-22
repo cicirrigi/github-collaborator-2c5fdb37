@@ -1,0 +1,112 @@
+/**
+ * 🚗 ONE-WAY Booking Mapper - NON-DEPRECATED
+ *
+ * This file satisfies imports from `booking.service.ts`.
+ */
+
+import { createBaseBookingRecord, safeToISOString } from '../base-mapping';
+import type { BookingRecord, TripConfiguration } from '../types';
+
+/**
+ * Maps TripConfiguration to BookingRecord for ONE-WAY bookings
+ */
+export const mapOnewayBooking = (
+  tripConfig: TripConfiguration,
+  customerId: string
+): BookingRecord => {
+  return createBaseBookingRecord(tripConfig, 'oneway', customerId);
+};
+
+/**
+ * Maps TripConfiguration to BookingLegRecord[] for ONE-WAY journey.
+ * Uses the data model expected by `create_booking_with_legs()` RPC.
+ */
+export const mapOnewayLegs = (bookingId: string, tripConfig: TripConfiguration): any[] => {
+  const legs: any[] = [];
+
+  if (!tripConfig.selectedVehicle?.category?.id) {
+    throw new Error('vehicle category is required for booking legs');
+  }
+  if (!tripConfig.pickup?.address) {
+    throw new Error('pickup address is required for booking legs');
+  }
+  if (!tripConfig.pickupDateTime) {
+    throw new Error('pickup datetime is required for booking legs');
+  }
+
+  // Handle journey with additional stops
+  if (tripConfig.additionalStops && tripConfig.additionalStops.length > 0) {
+    // First leg: pickup → first stop
+    legs.push({
+      parent_booking_id: bookingId,
+      leg_number: 1,
+      leg_type: 'main',
+      status: 'pending',
+      pickup_location: tripConfig.pickup.address,
+      destination: tripConfig.additionalStops[0]?.address || null,
+      pickup_lat: tripConfig.pickup.coordinates?.[1] || null,
+      pickup_lng: tripConfig.pickup.coordinates?.[0] || null,
+      destination_lat: tripConfig.additionalStops[0]?.coordinates?.[1] || null,
+      destination_lng: tripConfig.additionalStops[0]?.coordinates?.[0] || null,
+      scheduled_at: safeToISOString(tripConfig.pickupDateTime),
+      vehicle_category: tripConfig.selectedVehicle.category.id,
+      vehicle_model: tripConfig.selectedVehicle.model?.name || null,
+    });
+
+    // Middle legs: stop to stop
+    for (let i = 1; i < tripConfig.additionalStops.length; i++) {
+      legs.push({
+        parent_booking_id: bookingId,
+        leg_number: i + 1,
+        leg_type: 'main',
+        status: 'pending',
+        pickup_location: tripConfig.additionalStops[i - 1]?.address || '',
+        destination: tripConfig.additionalStops[i]?.address || null,
+        pickup_lat: tripConfig.additionalStops[i - 1]?.coordinates?.[1] || null,
+        pickup_lng: tripConfig.additionalStops[i - 1]?.coordinates?.[0] || null,
+        destination_lat: tripConfig.additionalStops[i]?.coordinates?.[1] || null,
+        destination_lng: tripConfig.additionalStops[i]?.coordinates?.[0] || null,
+        scheduled_at: safeToISOString(tripConfig.pickupDateTime),
+        vehicle_category: tripConfig.selectedVehicle.category.id,
+        vehicle_model: tripConfig.selectedVehicle.model?.name || null,
+      });
+    }
+
+    // Final leg: last stop → dropoff
+    const lastStop = tripConfig.additionalStops[tripConfig.additionalStops.length - 1];
+    legs.push({
+      parent_booking_id: bookingId,
+      leg_number: tripConfig.additionalStops.length + 1,
+      leg_type: 'main',
+      status: 'pending',
+      pickup_location: lastStop?.address || '',
+      destination: tripConfig.dropoff?.address || null,
+      pickup_lat: lastStop?.coordinates?.[1] || null,
+      pickup_lng: lastStop?.coordinates?.[0] || null,
+      destination_lat: tripConfig.dropoff?.coordinates?.[1] || null,
+      destination_lng: tripConfig.dropoff?.coordinates?.[0] || null,
+      scheduled_at: safeToISOString(tripConfig.pickupDateTime),
+      vehicle_category: tripConfig.selectedVehicle.category.id,
+      vehicle_model: tripConfig.selectedVehicle.model?.name || null,
+    });
+  } else {
+    // Simple oneway: pickup → dropoff (no stops)
+    legs.push({
+      parent_booking_id: bookingId,
+      leg_number: 1,
+      leg_type: 'main',
+      status: 'pending',
+      pickup_location: tripConfig.pickup.address,
+      destination: tripConfig.dropoff?.address || null,
+      pickup_lat: tripConfig.pickup.coordinates?.[1] || null,
+      pickup_lng: tripConfig.pickup.coordinates?.[0] || null,
+      destination_lat: tripConfig.dropoff?.coordinates?.[1] || null,
+      destination_lng: tripConfig.dropoff?.coordinates?.[0] || null,
+      scheduled_at: safeToISOString(tripConfig.pickupDateTime),
+      vehicle_category: tripConfig.selectedVehicle.category.id,
+      vehicle_model: tripConfig.selectedVehicle.model?.name || null,
+    });
+  }
+
+  return legs;
+};

@@ -255,6 +255,19 @@ export async function POST(req: Request) {
 
     if (tripConfiguration.servicePackages && vehicleCategoryCode) {
       try {
+        // Query leg #1 for client_leg_quotes.booking_leg_id (NOT NULL constraint)
+        const { data: leg1, error: legErr } = await supabaseAdmin
+          .from('booking_legs')
+          .select('id')
+          .eq('booking_id', bookingId)
+          .eq('leg_number', 1)
+          .maybeSingle();
+
+        if (legErr || !leg1?.id) {
+          console.error('[BOOKING_CREATE] Failed to load leg #1 for quotes:', legErr);
+          throw new Error(`Leg #1 not found: ${legErr?.message || 'unknown'}`);
+        }
+
         const resolved = resolveBookingServices({
           servicePackages: tripConfiguration.servicePackages,
           vehicleCategoryCode,
@@ -283,7 +296,8 @@ export async function POST(req: Request) {
 
           await supabaseAdmin.from('client_leg_quotes').insert({
             booking_id: bookingId,
-            booking_leg_id: null, // TEMP – next step: bind per leg
+            booking_leg_id: leg1.id,
+            organization_id: organizationId,
             version: 1,
             currency: 'GBP',
             subtotal_pence: servicesSubtotal,
