@@ -6,12 +6,7 @@
  */
 
 import { ProfileContent } from '@/features/account/components/profile/ProfileContent';
-import { AccountLayout } from '@/features/account/components/shared/AccountLayout';
 
 export default function ProfilePage() {
-  return (
-    <AccountLayout>
-      <ProfileContent />
-    </AccountLayout>
-  );
+  return <ProfileContent />;
 }

@@ -20,7 +20,7 @@ export interface ServiceCatalogItem {
 
 // 🎯 MASTER SERVICE CATALOG
 export const SERVICE_CATALOG: ServiceCatalogItem[] = [
-  // A. INCLUDED SERVICES (ALL CLASSES) - 8 services
+  // A. INCLUDED SERVICES (ALL CLASSES) - 9 services
   {
     code: 'meet-greet',
     label: 'Greeting',
@@ -74,6 +74,13 @@ export const SERVICE_CATALOG: ServiceCatalogItem[] = [
     code: 'extra-stops',
     label: 'Extra Stops',
     description: 'Short stops on-route within reasonable time',
+    type: 'included',
+    pricing: { type: 'none' },
+  },
+  {
+    code: 'priority-support',
+    label: 'Priority Support',
+    description: '24/7 priority customer service',
     type: 'included',
     pricing: { type: 'none' },
   },

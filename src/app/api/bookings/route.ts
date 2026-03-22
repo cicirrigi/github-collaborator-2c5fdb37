@@ -2,6 +2,8 @@ import { resolveBookingServices } from '@/domain/services/resolveBookingServices
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { buildBookingPayload, buildLegsPayload } from '@/services/booking-mapping/dbPayload';
 import { buildQuoteLineItems, calculateQuoteTotal } from '@/services/pricing/serviceItems';
+import type { BillingSnapshot } from '@/types/billing/billing.types';
+import { fetchBillingForBooking } from '@/utils/booking/billing-helper';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -12,6 +14,7 @@ export const runtime = 'nodejs';
 const createBookingSchema = z.object({
   tripConfiguration: z.any(),
   bookingType: z.enum(['oneway', 'return', 'hourly', 'daily', 'fleet', 'bespoke']),
+  billingEntityId: z.string().uuid().optional().nullable(), // Explicit billing ID from UI
   pricingSnapshot: z
     .object({
       finalPricePence: z.number().int().nonnegative(),
@@ -50,6 +53,7 @@ export async function POST(req: Request) {
     }
 
     const { tripConfiguration, bookingType, pricingSnapshot } = parsed.data;
+    const requestedBillingEntityId = parsed.data.billingEntityId; // Rename to avoid redeclaration
 
     const supabaseAdmin = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -64,8 +68,8 @@ export async function POST(req: Request) {
     try {
       const result = await createCustomerWithOrganization(user.id, {
         email: user.email ?? 'unknown@example.com',
-        first_name: 'Guest',
-        last_name: '',
+        first_name: user.user_metadata?.first_name || 'Guest',
+        last_name: user.user_metadata?.last_name || '',
       });
       customer = result.customer;
       organizationId = result.organizationId;
@@ -77,11 +81,52 @@ export async function POST(req: Request) {
       );
     }
 
+    // 5️⃣ Fetch billing profile (explicit or fallback to default)
+
+    let finalBillingEntityId: string | null = null;
+    let finalBillingSnapshot: BillingSnapshot | null = null;
+
+    try {
+      const selectedBilling = await fetchBillingForBooking(
+        supabaseAdmin,
+        customer.id,
+        organizationId,
+        requestedBillingEntityId
+      );
+      finalBillingEntityId = selectedBilling.billingEntityId;
+      finalBillingSnapshot = selectedBilling.billingSnapshot;
+    } catch (billingErr) {
+      const errorMessage = billingErr instanceof Error ? billingErr.message : String(billingErr);
+
+      // If explicit billing ID was provided but is invalid, fail the booking (400)
+      if (requestedBillingEntityId) {
+        return NextResponse.json(
+          { error: 'Invalid billing profile', debug: errorMessage },
+          { status: 400 }
+        );
+      }
+
+      // If no explicit ID, check if it's a real infrastructure error vs just "no default"
+      if (errorMessage.includes('Failed to fetch')) {
+        // Real infrastructure error - return 500
+        console.error('[BOOKING_CREATE] Billing infrastructure error:', errorMessage);
+        return NextResponse.json(
+          { error: 'Billing service error', debug: errorMessage },
+          { status: 500 }
+        );
+      }
+
+      // Otherwise it's just "no default profile" - continue without billing
+      console.warn('[BOOKING_CREATE] No default billing profile, continuing without billing');
+    }
+
     const p_booking = buildBookingPayload({
       customerId: customer.id,
-      organizationId: organizationId, // ✅ USAR ORGANIZATION_ID REAL
+      organizationId: organizationId,
       bookingType,
       tripConfiguration,
+      billingEntityId: finalBillingEntityId,
+      billingSnapshot: finalBillingSnapshot,
       currency: pricingSnapshot?.currency ?? 'GBP',
     });
 
@@ -210,6 +255,19 @@ export async function POST(req: Request) {
 
     if (tripConfiguration.servicePackages && vehicleCategoryCode) {
       try {
+        // Query leg #1 for client_leg_quotes.booking_leg_id (NOT NULL constraint)
+        const { data: leg1, error: legErr } = await supabaseAdmin
+          .from('booking_legs')
+          .select('id')
+          .eq('booking_id', bookingId)
+          .eq('leg_number', 1)
+          .maybeSingle();
+
+        if (legErr || !leg1?.id) {
+          console.error('[BOOKING_CREATE] Failed to load leg #1 for quotes:', legErr);
+          throw new Error(`Leg #1 not found: ${legErr?.message || 'unknown'}`);
+        }
+
         const resolved = resolveBookingServices({
           servicePackages: tripConfiguration.servicePackages,
           vehicleCategoryCode,
@@ -238,7 +296,8 @@ export async function POST(req: Request) {
 
           await supabaseAdmin.from('client_leg_quotes').insert({
             booking_id: bookingId,
-            booking_leg_id: null, // TEMP – next step: bind per leg
+            booking_leg_id: leg1.id,
+            organization_id: organizationId,
             version: 1,
             currency: 'GBP',
             subtotal_pence: servicesSubtotal,
@@ -281,8 +340,8 @@ export async function POST(req: Request) {
   }
 }
 
-// GET handler - Keep existing functionality
-export async function GET(req: Request) {
+// GET handler - Multi-tenant safe
+export async function GET(_req: Request) {
   try {
     const supabase = await createSupabaseServerClient();
     const {
@@ -302,30 +361,33 @@ export async function GET(req: Request) {
       { auth: { persistSession: false } }
     );
 
-    // Find customer
-    const { data: customerData, error: customerError } = await supabaseAdmin
-      .from('customers')
-      .select('id')
-      .eq('auth_user_id', user.id)
-      .single();
+    // Resolve customer and organization context (multi-tenant safe)
+    const { customer, organizationId } = await createCustomerWithOrganization(user.id, {
+      email: user.email || '',
+      first_name: user.user_metadata?.first_name,
+      last_name: user.user_metadata?.last_name,
+    });
 
-    if (customerError || !customerData) {
+    if (!customer?.id || !organizationId) {
       return NextResponse.json({ bookings: [] });
     }
 
-    // Get bookings with corrected schema
+    // Get bookings filtered by BOTH customer_id AND organization_id (multi-tenant defense)
     const { data: bookings, error: bookingsError } = await supabaseAdmin
       .from('bookings')
       .select(
         `
         id,
         reference,
-        currency,
+        customer_id,
+        organization_id,
         status,
+        booking_type,
         created_at
       `
       )
-      .eq('customer_id', customerData.id)
+      .eq('customer_id', customer.id)
+      .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
 
     if (bookingsError) {

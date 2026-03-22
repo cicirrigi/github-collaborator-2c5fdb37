@@ -26,41 +26,48 @@ export async function resolveUserOrganization(authUserId: string): Promise<strin
       .eq('user_id', authUserId)
       .order('created_at', { ascending: true })
       .limit(1)
-      .single();
+      .maybeSingle(); // ✅ Returns null if no membership, no error
 
-    if (!membershipErr && membership) {
+    if (membershipErr) {
+      console.error('[resolveUserOrganization] Membership lookup failed:', membershipErr);
+      throw membershipErr;
+    }
+
+    if (membership) {
       console.log('[resolveUserOrganization] User has org membership:', membership.organization_id);
       return membership.organization_id;
     }
 
-    // 2) Fallback to default Vantage Lane organization
+    // 2) Fallback to default organization (is_default = true)
     const { data: defaultOrg, error: orgErr } = await supabaseAdmin
       .from('organizations')
       .select('id')
-      .eq('name', 'Vantage Lane')
-      .eq('org_type', 'platform_owner')
+      .eq('is_default', true)
       .single();
 
     if (orgErr || !defaultOrg) {
       console.error('[resolveUserOrganization] Failed to get default org:', orgErr);
-      // Hardcoded fallback to known Vantage Lane ID
-      return '9a5caade-4791-4860-93b5-12b1c4fa9830';
+      throw new Error(
+        'No default organization found. Cannot proceed without organization assignment.'
+      );
     }
 
     console.log('[resolveUserOrganization] Using default org:', defaultOrg.id);
     return defaultOrg.id;
   } catch (error) {
     console.error('[resolveUserOrganization] Unexpected error:', error);
-    // Always fallback to default Vantage Lane
-    return '9a5caade-4791-4860-93b5-12b1c4fa9830';
+    throw error; // Re-throw instead of returning hardcoded fallback
   }
 }
 
 /**
- * 🔧 Create customer with proper organization assignment
+ * 🔧 Find or create customer with proper organization assignment
+ *
+ * Uses FIND-OR-CREATE pattern instead of UPSERT to avoid overwriting
+ * profile data (first_name, last_name) on every booking.
  *
  * @param authUserId - Supabase auth user ID
- * @param userData - User data from auth
+ * @param userData - User data from auth (only used for initial creation)
  * @returns customer record with organization_id
  */
 export async function createCustomerWithOrganization(
@@ -73,28 +80,77 @@ export async function createCustomerWithOrganization(
 ) {
   const organizationId = await resolveUserOrganization(authUserId);
 
-  const { data: customer, error: customerErr } = await supabaseAdmin
+  // 1️⃣ FIND: Try to get existing customer
+  const { data: existingCustomer, error: findErr } = await supabaseAdmin
     .from('customers')
-    .upsert(
-      {
-        auth_user_id: authUserId,
-        organization_id: organizationId, // ✅ PROPER ORG ASSIGNMENT
-        email: userData.email,
-        first_name: userData.first_name || 'Guest',
-        last_name: userData.last_name || '',
-        is_active: true,
-      },
-      {
-        onConflict: 'organization_id,auth_user_id', // ✅ CORRECT CONSTRAINT
-      }
-    )
+    .select('id, organization_id')
+    .eq('auth_user_id', authUserId)
+    .eq('organization_id', organizationId)
+    .maybeSingle(); // ✅ Returns null if not found, no error
+
+  // Handle real errors (not "not found")
+  if (findErr) {
+    console.error('[createCustomerWithOrganization] Find failed:', findErr);
+    throw new Error(`Failed to find customer: ${findErr.message}`);
+  }
+
+  // 2️⃣ If customer exists, return it WITHOUT modifying profile data
+  if (existingCustomer) {
+    console.log('[createCustomerWithOrganization] Found existing customer:', existingCustomer.id);
+    return { customer: existingCustomer, organizationId };
+  }
+
+  // 3️⃣ CREATE: Customer doesn't exist, insert new one
+  console.log('[createCustomerWithOrganization] Creating new customer for user:', authUserId);
+
+  // Clean and validate input data
+  const cleanEmail = userData.email.trim().toLowerCase();
+  const cleanFirstName = userData.first_name?.trim() || '';
+  const cleanLastName = userData.last_name?.trim() || '';
+
+  const { data: newCustomer, error: insertErr } = await supabaseAdmin
+    .from('customers')
+    .insert({
+      auth_user_id: authUserId,
+      organization_id: organizationId,
+      email: cleanEmail,
+      first_name: cleanFirstName || 'Guest',
+      last_name: cleanLastName,
+      is_active: true,
+    })
     .select('id, organization_id')
     .single();
 
-  if (customerErr) {
-    console.error('[createCustomerWithOrganization] Failed:', customerErr);
-    throw new Error(`Failed to create/update customer: ${customerErr.message}`);
+  if (insertErr) {
+    // 🔒 Race condition handling: If unique constraint violated (another request created customer)
+    // re-fetch the customer instead of failing
+    if (insertErr.code === '23505') {
+      // Postgres unique_violation error code
+      console.log('[createCustomerWithOrganization] Unique constraint hit, re-fetching customer');
+      const { data: racedCustomer, error: refetchErr } = await supabaseAdmin
+        .from('customers')
+        .select('id, organization_id')
+        .eq('auth_user_id', authUserId)
+        .eq('organization_id', organizationId)
+        .single();
+
+      if (refetchErr || !racedCustomer) {
+        console.error('[createCustomerWithOrganization] Re-fetch after race failed:', refetchErr);
+        throw new Error(
+          `Failed to create or retrieve customer: ${refetchErr?.message || 'Unknown error'}`
+        );
+      }
+
+      console.log(
+        '[createCustomerWithOrganization] Retrieved customer created by concurrent request'
+      );
+      return { customer: racedCustomer, organizationId };
+    }
+
+    // Other errors: fail
+    console.error('[createCustomerWithOrganization] Insert failed:', insertErr);
+    throw new Error(`Failed to create customer: ${insertErr.message}`);
   }
 
-  return { customer, organizationId };
+  return { customer: newCustomer, organizationId };
 }

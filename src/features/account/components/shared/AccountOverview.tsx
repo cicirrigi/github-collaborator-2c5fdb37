@@ -7,7 +7,6 @@
 
 'use client';
 
-import { getCurrentUser } from '@/features/auth/services/supabaseAuth';
 import {
   Calendar,
   Car,
@@ -16,52 +15,51 @@ import {
   User as UserIcon,
   type LucideIcon,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { LOYALTY_TIERS } from '../../constants/account.constants';
+import { useDashboard } from '../../hooks/useDashboard';
 import type { LoyaltyTier } from '../../types/account.types';
 
-interface UserData {
-  email?: string;
-  id?: string;
-  user_metadata?: Record<string, unknown>;
-  created_at?: string;
-}
-
 export function AccountOverview() {
-  const [user, setUser] = useState<UserData | null>(null);
+  const { dashboard, loading, error } = useDashboard();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { user } = await getCurrentUser();
-        setUser(user);
-      } catch {
-        // Silently handle error
-      }
-    };
+  if (loading) {
+    return (
+      <div className='p-6'>
+        <div className='bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-8 text-center'>
+          <p className='text-neutral-600 dark:text-neutral-400'>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
-    fetchUser();
-  }, []);
+  if (error || !dashboard) {
+    return (
+      <div className='p-6'>
+        <div className='bg-red-50 dark:bg-red-900/20 rounded-lg p-6 border border-red-200 dark:border-red-800'>
+          <p className='text-red-600 dark:text-red-400'>{error || 'Failed to load dashboard'}</p>
+        </div>
+      </div>
+    );
+  }
 
-  // Mock data - va fi înlocuit cu hook-uri reale
-  const mockProfile = {
-    fullName: user?.user_metadata?.first_name
-      ? `${user.user_metadata.first_name} ${user.user_metadata.last_name || ''}`
-      : user?.email || 'User',
-    email: user?.email || '',
-    loyaltyTier: 'bronze' as LoyaltyTier,
-    totalRides: 0,
-    totalSpent: 0,
-    memberSince: user?.created_at || new Date().toISOString(),
+  const profile = {
+    fullName:
+      `${dashboard.first_name || ''} ${dashboard.last_name || ''}`.trim() || dashboard.email,
+    email: dashboard.email,
+    loyaltyTier: dashboard.loyalty_tier,
+    totalRides: dashboard.total_bookings,
+    totalSpent: dashboard.total_spent_pounds,
+    memberSince: dashboard.member_since,
+    profilePhotoUrl: dashboard.profile_photo_url,
   };
 
   return (
     <div className='p-6 space-y-8'>
       {/* Welcome Section */}
-      <WelcomeSection profile={mockProfile} />
+      <WelcomeSection profile={profile} />
 
       {/* Quick Stats */}
-      <QuickStats profile={mockProfile} />
+      <QuickStats profile={profile} />
 
       {/* Recent Activity Placeholder */}
       <RecentActivity />
@@ -76,6 +74,7 @@ interface ProfileData {
   readonly totalRides: number;
   readonly totalSpent: number;
   readonly memberSince: string;
+  readonly profilePhotoUrl: string | null;
 }
 
 interface WelcomeSectionProps {
@@ -113,8 +112,16 @@ function WelcomeSection({ profile }: WelcomeSectionProps) {
         </div>
 
         <div className='text-right'>
-          <div className='w-16 h-16 bg-amber-100 dark:bg-amber-900/40 rounded-full flex items-center justify-center'>
-            <UserIcon className='w-8 h-8 text-amber-600' />
+          <div className='w-16 h-16 bg-amber-100 dark:bg-amber-900/40 rounded-full flex items-center justify-center overflow-hidden'>
+            {profile.profilePhotoUrl ? (
+              <img
+                src={profile.profilePhotoUrl}
+                alt={profile.fullName}
+                className='w-full h-full object-cover'
+              />
+            ) : (
+              <UserIcon className='w-8 h-8 text-amber-600' />
+            )}
           </div>
         </div>
       </div>

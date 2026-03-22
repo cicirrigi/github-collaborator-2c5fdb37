@@ -2,6 +2,7 @@
 
 import { format } from 'date-fns';
 import { Banknote, Calendar, Car, CheckCircle, Hash, MapPin } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import BookingDetailsModal from './BookingDetailsModal';
 
@@ -20,6 +21,16 @@ interface Booking {
   created_at: string;
 }
 
+interface BookingHistoryListProps {
+  initialBookings?: Booking[];
+  initialPagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
 const STATUS_COLORS: Record<string, string> = {
   CONFIRMED: 'bg-green-100 text-green-800',
   PENDING_PAYMENT: 'bg-yellow-100 text-yellow-800',
@@ -36,40 +47,25 @@ const VEHICLE_LABELS: Record<string, string> = {
   mpv: 'MPV',
 };
 
-export default function BookingHistoryList() {
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default function BookingHistoryList({
+  initialBookings = [],
+  initialPagination = { page: 1, limit: 20, total: 0, totalPages: 0 },
+}: BookingHistoryListProps) {
+  const router = useRouter();
+  const [bookings, setBookings] = useState<Booking[]>(initialBookings);
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 20,
-    total: 0,
-    totalPages: 0,
-  });
+  const [pagination, setPagination] = useState(initialPagination);
 
+  // Update state when initial props change (server navigation)
   useEffect(() => {
-    async function fetchBookings() {
-      setLoading(true);
-      try {
-        const response = await fetch(`/api/bookings_v1?page=${currentPage}&limit=20`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch bookings');
-        }
-        const data = await response.json();
-        setBookings(data.bookings || []);
-        setPagination(data.pagination || { page: 1, limit: 20, total: 0, totalPages: 0 });
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setLoading(false);
-      }
-    }
+    setBookings(initialBookings);
+    setPagination(initialPagination);
+  }, [initialBookings, initialPagination]);
 
-    fetchBookings();
-  }, [currentPage]);
+  const handlePageChange = (newPage: number) => {
+    router.push(`/account/bookings?page=${newPage}`);
+  };
 
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat('en-GB', {
@@ -94,22 +90,6 @@ export default function BookingHistoryList() {
     };
     return `${cleanAddress(pickup)} → ${cleanAddress(dropoff)}`;
   };
-
-  if (loading) {
-    return (
-      <div className='flex items-center justify-center py-12'>
-        <div className='text-neutral-500 dark:text-neutral-400'>Loading bookings...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className='rounded-lg bg-red-50 dark:bg-red-900/20 p-4 border border-red-200 dark:border-red-800'>
-        <p className='text-sm text-red-600 dark:text-red-400'>Error: {error}</p>
-      </div>
-    );
-  }
 
   if (bookings.length === 0) {
     return (
@@ -213,25 +193,25 @@ export default function BookingHistoryList() {
         <div className='flex items-center justify-between border-t border-neutral-200 dark:border-neutral-800 px-6 py-4 bg-neutral-50 dark:bg-neutral-800/50'>
           <div className='flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400'>
             <span>
-              Showing {(currentPage - 1) * pagination.limit + 1} to{' '}
-              {Math.min(currentPage * pagination.limit, pagination.total)} of {pagination.total}{' '}
+              Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
+              {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}{' '}
               bookings
             </span>
           </div>
           <div className='flex items-center gap-2'>
             <button
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
+              onClick={() => handlePageChange(Math.max(1, pagination.page - 1))}
+              disabled={pagination.page === 1}
               className='px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
             >
               Previous
             </button>
             <span className='px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300'>
-              Page {currentPage} of {pagination.totalPages}
+              Page {pagination.page} of {pagination.totalPages}
             </span>
             <button
-              onClick={() => setCurrentPage(prev => Math.min(pagination.totalPages, prev + 1))}
-              disabled={currentPage === pagination.totalPages}
+              onClick={() => handlePageChange(Math.min(pagination.totalPages, pagination.page + 1))}
+              disabled={pagination.page === pagination.totalPages}
               className='px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
             >
               Next

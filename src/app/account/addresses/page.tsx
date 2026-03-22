@@ -6,20 +6,11 @@
  */
 
 import { ProfileAddresses } from '@/features/account/components/profile/ProfileAddresses';
-import { AccountLayout } from '@/features/account/components/shared/AccountLayout';
 
-function AddressesContent() {
+export default function AddressesPage() {
   return (
     <div className='p-6'>
       <ProfileAddresses />
     </div>
-  );
-}
-
-export default function AddressesPage() {
-  return (
-    <AccountLayout>
-      <AddressesContent />
-    </AccountLayout>
   );
 }

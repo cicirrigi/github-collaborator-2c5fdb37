@@ -1,0 +1,156 @@
+/**
+ * ↩️ RETURN Booking Mapper - NON-DEPRECATED
+ */
+
+import {
+  createBaseBookingRecord,
+  createBookingMetadataRecord,
+  safeToISOString,
+} from '../base-mapping';
+import type {
+  BookingLegRecord,
+  BookingMetadataRecord,
+  BookingRecord,
+  TripConfiguration,
+} from '../types';
+
+/**
+ * Maps TripConfiguration to BookingRecord for RETURN bookings
+ */
+export const mapReturnBooking = (
+  tripConfig: TripConfiguration,
+  customerId: string
+): BookingRecord => {
+  return createBaseBookingRecord(tripConfig, 'return', customerId);
+};
+
+/**
+ * Maps TripConfiguration to BookingMetadataRecord for RETURN bookings
+ */
+export const mapReturnBookingMetadata = (
+  bookingId: string,
+  tripConfig: TripConfiguration
+): BookingMetadataRecord => {
+  const baseMetadata = createBookingMetadataRecord(bookingId, tripConfig, 'return');
+
+  const returnDateISO = safeToISOString(tripConfig.returnDateTime);
+  const returnDate = returnDateISO.split('T')[0];
+  const returnTime = returnDateISO.split('T')[1]?.split('.')[0] || null;
+
+  return {
+    ...baseMetadata,
+    return_date: returnDate,
+    return_time: returnTime,
+    return_flight_number: tripConfig.flightNumberReturn || null,
+  };
+};
+
+/**
+ * Maps TripConfiguration to BookingLegRecord[] for RETURN journey.
+ * Creates 2 legs: outbound + return using new DB schema expectations.
+ */
+export const mapReturnLegs = (
+  bookingId: string,
+  tripConfig: TripConfiguration
+): BookingLegRecord[] => {
+  const legs: BookingLegRecord[] = [];
+
+  if (!tripConfig.selectedVehicle?.category?.id) {
+    throw new Error('vehicle_category_id is required for booking legs');
+  }
+  if (!tripConfig.pickup?.address) {
+    throw new Error('pickup_address is required for booking legs');
+  }
+  if (!tripConfig.pickupDateTime) {
+    throw new Error('scheduled_at is required for booking legs');
+  }
+  if (!tripConfig.returnDateTime) {
+    throw new Error('return scheduled_at is required for return bookings');
+  }
+
+  // LEG 1: Outbound journey (pickup → dropoff)
+  legs.push({
+    booking_id: bookingId,
+    leg_number: 1,
+    leg_kind: 'main',
+    status: 'PENDING',
+    pickup_address: tripConfig.pickup.address,
+    dropoff_address: tripConfig.dropoff?.address || null,
+    pickup_lat: tripConfig.pickup.coordinates?.[1] || null,
+    pickup_lng: tripConfig.pickup.coordinates?.[0] || null,
+    dropoff_lat: tripConfig.dropoff?.coordinates?.[1] || null,
+    dropoff_lng: tripConfig.dropoff?.coordinates?.[0] || null,
+    pickup_place_id: tripConfig.pickup.placeId || null,
+    dropoff_place_id: tripConfig.dropoff?.placeId || null,
+    scheduled_at: safeToISOString(tripConfig.pickupDateTime),
+    vehicle_category_id: tripConfig.selectedVehicle.category.id,
+    vehicle_model_id: tripConfig.selectedVehicle.model?.id || null,
+    stops_raw: [],
+  });
+
+  // LEG 2: Return journey (dropoff → pickup)
+  const returnPickupLocation =
+    tripConfig.isDifferentReturnLocation && tripConfig.returnPickup
+      ? tripConfig.returnPickup.address
+      : tripConfig.dropoff?.address || null;
+
+  const returnPickupLat =
+    tripConfig.isDifferentReturnLocation && tripConfig.returnPickup
+      ? tripConfig.returnPickup.coordinates?.[1] || null
+      : tripConfig.dropoff?.coordinates?.[1] || null;
+
+  const returnPickupLng =
+    tripConfig.isDifferentReturnLocation && tripConfig.returnPickup
+      ? tripConfig.returnPickup.coordinates?.[0] || null
+      : tripConfig.dropoff?.coordinates?.[0] || null;
+
+  const returnPickupPlaceId =
+    tripConfig.isDifferentReturnLocation && tripConfig.returnPickup
+      ? tripConfig.returnPickup.placeId || null
+      : tripConfig.dropoff?.placeId || null;
+
+  const returnDropoffLocation =
+    tripConfig.isDifferentReturnLocation && tripConfig.returnDropoff
+      ? tripConfig.returnDropoff.address
+      : tripConfig.pickup.address;
+
+  const returnDropoffLat =
+    tripConfig.isDifferentReturnLocation && tripConfig.returnDropoff
+      ? tripConfig.returnDropoff.coordinates?.[1] || null
+      : tripConfig.pickup.coordinates?.[1] || null;
+
+  const returnDropoffLng =
+    tripConfig.isDifferentReturnLocation && tripConfig.returnDropoff
+      ? tripConfig.returnDropoff.coordinates?.[0] || null
+      : tripConfig.pickup.coordinates?.[0] || null;
+
+  const returnDropoffPlaceId =
+    tripConfig.isDifferentReturnLocation && tripConfig.returnDropoff
+      ? tripConfig.returnDropoff.placeId || null
+      : tripConfig.pickup.placeId || null;
+
+  if (!returnPickupLocation) {
+    throw new Error('Return leg pickup_address is required');
+  }
+
+  legs.push({
+    booking_id: bookingId,
+    leg_number: 2,
+    leg_kind: 'return',
+    status: 'PENDING',
+    pickup_address: returnPickupLocation,
+    dropoff_address: returnDropoffLocation,
+    pickup_lat: returnPickupLat,
+    pickup_lng: returnPickupLng,
+    dropoff_lat: returnDropoffLat,
+    dropoff_lng: returnDropoffLng,
+    pickup_place_id: returnPickupPlaceId,
+    dropoff_place_id: returnDropoffPlaceId,
+    scheduled_at: safeToISOString(tripConfig.returnDateTime),
+    vehicle_category_id: tripConfig.selectedVehicle.category.id,
+    vehicle_model_id: tripConfig.selectedVehicle.model?.id || null,
+    stops_raw: [],
+  });
+
+  return legs;
+};

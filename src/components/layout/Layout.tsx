@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import type React from 'react';
 
 import { BackgroundOrchestrator } from '@/design-system/backgrounds';
@@ -63,6 +64,12 @@ export default function Layout({
   fullHeight = false,
   pageTitle,
 }: LayoutProps): React.JSX.Element {
+  const pathname = usePathname();
+
+  // Hide footer on account pages but keep navbar
+  const isAccountPage = pathname?.startsWith('/account');
+  const shouldHideFooter = hideFooter || isAccountPage;
+
   return (
     <>
       {/* SEO Title */}
@@ -89,7 +96,7 @@ export default function Layout({
         <main
           className={cn(
             'flex-1',
-            fullHeight && !hideNavbar && !hideFooter && 'flex flex-col',
+            fullHeight && !hideNavbar && !shouldHideFooter && 'flex flex-col',
             containerClassName
           )}
           role='main'
@@ -97,7 +104,7 @@ export default function Layout({
         >
           <div
             className={cn(
-              fullHeight && !hideNavbar && !hideFooter && 'flex flex-1 flex-col',
+              fullHeight && !hideNavbar && !shouldHideFooter && 'flex flex-1 flex-col',
               className
             )}
           >
@@ -106,7 +113,7 @@ export default function Layout({
         </main>
 
         {/* Footer */}
-        {!hideFooter && <Footer />}
+        {!shouldHideFooter && <Footer />}
       </div>
     </>
   );

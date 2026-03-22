@@ -8,7 +8,7 @@
 export interface RenderPricingRequest {
   pickup: string;
   dropoff: string;
-  vehicleType: 'executive' | 'luxury' | 'suv' | 'van';
+  vehicleType: 'executive' | 'luxury' | 'suv' | 'mpv';
   bookingType: 'one_way' | 'return' | 'hourly' | 'daily';
   dateTime: string; // ISO 8601 format
   distance: number; // miles from Google Maps
@@ -91,11 +91,11 @@ class RenderPricingService {
   async calculatePricesForAllVehicles(
     baseRequest: Omit<RenderPricingRequest, 'vehicleType'>
   ): Promise<Record<string, RenderPricingResponse | RenderPricingError>> {
-    const vehicleTypes: Array<'executive' | 'luxury' | 'suv' | 'van'> = [
+    const vehicleTypes: Array<'executive' | 'luxury' | 'suv' | 'mpv'> = [
       'executive',
       'luxury',
       'suv',
-      'van',
+      'mpv',
     ];
 
     const pricePromises = vehicleTypes.map(async vehicleType => {
@@ -123,12 +123,12 @@ class RenderPricingService {
    */
   mapVehicleCategoryToRenderType(
     categoryId: string
-  ): 'executive' | 'luxury' | 'suv' | 'van' | null {
-    const mapping: Record<string, 'executive' | 'luxury' | 'suv' | 'van'> = {
+  ): 'executive' | 'luxury' | 'suv' | 'mpv' | null {
+    const mapping: Record<string, 'executive' | 'luxury' | 'suv' | 'mpv'> = {
       executive: 'executive',
       luxury: 'luxury',
       suv: 'suv',
-      mpv: 'van', // MPV maps to van in Render API
+      mpv: 'mpv', // MPV sent directly to backend
     };
 
     return mapping[categoryId] || null;

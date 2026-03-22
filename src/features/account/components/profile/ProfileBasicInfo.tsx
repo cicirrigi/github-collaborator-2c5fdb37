@@ -242,6 +242,16 @@ function FormField({
   helperText,
   onChange,
 }: FormFieldProps) {
+  // Format date for display when not editing
+  const displayValue =
+    type === 'date' && value
+      ? new Date(value).toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })
+      : value;
+
   return (
     <div>
       <label className='block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2'>
@@ -249,21 +259,23 @@ function FormField({
       </label>
 
       <div className='relative'>
-        <div className='absolute left-3 top-1/2 transform -translate-y-1/2'>
+        <div className='absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none z-10'>
           <Icon className='w-4 h-4 text-neutral-400' />
         </div>
 
         {isEditing && !readOnly ? (
           <input
             type={type}
-            value={value}
+            value={value || ''}
             placeholder={placeholder}
+            max={type === 'date' ? new Date().toISOString().split('T')[0] : undefined}
             onChange={e => onChange?.(e.target.value)}
-            className='w-full pl-10 pr-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:border-amber-500 dark:focus:border-amber-400 focus:ring-1 focus:ring-amber-500 dark:focus:ring-amber-400 transition-colors'
+            style={type === 'date' ? { colorScheme: 'dark' } : undefined}
+            className='w-full pl-10 pr-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:border-amber-500 dark:focus:border-amber-400 focus:ring-1 focus:ring-amber-500 dark:focus:ring-amber-400 transition-colors [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100'
           />
         ) : (
           <div className='w-full pl-10 pr-4 py-3 border border-neutral-200 dark:border-neutral-700 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 text-neutral-900 dark:text-white'>
-            {value || <span className='text-neutral-400'>Not provided</span>}
+            {displayValue || <span className='text-neutral-400'>Not provided</span>}
           </div>
         )}
       </div>

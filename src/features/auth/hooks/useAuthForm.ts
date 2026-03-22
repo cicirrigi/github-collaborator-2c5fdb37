@@ -7,14 +7,14 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { signInWithEmail, signUpWithEmail } from '../services/supabaseAuth';
 import type { AuthMode, SignInFormData, SignUpFormData } from '../types/auth.types';
 import { signInSchema, signUpSchema } from '../validation/authSchema';
-import { signInWithEmail, signUpWithEmail } from '../services/supabaseAuth';
 
 // Union types for conditional form handling
 type AuthFormData = SignInFormData | SignUpFormData;
@@ -94,7 +94,9 @@ export function useAuthForm({
       if (mode === 'signin') {
         setSuccess('Sign in successful! Redirecting...');
       } else {
-        setSuccess('Account created! Please check your email to verify your account.');
+        // Redirect to verify-email page after successful signup
+        const email = (data as SignUpFormData).email;
+        router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
         onSuccess?.();
       }
     } catch (err) {

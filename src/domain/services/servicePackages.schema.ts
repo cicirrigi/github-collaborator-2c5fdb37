@@ -9,6 +9,7 @@ const INCLUDED_SERVICE_CODES = [
   'refreshments',
   'luggage-assistance',
   'pet-friendly',
+  'priority-support',
   'airport-wait-time',
   'extra-stops',
 ] as const;

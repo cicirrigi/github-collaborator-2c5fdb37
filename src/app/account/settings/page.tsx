@@ -6,12 +6,7 @@
  */
 
 import { SettingsContent } from '@/features/account/components/settings/SettingsContent';
-import { AccountLayout } from '@/features/account/components/shared/AccountLayout';
 
 export default function SettingsPage() {
-  return (
-    <AccountLayout>
-      <SettingsContent />
-    </AccountLayout>
-  );
+  return <SettingsContent />;
 }
