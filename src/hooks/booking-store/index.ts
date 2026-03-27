@@ -5,6 +5,7 @@ import {
   createInitialPricingState,
   createInitialTripConfiguration,
   initialWizardState,
+  initialBackendState,
 } from './initialState';
 
 // Import individual action creators
@@ -21,6 +22,8 @@ import { createServicesActions } from './services.actions';
 import { createUpgradesActions } from './upgrades.actions';
 // Pricing Actions
 import { createPricingActions } from './pricing.actions';
+// Backend Integration Actions
+import { createBackendActions } from './backend.actions';
 
 /**
  * 🚀 MODULAR BOOKING STORE - Enterprise Architecture
@@ -34,6 +37,7 @@ export const useBookingState = create<BookingState>((set, get) => ({
   tripConfiguration: createInitialTripConfiguration(),
   pricingState: createInitialPricingState(),
   ...initialWizardState,
+  ...initialBackendState,
 
   // 🎯 BOOKING & STEPPER ACTIONS
   ...createBookingActions(set, get),
@@ -60,6 +64,9 @@ export const useBookingState = create<BookingState>((set, get) => ({
 
   // 💰 PRICING ACTIONS
   ...createPricingActions(set, get),
+
+  // 🆕 BACKEND INTEGRATION ACTIONS
+  ...createBackendActions(set, get),
 
   // ✅ VALIDATION & UTILITY ACTIONS
   ...createValidationActions(set, get),

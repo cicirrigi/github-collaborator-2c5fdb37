@@ -12,6 +12,8 @@ export const createPassengerActions = (
         ...state.tripConfiguration,
         passengers: Math.max(1, Math.min(8, value)), // Clamp between 1-8
       },
+      // FIX 9: Invalidate quote when passengers change
+      quoteStatus: 'stale',
     })),
 
   // 🧳 LUGGAGE COUNT
@@ -21,6 +23,8 @@ export const createPassengerActions = (
         ...state.tripConfiguration,
         luggage: Math.max(0, Math.min(10, value)), // Clamp between 0-10
       },
+      // FIX 9: Invalidate quote when luggage changes
+      quoteStatus: 'stale',
     })),
 
   // ✈️ FLIGHT NUMBERS
@@ -47,6 +51,8 @@ export const createPassengerActions = (
         ...state.tripConfiguration,
         hoursRequested: value ? Math.max(1, Math.min(24, value)) : null, // Clamp 1-24 hours
       },
+      // FIX 9: Invalidate quote when hours change
+      quoteStatus: 'stale',
     })),
 
   // 📅 DAILY BOOKINGS
@@ -56,6 +62,8 @@ export const createPassengerActions = (
         ...state.tripConfiguration,
         daysRequested: value ? Math.max(1, Math.min(30, value)) : null, // Clamp 1-30 days
       },
+      // FIX 9: Invalidate quote when days change
+      quoteStatus: 'stale',
     })),
 
   // 📝 BESPOKE REQUIREMENTS

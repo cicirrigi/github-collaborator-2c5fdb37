@@ -4,6 +4,8 @@
 import type { BookingConfirmation, ConfirmationActions } from './confirmation.types';
 import type { FleetActions, FleetSelection, FleetSummary } from './fleet.types';
 import type { VehicleCategory, VehicleModel, VehicleSelection } from './vehicle.types';
+// Import backend integration types
+import type { QuoteResponse, QuoteStatus } from '@/types/backend-integration.types';
 export type {
   BookingConfirmation,
   ConfirmationActions,
@@ -80,6 +82,12 @@ export interface TripConfiguration {
     currency?: string;
   };
 
+  // 🆕 Customer Information (for booking conversion)
+  customerEmail: string;
+  customerFirstName: string;
+  customerLastName: string;
+  customerPhone: string;
+
   // 🚗 Step 2: Vehicle Selection (single vehicle)
   selectedVehicle: VehicleSelection;
 
@@ -103,6 +111,12 @@ export interface BookingState {
 
   // PRICING STATE
   pricingState: PricingState;
+
+  // BACKEND INTEGRATION STATE (NEW)
+  quoteId: string | null;
+  bookingId: string | null;
+  quoteResponse: QuoteResponse | null;
+  quoteStatus: QuoteStatus;
 
   // CONFIRMATION STATE
   confirmation: BookingConfirmation | null;
@@ -212,6 +226,11 @@ export interface BookingState {
     error: string | null;
   };
 
+  // BACKEND INTEGRATION ACTIONS (NEW)
+  setQuoteData: (quoteId: string, response: QuoteResponse) => void;
+  setBookingId: (bookingId: string) => void;
+  clearQuoteAndBooking: () => void;
+
   // 🚗 RETURN TRIP ENTERPRISE LOGIC
   prepareReturnTripBookings: () => { outbound: SingleBooking; inbound: SingleBooking } | null;
 }
@@ -292,7 +311,7 @@ export interface PricingActions {
   shouldRecalculatePricing: () => boolean;
 }
 
-// �� FUTURE FEATURES (hidden from UI)
+// 🔮 FUTURE FEATURES (hidden from UI)
 export interface FutureFeatures {
   oshiboriTowels: boolean;
 }
@@ -300,3 +319,6 @@ export interface FutureFeatures {
 // 🔧 UTILITY TYPE EXPORTS
 export type PickupDropoffField = LocationData | null;
 export type StopPoint = LocationData;
+
+// 🆕 BACKEND INTEGRATION TYPES - imported from central location
+export type { QuoteResponse, QuoteStatus } from '@/types/backend-integration.types';

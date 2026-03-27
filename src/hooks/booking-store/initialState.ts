@@ -37,6 +37,12 @@ export const createInitialTripConfiguration = (): TripConfiguration => ({
   daysRequested: 1, // Default to 1 day for daily bookings
   customRequirements: '',
 
+  // 🆕 Customer Information (for booking conversion)
+  customerEmail: '',
+  customerFirstName: '',
+  customerLastName: '',
+  customerPhone: '',
+
   // 🚗 Step 2: Vehicle Selection (single vehicle)
   selectedVehicle: {
     category: null,
@@ -121,4 +127,15 @@ export const initialWizardState = {
   currentStep: 1,
   completedSteps: [] as number[],
   totalSteps: 4,
+  confirmation: null,
+};
+
+/**
+ * 🆕 Initial Backend Integration State
+ */
+export const initialBackendState = {
+  quoteId: null,
+  bookingId: null,
+  quoteResponse: null,
+  quoteStatus: 'idle' as const,
 };

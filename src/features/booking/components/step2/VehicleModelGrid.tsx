@@ -76,17 +76,17 @@ interface VehicleModelCardProps {
 function VehicleModelCard({ model, category, isSelected, onSelect, index }: VehicleModelCardProps) {
   const { pricingState, getPriceForVehicle } = useBookingState();
 
-  // Get real price from Render API or fallback to hardcoded
-  const renderPrice = getPriceForVehicle ? getPriceForVehicle(category.id) : null;
-  const fallbackPrice = Math.round(category.basePrice * model.priceMultiplier);
-  const price = renderPrice || fallbackPrice;
+  // Get real price from backend quote ONLY - no fallback to avoid showing wrong prices
+  const backendPrice = getPriceForVehicle ? getPriceForVehicle(category.id) : null;
+
+  // Round price to whole number (no decimals)
+  const price = typeof backendPrice === 'number' ? Math.round(backendPrice) : null;
 
   // Debug logging
   console.log('🚗 VehicleCard Debug:', {
     categoryId: category.id,
-    renderPrice,
-    fallbackPrice,
-    finalPrice: price,
+    backendPrice,
+    formattedPrice: price,
     pricingState: pricingState?.vehiclePrices,
     hasGetPriceForVehicle: !!getPriceForVehicle,
   });
@@ -168,7 +168,11 @@ function VehicleModelCard({ model, category, isSelected, onSelect, index }: Vehi
             <h4 className='text-white font-medium text-sm leading-tight'>{model.name}</h4>
             <div className='text-right'>
               <div className='text-amber-200/70 text-xs font-medium'>Your Tailored Fare</div>
-              <div className='text-yellow-400 font-bold text-2xl'>£{price}</div>
+              {price !== null ? (
+                <div className='text-yellow-400 font-bold text-2xl'>£{price}</div>
+              ) : (
+                <div className='text-yellow-400/50 font-bold text-sm'>Calculating...</div>
+              )}
             </div>
           </div>
 
