@@ -3,21 +3,14 @@
 'use client';
 
 import { StripePaymentForm } from '@/features/booking/components/step3/StripePaymentForm';
+import { useAuth } from '@/features/auth/context/AuthProvider';
 import { useBookingPayment } from '@/hooks/useBookingPayment';
 import { useBookingState } from '@/hooks/useBookingState';
 import { stripePromise } from '@/lib/stripe/stripe';
+import { backendPricingService } from '@/services/backend-pricing.service';
 import { Elements } from '@stripe/react-stripe-js';
 import { AlertCircle, CreditCard, DollarSign } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-
-type BookingApiResponse = {
-  success: boolean;
-  bookingId?: string;
-  reference?: string;
-  amount_total_pence?: number;
-  currency?: string;
-  error?: string;
-};
 
 interface PaymentData {
   paymentIntentId: string;
@@ -27,14 +20,20 @@ interface PaymentData {
 }
 
 export function PaymentCard() {
+  const { user } = useAuth(); // 🆕 Get authenticated user data
+
   const {
     nextStep,
     tripConfiguration,
     bookingType,
-    pricingState,
     getPriceForVehicle,
     getFleetTotalPrice,
     calculateUpgradesCost,
+    // 🆕 NEW: Backend integration state
+    quoteId,
+    quoteResponse,
+    quoteStatus,
+    setBookingId,
   } = useBookingState();
 
   const [paymentMethod, setPaymentMethod] = useState<'card'>('card');
@@ -65,104 +64,76 @@ export function PaymentCard() {
     if (bookingCreateStartedRef.current) return;
     if (isCreatingBooking || bookingData) return;
 
+    // 🆕 CRITICAL: Validate quote status before booking conversion
+    if (!quoteId || !quoteResponse) {
+      console.error('❌ Cannot create booking: No valid quote available');
+      alert('Please calculate pricing first before proceeding to payment.');
+      return;
+    }
+
+    if (quoteStatus !== 'ready') {
+      console.error('❌ Cannot create booking: Quote status is', quoteStatus);
+      alert(`Quote is ${quoteStatus}. Please recalculate pricing before proceeding.`);
+      return;
+    }
+
     try {
       setIsCreatingBooking(true);
       bookingCreateStartedRef.current = true;
 
-      // 🔍 DEBUG: Log fleet booking payload structure
-      console.log('🚛 FLEET BOOKING PAYLOAD DEBUG:', {
-        bookingType,
-        tripConfiguration: JSON.stringify(tripConfiguration, null, 2),
-        fleetSelection: tripConfiguration.fleetSelection,
-        selectedVehicle: tripConfiguration.selectedVehicle,
+      console.log('🆕 Converting quote to booking:', {
+        quoteId,
+        quoteStatus,
+        finalPrice: quoteResponse.pricing.finalPrice,
       });
 
-      const response = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tripConfiguration,
-          bookingType,
-          pricingSnapshot: {
-            finalPricePence: (() => {
-              // Fleet bookings use different pricing logic
-              if (bookingType === 'fleet') {
-                const fleetPriceGBP = getFleetTotalPrice();
-                const fleetBasePrice = fleetPriceGBP ? fleetPriceGBP : 0;
-                const upgradesPrice = calculateUpgradesCost();
-                const totalPrice = fleetBasePrice + upgradesPrice;
-                return Math.round(totalPrice * 100);
-              }
+      // 🆕 NEW BACKEND FLOW: Use auth user data (or fallback to guest)
+      const customerData = {
+        ...(user?.id && { customerId: user.id }), // Only include if user exists
+        email: user?.email || user?.user_metadata?.email || 'guest@example.com',
+        firstName: user?.user_metadata?.first_name || 'Guest',
+        lastName: user?.user_metadata?.last_name || 'Customer',
+      };
 
-              // Single vehicle bookings use selectedVehicle
-              const categoryId = tripConfiguration?.selectedVehicle?.category?.id;
-              if (!categoryId) {
-                // Even without vehicle, include upgrades cost
-                const upgradesPrice = calculateUpgradesCost();
-                return Math.round(upgradesPrice * 100);
-              }
+      console.log('📧 Using customer data from auth:', customerData);
 
-              const basePriceGBP = getPriceForVehicle(categoryId);
-              const basePrice = basePriceGBP ? basePriceGBP : 0;
-              const upgradesPrice = calculateUpgradesCost();
-              const totalPrice = basePrice + upgradesPrice;
-              return Math.round(totalPrice * 100);
-            })(),
-            currency: 'GBP',
-            routeData: pricingState?.routeData
-              ? {
-                  distance: pricingState.routeData.distance ?? null,
-                  duration: pricingState.routeData.duration ?? null,
-                  isCalculated: !!pricingState.routeData.isCalculated,
-                }
-              : undefined,
-          },
-        }),
+      const data = await backendPricingService.convertQuoteToBooking(quoteId, customerData);
+
+      console.log('✅ Booking created from quote:', data);
+      console.log('🔍 Response fields:', {
+        hasBookingId: !!data.bookingId,
+        hasReference: !!data.reference,
+        hasAmount: !!data.amount,
+        hasCurrency: !!data.currency,
+        bookingId: data.bookingId,
+        reference: data.reference,
+        amount: data.amount,
+        currency: data.currency,
       });
 
-      const contentType = response.headers.get('content-type') || '';
-      const rawText = await response.text();
-
-      let data: BookingApiResponse;
-      try {
-        data = contentType.includes('application/json')
-          ? (JSON.parse(rawText) as BookingApiResponse)
-          : ({ error: rawText, success: false } as BookingApiResponse);
-      } catch {
-        data = { success: false, error: rawText };
-      }
-
-      console.log('🧾 BOOKING RESPONSE', {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        data,
-      });
-
-      if (!response.ok) {
-        bookingCreateStartedRef.current = false; // allow retry
-        throw new Error(data.error || JSON.stringify(data));
-      }
-
-      if (data.success && data.bookingId && data.reference && data.amount_total_pence) {
+      if (data.bookingId && data.reference) {
         const bookingData = {
           bookingId: data.bookingId,
           reference: data.reference,
-          amount_total_pence: data.amount_total_pence,
+          amount_total_pence: data.amount, // Amount in pence from backend
           currency: data.currency || 'GBP',
         };
+
+        // Save bookingId to Zustand store
+        setBookingId(data.bookingId);
 
         setBookingData(bookingData);
 
         // Save booking data for Step 4 confirmation
         sessionStorage.setItem('vl-booking-data', JSON.stringify(bookingData));
       } else {
-        bookingCreateStartedRef.current = false; // allow retry
-        console.error('Booking create failed:', data);
+        bookingCreateStartedRef.current = false;
+        throw new Error('Invalid booking response from backend');
       }
     } catch (e) {
-      bookingCreateStartedRef.current = false; // allow retry
-      console.error('Booking create failed FULL:', e);
+      bookingCreateStartedRef.current = false;
+      console.error('❌ Booking conversion failed:', e);
+      alert(e instanceof Error ? e.message : 'Failed to create booking');
     } finally {
       setIsCreatingBooking(false);
     }
@@ -189,11 +160,15 @@ export function PaymentCard() {
 
     initializePayment({
       bookingId: bookingData.bookingId,
-      amount: bookingData.amount_total_pence, // Pass amount to Stripe endpoint
+      ...(quoteId && { quoteId }), // Pass quoteId for validation if exists
+      customerData: {
+        customerId: user?.id || '',
+        email: user?.email || user?.user_metadata?.email || '',
+      },
     }).catch(() => {
       paymentInitStartedRef.current = false; // allow retry
     });
-  }, [bookingData, clientSecret, isCreatingPayment, initializePayment]);
+  }, [bookingData, clientSecret, isCreatingPayment, initializePayment, quoteId]);
 
   // Fetch booking status after booking is created
   const fetchBookingStatus = useCallback(async (bookingId: string) => {
@@ -306,7 +281,7 @@ export function PaymentCard() {
     // Initialize new payment attempt
     await initializePayment({
       bookingId: bookingData.bookingId,
-      amount: bookingData.amount_total_pence,
+      ...(quoteId && { quoteId }),
     });
   };
 
@@ -319,14 +294,14 @@ export function PaymentCard() {
     totalPrice: number;
   } => {
     if (bookingData) {
-      // If booking already created, reverse calculate from VAT-inclusive total
+      // If booking already created, use booking amount (source of truth)
       const totalWithVat = bookingData.amount_total_pence / 100;
       const currentUpgrades = calculateUpgradesCost();
 
       // Reverse VAT calculation (UK VAT = 20%)
-      const subtotalNet = totalWithVat / 1.2; // Remove VAT to get net amount
+      const subtotalNet = totalWithVat / 1.2;
       const vatAmount = totalWithVat - subtotalNet;
-      const upgradesNetPrice = currentUpgrades / 1.2; // Upgrades are also VAT-inclusive
+      const upgradesNetPrice = currentUpgrades / 1.2;
       const baseNetPrice = Math.max(0, subtotalNet - upgradesNetPrice);
 
       return {
@@ -338,7 +313,28 @@ export function PaymentCard() {
       };
     }
 
-    // Calculate from available pricing data (VAT-inclusive from calculator)
+    // ✅ FIX: Use quoteResponse as source of truth (not local calculations)
+    if (quoteResponse && quoteStatus === 'ready') {
+      const totalWithVat = quoteResponse.pricing.finalPrice;
+      const baseFare = quoteResponse.pricing.breakdown.baseFare;
+      const servicesTotal = quoteResponse.pricing.breakdown.servicesTotal;
+
+      // Reverse VAT calculation (UK VAT = 20%)
+      const subtotalNet = totalWithVat / 1.2;
+      const vatAmount = totalWithVat - subtotalNet;
+      const baseNetPrice = baseFare / 1.2;
+      const upgradesNetPrice = servicesTotal / 1.2;
+
+      return {
+        baseNetPrice,
+        upgradesNetPrice,
+        subtotalNet,
+        vatAmount,
+        totalPrice: totalWithVat,
+      };
+    }
+
+    // Fallback: No quote yet - use local calculations (should rarely happen)
     let basePriceWithVat = 0;
 
     if (bookingType === 'fleet') {
@@ -353,8 +349,7 @@ export function PaymentCard() {
     const upgradesPriceWithVat = calculateUpgradesCost();
     const totalWithVat = basePriceWithVat + upgradesPriceWithVat;
 
-    // Reverse VAT calculation (UK VAT = 20%)
-    const subtotalNet = totalWithVat / 1.2; // Remove VAT to get net amount
+    const subtotalNet = totalWithVat / 1.2;
     const vatAmount = totalWithVat - subtotalNet;
     const baseNetPrice = basePriceWithVat / 1.2;
     const upgradesNetPrice = upgradesPriceWithVat / 1.2;
