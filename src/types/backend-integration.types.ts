@@ -74,10 +74,16 @@ export interface QuoteRequest {
     vehicleType: string;
     quantity: number;
   }>;
-  // Service packages
+  // Service packages - ALL services for driver visibility
   servicePackages?: {
-    premiumFeatures?: string[];
-    paidUpgrades?: string[];
+    includedServices?: string[]; // Always included services (9 items)
+    premiumFeatures?: string[]; // Conditional free features (Luxury/SUV/MPV)
+    tripPreferences?: {
+      music?: string;
+      temperature?: string;
+      communication?: string;
+    };
+    paidUpgrades?: string[]; // Paid upgrades (champagne, flowers, security)
   };
   // Custom requirements
   customRequirements?: string;

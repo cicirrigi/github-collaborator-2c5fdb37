@@ -172,11 +172,42 @@ export const createPricingActions = (
         //   vehicleType: v.category.id,
         //   quantity: v.quantity,
         // })),
-        // FIX 13: Service packages (TODO: add premiumFeatures/paidUpgrades to TripConfiguration)
-        // servicePackages: {
-        //   premiumFeatures: tripConfiguration.premiumFeatures,
-        //   paidUpgrades: tripConfiguration.paidUpgrades,
-        // },
+        // Service packages - send ALL services to backend for driver visibility
+        servicePackages: {
+          // Included services (always active for all bookings)
+          includedServices: tripConfiguration.servicePackages.includedServices,
+          // Map all selected premium features to service IDs
+          premiumFeatures: Object.entries(tripConfiguration.servicePackages.premiumFeatures)
+            .filter(([_, enabled]) => enabled)
+            .map(([key]) => {
+              // Map camelCase to kebab-case service IDs
+              const mapping: Record<string, string> = {
+                paparazziSafeMode: 'paparazzi-safe-mode',
+                frontSeatRequest: 'front-seat-request',
+                comfortRideMode: 'comfort-ride-mode',
+                personalLuggagePrivacy: 'personal-luggage-privacy',
+              };
+              return mapping[key];
+            }),
+          // Trip preferences (music, temperature, communication)
+          tripPreferences: {
+            music: tripConfiguration.servicePackages.tripPreferences.music,
+            temperature: tripConfiguration.servicePackages.tripPreferences.temperature,
+            communication: tripConfiguration.servicePackages.tripPreferences.communication,
+          },
+          // Map paid upgrades to service IDs
+          paidUpgrades: [
+            ...(tripConfiguration.servicePackages.paidUpgrades.flowers
+              ? [`flowers-${tripConfiguration.servicePackages.paidUpgrades.flowers}`]
+              : []),
+            ...(tripConfiguration.servicePackages.paidUpgrades.champagne
+              ? [`champagne-${tripConfiguration.servicePackages.paidUpgrades.champagne}`]
+              : []),
+            ...(tripConfiguration.servicePackages.paidUpgrades.securityEscort
+              ? ['security-escort']
+              : []),
+          ],
+        },
         flightNumber: tripConfiguration.flightNumberPickup || undefined,
         customRequirements: tripConfiguration.customRequirements || undefined,
       };
