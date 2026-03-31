@@ -121,8 +121,24 @@ export const createPricingActions = (
           : bookingType === 'return'
             ? tripConfiguration.pickupDateTime?.toISOString() || new Date().toISOString()
             : null,
-        hours: tripConfiguration.hoursRequested,
-        days: tripConfiguration.daysRequested,
+        // For FLEET bookings, use fleetSelection hours/days, otherwise use tripConfiguration
+        hours:
+          bookingType === 'fleet'
+            ? tripConfiguration.fleetSelection?.fleetHours
+            : tripConfiguration.hoursRequested,
+        days:
+          bookingType === 'fleet'
+            ? tripConfiguration.fleetSelection?.fleetDays
+            : tripConfiguration.daysRequested,
+        // For FLEET bookings, send baseServiceType based on fleetMode
+        baseServiceType:
+          bookingType === 'fleet'
+            ? tripConfiguration.fleetSelection?.fleetMode === 'hourly'
+              ? 'hourly'
+              : tripConfiguration.fleetSelection?.fleetMode === 'daily'
+                ? 'daily'
+                : 'oneway'
+            : undefined,
         passengers: tripConfiguration.passengers,
         luggage: tripConfiguration.luggage,
         // Additional stops for outbound trip
@@ -167,11 +183,18 @@ export const createPricingActions = (
                 coordinates: stop.coordinates,
               }))
             : undefined,
-        // FIX 13: Fleet vehicles (TODO: add fleetSelection to BookingState)
-        // fleetVehicles: state.fleetSelection?.vehicles?.map(v => ({
-        //   vehicleType: v.category.id,
-        //   quantity: v.quantity,
-        // })),
+        // Fleet configuration for FLEET bookings
+        fleetConfig:
+          bookingType === 'fleet' && tripConfiguration.fleetSelection?.vehicles?.length > 0
+            ? tripConfiguration.fleetSelection.vehicles.reduce(
+                (config, vehicle) => {
+                  const categoryId = vehicle.category.id;
+                  config[categoryId] = (config[categoryId] || 0) + vehicle.quantity;
+                  return config;
+                },
+                {} as Record<string, number>
+              )
+            : undefined,
         // Service packages - send ALL services to backend for driver visibility
         servicePackages: {
           // Included services (always active for all bookings)
