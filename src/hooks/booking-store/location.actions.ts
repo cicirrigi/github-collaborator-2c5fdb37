@@ -12,6 +12,8 @@ export const createLocationActions = (
         ...state.tripConfiguration,
         pickup: location,
       },
+      // FIX 9: Invalidate quote when pickup changes
+      quoteStatus: 'stale',
     })),
 
   setDropoff: (location: LocationData | null) =>
@@ -20,6 +22,8 @@ export const createLocationActions = (
         ...state.tripConfiguration,
         dropoff: location,
       },
+      // FIX 9: Invalidate quote when dropoff changes
+      quoteStatus: 'stale',
     })),
 
   setAdditionalStops: (stops: LocationData[]) =>
@@ -28,6 +32,8 @@ export const createLocationActions = (
         ...state.tripConfiguration,
         additionalStops: stops,
       },
+      // FIX 9: Invalidate quote when stops change
+      quoteStatus: 'stale',
     })),
 
   // 🔄 RETURN TRIP LOCATIONS
@@ -37,6 +43,8 @@ export const createLocationActions = (
         ...state.tripConfiguration,
         returnPickup: location,
       },
+      // FIX 9: Invalidate quote when return pickup changes
+      quoteStatus: 'stale',
     })),
 
   setReturnDropoff: (location: LocationData | null) =>
@@ -45,6 +53,8 @@ export const createLocationActions = (
         ...state.tripConfiguration,
         returnDropoff: location,
       },
+      // FIX 9: Invalidate quote when return dropoff changes
+      quoteStatus: 'stale',
     })),
 
   setReturnAdditionalStops: (stops: LocationData[]) =>
@@ -53,6 +63,8 @@ export const createLocationActions = (
         ...state.tripConfiguration,
         returnAdditionalStops: stops,
       },
+      // FIX 9: Invalidate quote when return stops change
+      quoteStatus: 'stale',
     })),
 
   setIsDifferentReturnLocation: (isDifferent: boolean) =>

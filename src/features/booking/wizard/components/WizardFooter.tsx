@@ -9,7 +9,7 @@ interface WizardFooterProps {
 }
 
 export function WizardFooter({ currentStep, totalSteps, onNext, onPrev }: WizardFooterProps) {
-  const { resetTrip, setCurrentStep, validateStep2Complete } = useBookingState();
+  const { resetTrip, setCurrentStep, validateStep2Complete, calculatePricing } = useBookingState();
 
   const isFirstStep = currentStep === 1;
   const isLastStep = currentStep === totalSteps;
@@ -21,6 +21,15 @@ export function WizardFooter({ currentStep, totalSteps, onNext, onPrev }: Wizard
   const handleStartNewBooking = () => {
     resetTrip();
     setCurrentStep(1);
+  };
+
+  // 🆕 Handle Step 2 -> Step 3 transition with pricing recalculation
+  const handleNextFromStep2 = async () => {
+    console.log('🔄 Step 2 -> Step 3: Recalculating pricing with servicePackages selections');
+    // Recalculate pricing to include user's service selections
+    await calculatePricing();
+    // Then proceed to Step 3
+    onNext();
   };
 
   return (
@@ -40,7 +49,7 @@ export function WizardFooter({ currentStep, totalSteps, onNext, onPrev }: Wizard
       {/* Next/Complete/Start New Button - Hidden on Step 1 since Next is integrated in form */}
       {!isLastStep && !isFirstStep ? (
         <button
-          onClick={onNext}
+          onClick={currentStep === 2 ? handleNextFromStep2 : onNext}
           disabled={!isCurrentStepValid}
           className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 backdrop-filter backdrop-blur-md border shadow-lg ${
             isCurrentStepValid

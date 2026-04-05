@@ -20,10 +20,12 @@ export const createBookingActions = (
         // Clear incompatible fields when booking type changes
         returnDateTime: type === 'return' ? currentConfig.returnDateTime : null,
         dailyRange: type === 'daily' ? currentConfig.dailyRange : [null, null],
-        hoursRequested: type === 'hourly' ? currentConfig.hoursRequested : null,
-        daysRequested: type === 'daily' ? currentConfig.daysRequested : null,
+        hoursRequested: type === 'hourly' ? currentConfig.hoursRequested || 4 : null,
+        daysRequested: type === 'daily' ? currentConfig.daysRequested || 1 : null,
         customRequirements: type === 'bespoke' ? currentConfig.customRequirements : '',
       },
+      // Invalidate quote when booking type changes
+      quoteStatus: 'stale',
     });
 
     // 🔄 Trigger pricing recalculation if we have route data (industry standard pattern)

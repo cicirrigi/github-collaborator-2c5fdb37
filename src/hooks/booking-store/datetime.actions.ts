@@ -15,6 +15,8 @@ export const createDateTimeActions = (
         pickupDate: dateTime,
         pickupTime: dateTime ? dateTime.toTimeString().slice(0, 5) : '',
       },
+      // Invalidate quote when pickup datetime changes
+      quoteStatus: 'stale',
     })),
 
   // 🔄 RETURN DATE & TIME
@@ -27,6 +29,8 @@ export const createDateTimeActions = (
         returnDate: dateTime,
         returnTime: dateTime ? dateTime.toTimeString().slice(0, 5) : '',
       },
+      // Invalidate quote when return datetime changes
+      quoteStatus: 'stale',
     })),
 
   // 📊 DAILY RANGE (for multi-day bookings)
@@ -36,6 +40,8 @@ export const createDateTimeActions = (
         ...state.tripConfiguration,
         dailyRange: range,
       },
+      // Invalidate quote when daily range changes
+      quoteStatus: 'stale',
     })),
 
   // 🕒 LEGACY DATE SETTERS (for backward compatibility)

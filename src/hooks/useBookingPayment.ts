@@ -5,6 +5,7 @@ import {
   paymentIntentManager,
   type PaymentIntentData,
 } from '@/lib/booking/session/PaymentIntentManager';
+import { backendPricingService } from '@/services/backend-pricing.service';
 import { useCallback, useEffect, useState } from 'react';
 
 export interface UseBookingPaymentReturn {
@@ -19,7 +20,7 @@ export interface UseBookingPaymentReturn {
 
   initializePayment: (params: {
     bookingId: string;
-    amount?: number;
+    quoteId?: string; // Optional for validation
   }) => Promise<PaymentIntentData | null>;
   markAsProcessing: () => void;
   markAsSucceeded: () => void;
@@ -42,40 +43,37 @@ export function useBookingPayment(): UseBookingPaymentReturn {
   const [error, setError] = useState<string | null>(null);
 
   const initializePayment = useCallback(
-    async (params: { bookingId: string }): Promise<PaymentIntentData | null> => {
+    async (params: {
+      bookingId: string;
+      quoteId?: string;
+      customerData?: {
+        customerId: string;
+        email: string;
+      };
+    }): Promise<PaymentIntentData | null> => {
       if (isCreating) return paymentIntent;
 
       setIsCreating(true);
       setError(null);
 
       try {
-        const response = await fetch('/api/stripe/payment-intent', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(params),
+        // 🆕 NEW: Use backendPricingService for payment intent
+        const data = await backendPricingService.createPaymentIntent(params.bookingId, {
+          ...(params.quoteId && { quoteId: params.quoteId }),
+          ...(params.customerData && { customerData: params.customerData }),
         });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data?.error || data?.details || 'Failed to create payment intent');
-        }
 
         const intent: PaymentIntentData = {
           id: data.paymentIntentId,
           clientSecret: data.clientSecret,
-          amount: data.amount ?? 0, // optional if API returns it
+          amount: data.amount ?? 0,
           currency: data.currency ?? 'gbp',
-          status: data.status ?? 'requires_payment_method',
+          status: 'requires_payment_method',
         };
 
-        // Keep session manager state in sync (optional but good)
+        // Keep session manager state in sync
         const session = bookingSessionManager.getCurrentSession(0);
         if (session) {
-          // If your manager has a method to store intent in session, call it.
-          // Otherwise, you can rely on your existing restore logic.
           try {
             (paymentIntentManager as any).markIntentCreated?.(session.sessionId, {
               paymentIntentId: intent.id,
