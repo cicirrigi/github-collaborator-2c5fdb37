@@ -281,7 +281,7 @@ export const validateStep2 = (
       }
       break;
 
-    case 'fleet':
+    case 'fleet' as any:
       if (category && !['suv', 'mpv'].includes(category)) {
         errors.push({
           code: 'FLEET_REQUIRES_LARGE_VEHICLE',
