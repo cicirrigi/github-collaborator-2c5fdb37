@@ -9,8 +9,9 @@ export const runtime = 'nodejs';
  * SECURITY: Uses session client with RLS protection (no service role bypass).
  * View-based approach for consistent data access across web and mobile.
  */
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id: bookingId } = await params;
     const supabase = await createSupabaseServerClient();
     const {
       data: { session },
@@ -20,8 +21,6 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     if (sessionErr || !session?.user) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
-
-    const bookingId = params.id;
 
     // UUID validation
     const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;

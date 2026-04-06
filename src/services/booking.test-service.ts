@@ -16,11 +16,13 @@ import {
 } from './booking-mapping';
 import { saveBooking, type BookingResult } from './booking.service';
 
-// Supabase client for dev functions
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+// Lazy Supabase client for dev functions
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
 
 /**
  * Test function to validate ONE-WAY booking creation with current store data
@@ -107,7 +109,7 @@ export const testBooking = async (
  */
 export const testSupabaseConnection = async (): Promise<{ connected: boolean; error?: string }> => {
   try {
-    const { error } = await supabase.from('organizations').select('id').limit(1);
+    const { error } = await getSupabase().from('organizations').select('id').limit(1);
 
     if (error) {
       return { connected: false, error: error.message };
@@ -127,7 +129,7 @@ export const testSupabaseConnection = async (): Promise<{ connected: boolean; er
  */
 export const getBookingForTest = async (id: string): Promise<BookingRecord | null> => {
   try {
-    const { data, error } = await supabase.from('bookings').select('*').eq('id', id).single();
+    const { data, error } = await getSupabase().from('bookings').select('*').eq('id', id).single();
 
     if (error || !data) {
       console.error('Error fetching booking:', error);

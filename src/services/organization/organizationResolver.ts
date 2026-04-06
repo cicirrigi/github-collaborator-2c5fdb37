@@ -1,10 +1,18 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { persistSession: false } }
-);
+let _supabaseAdmin: SupabaseClient | null = null;
+
+function getSupabaseAdmin() {
+  if (!_supabaseAdmin) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!url || !key) throw new Error('Missing Supabase env vars for organizationResolver');
+    _supabaseAdmin = createClient(url, key, {
+      auth: { persistSession: false },
+    });
+  }
+  return _supabaseAdmin;
+}
 
 /**
  * 🏢 Resolve organization ID for a user
@@ -20,7 +28,7 @@ const supabaseAdmin = createClient(
 export async function resolveUserOrganization(authUserId: string): Promise<string> {
   try {
     // 1) Check user's organization membership
-    const { data: membership, error: membershipErr } = await supabaseAdmin
+    const { data: membership, error: membershipErr } = await getSupabaseAdmin()
       .from('organization_members')
       .select('organization_id')
       .eq('user_id', authUserId)
@@ -39,7 +47,7 @@ export async function resolveUserOrganization(authUserId: string): Promise<strin
     }
 
     // 2) Fallback to default organization (is_default = true)
-    const { data: defaultOrg, error: orgErr } = await supabaseAdmin
+    const { data: defaultOrg, error: orgErr } = await getSupabaseAdmin()
       .from('organizations')
       .select('id')
       .eq('is_default', true)
@@ -81,7 +89,7 @@ export async function createCustomerWithOrganization(
   const organizationId = await resolveUserOrganization(authUserId);
 
   // 1️⃣ FIND: Try to get existing customer
-  const { data: existingCustomer, error: findErr } = await supabaseAdmin
+  const { data: existingCustomer, error: findErr } = await getSupabaseAdmin()
     .from('customers')
     .select('id, organization_id')
     .eq('auth_user_id', authUserId)
@@ -108,7 +116,7 @@ export async function createCustomerWithOrganization(
   const cleanFirstName = userData.first_name?.trim() || '';
   const cleanLastName = userData.last_name?.trim() || '';
 
-  const { data: newCustomer, error: insertErr } = await supabaseAdmin
+  const { data: newCustomer, error: insertErr } = await getSupabaseAdmin()
     .from('customers')
     .insert({
       auth_user_id: authUserId,
@@ -127,7 +135,7 @@ export async function createCustomerWithOrganization(
     if (insertErr.code === '23505') {
       // Postgres unique_violation error code
       console.log('[createCustomerWithOrganization] Unique constraint hit, re-fetching customer');
-      const { data: racedCustomer, error: refetchErr } = await supabaseAdmin
+      const { data: racedCustomer, error: refetchErr } = await getSupabaseAdmin()
         .from('customers')
         .select('id, organization_id')
         .eq('auth_user_id', authUserId)

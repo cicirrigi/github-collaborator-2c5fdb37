@@ -5,12 +5,13 @@ import BookingDetailsView from './components/BookingDetailsView';
 export const runtime = 'nodejs';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function BookingDetailsPage({ params }: PageProps) {
+  const { id } = await params;
   const supabase = await createSupabaseServerClient();
   const {
     data: { session },
@@ -19,8 +20,6 @@ export default async function BookingDetailsPage({ params }: PageProps) {
   if (!session?.user) {
     redirect('/auth/signin');
   }
-
-  const { id } = params;
 
   return (
     <div className='min-h-screen bg-neutral-50 dark:bg-neutral-950'>

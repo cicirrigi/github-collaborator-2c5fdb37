@@ -1,18 +1,7 @@
-/**
- * 💳 Billing & Payments Page - Payment Methods Management
- *
- * Pagina pentru gestionarea metodelor de plată și facturare
- * Clean, fără logic hardcodat, responsive
- */
+export const dynamic = 'force-dynamic';
 
-'use client';
-
-import { BillingAddressAccordion } from '@/features/booking/components/step3/BillingAddressAccordion';
+import BillingPageClient from './BillingPageClient';
 
 export default function BillingPage() {
-  return (
-    <div className='p-6'>
-      <BillingAddressAccordion />
-    </div>
-  );
+  return <BillingPageClient />;
 }

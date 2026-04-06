@@ -1,15 +1,18 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+let _supabaseAdmin: SupabaseClient | null = null;
 
-// 🔐 SERVER-ONLY: Service role client for DB operations
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-});
+function getSupabaseAdmin() {
+  if (!_supabaseAdmin) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!url || !key) throw new Error('Missing Supabase env vars for serviceItems');
+    _supabaseAdmin = createClient(url, key, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+  }
+  return _supabaseAdmin;
+}
 
 // 🎯 SERVICE ITEM DB TYPES
 export interface ServiceItem {
@@ -26,7 +29,7 @@ export async function getServiceItemsByCodes(codes: string[]): Promise<ServiceIt
 
   console.log('[getServiceItemsByCodes] Looking up codes:', codes);
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await getSupabaseAdmin()
     .from('service_items')
     .select('id, name, price_pence, currency, is_active')
     .in('id', codes)
@@ -37,7 +40,7 @@ export async function getServiceItemsByCodes(codes: string[]): Promise<ServiceIt
     throw new Error(`Failed to fetch service items: ${error.message}`);
   }
 
-  const foundCodes = new Set(data.map(item => item.id));
+  const foundCodes = new Set((data as ServiceItem[]).map((item: ServiceItem) => item.id));
   const missingCodes = codes.filter(code => !foundCodes.has(code));
 
   // 🚨 ENTERPRISE INVARIANT: All requested codes must exist in DB

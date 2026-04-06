@@ -8,8 +8,9 @@ export const runtime = 'nodejs';
  * GET /api/bookings/[id] - Get single booking by ID
  * Used by PaymentCard for polling booking status after payment
  */
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id: bookingId } = await params;
     const supabase = await createSupabaseServerClient();
     const {
       data: { session },
@@ -20,7 +21,6 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    const bookingId = params.id;
     const user = session.user;
 
     // Validate bookingId format (basic UUID check)
