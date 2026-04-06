@@ -89,8 +89,9 @@ async function getBookings(page: number = 1, limit: number = 20) {
   }
 }
 
-export default async function BookingsPage({ searchParams }: { searchParams: { page?: string } }) {
-  const page = Number(searchParams.page) || 1;
+export default async function BookingsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const resolvedParams = await searchParams;
+  const page = Number(resolvedParams.page) || 1;
   const { bookings, pagination } = await getBookings(page, 20);
 
   return (
