@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { createCustomerWithOrganization } from '../../../services/organization/organizationResolver';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const createBookingSchema = z.object({
   tripConfiguration: z.any(),
