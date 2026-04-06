@@ -1,4 +1,4 @@
-// @ts-nocheck
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // This test page has outdated types and is kept for reference.
 
 'use client';
