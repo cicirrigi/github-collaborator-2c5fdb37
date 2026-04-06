@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "next dev -p 3002",
     "build": "NEXT_FONT_IGNORE_ERRORS=true next build",
+    "build:dev": "NEXT_FONT_IGNORE_ERRORS=true next build",
     "build:clean": "next build",
     "start": "next start -p 3002",
     "typecheck": "tsc --noEmit",
