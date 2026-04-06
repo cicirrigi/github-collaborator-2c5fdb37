@@ -29,7 +29,7 @@ export async function getServiceItemsByCodes(codes: string[]): Promise<ServiceIt
 
   console.log('[getServiceItemsByCodes] Looking up codes:', codes);
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await getSupabaseAdmin()
     .from('service_items')
     .select('id, name, price_pence, currency, is_active')
     .in('id', codes)
