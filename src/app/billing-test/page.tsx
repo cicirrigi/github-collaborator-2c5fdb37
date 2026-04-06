@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { BillingAddressAccordion } from '@/features/booking/components/step3/BillingAddressAccordion';
 
 export default function BillingTestPage() {

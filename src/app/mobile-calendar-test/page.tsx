@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { DatePicker } from '@/components/calendar/DatePicker';
 import { MobileCalendarModal } from '@/components/calendar/variants/modals/MobileCalendarModal';
 import { StatefulTimePicker } from '@/components/time/StatefulTimePicker';

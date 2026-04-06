@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { BookingFloatingDock } from '@/components/ui/booking-floating-dock/BookingFloatingDock.modular';
 import { ArrowRight, Car, Clock, RefreshCw } from 'lucide-react';
 

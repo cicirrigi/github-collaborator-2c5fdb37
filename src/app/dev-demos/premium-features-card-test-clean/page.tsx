@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { PremiumFeaturesCardV2 } from '@/features/booking/components/step2/PremiumFeaturesCardV2';
 
 export default function PremiumFeaturesCardTestPage() {

@@ -5,6 +5,8 @@
 
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { CarFront, Clock, CreditCard, Search, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 

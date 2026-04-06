@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { Button, Card } from '@/components/ui';
 import { WeatherWidget } from '@/features/booking/components/step1/WeatherWidget';
 import { useWeather } from '@/hooks/weather';

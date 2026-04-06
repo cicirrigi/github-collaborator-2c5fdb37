@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useMemo, useState } from 'react';
 import { PremiumBookingFormCard } from '@/features/booking/components/step1/PremiumBookingFormCard';
 import { useBookingState } from '@/hooks/useBookingState';

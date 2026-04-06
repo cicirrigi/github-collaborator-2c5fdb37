@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState } from 'react';
 import { BookingTabsPro } from '@/components/ui/booking-tabs-pro';
 import { demoTokens } from '@/lib/design-tokens/demo.tokens';

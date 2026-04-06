@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { PaidUpgradesCardV2 } from '@/features/booking/components/step2/PaidUpgradesCardV2';
 
 export default function PaidUpgradesCardTestPage() {
