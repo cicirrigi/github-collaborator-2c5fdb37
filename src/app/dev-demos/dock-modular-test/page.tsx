@@ -8,26 +8,10 @@ import { ArrowRight, Car, Clock, RefreshCw } from 'lucide-react';
  */
 export default function DockModularTestPage() {
   const testItems = [
-    {
-      title: 'Instant',
-      icon: <ArrowRight className='h-full w-full' />,
-      onClick: () => {}, // Demo: Instant booking
-    },
-    {
-      title: 'Scheduled',
-      icon: <RefreshCw className='h-full w-full' />,
-      onClick: () => {}, // Demo: Scheduled booking
-    },
-    {
-      title: 'By Hour',
-      icon: <Clock className='h-full w-full' />,
-      onClick: () => {}, // Demo: Hourly booking
-    },
-    {
-      title: 'Fleet',
-      icon: <Car className='h-full w-full' />,
-      onClick: () => {}, // Demo: Fleet booking
-    },
+    { title: 'Instant', icon: ArrowRight, onClick: () => {}, isActive: true },
+    { title: 'Scheduled', icon: RefreshCw, onClick: () => {}, isActive: false },
+    { title: 'By Hour', icon: Clock, onClick: () => {}, isActive: false },
+    { title: 'Fleet', icon: Car, onClick: () => {}, isActive: false },
   ];
 
   return (
