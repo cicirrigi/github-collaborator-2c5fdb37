@@ -27,7 +27,7 @@ export const validateBookingRecord = (record: BookingRecord): string[] => {
 
   // Trip type validation
   const validTripTypes = ['oneway', 'return', 'hourly', 'daily', 'fleet', 'bespoke'];
-  if (!validTripTypes.includes(record.trip_type)) {
+  if (!validTripTypes.includes(record.booking_type)) {
     errors.push(`trip_type must be one of: ${validTripTypes.join(', ')}`);
   }
 

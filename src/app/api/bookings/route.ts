@@ -177,7 +177,7 @@ export async function POST(req: Request) {
         quantity: Number(v?.quantity ?? 0),
       }));
 
-      if (requestsPayload.some(r => !r.vehicle_category_id || !r.quantity || r.quantity <= 0)) {
+      if (requestsPayload.some((r: any) => !r.vehicle_category_id || !r.quantity || r.quantity <= 0)) {
         return NextResponse.json(
           { success: false, error: 'Invalid fleet vehicles payload' },
           { status: 400 }

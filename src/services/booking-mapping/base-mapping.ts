@@ -41,7 +41,7 @@ export const createBaseBookingRecord = (
   return {
     // Required fields
     customer_id: customerId,
-    trip_type: bookingType,
+    booking_type: bookingType,
 
     // Core booking fields
     start_at: safeToISOString(tripConfig.pickupDateTime),

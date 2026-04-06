@@ -100,7 +100,7 @@ export const saveBooking = async (
     // 3. Normalize timestamps
     const payload = {
       ...bookingRecord,
-      start_at: normalizeTimestamp(bookingRecord.start_at),
+      start_at: normalizeTimestamp(bookingRecord.start_at ?? ''),
     };
 
     console.log('📝 Booking payload:', payload);

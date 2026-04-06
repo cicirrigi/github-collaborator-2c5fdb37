@@ -238,7 +238,7 @@ export const createPricingActions = (
       console.log('📤 Sending quote request to backend:', quoteRequest);
 
       // 🆕 Call NEW backend service
-      const quoteResponse = await backendPricingService.calculateAndQuote(quoteRequest);
+      const quoteResponse = await backendPricingService.calculateAndQuote(quoteRequest as any);
 
       console.log('📥 Received quote response:', quoteResponse);
 
