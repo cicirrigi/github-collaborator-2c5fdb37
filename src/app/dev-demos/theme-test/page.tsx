@@ -4,6 +4,8 @@
 
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState } from 'react';
 import { FleetCard3D } from '@/components/sections/FleetSection/FleetCard3D';
 import { fleetConfig } from '@/components/sections/FleetSection/FleetSection.config';

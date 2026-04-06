@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { IncludedServicesCardV2 } from '@/features/booking/components/step2/IncludedServicesCardV2';
 import { IncludedServicesCardV3 } from '@/features/booking/components/step2/IncludedServicesCardV3';
 

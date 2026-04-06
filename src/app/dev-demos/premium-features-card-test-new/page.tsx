@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { PremiumFeaturesCardV2 } from '@/features/booking/components/step2/PremiumFeaturesCardV2';
 import { PREMIUM_FEATURES } from '@/features/booking/components/step2/service-config';
 import { Crown } from 'lucide-react';

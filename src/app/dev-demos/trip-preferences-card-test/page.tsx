@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { TripPreferencesCardV2 } from '@/features/booking/components/step2/TripPreferencesCardV2';
 
 export default function TripPreferencesCardTestPage() {

@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { Calendar } from '@/components/calendar/Calendar';
 import { useState } from 'react';
 

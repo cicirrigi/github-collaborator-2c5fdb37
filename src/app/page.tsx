@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { FleetSection3D as FleetSection } from '@/components/sections/FleetSection';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { NarrativeSection } from '@/components/sections/NarrativeSection';

@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 export default function BackgroundTestPage() {
   return (
     <div className='min-h-screen w-full relative overflow-hidden'>
