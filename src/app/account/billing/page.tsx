@@ -1,13 +1,10 @@
+'use client';
+
 export const dynamic = 'force-dynamic';
 
 /**
  * 💳 Billing & Payments Page - Payment Methods Management
- *
- * Pagina pentru gestionarea metodelor de plată și facturare
- * Clean, fără logic hardcodat, responsive
  */
-
-'use client';
 
 import { BillingAddressAccordion } from '@/features/booking/components/step3/BillingAddressAccordion';
 
