@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+
 
 /**
  * 📧 Email Verification Page
@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
  * Shows instructions to check email and verify account
  */
 
-'use client';
+
 
 import { createClient } from '@/lib/supabase/client';
 import { ArrowLeft, Mail, RefreshCw } from 'lucide-react';
