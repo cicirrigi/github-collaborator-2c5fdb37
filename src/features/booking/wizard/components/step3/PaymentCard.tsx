@@ -160,12 +160,8 @@ export function PaymentCard() {
 
     initializePayment({
       bookingId: bookingData.bookingId,
-      ...(quoteId && { quoteId }), // Pass quoteId for validation if exists
-      customerData: {
-        customerId: user?.id || '',
-        email: user?.email || user?.user_metadata?.email || '',
-      },
-    }).catch(() => {
+      ...(quoteId && { quoteId }),
+    } as any).catch(() => {
       paymentInitStartedRef.current = false; // allow retry
     });
   }, [bookingData, clientSecret, isCreatingPayment, initializePayment, quoteId]);

@@ -189,14 +189,13 @@ class PaymentIntentManager {
   } {
     const sessionStats = bookingSessionManager.getSessionStats();
 
-    return {
+    const result: { hasValidIntent: boolean; paymentState?: PaymentState; sessionAge?: number; amount?: number } = {
       hasValidIntent: this.hasValidPaymentIntent(),
-      paymentState: sessionStats.paymentState,
-      sessionAge: sessionStats.sessionAge,
-      amount: sessionStats.hasActiveSession
-        ? bookingSessionManager.getCurrentSession(0).totalAmount
-        : undefined,
     };
+    if (sessionStats.paymentState !== undefined) result.paymentState = sessionStats.paymentState;
+    if (sessionStats.sessionAge !== undefined) result.sessionAge = sessionStats.sessionAge;
+    if (sessionStats.hasActiveSession) result.amount = bookingSessionManager.getCurrentSession(0).totalAmount;
+    return result;
   }
 }
 

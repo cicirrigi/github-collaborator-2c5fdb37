@@ -152,7 +152,7 @@ export const logBookingStructure = (
 
   console.group('📋 Booking Structure Preview');
 
-  const bookingRecord = mapTripConfigToBooking(tripConfig, bookingType);
+  const bookingRecord = mapTripConfigToBooking(tripConfig, bookingType, 'test-customer-id');
   const validation = validateBookingRecord(bookingRecord);
 
   console.log('Input from Store:', {

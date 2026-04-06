@@ -5,7 +5,7 @@
 
 import type { TripConfiguration } from './step1.types';
 import type { VehicleSelection, SelectedService, SpecialRequest } from './step2.types';
-import type { BookingStatus } from './common.types';
+import type { BookingUiStatus as BookingStatus } from './common.types';
 
 // Pricing - calculat dinamic
 export interface PricingBreakdown {

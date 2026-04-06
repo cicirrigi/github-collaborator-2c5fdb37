@@ -234,7 +234,7 @@ export const validateStep2 = (
       code: 'INVALID_VEHICLE_FOR_BOOKING_TYPE',
       field: 'vehicleCategory',
       message: `${VEHICLE_RULES_BY_BOOKING_TYPE[bookingType].allowedCategories.join(', ')} vehicles are recommended for ${bookingType} bookings.`,
-      severity: bookingType === 'fleet' || bookingType === 'bespoke' ? 'error' : 'warning',
+      severity: (bookingType as string) === 'fleet' || bookingType === 'bespoke' ? 'error' : 'warning',
     });
   }
 
@@ -281,7 +281,7 @@ export const validateStep2 = (
       }
       break;
 
-    case 'fleet':
+    case 'fleet' as any:
       if (category && !['suv', 'mpv'].includes(category)) {
         errors.push({
           code: 'FLEET_REQUIRES_LARGE_VEHICLE',

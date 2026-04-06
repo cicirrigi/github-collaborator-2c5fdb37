@@ -64,10 +64,9 @@ export const createVehicleActions = (
               ...state.tripConfiguration.selectedVehicle,
               model,
             }
-          : null,
+          : { category: null, model, selectedAt: new Date() },
       },
-      // Don't invalidate quote - model selection doesn't change pricing (same category = same price)
-    }));
+    } as any));
   },
 
   // 🗑️ CLEAR VEHICLE SELECTION

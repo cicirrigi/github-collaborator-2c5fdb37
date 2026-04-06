@@ -159,7 +159,7 @@ class GoogleServicesManager {
 
     // If only 2 locations, use regular getDirections
     if (validLocations.length === 2) {
-      return this.getDirections(validLocations[0], validLocations[1]);
+      return this.getDirections(validLocations[0]!, validLocations[1]!);
     }
 
     const w = window as GoogleWindow;
