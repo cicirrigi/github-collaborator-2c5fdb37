@@ -40,7 +40,7 @@ export async function getServiceItemsByCodes(codes: string[]): Promise<ServiceIt
     throw new Error(`Failed to fetch service items: ${error.message}`);
   }
 
-  const foundCodes = new Set(data.map(item => item.id));
+  const foundCodes = new Set((data as ServiceItem[]).map((item: ServiceItem) => item.id));
   const missingCodes = codes.filter(code => !foundCodes.has(code));
 
   // 🚨 ENTERPRISE INVARIANT: All requested codes must exist in DB
