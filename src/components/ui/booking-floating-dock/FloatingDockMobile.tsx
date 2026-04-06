@@ -1,117 +1,88 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
-import { Menu } from 'lucide-react';
-import { useState } from 'react';
-
 import { cn } from '@/lib/utils/cn';
-import type { BookingDockItem } from './dock.types';
+import { motion, LayoutGroup } from 'framer-motion';
+import type { LucideIcon } from 'lucide-react';
 
-interface FloatingDockMobileProps {
-  items: BookingDockItem[];
-  className?: string;
+export interface DockMobileItem {
+  title: string;
+  icon: LucideIcon;
+  onClick: () => void;
+  isActive: boolean;
 }
 
-export const FloatingDockMobile = ({ items, className }: FloatingDockMobileProps) => {
-  const [open, setOpen] = useState(false);
-
-  // Find current active booking type
-  const activeItem = items.find(item => item.isActive);
-
+export const FloatingDockMobile = ({
+  items,
+  className,
+}: {
+  items: DockMobileItem[];
+  className?: string;
+}) => {
   return (
-    <div className={cn('relative block md:hidden flex justify-center', className)}>
-      <AnimatePresence>
-        {open && (
-          <>
-            {/* Frosty backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className='fixed inset-0 bg-black/20 backdrop-blur-md z-[9998]'
-              onClick={() => setOpen(false)}
-            />
-
-            {/* Dropdown content */}
-            <motion.div
-              layoutId='nav'
-              className='absolute inset-x-0 top-full mt-2 flex flex-col gap-2 z-[9999]'
-            >
-              {items.map((item, idx) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{
-                    opacity: 0,
-                    y: 10,
-                    transition: { delay: idx * 0.05 },
-                  }}
-                  transition={{ delay: (items.length - 1 - idx) * 0.05 }}
-                >
-                  <button
-                    onClick={() => {
-                      item.onClick();
-                      setOpen(false); // Close menu after selection
-                    }}
-                    className={`flex items-center space-x-3 backdrop-blur-sm border rounded-full shadow-lg px-4 py-2 transition-colors w-full touch-manipulation ${
-                      item.isActive
-                        ? 'bg-[#CBB26A]/90 border-[#CBB26A]/50 shadow-[#CBB26A]/25'
-                        : 'bg-white/90 dark:bg-neutral-900/90 border-gray-200 dark:border-neutral-700 hover:bg-white/95 dark:hover:bg-neutral-900/95'
-                    }`}
-                  >
-                    <div className='flex h-8 w-8 items-center justify-center rounded-full'>
-                      <div
-                        className={`h-5 w-5 ${
-                          item.isActive ? 'text-white' : 'text-neutral-600 dark:text-neutral-300'
-                        }`}
-                      >
-                        {item.icon}
-                      </div>
-                    </div>
-                    <span
-                      className={`text-sm font-medium ${
-                        item.isActive ? 'text-white' : 'text-neutral-700 dark:text-neutral-200'
-                      }`}
-                    >
-                      {item.title}
-                    </span>
-                  </button>
-                </motion.div>
-              ))}
-            </motion.div>
-          </>
+    <div
+      className={cn(
+        'block md:hidden w-full overflow-x-auto scrollbar-hide',
+        '-mx-2 px-2',
+        className
+      )}
+    >
+      <motion.div
+        className={cn(
+          'flex items-center gap-1 p-1 rounded-full w-fit mx-auto',
+          'border border-[var(--border-subtle)]/20',
+          'backdrop-blur-xl',
         )}
-      </AnimatePresence>
-
-      <button
-        onClick={() => setOpen(prev => !prev)}
-        className={`
-          flex items-center gap-3 rounded-full px-4 py-2 h-10
-          backdrop-blur-sm shadow-lg touch-manipulation transition-colors
-          ${
-            activeItem
-              ? 'bg-[#CBB26A]/90 border border-[#CBB26A]/50 shadow-[#CBB26A]/25'
-              : 'bg-white/90 border border-gray-200 dark:bg-neutral-900/90 dark:border-neutral-700'
-          }
-        `}
+        style={{
+          background: 'color-mix(in srgb, var(--background-elevated) 70%, transparent)',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 24px rgba(0,0,0,0.12)',
+        }}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        role="tablist"
+        aria-label="Booking type selection"
       >
-        <Menu
-          className={`h-5 w-5 flex-shrink-0 ${
-            activeItem ? 'text-white' : 'text-neutral-500 dark:text-neutral-400'
-          }`}
-        />
-
-        {/* Current booking type label */}
-        <span
-          className={`text-sm font-medium whitespace-nowrap ${
-            activeItem ? 'text-white' : 'text-neutral-700 dark:text-neutral-200'
-          }`}
-        >
-          {activeItem?.title || 'One Way'}
-        </span>
-      </button>
+        <LayoutGroup>
+          {items.map(item => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.title}
+                onClick={item.onClick}
+                role="tab"
+                aria-selected={item.isActive}
+                type="button"
+                className={cn(
+                  'relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full',
+                  'text-xs font-medium whitespace-nowrap',
+                  'transition-colors duration-200',
+                  item.isActive
+                    ? 'text-[var(--background-dark)]'
+                    : 'text-[var(--text-muted)]'
+                )}
+              >
+                {item.isActive && (
+                  <motion.div
+                    layoutId="dock-mobile-pill"
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: 'linear-gradient(135deg, #CBB26A 0%, #D4C078 50%, #B89F5A 100%)',
+                      boxShadow: '0 0 12px rgba(203,178,106,0.3)',
+                    }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 400,
+                      damping: 30,
+                    }}
+                  />
+                )}
+                <Icon className="relative z-10 h-3.5 w-3.5 flex-shrink-0" />
+                <span className="relative z-10">{item.title}</span>
+              </button>
+            );
+          })}
+        </LayoutGroup>
+      </motion.div>
     </div>
   );
 };
