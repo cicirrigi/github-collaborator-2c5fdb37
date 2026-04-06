@@ -17,8 +17,8 @@ export const validateBookingRecord = (record: BookingRecord): string[] => {
     errors.push('customer_id is required');
   }
 
-  if (!record.trip_type) {
-    errors.push('trip_type is required');
+  if (!record.booking_type) {
+    errors.push('booking_type is required');
   }
 
   if (!record.start_at) {
