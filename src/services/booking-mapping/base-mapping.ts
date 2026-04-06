@@ -42,6 +42,7 @@ export const createBaseBookingRecord = (
     // Required fields
     customer_id: customerId,
     booking_type: bookingType as BookingRecord['booking_type'],
+    trip_configuration_raw: tripConfig,
 
     // Core booking fields
     start_at: safeToISOString(tripConfig.pickupDateTime),
@@ -49,23 +50,17 @@ export const createBaseBookingRecord = (
     // Passenger & logistics
     passenger_count: tripConfig.passengers || 1,
     bag_count: tripConfig.luggage || 0,
-    notes: tripConfig.customRequirements || null, // DB has notes
+    custom_requirements: tripConfig.customRequirements || null,
 
-    // System fields - align with DB schema expectations
+    // System fields
     status: 'NEW',
     payment_status: 'unpaid',
-    booking_source: 'web',
+    source: 'web',
     currency: 'GBP',
-
-    // Flight number
-    flight_number: tripConfig.flightNumberPickup || null,
-
-    // Required jsonb field
-    trip_configuration_raw: tripConfig,
 
     // Optional organization
     organization_id: null,
-  };
+  } as BookingRecord;
 };
 
 /**

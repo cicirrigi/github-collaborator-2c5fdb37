@@ -34,6 +34,7 @@ export default function VerifyEmailPage() {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [countdown]);
 
   const handleResendEmail = async () => {
