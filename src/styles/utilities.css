@@ -179,3 +179,56 @@
     background-color: var(--background-elevated);
   }
 }
+
+/* --- 🪟 GLASSMORPHISM SYSTEM (Drive My Way) --- */
+
+.glass {
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-strong {
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.glass-hover {
+  transition: all 0.3s ease;
+}
+
+.glass-hover:hover {
+  border-color: rgba(203, 178, 106, 0.3);
+  box-shadow: 0 0 20px rgba(203, 178, 106, 0.1),
+              0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.gold-text {
+  background: linear-gradient(
+    135deg,
+    var(--gold-dark, #b8941f),
+    var(--gold-classic, #d4af37),
+    var(--gold-light, #f4e6a1)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.form-input {
+  @apply w-full rounded-lg border border-white/10 px-4 py-2.5 text-sm;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+}
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+.form-input:focus {
+  outline: none;
+  border-color: rgba(203, 178, 106, 0.5);
+  box-shadow: 0 0 0 2px rgba(203, 178, 106, 0.2);
+}
