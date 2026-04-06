@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 /**
  * ⚙️ Settings Page - User Preferences & Settings
  *

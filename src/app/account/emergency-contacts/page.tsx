@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 /**
  * 📞 Emergency Contacts Page - Emergency Contact Management
  *

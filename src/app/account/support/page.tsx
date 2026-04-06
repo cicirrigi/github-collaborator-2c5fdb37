@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 /**
  * ❓ Help & Support Page - User Support Center
  *

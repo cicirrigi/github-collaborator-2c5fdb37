@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 /**
  * 📍 Saved Addresses Page - User Address Management
  *
