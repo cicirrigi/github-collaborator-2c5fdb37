@@ -109,7 +109,7 @@ export const testBooking = async (
  */
 export const testSupabaseConnection = async (): Promise<{ connected: boolean; error?: string }> => {
   try {
-    const { error } = await supabase.from('organizations').select('id').limit(1);
+    const { error } = await getSupabase().from('organizations').select('id').limit(1);
 
     if (error) {
       return { connected: false, error: error.message };
@@ -129,7 +129,7 @@ export const testSupabaseConnection = async (): Promise<{ connected: boolean; er
  */
 export const getBookingForTest = async (id: string): Promise<BookingRecord | null> => {
   try {
-    const { data, error } = await supabase.from('bookings').select('*').eq('id', id).single();
+    const { data, error } = await getSupabase().from('bookings').select('*').eq('id', id).single();
 
     if (error || !data) {
       console.error('Error fetching booking:', error);
